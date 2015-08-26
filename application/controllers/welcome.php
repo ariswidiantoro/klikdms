@@ -30,6 +30,13 @@ class Welcome extends Application {
         $this->load->view('template', $this->data);
     }
 
+//    public function admin() {
+//        $this->load->model('model_admin');
+//        $this->data['header'] = $this->model_admin->getMenuModule();
+//        $this->data['menuid'] = '6';
+//        $this->load->view('template', $this->data);
+//    }
+
     public function logout() {
         $arrdata = array('username_adm' => $this->session->userdata('username_adm'),
             'login_administr' => $this->session->userdata('login_administr'));
@@ -50,9 +57,11 @@ class Welcome extends Application {
     }
 
     public function home() {
-        $this->data['title'] = 'HOME';
+        $this->load->model('model_admin');
         $this->data['content'] = 'attribut/home';
-        $this->load->view('attribut/home');
+        $this->data['menuid'] = '1';
+        $this->data['header'] = $this->model_admin->getMenuModule();
+        $this->load->view('template', $this->data);
     }
 
     public function prosesLogin() {

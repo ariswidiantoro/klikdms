@@ -1,3 +1,4 @@
+<div id="result"></div>
 <form class="form-horizontal" id="formMenu" method="post" action="<?php echo site_url('admin/saveMenu'); ?>" name="formMenu">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Menu</label>
@@ -27,7 +28,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Parent</label>
         <div class="col-sm-8">
-            <select name="menu_parent_id" id="menu_parentid" class="col-xs-10 col-sm-5" >
+            <select name="menu_parent_id" id="menu_parentid" class="form-control col-xs-10 col-sm-5" style="width: 40%" >
                 <option value="-1">None</option>
                 <?php
                 if (count($menu) > 0) {
@@ -66,6 +67,30 @@
     </div>
 </form>
 <script type="text/javascript">
+    $(this).ready(function() {
+        $('#formMenu').submit(function() {
+            //  if (confirm("Yakin data sudah benar ?")) {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                dataType: "json",
+                async: false,
+                data: $(this)
+                .serialize(),
+                beforeSend: function() {
+                    $("#imgAjaxLoader")
+                    .show();
+                },
+                success: function(data) {
+                    window.scrollTo(0, 0);
+                    document.formMenu.reset();
+                    $("#result").html(data).show().fadeIn("slow");
+                }
+            })
+            return false;
+        });
+
+    });
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page

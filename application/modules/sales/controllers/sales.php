@@ -18,7 +18,7 @@ class Sales extends Application {
     }
 
     public function index() {
-        $this->data['content'] = 'admin';
+        $this->data['content'] = 'sales';
         $this->data['header'] = $this->model_admin->getMenuModule();
         $this->data['menuid'] = '2';
         $this->load->view('template', $this->data);

@@ -8,9 +8,9 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#admin/addGroupCabang" class="btn btn-sm btn-primary">
+            <a href="#admin/addCabang" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Group Cabang</a>
+                Tambah Karyawan</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
@@ -23,11 +23,11 @@ echo $this->session->flashdata('msg');
 
 <script type="text/javascript">
 
-    function hapusGroupCabang(id) {
+    function hapusKaryawan(id) {
         if (confirm("Yakin ingin menghapus baris ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('admin/hapusGroupCabang'); ?>',
+                url: '<?php echo site_url('admin/hapusKaryawan'); ?>',
                 dataType: "json",
                 data: {
                     id: id
@@ -46,16 +46,18 @@ echo $this->session->flashdata('msg');
         function getData()
         {
             jQuery("#grid-table").jqGrid({
-                url:'<?php echo site_url('admin/loadGroupCabang') ?>',      //another controller function for generating data
+                url:'<?php echo site_url('admin/loadKaryawan') ?>',      //another controller function for generating data
                 mtype : "post",             //Ajax request type. It also could be GET
                 datatype: "json",            //supported formats XML, JSON or Arrray
-                colNames:['Kode Cabang','Nama','Alamat','Telpon','NPWP', 'Edit', 'Hapus'],       //Grid column headings
+                colNames:['NIK','Nama','Alamat','Hp','Jabatan','Nomor KTP','Username', 'Edit', 'Hapus'],       //Grid column headings
                 colModel:[
-                    {name:'cbid',index:'cbid', width:70, align:"left"},
-                    {name:'cb_nama',index:'cb_nama', width:100, align:"left"},
-                    {name:'cb_alamat',index:'cb_alamat', width:100, align:"left"},
-                    {name:'cb_telpon',index:'cb_telpon', width:100, align:"left"},
-                    {name:'cb_npwp',index:'cb_npwp', width:100, align:"left"},
+                    {name:'kr_nik',index:'kr_nik', width:50, align:"left"},
+                    {name:'kr_nama',index:'kr_nama', width:90, align:"left"},
+                    {name:'kr_alamat',index:'kr_alamat', width:100, align:"left"},
+                    {name:'kr_hp',index:'kr_hp', width:100, align:"left"},
+                    {name:'jab_deskripsi',index:'jab_deskripsi', width:100, align:"left"},
+                    {name:'kr_nomor_ktp',index:'kr_nomor_ktp', width:70, align:"left"},
+                    {name:'kr_username',index:'kr_username', width:70, align:"left"},
                     {name:'edit',index:'edit', width:30, align:"center"},
                     {name:'hapus',index:'hapus', width:30, align:"center"},
                 ],
@@ -65,11 +67,11 @@ echo $this->session->flashdata('msg');
                 //height: 300,
                 rowList:[10,20,30],
                 pager: '#pager',
-                sortname: 'cb_nama',
+                sortname: 'kr_nama',
                 viewrecords: true,
                 rownumbers: true,
                 gridview: true,
-                caption:"Daftar Cabang"
+                caption:"Daftar Karyawan"
             }).navGrid('#pager',{edit:false,add:false,del:false});
         }
     

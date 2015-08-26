@@ -25,7 +25,8 @@
 			
             this.force_reload = (cache === false)
 			
-            if(typeof this.settings.content_url === 'function') url = this.settings.content_url(hash);
+            if(typeof this.settings.content_url === 'function')
+                url = this.settings.content_url(hash);
             if(typeof url === 'string') this.getUrl(url, hash, false);
         }
 		

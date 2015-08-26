@@ -53,17 +53,17 @@ class CI_Model {
     }
 
     function getCounter($key) {
-        $sql = "SELECT setting_value FROM setting WHERE setting_id = '" . $key . "' FOR UPDATE";
+        $sql = "SELECT set_value FROM setting WHERE set_key = '" . $key . "' FOR UPDATE";
         $sql = $this->db->QUERY($sql);
         if ($sql->num_rows() > 0) {
             $row = $sql->row();
-            $counter = intval($row->setting_value) + 1;
+            $counter = intval($row->set_value) + 1;
             $datas = array(
-                'setting_value' => $counter
+                'set_value' => $counter
             );
-            $this->db->UPDATE('setting', $datas, array('setting_id' => $key));
+            $this->db->UPDATE('setting', $datas, array('set_key' => $key));
         } else {
-            $this->db->INSERT('setting', array('setting_id' => $key, 'setting_value' => '1'));
+            $this->db->INSERT('setting', array('set_key' => $key, 'set_value' => '1'));
             $counter = '1';
         }
         return $counter;

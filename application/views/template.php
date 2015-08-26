@@ -201,12 +201,12 @@
 
                         <!-- #section:basics/content.searchbox -->
                         <div class="nav-search" id="nav-search">
-<!--                            <form class="form-search">
-                                <span class="input-icon">
-                                    <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-                                    <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                </span>
-                            </form>-->
+                            <!--                            <form class="form-search">
+                                                            <span class="input-icon">
+                                                                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                                                                <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                                            </span>
+                                                        </form>-->
                         </div><!-- /.nav-search -->
 
                         <!-- /section:basics/content.searchbox -->
@@ -305,6 +305,11 @@
 
                         <!-- /section:settings.box -->
                         <div class="page-content-area" data-ajax-content="true">
+                            <?php
+                            if (!empty($content)) {
+                                $this->load->view($content);
+                            }
+                            ?>
                             <!-- ajax content goes here -->
                         </div>
                     </div><!-- /.page-content -->
@@ -348,7 +353,9 @@
         <!-- basic scripts -->
 
         <!--[if !IE]> -->
+
         <script type="text/javascript">
+            
             window.jQuery || document.write("<script src='<?php echo path_js(); ?>jquery.js'>"+"<"+"/script>");
         </script>
 

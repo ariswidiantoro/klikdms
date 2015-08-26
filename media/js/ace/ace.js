@@ -106,15 +106,13 @@ jQuery(function($) {
                 //***NOTE***
                 //this is for Ace demo only, you should change it to return a valid URL
                 //please refer to documentation for more info
-//                if( !hash.match(/^page\//) ) return false;
-                var path = document.location.pathname;
-
-                //for example in Ace HTML demo version we convert /ajax/index.html#page/gallery to > /ajax/content/gallery.html and load it
-                if(path.match(/(\/ajax\/)(index\.html)?/))
-                    return path.replace(/(\/ajax\/)(index\.html)?/, '/ajax/content/'+hash.replace(/^page\//, '')+'.html') ;
+                //                if( !hash.match(/^page\//) ) return false;
+                var path = document.location.pathname.split('/');
+                //                var path = document.location.pathname;
 
                 //for example in Ace PHP demo version we convert "ajax.php#page/dashboard" to "ajax.php?page=dashboard" and load it
-//                alert(path +hash);
+                //                alert(path +hash);
+                path = '/'+path[1]+'/';
                 return path + hash;
             }			  
         }

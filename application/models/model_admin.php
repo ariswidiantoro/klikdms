@@ -73,11 +73,11 @@ class Model_Admin extends CI_Model {
      */
     public function getDetailRole($data) {
         $hasil = array();
-        $sql = $this->db->query("SELECT * FROM ms_role_detail WHERE rode_roleid = '$data'");
+        $sql = $this->db->query("SELECT * FROM ms_role_det WHERE roledet_roleid = '$data'");
 //        log_message('error', 'SQL ROLE = '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             foreach ($sql->result_array() as $value) {
-                $hasil[$value['rode_menuid']] = 1;
+                $hasil[$value['roledet_menuid']] = 1;
             }
         }
         return $hasil;
@@ -88,41 +88,19 @@ class Model_Admin extends CI_Model {
      * @param type $data
      * @return boolean
      */
-    public function getMenuByNama($start, $limit, $sidx, $sord, $where) {
-        $this->db->select('*');
-        $this->db->limit($limit);
-        if ($where != NULL)
-            $this->db->where($where, NULL, FALSE);
-        $this->db->order_by($sidx, $sord);
-        $query = $this->db->get('ms_menu', $limit, $start);
-        log_message('error', 'SQL = '.$this->db->last_query());
-        if ($query->num_rows() > 0) {
-            return $query->result();
-        }
-        return null;
-    }
-
-    public function getTotalMenu($where) {
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_menu");
-        return $sql->row()->total;
-    }
-
-    /**
-     * Function ini digunakan untuk mengambil menu
-     * @param type $data
-     * @return boolean
-     */
-    public function getMenuSort($cari = null) {
+    public function getMenuSort($sortby, $cari = null) {
         $where = '';
         if (!empty($cari)) {
-            $where = "WHERE (menu_deskripsi LIKE '$cari' OR menu_nama LIKE '$cari')";
+            $where = "WHERE $sortby LIKE '%$cari%'";
         }
         $sql = $this->db->query("SELECT * FROM ms_menu $where ORDER BY menu_deskripsi ASC");
+//        log_message('error', 'MENUUUU ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
         return null;
     }
+
     /**
      * Function ini digunakan untuk mengambil menu
      * @param type $data
@@ -135,7 +113,33 @@ class Model_Admin extends CI_Model {
         }
         return null;
     }
-    
+
+    /**
+     * Function ini digunakan untuk mengambil perusahan
+     * @param type $data
+     * @return boolean
+     */
+    public function getPerusahaan() {
+        $sql = $this->db->query("SELECT * FROM ms_company WHERE comp_status = 0 ORDER BY comp_nama ASC");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil departemen
+     * @param type $data
+     * @return boolean
+     */
+    public function getDepartemen() {
+        $sql = $this->db->query("SELECT * FROM ms_departemen ORDER BY dept_deskripsi ASC");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
     /**
      * Function ini digunakan untuk mengambil menu
      * @param type $data
@@ -167,37 +171,15 @@ class Model_Admin extends CI_Model {
     }
 
     /**
-     * Function ini digunakan untuk mendapatkan total role
+     * Function ini digunakan untuk mendapatkan data cabang
      * @param type $where
      * @return int
      */
-    public function getTotalRole($where) {
-        if ($where['sortby'] != '') {
-            $this->db->like('role_menu', $where['sortby']);
-        }
-        $this->db->from('ms_role');
-        $total = $this->db->count_all_results();
-        if ($total > 0) {
-            return $total;
-        }
-        return 0;
-    }
-
-    /**
-     * Function ini digunakan untuk mendapatkan total role
-     * @param type $where
-     * @return int
-     */
-    public function getTotalJabatan($where) {
-        if ($where['sortby'] != '') {
-            $this->db->like('jabatan_deskripsi', $where['sortby']);
-        }
-        $this->db->from('ms_jabatan');
-        $total = $this->db->count_all_results();
-        if ($total > 0) {
-            return $total;
-        }
-        return 0;
+    public function getTotalData($where, $table) {
+        if ($where != NULL)
+            $where = " WHERE " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM $table $where");
+        return $sql->row()->total;
     }
 
     /**
@@ -205,40 +187,11 @@ class Model_Admin extends CI_Model {
      * @param type $where
      * @return int
      */
-    public function getTotalCabang($where) {
-        if ($where['sortby'] != '') {
-            $this->db->like('cb_nama', $where['sortby']);
-        }
-        $this->db->from('ms_cabang');
-        $this->db->where('cb_status', 0);
-        $total = $this->db->count_all_results();
-        if ($total > 0) {
-            return $total;
-        }
-        return 0;
-    }
-
-    /**
-     * Function ini digunakan untuk mencari semua role
-     * @param type $sort
-     * @param type $order
-     * @param type $offset
-     * @param type $row
-     * @param type $where
-     * @return type
-     */
-    function getAllRole($sort = '', $order = '', $offset = '', $row = '', $where = array()) {
-        $this->db->select('*');
-        if (!empty($where['sortby'])) {
-            $this->db->like('role_menu', $where['sortby']);
-        }
-        $this->db->from('ms_role');
-        $this->db->order_by($sort, $order);
-        $this->db->limit($row, $offset);
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            return $query->result_array();
-        }
+    public function getTotalJabatan($where, $table) {
+        if ($where != NULL)
+            $where = " WHERE " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM $table LEFT JOIN ms_departemen ON deptid = jab_deptid $where");
+        return $sql->row()->total;
     }
 
     function getRole() {
@@ -263,29 +216,6 @@ class Model_Admin extends CI_Model {
     }
 
     /**
-     * Function ini digunakan untuk mencari semua role
-     * @param type $sort
-     * @param type $order
-     * @param type $offset
-     * @param type $row
-     * @param type $where
-     * @return type
-     */
-    function getAllJabatan($sort = '', $order = '', $offset = '', $row = '', $where = array()) {
-        $this->db->select('*');
-        if (!empty($where['sortby'])) {
-            $this->db->like('jabatan_deskripsi', $where['sortby']);
-        }
-        $this->db->from('ms_jabatan');
-        $this->db->order_by($sort, $order);
-        $this->db->limit($row, $offset);
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            return $query->result_array();
-        }
-    }
-
-    /**
      * Function ini digunakan untuk mencari semua Cabang
      * @param type $sort
      * @param type $order
@@ -294,19 +224,44 @@ class Model_Admin extends CI_Model {
      * @param type $where
      * @return type
      */
-    function getAllCabang($sort = '', $order = '', $offset = '', $row = '', $where = array()) {
+    function getAllData($start, $limit, $sidx, $sord, $where, $table) {
         $this->db->select('*');
-        if (!empty($where['sortby'])) {
-            $this->db->like('cb_nama', $where['sortby']);
-        }
-        $this->db->from('ms_cabang');
-        $this->db->where('cb_status', 0);
-        $this->db->order_by($sort, $order);
-        $this->db->limit($row, $offset);
-        $query = $this->db->get();
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->order_by($sidx, $sord);
+        $query = $this->db->get($table, $limit, $start);
         if ($query->num_rows() > 0) {
-            return $query->result_array();
+            return $query->result();
         }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mencari semua jabatan
+     * @param type $sort
+     * @param type $order
+     * @param type $offset
+     * @param type $row
+     * @param type $where
+     * @return type
+     */
+    function getAllJabatan($start, $limit, $sidx, $sord, $where, $table) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from($table);
+        $this->db->join('ms_departemen', 'jab_deptid = deptid', 'LEFT');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+//        $this->db->order_by($sidx, $sord);
+//        $query = $this->db->get($table, $limit, $start);
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
     }
 
     /**
@@ -314,10 +269,10 @@ class Model_Admin extends CI_Model {
      * @param array $data
      * @return boolean
      */
-    function simpanRole($data) {
+    function saveRole($data) {
         $this->db->trans_begin();
-        $id = sprintf("%05s", $this->getCounter("R"));
-        $data['roleid'] = "R" . $id;
+        $id = $this->getCounter("R");
+        $data['roleid'] = $id;
         $this->db->INSERT('ms_role', $data);
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();
@@ -349,10 +304,10 @@ class Model_Admin extends CI_Model {
         return false;
     }
 
-    function simpanJabatan($data) {
+    function saveJabatan($data) {
         $this->db->trans_begin();
-        $id = sprintf("%05s", $this->getCounter("J"));
-        $data['jabatanid'] = "J" . $id;
+        $id = sprintf("%03s", $this->getCounter("JAB"));
+        $data['jabid'] = "JAB" . $id;
         $this->db->INSERT('ms_jabatan', $data);
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();
@@ -364,10 +319,23 @@ class Model_Admin extends CI_Model {
         return false;
     }
 
-    function simpanCabang($data) {
+    function savePerusahaan($data) {
         $this->db->trans_begin();
-        $id = sprintf("%04s", $this->getCounter("CB"));
-        $data['cbid'] = $id;
+        $id = sprintf("%03s", $this->getCounter("C"));
+        $data['compid'] = "C" . $id;
+        $this->db->INSERT('ms_company', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
+    }
+
+    function saveCabang($data) {
+        $this->db->trans_begin();
         $this->db->INSERT('ms_cabang', $data);
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();
@@ -468,7 +436,7 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     public function getJabatanById($id) {
-        $sql = $this->db->query("SELECT * FROM ms_jabatan WHERE jabatanid = '$id'");
+        $sql = $this->db->query("SELECT * FROM ms_jabatan WHERE jabid = '$id'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
@@ -486,24 +454,6 @@ class Model_Admin extends CI_Model {
             return $sql->row_array();
         }
         return null;
-    }
-
-    /**
-     * Function ini digunakan untuk mendapatkan total testimonial
-     * @param type $where
-     * @return int
-     */
-    public function getTotalKaryawan($where) {
-        if ($where['sortby'] != '') {
-            $this->db->like($where['sortby'], $where['nama']);
-        }
-        $this->db->where('kr_status', 0);
-        $this->db->from('ms_karyawan');
-        $total = $this->db->count_all_results();
-        if ($total > 0) {
-            return $total;
-        }
-        return 0;
     }
 
     /**
@@ -596,7 +546,7 @@ class Model_Admin extends CI_Model {
 
     function updateJabatan($jab) {
         $this->db->trans_begin();
-        $this->db->where('jabatanid', $jab['jabatanid']);
+        $this->db->where('jabid', $jab['jabid']);
         $this->db->update('ms_jabatan', $jab);
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -616,21 +566,21 @@ class Model_Admin extends CI_Model {
      * @param type $where
      * @return type
      */
-    function getAllKaryawan($sort = '', $order = '', $offset = '', $row = '', $where = array()) {
-        $this->db->select('*');
-        if (!empty($where['sortby'])) {
-            $this->db->like($where['sortby'], $where['nama']);
-        }
-        $this->db->where('kr_status', 0);
-        $this->db->from('ms_karyawan');
-        $this->db->join('ms_jabatan', "jabatanid = kr_jabatanid", 'left');
-        $this->db->order_by($sort, $order);
-        $this->db->limit($row, $offset);
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            return $query->result_array();
-        }
-    }
+//    function getAllKaryawan($sort = '', $order = '', $offset = '', $row = '', $where = array()) {
+//        $this->db->select('*');
+//        if (!empty($where['sortby'])) {
+//            $this->db->like($where['sortby'], $where['nama']);
+//        }
+//        $this->db->where('kr_status', 0);
+//        $this->db->from('ms_karyawan');
+//        $this->db->join('ms_jabatan', "jabatanid = kr_jabatanid", 'left');
+//        $this->db->order_by($sort, $order);
+//        $this->db->limit($row, $offset);
+//        $query = $this->db->get();
+//        if ($query->num_rows() > 0) {
+//            return $query->result_array();
+//        }
+//    }
 
     /**
      * function in ini digunakan untuk menghapus user
@@ -651,9 +601,34 @@ class Model_Admin extends CI_Model {
      * @param type $data
      * @return boolean
      */
+    public function hapusMenu($id) {
+        $this->db->query("UPDATE ms_menu SET menu_status = 1 WHERE menuid = '$id'");
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        }
+        return true;
+    }
+
+    /**
+     * function in ini digunakan untuk menghapus user
+     * @param type $data
+     * @return boolean
+     */
+    public function hapusPerusahaan($id) {
+        $this->db->query("UPDATE ms_company SET comp_status = 1 WHERE compid = '$id'");
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        }
+        return true;
+    }
+
+    /**
+     * function in ini digunakan untuk menghapus user
+     * @param type $data
+     * @return boolean
+     */
     public function hapusJabatan($id) {
-        $this->db->where('jabatanid', $id);
-        $this->db->delete('ms_jabatan');
+        $this->db->query("UPDATE ms_jabatan SET jab_status = 1 WHERE jabid = '$id'");
         if ($this->db->affected_rows() > 0) {
             return true;
         }
@@ -663,15 +638,15 @@ class Model_Admin extends CI_Model {
     function updateRoleDetail($role) {
         $this->db->trans_begin();
         foreach ($role as $det) {
-            $this->db->where('rode_menuid', $det['rode_menuid']);
-            $this->db->where('rode_roleid', $det['rode_roleid']);
-            $this->db->delete('ms_role_detail');
+            $this->db->where('roledet_menuid', $det['roledet_menuid']);
+            $this->db->where('roledet_roleid', $det['roledet_roleid']);
+            $this->db->delete('ms_role_det');
             if ($det['check'] == 1) {
                 $array = array(
-                    'rode_menuid' => $det['rode_menuid'],
-                    'rode_roleid' => $det['rode_roleid'],
+                    'roledet_menuid' => $det['roledet_menuid'],
+                    'roledet_roleid' => $det['roledet_roleid'],
                 );
-                $this->db->INSERT('ms_role_detail', $array);
+                $this->db->INSERT('ms_role_det', $array);
             }
         }
         if ($this->db->trans_status() === FALSE) {

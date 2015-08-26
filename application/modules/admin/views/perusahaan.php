@@ -8,9 +8,9 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#admin/addMenu" class="btn btn-sm btn-primary">
+            <a href="#admin/addPerusahaan" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Menu</a>
+                Tambah Perusahaan</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
@@ -22,22 +22,12 @@ echo $this->session->flashdata('msg');
 
 
 <script type="text/javascript">
-    function search() {
-        $('#tt').treegrid('reload', {menu_nama:$("#nama").val()}); 
-    }
-    function addMenu()
-    {
-        document.formMenu.reset();
-        $('#Action').val('add');
-        $("#AccSubFrom").removeAttr('disabled');
-        $('#myModal').modal('show');
-    }
 
-    function hapusMenu(id) {
+    function hapusPerusahaan(id) {
         if (confirm("Yakin ingin menghapus baris ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('admin/hapusMenu'); ?>',
+                url: '<?php echo site_url('admin/hapusPerusahaan'); ?>',
                 dataType: "json",
                 data: {
                     id: id
@@ -51,16 +41,16 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('admin/loadMenu') ?>',      //another controller function for generating data
+            url:'<?php echo site_url('admin/loadPerusahaan') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Nama','Deskripsi','Url', 'Edit', 'Hapus'],       //Grid column headings
+            colNames:['Kode Perusahaan','Nama','Alamat', 'Edit', 'Hapus'],       //Grid column headings
             colModel:[
-                {name:'menu_nama',index:'menu_nama', width:100, align:"left"},
-                {name:'menu_deskripsi',index:'menu_deskripsi', width:150, align:"left"},
-                {name:'menu_url',index:'menu_url', width:100, align:"left"},
-                {name:'edit',index:'edit', width:20, align:"center"},
-                {name:'hapus',index:'hapus', width:20, align:"center"},
+                {name:'compid',index:'compid', width:50, align:"left"},
+                {name:'comp_nama',index:'comp_nama', width:70, align:"left"},
+                {name:'comp_alamat',index:'comp_alamat', width:100, align:"left"},
+                {name:'edit',index:'edit', width:30, align:"center"},
+                {name:'hapus',index:'hapus', width:30, align:"center"},
             ],
             rowNum:10,
             height : 300,
@@ -68,11 +58,11 @@ echo $this->session->flashdata('msg');
             //height: 300,
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'menu_nama',
+            sortname: 'comp_nama',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Menu"
+            caption:"Daftar Perusahaan"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );

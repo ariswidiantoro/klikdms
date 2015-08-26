@@ -1,25 +1,15 @@
 <div id="result"></div>
-<form class="form-horizontal" id="formRole" method="post" action="<?php echo site_url('admin/saveJabatan'); ?>" name="formRole">
+<form class="form-horizontal" id="formRole" method="post" action="<?php echo site_url('admin/savePerusahaan'); ?>" name="formRole">
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Departemen</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Perusahaan</label>
         <div class="col-sm-8">
-            <select name="jab_deptid" id="jab_deptid" class="form-control" style="width: 30%" >
-                <?php
-                if (count($departemen) > 0) {
-                    foreach ($departemen as $value) {
-                        ?>
-                        <option value="<?php echo $value['deptid']; ?>"><?php echo $value['dept_deskripsi'] ?></option> 
-                        <?php
-                    }
-                }
-                ?>
-            </select>
+            <input type="text" name="comp_nama" id="comp_nama" placeholder="Nama Perusahaan" class="col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Jabatan</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <input type="text" name="jab_deskripsi" id="jab_deskripsi" placeholder="Nama Jabatan" class="col-xs-10 col-sm-5" />
+            <textarea name="comp_alamat" class="ace col-xs-10 col-sm-5"></textarea>
         </div>
     </div>
     <div class="clearfix form-actions">
@@ -48,7 +38,6 @@
                 data: $(this)
                 .serialize(),
                 success: function(data) {
-                    document.formRole.reset();
                     $("#result").html(data).show().fadeIn("slow");
                 }
             })

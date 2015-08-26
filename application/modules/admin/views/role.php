@@ -84,54 +84,19 @@ echo $this->session->flashdata('msg');
         });
     }
 
-    function saveMenu()
-    {
-        var action = $('#Action').val();
-        if (action == 'add') {
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo base_url() ?>administrator/simpan_menu",
-                dataType: "json",
-                async: false,
-                data: $("#formMenu").serialize(),
-                success: function(data) {
-                    if (data) {
-                        window.location.href = '<?php echo site_url('administrator/menu') ?>';
-                    } else {
-                        alert("Data gagal disimpan");
-                    }
-                }
-            });
-        } else if (action == 'update') {
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo base_url() ?>administrator/update_menu",
-                dataType: "json",
-                async: false,
-                data: $("#formMenu").serialize(),
-                success: function(data) {
-                    if (data) {
-                        window.location.href = '<?php echo site_url('administrator/menu') ?>';
-                    } else {
-                        alert("Data gagal disimpan");
-                    }
-                }
-            });
-        }
-
-    }
     
     $(document).ready(function (){
         
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('admin/loadMenu') ?>',      //another controller function for generating data
+            url:'<?php echo site_url('admin/loadRole') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Nama','Deskripsi','Url'],       //Grid column headings
+            colNames:['Deskripsi','Edit Menu', 'Edit', 'Hapus'],       //Grid column headings
             colModel:[
-                {name:'menu_nama',index:'menu_nama', width:100, align:"left"},
-                {name:'menu_deskripsi',index:'menu_deskripsi', width:150, align:"left"},
-                {name:'menu_url',index:'menu_url', width:100, align:"left"},
+                {name:'role_nama',index:'role_nama', width:100, align:"left"},
+                {name:'menu',index:'menu', width:10, align:"center"},
+                {name:'edit',index:'edit', width:10, align:"center"},
+                {name:'hapus',index:'hapus', width:10, align:"center"},
             ],
             rowNum:10,
             height : 300,
@@ -139,7 +104,7 @@ echo $this->session->flashdata('msg');
             //height: 300,
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'menu_nama',
+            sortname: 'role_nama',
             viewrecords: true,
             rownumbers: true,
             gridview: true,

@@ -1,4 +1,5 @@
-<form class="form-horizontal" id="formMenu" method="post" action="<?php echo site_url('administrator/updateMenu'); ?>" name="formMenu">
+<div id="result"></div>
+<form class="form-horizontal" id="formMenu" method="post" action="<?php echo site_url('admin/updateMenu'); ?>" name="formMenu">
     <div class="form-group">
         <input type="hidden" name="menuid" value="<?php echo $data['menuid'] ?>" class="col-xs-10 col-sm-5" />
         <label class="col-sm-1 control-label no-padding-right" for="form-field-1">Nama Menu</label>
@@ -28,7 +29,7 @@
     <div class="form-group">
         <label class="col-sm-1 control-label no-padding-right" for="form-field-1">Parent</label>
         <div class="col-sm-9">
-            <select name="menu_parent_id" id="menu_parentid" class="col-xs-10 col-sm-5" >
+            <select name="menu_parent_id" id="menu_parent_id" class="col-xs-10 col-sm-5" >
                 <option value="-1">None</option>
                 <?php
                 if (count($menu) > 0) {
@@ -67,3 +68,32 @@
         </div>
     </div>
 </form>
+<script type="text/javascript">
+    $(this).ready(function() {
+        $('#formMenu').submit(function() {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                dataType: "json",
+                async: false,
+                data: $(this)
+                .serialize(),
+                beforeSend: function() {
+                    $("#imgAjaxLoader")
+                    .show();
+                },
+                success: function(data) {
+                    window.scrollTo(0, 0);
+                    document.formMenu.reset();
+                    $("#result").html(data).show().fadeIn("slow");
+                }
+            })
+            return false;
+        });
+
+    });
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });
+</script> 

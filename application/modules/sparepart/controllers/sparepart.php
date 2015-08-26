@@ -5,7 +5,7 @@
  * @author Aris
  * 2013-11-11
  */
-class Admin extends Application {
+class Sparepart extends Application {
 
     /**
      * The new Admin_controller
@@ -18,10 +18,9 @@ class Admin extends Application {
     }
 
     public function index() {
-        $this->data['content'] = 'admin';
+        $this->data['content'] = 'sparepart';
         $this->data['header'] = $this->model_admin->getMenuModule();
-        $this->data['menuid'] = '6';
-        $this->data['menu'] = 'attribut/menu';
+        $this->data['menuid'] = '3';
         $this->load->view('template', $this->data);
     }
 
@@ -45,19 +44,16 @@ class Admin extends Application {
         $this->load->view('menu', $this->data);
     }
 
-    public function departemen() {
-//        $this->hakAkses(2);
-        $this->load->view('departemen', $this->data);
-    }
-
     /**
      * This function is used for display the exmination form
      * @author Aris
      * @since 1.0
      */
-    public function dataKaryawan() {
-//        $this->hakAkses(75);
-        $this->load->view('karyawan', $this->data);
+    public function karyawan() {
+        $this->hakAkses(75);
+        $this->data['title'] = 'Form Karyawan';
+        $this->data['content'] = 'user';
+        $this->load->view('template', $this->data);
     }
 
     /**
@@ -66,18 +62,22 @@ class Admin extends Application {
      * @since 1.0
      */
     public function cabang() {
-//        $this->hakAkses(76);
-        $this->load->view('cabang', $this->data);
+        $this->hakAkses(76);
+        $this->data['title'] = 'Cabang';
+        $this->data['content'] = 'cabang';
+        $this->load->view('template', $this->data);
     }
 
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
     public function jabatan() {
-//        $this->hakAkses(76);
-        $this->load->view('jabatan', $this->data);
-    }
-
-    public function perusahaan() {
-//        $this->hakAkses(76);
-        $this->load->view('perusahaan', $this->data);
+        $this->hakAkses(74);
+        $this->data['title'] = 'Form Jabatan';
+        $this->data['content'] = 'jabatan';
+        $this->load->view('template', $this->data);
     }
 
     /**
@@ -96,8 +96,10 @@ class Admin extends Application {
      * @since 1.0
      */
     public function groupCabang() {
-//        $this->hakAkses(77);
-        $this->load->view('groupCabang', $this->data);
+        $this->hakAkses(77);
+        $this->data['title'] = 'Form Group Cabang';
+        $this->data['content'] = 'groupCabang';
+        $this->load->view('template', $this->data);
     }
 
     public function getMenuSortUrut() {
@@ -111,13 +113,8 @@ class Admin extends Application {
      */
     public function addMenu() {
 //        $this->hakAkses(2);
-        $this->data['menu'] = $this->model_admin->getMenuSort('', '');
+        $this->data['menu'] = $this->model_admin->getMenuSort();
         $this->load->view('addMenu', $this->data);
-    }
-
-    public function addPerusahaan() {
-//        $this->hakAkses(2);
-        $this->load->view('addPerusahaan', $this->data);
     }
 
     /**
@@ -140,9 +137,10 @@ class Admin extends Application {
      * @since 1.0
      */
     public function addRole() {
-//        $this->hakAkses(5);
+        $this->hakAkses(5);
+        $this->data['title'] = 'Tambah Role';
         $this->data['content'] = 'addrole';
-        $this->load->view('addrole', $this->data);
+        $this->load->view('template', $this->data);
     }
 
     /**
@@ -151,9 +149,10 @@ class Admin extends Application {
      * @since 1.0
      */
     public function addCabang() {
-//        $this->hakAkses(76);
-        $this->data['pt'] = $this->model_admin->getPerusahaan();
-        $this->load->view('addcabang', $this->data);
+        $this->hakAkses(76);
+        $this->data['title'] = 'Tambah Cabang';
+        $this->data['content'] = 'addcabang';
+        $this->load->view('template', $this->data);
     }
 
     /**
@@ -162,10 +161,10 @@ class Admin extends Application {
      * @since 1.0
      */
     public function addJabatan() {
-//        $this->hakAkses(74);
-//        $this->data['title'] = 'Tambah Jabatan';
-        $this->data['departemen'] = $this->model_admin->getDepartemen();
-        $this->load->view('addjabatan', $this->data);
+        $this->hakAkses(74);
+        $this->data['title'] = 'Tambah Jabatan';
+        $this->data['content'] = 'addjabatan';
+        $this->load->view('template', $this->data);
     }
 
     /**
@@ -227,9 +226,51 @@ class Admin extends Application {
         $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;
-        $where = whereLoad();
+//
+//        $where = "";
+//        $searchField = isset($_POST['searchField']) ? $_POST['searchField'] : false;
+//        $searchOper = isset($_POST['searchOper']) ? $_POST['searchOper'] : false;
+//        $searchString = isset($_POST['searchString']) ? $_POST['searchString'] : false;
+//
+//        if ($_POST['_search'] == 'true') {
+//            $ops = array(
+//                'eq' => '=',
+//                'ne' => '<>',
+//                'lt' => '<',
+//                'le' => '<=',
+//                'gt' => '>',
+//                'ge' => '>=',
+//                'bw' => 'LIKE',
+//                'bn' => 'NOT LIKE',
+//                'in' => 'LIKE',
+//                'ni' => 'NOT LIKE',
+//                'ew' => 'LIKE',
+//                'en' => 'NOT LIKE',
+//                'cn' => 'LIKE',
+//                'nc' => 'NOT LIKE'
+//            );
+//            foreach ($ops as $key => $value) {
+//                if ($searchOper == $key) {
+//                    $ops = $value;
+//                }
+//            }
+//            if ($searchOper == 'eq')
+//                $searchString = $searchString;
+//            if ($searchOper == 'bw' || $searchOper == 'bn')
+//                $searchString .= '%';
+//            if ($searchOper == 'ew' || $searchOper == 'en')
+//                $searchString = '%' . $searchString;
+//            if ($searchOper == 'cn' || $searchOper == 'nc' || $searchOper == 'in' || $searchOper == 'ni')
+//                $searchString = '%' . $searchString . '%';
+//
+//            $where = "$searchField $ops '$searchString' ";
+//        }
+
+        if (!$sidx)
+            $sidx = 1;
+        $where = array();
         $this->load->model('model_admin');
-        $count = $this->model_admin->getTotalData($where, 'ms_menu');
+        $count = $this->model_admin->getTotalMenu($where);
         if ($count > 0) {
             $total_pages = ceil($count / $limit);
         } else {
@@ -238,25 +279,19 @@ class Admin extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_menu');
+        $query = $this->model_admin->getMenuByNama($start, $limit, $sidx, $sord, $where);
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $hapus = '-';
-                $edit = '-';
-                if ($row->menu_status == '0') {
-                    $del = "hapusMenu('" . $row->menuid . "')";
-                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#admin/editMenu?id=' . $row->menuid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
-                }
                 $responce->rows[$i]['id'] = $row->menuid;
                 $responce->rows[$i]['cell'] = array(
-                    $row->menu_nama, $row->menu_deskripsi, $row->menu_url, $edit, $hapus);
+                    $row->menu_nama, $row->menu_deskripsi, $row->menu_url);
                 $i++;
             }
+
         echo json_encode($responce);
     }
 
@@ -282,9 +317,9 @@ class Admin extends Application {
             );
             $hasil = $this->model_admin->simpanMenu($menu);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan menu");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil menyimpan menu"));
             } else {
-                $hasil = $this->error("Gagal menyimpan menu");
+                $this->session->set_flashdata('msg', $this->error("Gagal menyimpan menu"));
             }
         }
         echo json_encode($hasil);
@@ -306,103 +341,78 @@ class Admin extends Application {
                 'menuid' => $this->input->post('menuid'),
                 'menu_nama' => $this->input->post('menu_nama'),
                 'menu_url' => $this->input->post('menu_url'),
+                'menu_type' => $this->input->post('menu_type'),
                 'menu_deskripsi' => $this->input->post('menu_deskripsi'),
-                'menu_parent_id' => $this->input->post('menu_parent_id'),
+                'menu_parentid' => $this->input->post('menu_parentid'),
                 'menu_icon' => $this->input->post('menu_icon'),
+                'menu_isactive' => 1,
             );
             $hasil = $this->model_admin->updateMenu($menu);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan menu");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil menyimpan menu"));
             } else {
-                $hasil = $this->error("Gagal menyimpan menu");
+                $this->session->set_flashdata('msg', $this->error("Gagal menyimpan menu"));
             }
         }
-        echo json_encode($hasil);
+        redirect('administrator/menu');
     }
 
     /**
      * Function ini digunakan untuk menyimpan member
      */
-    public function saveRole() {
+    public function simpanRole() {
         $this->form_validation->set_rules('role_menu', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
             $role = array(
-                'role_nama' => $this->input->post('role_nama')
+                'role_menu' => $this->input->post('role_menu')
             );
-            $hasil = $this->model_admin->saveRole($role);
+            $hasil = $this->model_admin->simpanRole($role);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan role");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil menyimpan role"));
             } else {
-                $hasil = $this->error("Gagal menyimpan role");
+                $this->session->set_flashdata('msg', $this->error("Gagal menyimpan role"));
             }
         }
-        echo json_encode($hasil);
+        redirect('administrator/role');
     }
 
     /**
      * Function ini digunakan untuk menyimpan jabatan
      */
-    public function saveJabatan() {
-        $this->form_validation->set_rules('jab_deskripsi', '<b>Fx</b>', 'xss_clean');
+    public function simpanJabatan() {
+        $this->form_validation->set_rules('jabatan_deskripsi', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
-            $data = array(
-                'jab_deskripsi' => $this->input->post('jab_deskripsi'),
-                'jab_deptid' => $this->input->post('jab_deptid')
+            $role = array(
+                'jabatan_deskripsi' => $this->input->post('jabatan_deskripsi')
             );
-            $hasil = $this->model_admin->saveJabatan($data);
+            $hasil = $this->model_admin->simpanJabatan($role);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan jabatan");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil menyimpan jabatan"));
             } else {
-                $hasil = $this->error("Gagal menyimpan jabatan");
+                $this->session->set_flashdata('msg', $this->error("Gagal menyimpan jabatan"));
             }
         }
-        echo json_encode($hasil);
+        redirect('administrator/jabatan');
     }
 
     /**
      * Function ini digunakan untuk menyimpan cabang
      */
-    public function saveCabang() {
+    public function simpanCabang() {
         $this->form_validation->set_rules('cb_nama', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
             $data = array(
                 'cb_nama' => $this->input->post('cb_nama'),
-                'cbid' => $this->input->post('cbid'),
-                'cb_compid' => $this->input->post('cb_compid'),
-                'cb_telpon' => $this->input->post('cb_telpon'),
-                'cb_fax' => $this->input->post('cb_fax'),
-                'cb_npwp' => $this->input->post('cb_npwp'),
-                'cb_email' => $this->input->post('cb_email'),
                 'cb_alamat' => $this->input->post('cb_alamat')
             );
-            $hasil = $this->model_admin->saveCabang($data);
+            $hasil = $this->model_admin->simpanCabang($data);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan Cabang");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil menyimpan Cabang"));
             } else {
-                $hasil = $this->error("Gagal menyimpan Cabang");
+                $this->session->set_flashdata('msg', $this->error("Gagal menyimpan Cabang"));
             }
         }
-        echo json_encode($hasil);
-    }
-
-    /**
-     * Function ini digunakan untuk menyimpan cabang
-     */
-    public function savePerusahaan() {
-        $this->form_validation->set_rules('comp_nama', '<b>Fx</b>', 'xss_clean');
-        if ($this->form_validation->run() == TRUE) {
-            $data = array(
-                'comp_nama' => $this->input->post('comp_nama'),
-                'comp_alamat' => $this->input->post('comp_alamat')
-            );
-            $hasil = $this->model_admin->savePerusahaan($data);
-            if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan Cabang");
-            } else {
-                $hasil = $this->error("Gagal menyimpan Cabang");
-            }
-        }
-        echo json_encode($hasil);
+        redirect('administrator/cabang');
     }
 
     /**
@@ -439,276 +449,153 @@ class Admin extends Application {
      * Function ini digunakan untuk mengambil data kota
      */
     public function loadRole() {
-        $page = isset($_POST['page']) ? $_POST['page'] : 1;
-        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
-        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'role_nama';
-        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
-        $start = $limit * $page - $limit;
-        $start = ($start < 0) ? 0 : $start;
-        $where = whereLoad();
-        $this->load->model('model_admin');
-        $count = $this->model_admin->getTotalData($where, 'ms_role');
-        if ($count > 0) {
-            $total_pages = ceil($count / $limit);
-        } else {
-            $total_pages = 0;
-        }
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_role');
-        $responce->page = $page;
-        $responce->total = $total_pages;
-        $responce->records = $count;
-        $i = 0;
-        if (count($query) > 0)
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 20;
+        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'role_menu';
+        $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';
+        $kode = isset($_POST['sortby']) ? trim($_POST['sortby']) : '';
+        $offset = ($page - 1) * $rows;
+        $where = array('sortby' => strtolower($kode));
+        $result["total"] = $this->model_admin->getTotalRole($where);
+        $query = $this->model_admin->getAllRole($sort, $order, $offset, $rows, $where);
+        if (count($query) > 0) {
             foreach ($query as $row) {
-                $hapus = '-';
-                $edit = '-';
-                $menu = '-';
-                if ($row->role_status == '0') {
-                    $del = "hapusRole('" . $row->roleid . "')";
-                    $menu = '<a href="#admin/editRoleDetail?id=' . $row->roleid . '" title="edit menu"><i class="ace-icon fa fa-folder-open bigger-120 green"></i>';
-                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#admin/editRole?id=' . $row->roleid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
-                }
-                $responce->rows[$i]['id'] = $row->roleid;
-                $responce->rows[$i]['cell'] = array(
-                    $row->role_nama, $menu, $edit, $hapus);
-                $i++;
+                $delete = 'deleteRole("' . $row['roleid'] . '")';
+                $ed = 'editRole("' . $row['roleid'] . '")';
+                $edit = "<a href='" . site_url('administrator/editRole') . "/?id=" . $row['roleid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-pencil bigger-130'></i></a>";
+                $menu = "<a href='" . site_url('administrator/editRoleDetail') . "/" . $row['roleid'] . "' class='green' title='Lihat Menu Akses'><span class='ace-icon fa fa-cog bigger-130'></span></a>";
+                $del = "" . "<a href='javascript:void(0)' onclick='$delete' class='red' title='Delete'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>";
+                $result['rows'][] = array(
+                    'role_menu' => $row['role_menu'],
+                    'edit' => $edit,
+                    'menu' => $menu,
+                    'hapus' => $del,
+                );
             }
-        echo json_encode($responce);
-    }
-
-    /**
-     * Function ini digunakan untuk mengambil data kota
-     */
-    public function loadPerusahaan() {
-        $page = isset($_POST['page']) ? $_POST['page'] : 1;
-        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
-        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'comp_nama';
-        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
-        $start = $limit * $page - $limit;
-        $start = ($start < 0) ? 0 : $start;
-        $where = whereLoad();
-        $this->load->model('model_admin');
-        $count = $this->model_admin->getTotalData($where, 'ms_company');
-        if ($count > 0) {
-            $total_pages = ceil($count / $limit);
         } else {
-            $total_pages = 0;
+            $result['rows'][] = array('id' => "");
         }
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_company');
-        $responce->page = $page;
-        $responce->total = $total_pages;
-        $responce->records = $count;
-        $i = 0;
-        if (count($query) > 0)
-            foreach ($query as $row) {
-                $hapus = 'Sudah Dihapus';
-                $edit = '-';
-                if ($row->comp_status == '0') {
-                    $del = "hapusPerusahaan('" . $row->compid . "')";
-                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#admin/editRole?id=' . $row->compid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
-                }
-                $responce->rows[$i]['id'] = $row->compid;
-                $responce->rows[$i]['cell'] = array(
-                    $row->compid, $row->comp_nama, $row->comp_alamat, $edit, $hapus);
-                $i++;
-            }
-        echo json_encode($responce);
+        echo json_encode($result);
     }
 
     /**
      * Function ini digunakan untuk mengambil data jabatan
      */
     public function loadJabatan() {
-        $page = isset($_POST['page']) ? $_POST['page'] : 1;
-        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
-        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'comp_nama';
-        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
-        $start = $limit * $page - $limit;
-        $start = ($start < 0) ? 0 : $start;
-        $where = whereLoad();
-        $this->load->model('model_admin');
-        $count = $this->model_admin->getTotalJabatan($where, 'ms_jabatan');
-        if ($count > 0) {
-            $total_pages = ceil($count / $limit);
-        } else {
-            $total_pages = 0;
-        }
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $query = $this->model_admin->getAllJabatan($start, $limit, $sidx, $sord, $where, 'ms_jabatan');
-        $responce->page = $page;
-        $responce->total = $total_pages;
-        $responce->records = $count;
-        $i = 0;
-        if (count($query) > 0)
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 20;
+        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'jabatan_deskripsi';
+        $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';
+        $kode = isset($_POST['sortby']) ? trim($_POST['sortby']) : '';
+        $offset = ($page - 1) * $rows;
+        $where = array('sortby' => strtolower($kode));
+        $result["total"] = $this->model_admin->getTotalJabatan($where);
+        $query = $this->model_admin->getAllJabatan($sort, $order, $offset, $rows, $where);
+        if (count($query) > 0) {
             foreach ($query as $row) {
-                $hapus = 'Sudah Dihapus';
-                $edit = '-';
-                if ($row->jab_status == '0') {
-                    $del = "hapusJabatan('" . $row->jabid . "')";
-                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#admin/editJabatan?id=' . $row->jabid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
-                }
-                $responce->rows[$i]['id'] = $row->jabid;
-                $responce->rows[$i]['cell'] = array(
-                    $row->jabid, $row->dept_deskripsi, $row->jab_deskripsi, $edit, $hapus);
-                $i++;
+                $delete = 'deleteJabatan("' . $row['jabatanid'] . '")';
+                $ed = 'editRole("' . $row['jabatanid'] . '")';
+                $edit = "<a href='" . site_url('administrator/editJabatan') . "/?id=" . $row['jabatanid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-pencil bigger-130'></i></a>";
+                $del = "" . "<a href='javascript:void(0)' onclick='$delete' class='red' title='Delete'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>";
+                $result['rows'][] = array(
+                    'deskripsi' => $row['jabatan_deskripsi'],
+                    'edit' => $edit,
+                    'hapus' => $del,
+                );
             }
-        echo json_encode($responce);
+        } else {
+            $result['rows'][] = array('id' => "");
+        }
+        echo json_encode($result);
     }
 
     /**
      * Function ini digunakan untuk mengambil data jabatan
      */
     public function loadCabang() {
-        $page = isset($_POST['page']) ? $_POST['page'] : 1;
-        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
-        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'menu_nama';
-        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
-        $start = $limit * $page - $limit;
-        $start = ($start < 0) ? 0 : $start;
-        $where = whereLoad();
-        $this->load->model('model_admin');
-        $count = $this->model_admin->getTotalData($where, 'ms_cabang');
-        if ($count > 0) {
-            $total_pages = ceil($count / $limit);
-        } else {
-            $total_pages = 0;
-        }
-
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_cabang');
-        $responce->page = $page;
-        $responce->total = $total_pages;
-        $responce->records = $count;
-        $i = 0;
-        if (count($query) > 0)
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 20;
+        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'cb_nama';
+        $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';
+        $kode = isset($_POST['sortby']) ? trim($_POST['sortby']) : '';
+        $offset = ($page - 1) * $rows;
+        $where = array('sortby' => strtolower($kode));
+        $result["total"] = $this->model_admin->getTotalCabang($where);
+        $query = $this->model_admin->getAllCabang($sort, $order, $offset, $rows, $where);
+        if (count($query) > 0) {
             foreach ($query as $row) {
-                $hapus = 'Dihapus';
-                $edit = '-';
-                if ($row->cb_status == '0') {
-                    $del = "hapusCabang('" . $row->cbid . "')";
-                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#admin/editCabang?id=' . $row->cbid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
-                }
-                $responce->rows[$i]['id'] = $row->cbid;
-                $responce->rows[$i]['cell'] = array(
-                    $row->cbid, $row->cb_nama, $row->cb_alamat, $row->cb_telpon, $row->cb_npwp, $edit, $hapus);
-                $i++;
+                $delete = 'deleteCabang("' . $row['cbid'] . '")';
+                $edit = "<a href='" . site_url('administrator/editCabang') . "/?id=" . $row['cbid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-pencil bigger-130'></i></a>";
+                $del = "" . "<a href='javascript:void(0)' onclick='$delete' class='red' title='Delete'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>";
+                $result['rows'][] = array(
+                    'cbid' => $row['cbid'],
+                    'cb_nama' => $row['cb_nama'],
+                    'cb_alamat' => $row['cb_alamat'],
+                    'edit' => $edit,
+                    'hapus' => $del,
+                );
             }
-        echo json_encode($responce);
-    }
-
-    /**
-     * Function ini digunakan untuk mengambil data jabatan
-     */
-    public function loadDepartemen() {
-        $page = isset($_POST['page']) ? $_POST['page'] : 1;
-        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
-        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'deptid';
-        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
-        $start = $limit * $page - $limit;
-        $start = ($start < 0) ? 0 : $start;
-        $where = whereLoad();
-        $this->load->model('model_admin');
-        $count = $this->model_admin->getTotalData($where, 'ms_departemen');
-        if ($count > 0) {
-            $total_pages = ceil($count / $limit);
         } else {
-            $total_pages = 0;
+            $result['rows'][] = array('id' => "");
         }
-
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_departemen');
-        $responce->page = $page;
-        $responce->total = $total_pages;
-        $responce->records = $count;
-        $i = 0;
-        if (count($query) > 0)
-            foreach ($query as $row) {
-                $del = "hapusDepartemen('" . $row->deptid . "')";
-                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                $edit = '<a href="#admin/editDepartemen?id=' . $row->deptid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
-                $responce->rows[$i]['id'] = $row->deptid;
-                $responce->rows[$i]['cell'] = array(
-                    $row->deptid, $row->dept_deskripsi, $edit, $hapus);
-                $i++;
-            }
-        echo json_encode($responce);
+        echo json_encode($result);
     }
 
     function editRole() {
-//        $this->hakAkses(5);
+        $this->hakAkses(5);
         $id = $this->input->GET('id');
+        $this->data['title'] = 'Edit Role';
         $this->data['content'] = 'editRole';
         $this->data['role'] = $this->model_admin->getRoleById($id);
-        $this->load->view("editRole", $this->data);
+        $this->load->view("template", $this->data);
     }
 
     function editMenu() {
-//        $this->hakAkses(2);
+        $this->hakAkses(2);
         $id = $this->input->GET('id');
         $this->data['title'] = 'Edit Menu';
         $this->data['content'] = 'editMenu';
         $this->data['data'] = $this->model_admin->getMenuById($id);
-        $this->data['menu'] = $this->model_admin->getMenuSort('', '');
-        $this->load->view("editMenu", $this->data);
+        $this->data['menu'] = $this->model_admin->getMenuSort();
+        $this->load->view("template", $this->data);
     }
 
     /**
      * Digunakan untuk menampilkan form edit jabatan
      */
     function editJabatan() {
-//        $this->hakAkses(74);
+        $this->hakAkses(74);
         $id = $this->input->GET('id');
-        $this->data['departemen'] = $this->model_admin->getDepartemen();
-        $this->data['jab'] = $this->model_admin->getJabatanById($id);
-        $this->load->view("editJabatan", $this->data);
+        $this->data['title'] = 'Edit Jabatan';
+        $this->data['content'] = 'editJabatan';
+        $this->data['jabatan'] = $this->model_admin->getJabatanById($id);
+        $this->load->view("template", $this->data);
     }
 
     /**
      * Digunakan untuk menampilkan form edit cabang
      */
     function editCabang() {
-//        $this->hakAkses(76);
+        $this->hakAkses(76);
         $id = $this->input->GET('id');
-        $this->data['pt'] = $this->model_admin->getPerusahaan();
+        $this->data['title'] = 'Edit Cabang';
+        $this->data['content'] = 'editcabang';
         $this->data['cabang'] = $this->model_admin->getCabangById($id);
-        $this->load->view("editcabang", $this->data);
+        $this->load->view("template", $this->data);
     }
 
     /**
      * Dgunakan untuk edit role detail
      */
     function editRoleDetail() {
-        $id = $this->input->GET('id');
-        $cari = $this->input->GET('cari');
-        $this->data['roleid'] = $id;
+        $id = $this->uri->segment(3);
+        $cari = $this->uri->segment(4);
+        $this->data['title'] = 'Edit Role';
+        $this->data['content'] = 'editRoleDetail';
         $this->data['role'] = $this->model_admin->getRoleById($id);
         $this->data['menu'] = $this->model_admin->getMenuSort($cari);
         $this->data['detail'] = $this->model_admin->getDetailRole($id);
-        $this->load->view("editRoleDetail", $this->data);
-    }
-
-    /**
-     * Dgunakan untuk edit role detail
-     */
-    function getMenuDetail() {
-        $id = $this->input->post('roleid');
-        $cari = $this->input->post('cari_menu');
-        $sortby = $this->input->post('sortby');
-        $this->data['roleid'] = $id;
-        $this->data['menu'] = $this->model_admin->getMenuSort($sortby, $cari);
-        $this->data['detail'] = $this->model_admin->getDetailRole($id);
-        $this->load->view("getMenuDetail", $this->data);
+        $this->load->view("template", $this->data);
     }
 
     /**
@@ -742,20 +629,20 @@ class Admin extends Application {
      * Function ini digunakan untuk menyimpan member
      */
     public function updateRole() {
-        $this->form_validation->set_rules('role_nama', '<b>Fx</b>', 'xss_clean');
+        $this->form_validation->set_rules('role_menu', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
             $role = array(
                 'roleid' => $this->input->post('roleid'),
-                'role_nama' => $this->input->post('role_nama'),
+                'role_menu' => $this->input->post('role_menu'),
             );
             $hasil = $this->model_admin->updateRole($role);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil mengupdate role menu");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil mengupdate role menu"));
             } else {
-                $hasil = $this->error("Gagal mengupdate role menu");
+                $this->session->set_flashdata('msg', $this->error("Gagal mengupdate role menu"));
             }
         }
-        echo json_encode($hasil);
+        redirect('administrator/role');
     }
 
     /**
@@ -765,44 +652,38 @@ class Admin extends Application {
         $this->form_validation->set_rules('cb_nama', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
             $data = array(
-                'cb_nama' => $this->input->post('cb_nama'),
                 'cbid' => $this->input->post('cbid'),
-                'cb_compid' => $this->input->post('cb_compid'),
-                'cb_telpon' => $this->input->post('cb_telpon'),
-                'cb_fax' => $this->input->post('cb_fax'),
-                'cb_npwp' => $this->input->post('cb_npwp'),
-                'cb_email' => $this->input->post('cb_email'),
-                'cb_alamat' => $this->input->post('cb_alamat')
+                'cb_nama' => $this->input->post('cb_nama'),
+                'cb_alamat' => $this->input->post('cb_alamat'),
             );
             $hasil = $this->model_admin->updateCabang($data);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil mengupdate cabang");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil mengupdate cabang"));
             } else {
-                $hasil = $this->error("Gagal mengupdate role menu");
+                $this->session->set_flashdata('msg', $this->error("Gagal mengupdate role menu"));
             }
         }
-        echo json_encode($hasil);
+        redirect('administrator/cabang');
     }
 
     /**
      * Function ini digunakan untuk menyimpan jabatan
      */
     public function updateJabatan() {
-        $this->form_validation->set_rules('jab_deskripsi', '<b>Fx</b>', 'xss_clean');
+        $this->form_validation->set_rules('jabatan_deskripsi', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
-            $data = array(
-                'jabid' => $this->input->post('jabid'),
-                'jab_deptid' => $this->input->post('jab_deptid'),
-                'jab_deskripsi' => $this->input->post('jab_deskripsi'),
+            $role = array(
+                'jabatanid' => $this->input->post('jabatanid'),
+                'jabatan_deskripsi' => $this->input->post('jabatan_deskripsi'),
             );
-            $hasil = $this->model_admin->updateJabatan($data);
+            $hasil = $this->model_admin->updateJabatan($role);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil mengupdate jabatan");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil mengupdate jabatan"));
             } else {
-                $hasil = $this->error("Gagal mengupdate jabatan");
+                $this->session->set_flashdata('msg', $this->error("Gagal mengupdate jabatan"));
             }
         }
-        echo json_encode($hasil);
+        redirect('administrator/jabatan');
     }
 
     /**
@@ -822,70 +703,6 @@ class Admin extends Application {
     }
 
     /**
-     * Function ini digunakan untuk menghapus data jabatan
-     * @since 1.0
-     * @author Aris
-     */
-    public function hapusJabatan() {
-        $id = $this->input->post('id');
-        $hasil = $this->model_admin->hapusJabatan($id);
-        if ($hasil) {
-            $hasil = $this->sukses("Berhasil menghapus jabatan");
-        } else {
-            $hasil = $this->error("Gagal menghapus jabatan");
-        }
-        echo json_encode($hasil);
-    }
-
-    /**
-     * Function ini digunakan untuk menghapus data produk
-     * @since 1.0
-     * @author Aris
-     */
-    public function hapusMenu() {
-        $id = $this->input->post('id');
-        $hasil = $this->model_admin->hapusMenu($id);
-        if ($hasil) {
-            $hasil = $this->sukses("Berhasil menghapus menu");
-        } else {
-            $hasil = $this->error("Gagal menghapus menu");
-        }
-        echo json_encode($hasil);
-    }
-
-    /**
-     * Function ini digunakan untuk menghapus data produk
-     * @since 1.0
-     * @author Aris
-     */
-    public function hapusCabang() {
-        $id = $this->input->post('id');
-        $hasil = $this->model_admin->hapusCabang($id);
-        if ($hasil) {
-            $hasil = $this->sukses("Berhasil menghapus cabang");
-        } else {
-            $hasil = $this->error("Gagal menghapus cabang");
-        }
-        echo json_encode($hasil);
-    }
-
-    /**
-     * Function ini digunakan untuk menghapus data produk
-     * @since 1.0
-     * @author Aris
-     */
-    public function hapusPerusahaan() {
-        $id = $this->input->post('id');
-        $hasil = $this->model_admin->hapusPerusahaan($id);
-        if ($hasil) {
-            $hasil = $this->sukses("Berhasil menghapus perusahaan");
-        } else {
-            $hasil = $this->error("Gagal menghapus perusahaan");
-        }
-        echo json_encode($hasil);
-    }
-
-    /**
      * Function ini digunakan untuk menghapus data produk
      * @since 1.0
      * @author Aris
@@ -897,6 +714,38 @@ class Admin extends Application {
             $this->session->set_flashdata('msg', $this->sukses("Berhasil menghapus karyawan"));
         } else {
             $this->session->set_flashdata('msg', $this->error("Gagal menghapus karyawan"));
+        }
+        echo json_encode("a");
+    }
+
+    /**
+     * Function ini digunakan untuk menghapus data produk
+     * @since 1.0
+     * @author Aris
+     */
+    public function hapusCabang() {
+        $id = $this->input->post('id');
+        $hasil = $this->model_admin->hapusCabang($id);
+        if ($hasil) {
+            $this->session->set_flashdata('msg', $this->sukses("Berhasil menghapus Cabang"));
+        } else {
+            $this->session->set_flashdata('msg', $this->error("Gagal menghapus Cabang"));
+        }
+        echo json_encode("a");
+    }
+
+    /**
+     * Function ini digunakan untuk menghapus data produk
+     * @since 1.0
+     * @author Aris
+     */
+    public function hapusJabatan() {
+        $id = $this->input->post('id');
+        $hasil = $this->model_admin->hapusJabatan($id);
+        if ($hasil) {
+            $this->session->set_flashdata('msg', $this->sukses("Berhasil menghapus jabatan"));
+        } else {
+            $this->session->set_flashdata('msg', $this->error("Gagal menghapus jabatan"));
         }
         echo json_encode("a");
     }
@@ -913,16 +762,16 @@ class Admin extends Application {
                     $check = 1;
                 }
                 $arr[] = array(
-                    'roledet_roleid' => $roleid,
-                    'roledet_menuid' => $menu[$i],
+                    'rode_roleid' => $roleid,
+                    'rode_menuid' => $menu[$i],
                     'check' => $check,
                 );
             }
             $hasil = $this->model_admin->updateRoleDetail($arr);
             if ($hasil) {
-                $hasil = $this->sukses("Berhasil mengupdate role menu");
+                $this->session->set_flashdata('msg', $this->sukses("Berhasil mengupdate role menu"));
             } else {
-                $hasil = $this->error("Gagal mengupdate role menu");
+                $this->session->set_flashdata('msg', $this->error("Gagal mengupdate role menu"));
             }
         }
         echo json_encode($hasil);

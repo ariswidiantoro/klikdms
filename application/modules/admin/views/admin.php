@@ -1,7 +1,8 @@
-<?php
+HALAMAN ADMIN
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
+<script type="text/javascript">
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });
+</script> 

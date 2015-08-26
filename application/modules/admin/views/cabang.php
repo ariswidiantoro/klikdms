@@ -1,94 +1,98 @@
-<!DOCTYPE html>
-
 <?php
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
 echo $this->session->flashdata('msg');
 ?> 
-<style type="text/css">
-    #fm{
-        margin:0;
-        padding:10px 30px;
-    }
-    .ftitle{
-        font-size:14px;
-        font-weight:bold;
-        padding:5px 0;
-        margin-bottom:10px;
-        border-bottom:1px solid #ccc;
-    }
-    .fitem{
-        margin-bottom:5px;
-    }
-    .fitem label{
-        display:inline-block;
-        width:80px;
-    }
-    .fitem input{
-        width:160px;
-    }
-    /*    #myModal .modal-dialog
-        {
-            width: 900px;;
-        }*/
-</style>
-<div style="height: 100%;">
-    <div id="adv-view">
+
+<div id="result"></div>
+<div class="row">
+    <div class="col-xs-12">
         <p>
-            <a href="<?php echo site_url('administrator/addCabang') ?>" data-toggle="modal" class="btn btn-small btn-primary">
-                <i class="icon-ok bigger-70"></i>
+            <a href="#admin/addCabang" class="btn btn-sm btn-primary">
+                <i class="ace-icon fa fa-plus"></i>
                 Tambah Cabang</a>
         </p>
-    </div>
-
-    <div id="adv-view1" style="background: #ffffff;">
-        <div id="tb" style="height: 30px;">  
-            <span>Cari :</span> 
-            <input id="nama" class="text-input" onkeyup="search()"/>
-        </div>
-        <table id="tt" class="easyui-datagrid" style="height: 450px;" 
-               url="<?php echo site_url("administrator/loadCabang"); ?>"
-               title="Data Role" rownumbers="true" striped="true" nowrap="true"
-               toolbar="#tb" pagination="true" singleSelect="true">
-            <thead>
-                <tr>
-                    <th field="cbid" width="100" sortable="true" >Kode Cabang</th>
-                    <th field="cb_nama" width="130" sortable="true" >Nama Cabang</th>
-                    <th field="cb_alamat" width="300" sortable="true" >Alamat</th>
-                    <th field="edit" align="center" width="80" sortable="true" >Edit</th>
-                    <th field="hapus" align="center" width="80" sortable="true" >Hapus</th>
-                </tr>
-            </thead>   
-        </table>
+        <table id="grid-table"></table>
+        <div id="pager"></div>
     </div>
 </div>
-<script type="text/javascript">
-    function search() {
-        $('#tt').datagrid('reload', {sortby:$("#nama").val()}); 
-    }
-    function addMenu()
-    {
-        document.formMenu.reset();
-        $('#Action').val('add');
-        $("#AccSubFrom").removeAttr('disabled');
-        $('#myModal').modal('show');
-    }
 
-    function deleteCabang(id) {
+
+</div>
+
+
+<script type="text/javascript">
+
+    function hapusCabang(id) {
         if (confirm("Yakin ingin menghapus baris ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('administrator/hapusCabang'); ?>',
+                url: '<?php echo site_url('admin/hapusCabang'); ?>',
                 dataType: "json",
                 data: {
                     id: id
                 },
                 success: function(data) {
-                    if (data) {
-                        window.location.href = '<?php echo site_url('administrator/cabang') ?>';
-                    } else {
-                        alert("gagal menghapus");
-                    }
+                    getData();
+                    $("#result").html(data).show().fadeIn("slow");
                 }
             });
         }
     }
+
+    $(document).ready(function (){
+        getData();
+    
+        function getData()
+        {
+            jQuery("#grid-table").jqGrid({
+                url:'<?php echo site_url('admin/loadCabang') ?>',      //another controller function for generating data
+                mtype : "post",             //Ajax request type. It also could be GET
+                datatype: "json",            //supported formats XML, JSON or Arrray
+                colNames:['Kode Cabang','Nama','Alamat','Telpon','NPWP', 'Edit', 'Hapus'],       //Grid column headings
+                colModel:[
+                    {name:'cbid',index:'cbid', width:70, align:"left"},
+                    {name:'cb_nama',index:'cb_nama', width:100, align:"left"},
+                    {name:'cb_alamat',index:'cb_alamat', width:100, align:"left"},
+                    {name:'cb_telpon',index:'cb_telpon', width:100, align:"left"},
+                    {name:'cb_npwp',index:'cb_npwp', width:100, align:"left"},
+                    {name:'edit',index:'edit', width:30, align:"center"},
+                    {name:'hapus',index:'hapus', width:30, align:"center"},
+                ],
+                rowNum:10,
+                height : 300,
+                width: $(".page-content").width(),
+                //height: 300,
+                rowList:[10,20,30],
+                pager: '#pager',
+                sortname: 'cb_nama',
+                viewrecords: true,
+                rownumbers: true,
+                gridview: true,
+                caption:"Daftar Cabang"
+            }).navGrid('#pager',{edit:false,add:false,del:false});
+        }
+    
+      
+        $(window).on('resize.jqGrid', function () {
+            $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
+        })
+        
+        var parent_column = $("#grid-table").closest('[class*="col-"]');
+        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
+            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function() {
+                    $("#grid-table").jqGrid( 'setGridWidth', parent_column.width() );
+                }, 0);
+            }
+        })
+    });
+    
+    
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });
 </script> 
+

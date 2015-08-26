@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo path_js(); ?>/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo path_js(); ?>jquery.min.js"></script>
 <script type="text/javascript">
    
     $(document).ready(function() {
@@ -25,9 +25,9 @@
                     var dekripsi = item["menu_deskripsi"];
                     var url = item["menu_url"];
     
-//                    alert(parentid+" LABEL "+label);
+                    //                    alert(parentid+" LABEL "+label);
                     if (items[parentid]) {
-//                        alert("parent id bawah"+label);
+                        //                        alert("parent id bawah"+label);
                         var item = {parentid: parentid, label: label, url: url, item: item, icon: icon, dekripsi:dekripsi};
                         if (!items[parentid].items) {
                             items[parentid].items = [];
@@ -38,7 +38,7 @@
                     else {
                         if (parentid == '<?php echo $menuid; ?>') {
                             items[id] = {parentid: parentid, label: label, url: url, item: item, icon: icon, dekripsi:dekripsi};
-                            source[id] = items[id];
+                            source[i] = items[id];
                         }
                     }
                 }
