@@ -57,9 +57,9 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     public function hakAkses($id) {
-        $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_detail "
-                . " ON rode_roleid = user_roleid WHERE user_krid = '" . ses_krid . "' AND rode_menuid = '$id'");
-        log_message('error', 'SQL = ' . $this->db->last_query());
+        $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON"
+                . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
+                . " WHERE userro_krid = " . ses_krid . " AND menuid = '$id'");
         if ($sql->num_rows() > 0) {
             return true;
         }
@@ -128,6 +128,19 @@ class Model_Admin extends CI_Model {
     }
 
     /**
+     * Function ini digunakan untuk mengambil propinsi
+     * @param type $data
+     * @return boolean
+     */
+    public function getPropinsi() {
+        $sql = $this->db->query("SELECT * FROM ms_propinsi ORDER BY prop_deskripsi");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
      * Function ini digunakan untuk mengambil departemen
      * @param type $data
      * @return boolean
@@ -146,7 +159,26 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     public function getMenuModule() {
-        $sql = $this->db->query("SELECT * FROM ms_menu WHERE menu_parent_id = -1 ORDER BY menu_urut ASC");
+
+        $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON"
+                . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
+                . " WHERE menu_parent_id = -1 AND userro_krid = " . ses_krid . " ORDER BY menu_urut ASC");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil menu
+     * @param type $data
+     * @return boolean
+     */
+    public function getSubMenu() {
+
+        $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON"
+                . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
+                . " WHERE menu_parent_id != -1 AND userro_krid = " . ses_krid . " ORDER BY menu_urut ASC");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -194,8 +226,31 @@ class Model_Admin extends CI_Model {
         return $sql->row()->total;
     }
 
+    /**
+     * Function ini digunakan untuk mendapatkan data karyawab
+     * @param type $where
+     * @return int
+     */
+    public function getTotalKaryawan($where) {
+        if ($where != NULL)
+            $where = " WHERE " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_karyawan $where");
+        return $sql->row()->total;
+    }
+
+    /**
+     * Function ini digunakan untuk mendapatkan data karyawab
+     * @param type $where
+     * @return int
+     */
+    public function getKaryawanById($id) {
+        $sql = $this->db->query("SELECT * FROM ms_karyawan LEFT JOIN ms_kota ON kr_kotaid"
+                . " = kotaid LEFT JOIN ms_jabatan ON jabid = kr_jabid WHERE krid = '$id'");
+        return $sql->row_array();
+    }
+
     function getRole() {
-        $sql = $this->db->query("SELECT * FROM ms_role ORDER BY role_menu");
+        $sql = $this->db->query("SELECT * FROM ms_role ORDER BY role_nama");
         return $sql->result_array();
     }
 
@@ -265,6 +320,34 @@ class Model_Admin extends CI_Model {
     }
 
     /**
+     * Function ini digunakan untuk mencari semua jabatan
+     * @param type $sort
+     * @param type $order
+     * @param type $offset
+     * @param type $row
+     * @param type $where
+     * @return type
+     */
+    function getAllKaryawan($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+//        $this->db->where('kr_cbid', ses_cabang);
+        $this->db->from('ms_karyawan');
+//        $this->db->join('ms_departemen', 'jab_deptid = deptid', 'LEFT');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+//        $this->db->order_by($sidx, $sord);
+//        $query = $this->db->get($table, $limit, $start);
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    /**
      * 
      * @param array $data
      * @return boolean
@@ -284,16 +367,16 @@ class Model_Admin extends CI_Model {
         return false;
     }
 
-    function simpanKaryawan($data) {
+    function saveKaryawan($data) {
         $this->db->trans_begin();
-        $id = sprintf("%06s", $this->getCounter("K"));
-        $data['krid'] = "K-" . $id;
+        $id = $this->getCounter("KAR");
+        $data['krid'] = $id;
         $this->db->INSERT('ms_karyawan', $data);
         $group = array(
             'group_krid' => $data['krid'],
             'group_cbid' => $data['kr_cbid'],
         );
-        $this->db->INSERT('ms_groupcabang', $group);
+        $this->db->INSERT('ms_group_cabang', $group);
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();
             return true;
@@ -366,7 +449,7 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     public function login($array) {
-        $sql = $this->db->query("SELECT * FROM ms_karyawan LEFT JOIN ms_groupcabang"
+        $sql = $this->db->query("SELECT * FROM ms_karyawan LEFT JOIN ms_group_cabang"
                 . " ON group_krid = krid WHERE kr_username = '" . $array['username'] . "' AND group_cbid = '" . $array['cbid'] . "' AND kr_password = '" . $array['password'] . "'");
         if ($sql->num_rows() > 0) {
             return true;
@@ -381,7 +464,7 @@ class Model_Admin extends CI_Model {
      */
     public function getGroupCabangByUserId($id) {
         $data = array();
-        $sql = $this->db->query("SELECT * FROM ms_groupcabang WHERE group_krid = '$id'");
+        $sql = $this->db->query("SELECT * FROM ms_group_cabang WHERE group_krid = '$id'");
         if ($sql->num_rows() > 0) {
             foreach ($sql->result_array() as $value) {
                 $data[$value['group_cbid']] = 1;
@@ -396,9 +479,48 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     public function getJabatan() {
-        $sql = $this->db->query("SELECT * FROM ms_jabatan ORDER BY jabatan_deskripsi");
+        $sql = $this->db->query("SELECT * FROM ms_jabatan ORDER BY jab_deskripsi");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil User Role
+     * @param type $data
+     * @return boolean
+     */
+    public function getUserRoleByKrid($krid) {
+        $sql = $this->db->query("SELECT * FROM ms_user_role WHERE userro_krid = '$krid'");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil jabatan
+     * @param type $data
+     * @return boolean
+     */
+    public function getKaryawan($nama, $cbid) {
+        $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_nama LIKE '%$nama%' AND kr_cbid = '$cbid' ORDER BY kr_nama");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil jabatan
+     * @param type $data
+     * @return boolean
+     */
+    public function getJabatanByDepartemen($departemen) {
+        $sql = $this->db->query("SELECT * FROM ms_jabatan WHERE jab_deptid = '$departemen' ORDER BY jab_deskripsi");
+        if ($sql->num_rows() > 0) {
+            return $sql->result();
         }
         return null;
     }
@@ -410,7 +532,6 @@ class Model_Admin extends CI_Model {
      */
     public function getCabang() {
         $sql = $this->db->query("SELECT * FROM ms_cabang WHERE cb_status = 0 ORDER BY cb_nama");
-        log_message('error', 'DDDDDDDD ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -448,6 +569,19 @@ class Model_Admin extends CI_Model {
      * @param type $data
      * @return boolean
      */
+    public function getKotaByPropinsi($propid) {
+        $sql = $this->db->query("SELECT * FROM ms_kota WHERE kota_propid = '$propid' ORDER BY kota_deskripsi");
+        if ($sql->num_rows() > 0) {
+            return $sql->result();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil rol
+     * @param type $data
+     * @return boolean
+     */
     public function getCabangById($id) {
         $sql = $this->db->query("SELECT * FROM ms_cabang WHERE cbid = '$id'");
         if ($sql->num_rows() > 0) {
@@ -465,6 +599,25 @@ class Model_Admin extends CI_Model {
         $this->db->trans_begin();
         $this->db->where('roleid', $role['roleid']);
         $this->db->update('ms_role', $role);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    /**
+     * 
+     * @param type $role
+     * @return boolean
+     */
+    function updateKaryawan($data) {
+        $this->db->trans_begin();
+        $this->db->where('krid', $data['krid']);
+        $this->db->update('ms_karyawan', $data);
+        log_message('error', 'AAAAAAAAAAA ' . $this->db->last_query());
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             return false;
@@ -516,15 +669,11 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     function hapusCabang($data) {
-        $this->db->trans_begin();
         $this->db->query("UPDATE ms_cabang SET cb_status = 1 WHERE cbid = '$data'");
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-            return false;
-        } else {
-            $this->db->trans_commit();
+        if ($this->db->affected_rows() > 0) {
             return true;
         }
+        return false;
     }
 
     /**
@@ -533,15 +682,25 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     function hapusKaryawan($data) {
-        $this->db->trans_begin();
         $this->db->query("UPDATE ms_karyawan SET kr_status = 1 WHERE krid = '$data'");
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-            return false;
-        } else {
-            $this->db->trans_commit();
+        if ($this->db->affected_rows() > 0) {
             return true;
         }
+        return false;
+    }
+
+    /**
+     * 
+     * @param type $role
+     * @return boolean
+     */
+    function resetPassword($data) {
+        $password = sha1("123456");
+        $this->db->query("UPDATE ms_karyawan SET kr_password = '$password' WHERE krid = '$data'");
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        }
+        return false;
     }
 
     function updateJabatan($jab) {
@@ -619,7 +778,7 @@ class Model_Admin extends CI_Model {
         if ($this->db->affected_rows() > 0) {
             return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -647,6 +806,29 @@ class Model_Admin extends CI_Model {
                     'roledet_roleid' => $det['roledet_roleid'],
                 );
                 $this->db->INSERT('ms_role_det', $array);
+            }
+        }
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    function updateUserRole($role) {
+        $this->db->trans_begin();
+        foreach ($role as $det) {
+            $this->db->where('userro_krid', $det['userro_krid']);
+            $this->db->where('userro_roleid', $det['userro_roleid']);
+            $this->db->delete('ms_user_role');
+            if ($det['check'] == 1) {
+                $array = array(
+                    'userro_krid' => $det['userro_krid'],
+                    'userro_roleid' => $det['userro_roleid'],
+                );
+                $this->db->INSERT('ms_user_role', $array);
             }
         }
         if ($this->db->trans_status() === FALSE) {
@@ -694,14 +876,14 @@ class Model_Admin extends CI_Model {
     function updateGroupCabang($data, $krid) {
         $this->db->trans_begin();
         $this->db->where('group_krid', $krid);
-        $this->db->delete('ms_groupcabang');
+        $this->db->delete('ms_group_cabang');
         foreach ($data as $det) {
             if ($det['check'] == 1) {
                 $array = array(
                     'group_krid' => $det['group_krid'],
                     'group_cbid' => $det['group_cbid'],
                 );
-                $this->db->INSERT('ms_groupcabang', $array);
+                $this->db->INSERT('ms_group_cabang', $array);
             }
         }
         if ($this->db->trans_status() === FALSE) {

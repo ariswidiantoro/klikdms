@@ -26,8 +26,7 @@ class Welcome extends Application {
      */
     public function index() {
         $this->load->model('model_admin');
-        $this->data['header'] = $this->model_admin->getMenuModule();
-        $this->load->view('template', $this->data);
+        $this->load->view('attribut/login', $this->data);
     }
 
 //    public function admin() {
@@ -52,14 +51,13 @@ class Welcome extends Application {
 
     public function akses() {
         $this->data['content'] = 'attribut/akses';
-        $this->load->view('template', $this->data);
+        $this->load->view('attribut/akses', $this->data);
 //        $this->load->view('attribut/akses');
     }
 
     public function home() {
         $this->load->model('model_admin');
-        $this->data['content'] = 'attribut/home';
-        $this->data['menuid'] = '1';
+        $this->load->model('model_admin');
         $this->data['header'] = $this->model_admin->getMenuModule();
         $this->load->view('template', $this->data);
     }
@@ -87,7 +85,7 @@ class Welcome extends Application {
                 $this->session->set_userdata('cbid', $cbid);
                 $this->session->set_userdata('cb_nama', $cbg['cb_nama']);
                 $this->session->set_userdata('krid', $data_user['krid']);
-                $this->session->set_userdata('login_administr', 'true');
+                $this->session->set_userdata('isLogin', 'true');
                 redirect('welcome/home');
             } else {
                 $this->session->set_flashdata('msg', $this->error("Username / Password Tidak Terdaftar"));

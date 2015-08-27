@@ -8,9 +8,9 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#admin/addCabang" class="btn btn-sm btn-primary">
+            <a href="#admin/addKaryawan" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Cabang</a>
+                Tambah Karyawan</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
@@ -22,15 +22,12 @@ echo $this->session->flashdata('msg');
 
 
 <script type="text/javascript">
-   var scripts = [null, null]
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-        //inline scripts related to this page
-    });
-    function hapusCabang(id) {
-        if (confirm("Yakin ingin menghapus baris ini ?")) {
+
+    function resetPassword(id) {
+        if (confirm("Yakin ingin mereset user ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('admin/hapusCabang'); ?>',
+                url: '<?php echo site_url('admin/resetPassword'); ?>',
                 dataType: "json",
                 data: {
                     id: id
@@ -45,22 +42,20 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         getData();
-    
         function getData()
         {
             jQuery("#grid-table").jqGrid({
-                url:'<?php echo site_url('admin/loadCabang') ?>',      //another controller function for generating data
+                url:'<?php echo site_url('admin/loadUserRole') ?>',      //another controller function for generating data
                 mtype : "post",             //Ajax request type. It also could be GET
                 datatype: "json",            //supported formats XML, JSON or Arrray
-                colNames:['Kode Cabang','Nama','Alamat','Telpon','NPWP', 'Edit', 'Hapus'],       //Grid column headings
+                colNames:['NIK','Nama', 'Username','Role','Group Cabang', 'Reset Pswd'],       //Grid column headings
                 colModel:[
-                    {name:'cbid',index:'cbid', width:70, align:"left"},
-                    {name:'cb_nama',index:'cb_nama', width:100, align:"left"},
-                    {name:'cb_alamat',index:'cb_alamat', width:100, align:"left"},
-                    {name:'cb_telpon',index:'cb_telpon', width:100, align:"left"},
-                    {name:'cb_npwp',index:'cb_npwp', width:100, align:"left"},
-                    {name:'edit',index:'edit', width:30, align:"center"},
-                    {name:'hapus',index:'hapus', width:30, align:"center"},
+                    {name:'kr_nik',index:'kr_nik', width:50, align:"left"},
+                    {name:'kr_nama',index:'kr_nama', width:90, align:"left"},
+                    {name:'kr_username',index:'kr_username', width:70, align:"left"},
+                    {name:'role',index:'role', width:20, align:"center"},
+                    {name:'group',index:'group', width:30, align:"center"},
+                    {name:'password',index:'password', width:20, align:"center"},
                 ],
                 rowNum:10,
                 height : 300,
@@ -68,11 +63,11 @@ echo $this->session->flashdata('msg');
                 //height: 300,
                 rowList:[10,20,30],
                 pager: '#pager',
-                sortname: 'cb_nama',
+                sortname: 'kr_nama',
                 viewrecords: true,
                 rownumbers: true,
                 gridview: true,
-                caption:"Daftar Cabang"
+                caption:"Daftar Karyawan"
             }).navGrid('#pager',{edit:false,add:false,del:false});
         }
     
@@ -93,6 +88,9 @@ echo $this->session->flashdata('msg');
     });
     
     
- 
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });
 </script> 
 

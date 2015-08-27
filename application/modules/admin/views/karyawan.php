@@ -8,7 +8,7 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#admin/addCabang" class="btn btn-sm btn-primary">
+            <a href="#admin/addKaryawan" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Karyawan</a>
         </p>
@@ -22,7 +22,11 @@ echo $this->session->flashdata('msg');
 
 
 <script type="text/javascript">
-
+   
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });
     function hapusKaryawan(id) {
         if (confirm("Yakin ingin menghapus baris ini ?")) {
             $.ajax({
@@ -42,20 +46,18 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         getData();
-    
         function getData()
         {
             jQuery("#grid-table").jqGrid({
                 url:'<?php echo site_url('admin/loadKaryawan') ?>',      //another controller function for generating data
                 mtype : "post",             //Ajax request type. It also could be GET
                 datatype: "json",            //supported formats XML, JSON or Arrray
-                colNames:['NIK','Nama','Alamat','Hp','Jabatan','Nomor KTP','Username', 'Edit', 'Hapus'],       //Grid column headings
+                colNames:['NIK','Nama','Alamat','Hp','Nomor KTP','Username', 'Edit', 'Hapus'],       //Grid column headings
                 colModel:[
                     {name:'kr_nik',index:'kr_nik', width:50, align:"left"},
                     {name:'kr_nama',index:'kr_nama', width:90, align:"left"},
                     {name:'kr_alamat',index:'kr_alamat', width:100, align:"left"},
                     {name:'kr_hp',index:'kr_hp', width:100, align:"left"},
-                    {name:'jab_deskripsi',index:'jab_deskripsi', width:100, align:"left"},
                     {name:'kr_nomor_ktp',index:'kr_nomor_ktp', width:70, align:"left"},
                     {name:'kr_username',index:'kr_username', width:70, align:"left"},
                     {name:'edit',index:'edit', width:30, align:"center"},
@@ -91,10 +93,6 @@ echo $this->session->flashdata('msg');
         })
     });
     
-    
-    var scripts = [null, null]
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-        //inline scripts related to this page
-    });
+ 
 </script> 
 

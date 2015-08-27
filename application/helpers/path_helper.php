@@ -264,15 +264,6 @@ if (!function_exists('is_logged_in')) {
     }
 
 }
-if (!defined('isLogin')) {
-    $this->load->library(array('system', 'cache', 'session'));
-    $CI = & get_instance();
-    $userid = $CI->session->userdata('login_administr');
-    if ($userid == "") {
-        $userid = data_cookie("login_administr");
-    }
-    define("isLogin", $userid);
-}
 
 function whereLoad() {
     $searchField = isset($_POST['searchField']) ? $_POST['searchField'] : false;

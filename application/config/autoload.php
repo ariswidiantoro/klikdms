@@ -53,6 +53,7 @@ $autoload['packages'] = array();
 */
 
 $autoload['libraries'] = array('form_validation','session','database','user_agent', 'pagination');
+//$autoload['libraries'] = array('form_validation','session','database','user_agent', 'pagination');
 
 
 /*
@@ -63,7 +64,7 @@ $autoload['libraries'] = array('form_validation','session','database','user_agen
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-
+//$CI->load->library('session');
 $autoload['helper'] = array('url','path_helper', 'system_helper');
 
 

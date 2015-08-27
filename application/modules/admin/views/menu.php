@@ -22,6 +22,11 @@ echo $this->session->flashdata('msg');
 
 
 <script type="text/javascript">
+    
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });  
     function search() {
         $('#tt').treegrid('reload', {menu_nama:$("#nama").val()}); 
     }
@@ -89,10 +94,6 @@ echo $this->session->flashdata('msg');
         })
     });
     
-    
-    var scripts = [null, null]
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-        //inline scripts related to this page
-    });
+
 </script> 
 

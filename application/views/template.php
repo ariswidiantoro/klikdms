@@ -71,6 +71,8 @@
                 <div class="navbar-buttons navbar-header pull-left" role="navigation">
                     <ul class="nav ace-nav">
                         <?php
+                        $this->load->model('model_admin');
+                        $header = $this->model_admin->getMenuModule();
                         foreach ($header as $value) {
                             ?>
                             <li class="transparent">
@@ -169,8 +171,12 @@
                         <span class="btn btn-danger"></span>
                     </div>
                 </div><!-- /.sidebar-shortcuts -->
-
+                <script type="text/javascript">
+            
+                    window.jQuery || document.write("<script src='<?php echo path_js(); ?>jquery.js'>"+"<"+"/script>");
+                </script>
                 <?php $this->load->view('attribut/menu') ?>
+
 
                 <!-- #section:basics/sidebar.layout.minimize -->
                 <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
@@ -354,10 +360,7 @@
 
         <!--[if !IE]> -->
 
-        <script type="text/javascript">
-            
-            window.jQuery || document.write("<script src='<?php echo path_js(); ?>jquery.js'>"+"<"+"/script>");
-        </script>
+
 
         <!-- <![endif]-->
 
@@ -370,6 +373,7 @@ window.jQuery || document.write("<script src='../../assets/js/jquery1x.js'>"+"<"
             if('ontouchstart' in document.documentElement) document.write("<script src='<?php echo path_js(); ?>jquery.mobile.custom.js'>"+"<"+"/script>");
         </script>
         <script src="<?php echo path_js(); ?>bootstrap.js"></script>
+        <script src="<?php echo path_js(); ?>jquery-ui.js"></script>
 
         <!-- ace scripts -->
         <script src="<?php echo path_js(); ?>ace/elements.scroller.js"></script>

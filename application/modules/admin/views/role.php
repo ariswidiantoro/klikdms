@@ -21,70 +21,12 @@ echo $this->session->flashdata('msg');
 
 
 <script type="text/javascript">
-    function search() {
-        $('#tt').treegrid('reload', {menu_nama:$("#nama").val()}); 
-    }
-    function addMenu()
-    {
-        document.formMenu.reset();
-        $('#Action').val('add');
-        $("#AccSubFrom").removeAttr('disabled');
-        $('#myModal').modal('show');
-    }
+       
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });
 
-    function deleteMenu(id) {
-        if (confirm("Yakin ingin menghapus baris ini ?")) {
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo site_url('administrator/hapus_menu'); ?>',
-                dataType: "json",
-                data: {
-                    menuid: id
-                },
-                success: function(data) {
-                    if (data) {
-                        window.location.href = '<?php echo site_url('administrator/menu') ?>';
-                    } else {
-                        alert("gagal menghapus");
-                    }
-                }
-            });
-        }
-    }
-
-    function editMenu(id)
-    {
-        document.formMenu.reset();
-        $.ajax({
-            type: 'POST',
-            url: "<?php echo base_url() ?>administrator/get_menu_by_id",
-            dataType: "json",
-            async: false,
-            data: {
-                menuid: id
-            },
-            success: function(data) {
-                if (data) {
-                    $('#Action').val('update');
-                    $("#menuid").val(id);
-                    $("#menu_nama").val(data['menu_nama']);
-                    $("#menu_type").val(data['menu_type']);
-                    $("#menu_url").val(data['menu_url']);
-                    $("#menu_deskripsi").val(data['menu_deskripsi']);
-                    $("#menu_icon").val(data['menu_icon']);
-                    $('#menu_parentid').val(data['menu_parentid']);
-                    if (data['menu_isactive'] == '1') {
-                        $("#menu_isactive").attr('checked', true);
-                    } else {
-                        $('#menu_isactive').attr('checked', false);
-                    }
-                    $('#myModal').modal('show');
-                }
-            }
-        });
-    }
-
-    
     $(document).ready(function (){
         
         jQuery("#grid-table").jqGrid({
@@ -125,10 +67,6 @@ echo $this->session->flashdata('msg');
         })
     });
     
-    
-    var scripts = [null, null]
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-        //inline scripts related to this page
-    });
+
 </script> 
 

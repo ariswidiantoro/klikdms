@@ -124,21 +124,22 @@ class Application extends CI_Controller {
      * method untuk menampikan pesan kesalahan
      */
 
-    protected function check_login() {
+    protected function isLogin() {
         $login = isLogin;
         if (empty($login)) {
-            redirect(site_url("welcome/login"));
+            redirect(site_url("welcome/index"));
         }
     }
+
     /*
      * method untuk menampikan pesan kesalahan
      */
 
     protected function hakAkses($id) {
         $this->load->model('model_admin');
-        log_message('error', 'ID = '.$id);
         $check = $this->model_admin->hakAkses($id);
         if (!$check) {
+//            $this->load->view('attribut/akses', $this->data);
             redirect(site_url("welcome/akses"));
         }
     }

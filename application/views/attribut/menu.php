@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo path_js(); ?>jquery.min.js"></script>
+<!--<script type="text/javascript" src="<?php echo path_js(); ?>jquery.js"></script>-->
 <script type="text/javascript">
    
     $(document).ready(function() {

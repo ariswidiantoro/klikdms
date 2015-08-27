@@ -1,18 +1,13 @@
-<form class="form-horizontal" method="post" action="<?php echo base_url() ?>administrator/updateGroupCabang" id="formRole" name="formRole">
+<div id="result"></div>
+<form class="form-horizontal" method="post" action="<?php echo base_url() ?>admin/updateGroupCabang" id="formRole" name="formRole">
     <input type="hidden" id="krid" name="krid" value="<?php echo $krid ?>">
-<!--    <div  class="form-group" style="margin-left: 0px;">
-        <label class="col-sm-1 control-label no-padding-right" for="form-field-1">Nama Cabang</label>
-        <div class="col-sm-9">
+    <div  class="form-group" style="margin-left: 0px;">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Karyawan</label>
+        <div class="col-sm-8">
+            <input type="hidden" name="krid" id="krid" value="<?php echo $karyawan['krid']; ?>">
+            <input type="text" name="kr_nama" readonly="readonly" value="<?php echo $karyawan['kr_nama'] ?>" id="kr_nama"/>
         </div>
-    </div>-->
-<!--    <div  class="form-group" style="margin-left: 0px;">
-        <label class="col-sm-1 control-label no-padding-right" for="form-field-1">Cari Cabang</label>
-        <div class="col-sm-9">
-            <input type="text" class="col-xs-10 col-sm-5" name="cari_menu" id="cari_menu"/>
-            <button class="btn btn-sm btn-primary" onclick="carimenu()">Cari</button>
-        </div>
-    </div>-->
-
+    </div>
     <table style="width: 100%" id="table" class="table table-striped table-bordered table-hover">
         <thead>
             <tr class="timetable">
@@ -63,32 +58,6 @@
 
 </form>
 <script type="text/javascript">
-    
-    $(this).ready(function() {
-        $('#formRole').submit(function() {
-            $.ajax({
-                type: 'POST',
-                url: $(this).attr('action'),
-                dataType: "json",
-                async: false,
-                data: $(this).serialize(),
-                success: function(data) {
-                    if (data) {
-                        window.location.href = '<?php echo site_url('administrator/groupCabang') ?>';
-                    }else{
-                        alert("Data Gagal disimpan");
-                    }
-                }
-            })
-            return false;
-        });
-
-    });
-    
-    function carimenu()
-    {
-        window.location.href = '<?php echo site_url('administrator/editRoleDetail') ?>'+'/'+$('#roleid').val()+'/'+$('#cari_menu').val();
-    }
     $(function() {
         $('table th input:checkbox').on('click', function() {
             var that = this;
@@ -113,4 +82,27 @@
             return 'left';
         }
     });
+    $(this).ready(function() {
+        $('#formRole').submit(function() {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                dataType: "json",
+                async: false,
+                data: $(this)
+                .serialize(),
+                success: function(data) {
+                    window.scrollTo(0, 0);
+                    $("#result").html(data).show().fadeIn("slow");
+                }
+            })
+            return false;
+        });
+
+    });
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });
+    
 </script>

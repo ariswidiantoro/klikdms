@@ -13,13 +13,13 @@ class Admin extends Application {
     public function __construct() {
         parent::__construct();
         $this->load->model('model_admin');
-//        $this->hakAkses(1);
-//        $this->check_login();
+        $this->hakAkses(6);
+        $this->isLogin();
     }
 
     public function index() {
+        $this->hakAkses(6);
         $this->data['content'] = 'admin';
-        $this->data['header'] = $this->model_admin->getMenuModule();
         $this->data['menuid'] = '6';
         $this->data['menu'] = 'attribut/menu';
         $this->load->view('template', $this->data);
@@ -41,12 +41,12 @@ class Admin extends Application {
      * @since 1.0
      */
     public function menu() {
-//        $this->hakAkses(2);
+        $this->hakAkses(8);
         $this->load->view('menu', $this->data);
     }
 
     public function departemen() {
-//        $this->hakAkses(2);
+        $this->hakAkses(21);
         $this->load->view('departemen', $this->data);
     }
 
@@ -56,8 +56,18 @@ class Admin extends Application {
      * @since 1.0
      */
     public function dataKaryawan() {
-//        $this->hakAkses(75);
+        $this->hakAkses(23);
         $this->load->view('karyawan', $this->data);
+    }
+
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function userRole() {
+//        $this->hakAkses(75);
+        $this->load->view('userRole', $this->data);
     }
 
     /**
@@ -96,12 +106,12 @@ class Admin extends Application {
      * @since 1.0
      */
     public function groupCabang() {
-//        $this->hakAkses(77);
+        $this->hakAkses(77);
         $this->load->view('groupCabang', $this->data);
     }
 
     public function getMenuSortUrut() {
-        echo json_encode($this->model_admin->getMenuSortUrut());
+        echo json_encode($this->model_admin->getSubMenu());
     }
 
     /**
@@ -120,18 +130,60 @@ class Admin extends Application {
         $this->load->view('addPerusahaan', $this->data);
     }
 
+    function jsonJabatan() {
+        $departemen = $this->input->post('departemen');
+        echo json_encode($this->model_admin->getJabatanByDepartemen($departemen));
+    }
+
+    function jsonKota() {
+        $propid = $this->input->post('propid');
+        echo json_encode($this->model_admin->getKotaByPropinsi($propid));
+    }
+
+    function jsonKaryawan() {
+        $nama = $this->input->post('param');
+        $cbid = $this->input->post('cbid');
+        $data['response'] = 'false';
+        $query = $this->model_admin->getKaryawan($nama, $cbid);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+//                log_message('error', ' errrrr ' . $row['mb_member_id']);
+                $data['message'][] = array('value' => $row['kr_nama'], 'krid' => $row['krid'], 'desc' => $row['kr_nama']);
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+        }
+        echo json_encode($data);
+    }
+
     /**
      * This function is used for display the exmination form
      * @author Aris
      * @since 1.0
      */
     public function addKaryawan() {
-        $this->hakAkses(75);
-        $this->data['title'] = 'Tambah Karyawan';
-        $this->data['content'] = 'addKaryawan';
+//        $this->hakAkses(75);
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->data['departemen'] = $this->model_admin->getDepartemen();
         $this->data['jabatan'] = $this->model_admin->getJabatan();
         $this->data['cabang'] = $this->model_admin->getCabang();
-        $this->load->view('template', $this->data);
+        $this->load->view('addKaryawan', $this->data);
+    }
+
+    public function editKaryawan() {
+//        $this->hakAkses(75);
+        $id = $this->input->GET('id');
+        $kar = $this->model_admin->getKaryawanById($id);
+        $this->data['kar'] = $kar;
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->data['kota'] = $this->model_admin->getKotaByPropinsi($kar['kota_propid']);
+        $this->data['departemen'] = $this->model_admin->getDepartemen();
+        $this->data['jabatan'] = $this->model_admin->getJabatanByDepartemen($kar['jab_deptid']);
+        $this->data['atasan'] = $this->model_admin->getKaryawanById($kar['kr_atasan']);
+        $this->data['cabang'] = $this->model_admin->getCabang();
+        $this->load->view('editKaryawan', $this->data);
     }
 
     /**
@@ -255,6 +307,86 @@ class Admin extends Application {
                 $responce->rows[$i]['id'] = $row->menuid;
                 $responce->rows[$i]['cell'] = array(
                     $row->menu_nama, $row->menu_deskripsi, $row->menu_url, $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    function loadKaryawan() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'kr_nama';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_admin');
+        $count = $this->model_admin->getTotalKaryawan($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_admin->getAllKaryawan($start, $limit, $sidx, $sord, $where);
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $hapus = '-';
+                $edit = '-';
+                if ($row->kr_status == '0') {
+                    $del = "hapusKaryawan('" . $row->krid . "')";
+                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                    $edit = '<a href="#admin/editKaryawan?id=' . $row->krid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                }
+                $responce->rows[$i]['id'] = $row->krid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->kr_nik, $row->kr_nama, $row->kr_alamat, $row->kr_hp, $row->kr_nomor_ktp, $row->kr_username, $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    /**
+     * 
+     */
+    function loadUserRole() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'kr_nama';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_admin');
+        $count = $this->model_admin->getTotalKaryawan($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_admin->getAllKaryawan($start, $limit, $sidx, $sord, $where);
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $editRole = '<a href="#admin/editUserRole?id=' . $row->krid . '" title="Edit User Role"><i class="ace-icon fa fa-cogs bigger-120 green"></i>';
+                $group = '<a href="#admin/editGroupCabang?id=' . $row->krid . '" title="Edit Group Cabang"><i class="ace-icon fa fa-globe green"></i>';
+                $rst = "resetPassword('" . $row->krid . "')";
+                $resetPassword = '<a href="javascript:;" onclick="' . $rst . '" title="Reset Password"><i class="ace-icon fa fa-key green"></i>';
+                $responce->rows[$i]['id'] = $row->krid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->kr_nik, $row->kr_nama, $row->kr_username, $editRole, $group, $resetPassword);
                 $i++;
             }
         echo json_encode($responce);
@@ -408,31 +540,76 @@ class Admin extends Application {
     /**
      * Function ini digunakan untuk menyimpan karyawan
      */
-    public function simpanKaryawan() {
+    public function saveKaryawan() {
         $this->form_validation->set_rules('kr_nama', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
+            $tgl = $this->input->post('kr_tgl_lahir');
+            if (empty($tgl)) {
+                $tgl = '2015-01-01';
+            }
             $data = array(
                 'kr_nik' => $this->input->post('kr_nik'),
                 'kr_nama' => $this->input->post('kr_nama'),
+                'kr_kotaid' => $this->input->post('kr_kotaid'),
                 'kr_alamat' => $this->input->post('kr_alamat'),
-                'kr_jabatanid' => $this->input->post('kr_jabatanid'),
-                'kr_nomorktp' => $this->input->post('kr_nomorktp'),
+                'kr_jabid' => $this->input->post('kr_jabid'),
+                'kr_atasan' => $this->input->post('kr_atasanid'),
+                'kr_nomor_ktp' => $this->input->post('kr_nomor_ktp'),
                 'kr_cbid' => $this->input->post('kr_cbid'),
                 'kr_username' => $this->input->post('kr_username'),
                 'kr_password' => sha1('123456'),
                 'kr_hp' => $this->input->post('kr_hp'),
                 'kr_email' => $this->input->post('kr_email'),
                 'kr_tempat_lahir' => $this->input->post('kr_tempat_lahir'),
-                'kr_tgl_lahir' => dateToIndo($this->input->post('kr_tgl_lahir')),
+                'kr_tgl_lahir' => dateToIndo($tgl),
             );
-            $hasil = $this->model_admin->simpanKaryawan($data);
+            $hasil = $this->model_admin->saveKaryawan($data);
             if ($hasil) {
-                $this->session->set_flashdata('msg', $this->sukses("Berhasil menyimpan karyawan"));
+                $hasil = $this->sukses("Berhasil menyimpan karyawan");
             } else {
-                $this->session->set_flashdata('msg', $this->error("Gagal menyimpan karyawan"));
+                $hasil = $this->error("Gagal menyimpan karyawan");
             }
         }
-        redirect('administrator/karyawan');
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan karyawan
+     */
+    public function updateKaryawan() {
+        $this->form_validation->set_rules('kr_nama', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $tgl = $this->input->post('kr_tgl_lahir');
+            if (empty($tgl)) {
+                $tgl = '2015-01-01';
+            }
+//            $kota = $this->input->post('kr_kotaid');
+//            log_message('error', 'KOTA '.$kota);
+            $data = array(
+                'krid' => $this->input->post('krid'),
+                'kr_nik' => $this->input->post('kr_nik'),
+                'kr_nama' => $this->input->post('kr_nama'),
+                'kr_kotaid' => $this->input->post('kr_kotaid'),
+                'kr_alamat' => $this->input->post('kr_alamat'),
+                'kr_jabid' => $this->input->post('kr_jabid'),
+                'kr_atasan' => $this->input->post('kr_atasanid'),
+                'kr_nomor_ktp' => $this->input->post('kr_nomor_ktp'),
+                'kr_cbid' => $this->input->post('kr_cbid'),
+                'kr_username' => $this->input->post('kr_username'),
+                'kr_password' => sha1('123456'),
+                'kr_hp' => $this->input->post('kr_hp'),
+                'kr_email' => $this->input->post('kr_email'),
+                'kr_tempat_lahir' => $this->input->post('kr_tempat_lahir'),
+                'kr_tgl_lahir' => dateToIndo($tgl),
+            );
+            $hasil = $this->model_admin->updateKaryawan($data);
+            if ($hasil) {
+                $hasil = $this->sukses("Berhasil menyimpan karyawan");
+            } else {
+                $hasil = $this->error("Gagal menyimpan karyawan");
+            }
+        }
+        echo json_encode($hasil);
     }
 
     /**
@@ -699,6 +876,43 @@ class Admin extends Application {
     }
 
     /**
+     * Dgunakan untuk edit role
+     */
+    function editUserRole() {
+        $id = $this->input->GET('id');
+        $role = $this->model_admin->getUserRoleByKrid($id);
+        $isi = array();
+        if (count($role) > 0) {
+            foreach ($role as $value) {
+                $isi[$value['userro_roleid']] = '1';
+            }
+        }
+        $this->data['user'] = $isi;
+        $this->data['role'] = $this->model_admin->getRole();
+        $this->data['karyawan'] = $this->model_admin->getKaryawanById($id);
+        $this->load->view("editUserRole", $this->data);
+    }
+
+//    /**
+//     * Dgunakan untuk edit role detail
+//     */
+//    function editGroupCabang() {
+//        $id = $this->input->GET('id');
+//        $this->data['karyawan'] = $this->model_admin->getKaryawanById($id);
+//
+//        $role = $this->model_admin->getGroupByKrid($id);
+//        $isi = array();
+//        if (count($role) > 0) {
+//            foreach ($role as $value) {
+//                $isi[$value['userro_roleid']] = '1';
+//            }
+//        }
+//        $this->data['user'] = $isi;
+//        $this->data['role'] = $this->model_admin->getRole();
+//        $this->load->view("editUserRole", $this->data);
+//    }
+
+    /**
      * Dgunakan untuk edit role detail
      */
     function getMenuDetail() {
@@ -728,14 +942,13 @@ class Admin extends Application {
      * Digunakan untuk mengedit grouo cabang
      */
     function editGroupCabang() {
-        $this->hakAkses(77);
+//        $this->hakAkses(77);
         $id = $this->input->GET('id');
-        $this->data['title'] = 'Edit Group Cabang';
+        $this->data['karyawan'] = $this->model_admin->getKaryawanById($id);
         $this->data['krid'] = $id;
-        $this->data['content'] = 'editGroupCabang';
         $this->data['cbid'] = $this->model_admin->getGroupCabangByUserId($id);
         $this->data['cabang'] = $this->model_admin->getCabang();
-        $this->load->view("template", $this->data);
+        $this->load->view("editGroupCabang", $this->data);
     }
 
     /**
@@ -874,13 +1087,13 @@ class Admin extends Application {
      * @since 1.0
      * @author Aris
      */
-    public function hapusPerusahaan() {
+    public function resetPassword() {
         $id = $this->input->post('id');
-        $hasil = $this->model_admin->hapusPerusahaan($id);
+        $hasil = $this->model_admin->resetPassword($id);
         if ($hasil) {
-            $hasil = $this->sukses("Berhasil menghapus perusahaan");
+            $hasil = $this->sukses("Berhasil menghapus cabang");
         } else {
-            $hasil = $this->error("Gagal menghapus perusahaan");
+            $hasil = $this->error("Gagal menghapus cabang");
         }
         echo json_encode($hasil);
     }
@@ -894,11 +1107,27 @@ class Admin extends Application {
         $id = $this->input->post('id');
         $hasil = $this->model_admin->hapusKaryawan($id);
         if ($hasil) {
-            $this->session->set_flashdata('msg', $this->sukses("Berhasil menghapus karyawan"));
+            $hasil = $this->sukses("Berhasil menghapus Karyawan");
         } else {
-            $this->session->set_flashdata('msg', $this->error("Gagal menghapus karyawan"));
+            $hasil = $this->error("Gagal menghapus cabang");
         }
-        echo json_encode("a");
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menghapus data produk
+     * @since 1.0
+     * @author Aris
+     */
+    public function hapusPerusahaan() {
+        $id = $this->input->post('id');
+        $hasil = $this->model_admin->hapusPerusahaan($id);
+        if ($hasil) {
+            $hasil = $this->sukses("Berhasil menghapus perusahaan");
+        } else {
+            $hasil = $this->error("Gagal menghapus perusahaan");
+        }
+        echo json_encode($hasil);
     }
 
     function updateRoleDetail() {
@@ -928,32 +1157,59 @@ class Admin extends Application {
         echo json_encode($hasil);
     }
 
-    function simpanUserRole() {
+    function updateUserRole() {
         $this->form_validation->set_rules('krid', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
-            $krid = $this->input->post('user_krid');
-            $roleid = $this->input->post('roleid');
+            $krid = $this->input->post('krid');
+            $role = $this->input->post('roleid');
             $arr = array();
-            for ($i = 0; $i < count($roleid); $i++) {
+            for ($i = 0; $i < count($role); $i++) {
                 $check = 0;
-                if ($this->input->post('check' . $roleid[$i]) == '1') {
+                if ($this->input->post('check' . $role[$i]) == '1') {
                     $check = 1;
                 }
                 $arr[] = array(
-                    'user_krid' => $krid,
-                    'user_roleid' => $roleid[$i],
+                    'userro_krid' => $krid,
+                    'userro_roleid' => $role[$i],
                     'check' => $check,
                 );
             }
-            $hasil = $this->model_admin->simpanUserRole($arr);
+            $hasil = $this->model_admin->updateUserRole($arr);
             if ($hasil) {
-                $this->session->set_flashdata('msg', $this->sukses("Berhasil mengupdate user role"));
+                $hasil = $this->sukses("Berhasil mengupdate role");
             } else {
-                $this->session->set_flashdata('msg', $this->error("Gagal mengupdate user role"));
+                $hasil = $this->error("Gagal mengupdate role");
             }
         }
-        redirect('administrator/karyawan');
+        echo json_encode($hasil);
     }
+
+//    function simpanUserRole() {
+//        $this->form_validation->set_rules('krid', '<b>Fx</b>', 'xss_clean');
+//        if ($this->form_validation->run() == TRUE) {
+//            $krid = $this->input->post('user_krid');
+//            $roleid = $this->input->post('roleid');
+//            $arr = array();
+//            for ($i = 0; $i < count($roleid); $i++) {
+//                $check = 0;
+//                if ($this->input->post('check' . $roleid[$i]) == '1') {
+//                    $check = 1;
+//                }
+//                $arr[] = array(
+//                    'user_krid' => $krid,
+//                    'user_roleid' => $roleid[$i],
+//                    'check' => $check,
+//                );
+//            }
+//            $hasil = $this->model_admin->simpanUserRole($arr);
+//            if ($hasil) {
+//                $this->session->set_flashdata('msg', $this->sukses("Berhasil mengupdate user role"));
+//            } else {
+//                $this->session->set_flashdata('msg', $this->error("Gagal mengupdate user role"));
+//            }
+//        }
+//        redirect('administrator/karyawan');
+//    }
 
     /**
      * Digunakan untuk mengupdate group cabang masing2 user
@@ -978,9 +1234,9 @@ class Admin extends Application {
             }
             $hasil = $this->model_admin->updateGroupCabang($arr, $krid);
             if ($hasil) {
-                $this->session->set_flashdata('msg', $this->sukses("Berhasil mengupdate group cabang"));
+                $hasil = $this->sukses("Berhasil mengupdate group cabang");
             } else {
-                $this->session->set_flashdata('msg', $this->error("Gagal mengupdate group cabang"));
+                $hasil = $this->error("Gagal mengupdate group cabang");
             }
         }
         echo json_encode($hasil);
@@ -989,47 +1245,46 @@ class Admin extends Application {
     /**
      * Function ini digunakan untuk mengambil data produk untuk ditampilkan di member manager
      */
-    public function loadKaryawan() {
-        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
-        $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 20;
-        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'kr_nama';
-        $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';
-        $nama = isset($_POST['isi']) ? trim($_POST['isi']) : ' ';
-        $kode = isset($_POST['kode']) ? trim($_POST['kode']) : '';
-        $offset = ($page - 1) * $rows;
-        $where = array('nama' => strtoupper($nama), 'sortby' => strtolower($kode));
-        $result["total"] = $this->model_admin->getTotalKaryawan($where);
-        $query = $this->model_admin->getAllKaryawan($sort, $order, $offset, $rows, $where);
-        if (count($query) > 0) {
-            foreach ($query as $row) {
-
-                $role = "<a href='" . site_url('administrator/addUserRole') . "/?id=" . $row['krid'] . "' class='green' title='Edit Role'><i class='ace-icon fa fa-cog  bigger-130'></i></a>";
-                $password = "<a href='javascript:;' onclick='updatePasword(" . $row['krid'] . ")' class='green' title='Edit Role'><i class='icon-road bigger-130'></i></a>";
-                $delete = 'deleteKaryawan("' . $row['krid'] . '")';
-                $edit = "<a href='" . site_url('administrator/editKaryawan') . "/?id=" . $row['krid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-pencil bigger-130'></i></a>";
-                $group = "<a href='" . site_url('administrator/editGroupCabang') . "/?id=" . $row['krid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-cog bigger-130'></i></a>";
-                $del = "" . "<a href='javascript:void(0)' onclick='$delete' class='red' title='Delete'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>";
-                $result['rows'][] = array(
-                    'nama' => $row['kr_nama'],
-                    'username' => $row['kr_username'],
-                    'nik' => $row['kr_nik'],
-                    'alamat' => $row['kr_alamat'],
-                    'hp' => $row['kr_hp'],
-                    'group' => $group,
-                    'ktp' => $row['kr_nomorktp'],
-                    'role' => $role,
-                    'jabatan' => $row['jabatan_deskripsi'],
-                    'password' => $password,
-                    'hapus' => $del,
-                    'edit' => $edit,
-                );
-            }
-        } else {
-            $result['rows'][] = array('id' => "");
-        }
-        echo json_encode($result);
-    }
-
+//    public function loadKaryawan() {
+//        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+//        $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 20;
+//        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'kr_nama';
+//        $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';
+//        $nama = isset($_POST['isi']) ? trim($_POST['isi']) : ' ';
+//        $kode = isset($_POST['kode']) ? trim($_POST['kode']) : '';
+//        $offset = ($page - 1) * $rows;
+//        $where = array('nama' => strtoupper($nama), 'sortby' => strtolower($kode));
+//        $result["total"] = $this->model_admin->getTotalKaryawan($where);
+//        $query = $this->model_admin->getAllKaryawan($sort, $order, $offset, $rows, $where);
+//        if (count($query) > 0) {
+//            foreach ($query as $row) {
+//
+//                $role = "<a href='" . site_url('administrator/addUserRole') . "/?id=" . $row['krid'] . "' class='green' title='Edit Role'><i class='ace-icon fa fa-cog  bigger-130'></i></a>";
+//                $password = "<a href='javascript:;' onclick='updatePasword(" . $row['krid'] . ")' class='green' title='Edit Role'><i class='icon-road bigger-130'></i></a>";
+//                $delete = 'deleteKaryawan("' . $row['krid'] . '")';
+//                $edit = "<a href='" . site_url('administrator/editKaryawan') . "/?id=" . $row['krid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-pencil bigger-130'></i></a>";
+//                $group = "<a href='" . site_url('administrator/editGroupCabang') . "/?id=" . $row['krid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-cog bigger-130'></i></a>";
+//                $del = "" . "<a href='javascript:void(0)' onclick='$delete' class='red' title='Delete'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>";
+//                $result['rows'][] = array(
+//                    'nama' => $row['kr_nama'],
+//                    'username' => $row['kr_username'],
+//                    'nik' => $row['kr_nik'],
+//                    'alamat' => $row['kr_alamat'],
+//                    'hp' => $row['kr_hp'],
+//                    'group' => $group,
+//                    'ktp' => $row['kr_nomorktp'],
+//                    'role' => $role,
+//                    'jabatan' => $row['jabatan_deskripsi'],
+//                    'password' => $password,
+//                    'hapus' => $del,
+//                    'edit' => $edit,
+//                );
+//            }
+//        } else {
+//            $result['rows'][] = array('id' => "");
+//        }
+//        echo json_encode($result);
+//    }
 }
 
 ?>

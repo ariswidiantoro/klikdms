@@ -679,7 +679,12 @@ if (!function_exists("arrayToObject")) {
  * update : 13/07/2012 10:50
  * -----------------------------------------------------------------------------
  */
-$CI = & get_instance();
+//$CI = & get_instance();
+
+$CI =& get_instance();
+
+$CI->load->library('session');
+
 //user id
 if (!defined('ses_userid')) {
     $userid = $CI->session->userdata('userid');
@@ -693,9 +698,9 @@ if (!defined('ses_userid')) {
 $CI = & get_instance();
 //user id
 if (!defined('isLogin')) {
-    $userid = $CI->session->userdata('login_administr');
+    $userid = $CI->session->userdata('isLogin');
     if ($userid == "") {
-        $userid = data_cookie("login_administr");
+        $userid = data_cookie("isLogin");
     }
     define("isLogin", $userid);
 }
