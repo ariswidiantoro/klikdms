@@ -11,7 +11,7 @@ class Model_Admin extends CI_Model {
         parent::__construct();
     }
 
-    /** TEST ARISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+    /** TEST ARISSSSklj/ld/fmsdvmdS:f;lS;fjWLKF.lksmweqweSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     /**
      * Function ini digunakan untuk mengambil menu
      * @param type $data
