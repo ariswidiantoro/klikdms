@@ -19,7 +19,7 @@ class admin extends Application {
 //        $this->check_login();
     }
     
-    
+    // INI DARI CONTROLLER BAWAH
     
 
     public function index() {
