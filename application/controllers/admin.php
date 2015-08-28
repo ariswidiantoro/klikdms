@@ -9,7 +9,7 @@ class admin extends Application {
 
     // INI TEST ADMINNNNNNNNNNNNNNNNNNNNnn
     
-    // INI CONTROLLER BAWAH
+    // INI CONTROLLER BAWAH BAWAHHHHHHHHHH
     
     /**
      * The new Admin_controller
