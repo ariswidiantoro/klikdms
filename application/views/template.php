@@ -73,12 +73,14 @@
                         <?php
                         $this->load->model('model_admin');
                         $header = $this->model_admin->getMenuModule();
-                        foreach ($header as $value) {
-                            ?>
-                            <li class="transparent">
-                                <a href="<?php echo site_url($value['menu_url']); ?>"><i class="<?php echo $value['menu_icon'] ?>"></i>&nbsp;<?php echo $value['menu_nama'] ?></a>
-                            </li>
-                            <?php
+                        if (count($header > 0)) {
+                            foreach ($header as $value) {
+                                ?>
+                                <li class="transparent">
+                                    <a href="<?php echo site_url($value['menu_url']); ?>"><i class="<?php echo $value['menu_icon'] ?>"></i>&nbsp;<?php echo $value['menu_nama'] ?></a>
+                                </li>
+                                <?php
+                            }
                         }
                         ?>
                     </ul>
@@ -89,7 +91,7 @@
                             <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                                 <span class="user-info">
                                     <small>Welcome,</small>
-                                    <?php echo ses_username; ?>
+<?php echo ses_username; ?>
                                 </span>
 
                                 <i class="ace-icon fa fa-caret-down"></i>
@@ -175,7 +177,7 @@
             
                     window.jQuery || document.write("<script src='<?php echo path_js(); ?>jquery.js'>"+"<"+"/script>");
                 </script>
-                <?php $this->load->view('attribut/menu') ?>
+<?php $this->load->view('attribut/menu') ?>
 
 
                 <!-- #section:basics/sidebar.layout.minimize -->

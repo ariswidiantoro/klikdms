@@ -3,7 +3,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Menu</label>
         <div class="col-sm-8">
-            <input type="text" name="menu_nama" id="menu_nama" placeholder="Nama Menu" class="col-xs-10 col-sm-5" />
+            <input type="text" name="menu_nama" maxlength="20" id="menu_nama" placeholder="Nama Menu" class="col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="form-group">
