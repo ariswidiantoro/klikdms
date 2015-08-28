@@ -89,7 +89,7 @@
                             <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                                 <span class="user-info">
                                     <small>Welcome,</small>
-                                    Jason
+                                    <?php echo ses_username; ?>
                                 </span>
 
                                 <i class="ace-icon fa fa-caret-down"></i>
@@ -104,7 +104,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="#page/profile">
+                                    <a href="#admin/profile" data-url="admin/">
                                         <i class="ace-icon fa fa-user"></i>
                                         Profile
                                     </a>
@@ -113,7 +113,7 @@
                                 <li class="divider"></li>
 
                                 <li>
-                                    <a href="#">
+                                    <a href="<?php echo site_url('welcome/logout') ?>">
                                         <i class="ace-icon fa fa-power-off"></i>
                                         Logout
                                     </a>

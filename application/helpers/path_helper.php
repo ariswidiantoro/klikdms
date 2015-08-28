@@ -19,6 +19,14 @@ if (!function_exists('path_css_admin')) {
     }
 
 }
+if (!function_exists('path_avatar')) {
+
+    function path_avatar($uri = '') {
+        $CI = & get_instance();
+        return $CI->config->item('path_avatar');
+    }
+
+}
 
 /**
  * 

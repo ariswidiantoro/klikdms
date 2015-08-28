@@ -13,8 +13,8 @@ class Admin extends Application {
     public function __construct() {
         parent::__construct();
         $this->load->model('model_admin');
-        $this->hakAkses(6);
         $this->isLogin();
+        $this->hakAkses(6);
     }
 
     public function index() {
@@ -50,6 +50,12 @@ class Admin extends Application {
         $this->load->view('departemen', $this->data);
     }
 
+    public function profile() {
+//        $this->hakAkses(21);
+        $this->data['karyawan'] = $this->model_admin->getKaryawanById(ses_krid);
+        $this->load->view('profile', $this->data);
+    }
+
     /**
      * This function is used for display the exmination form
      * @author Aris
@@ -81,12 +87,12 @@ class Admin extends Application {
     }
 
     public function jabatan() {
-//        $this->hakAkses(76);
+        $this->hakAkses(22);
         $this->load->view('jabatan', $this->data);
     }
 
     public function perusahaan() {
-//        $this->hakAkses(76);
+        $this->hakAkses(20);
         $this->load->view('perusahaan', $this->data);
     }
 
@@ -96,7 +102,7 @@ class Admin extends Application {
      * @since 1.0
      */
     public function role() {
-//        $this->hakAkses(5);
+        $this->hakAkses(11);
         $this->load->view('role', $this->data);
     }
 
@@ -105,10 +111,10 @@ class Admin extends Application {
      * @author Aris
      * @since 1.0
      */
-    public function groupCabang() {
-        $this->hakAkses(77);
-        $this->load->view('groupCabang', $this->data);
-    }
+//    public function groupCabang() {
+//        $this->hakAkses(77);
+//        $this->load->view('groupCabang', $this->data);
+//    }
 
     public function getMenuSortUrut() {
         echo json_encode($this->model_admin->getSubMenu());
@@ -120,13 +126,13 @@ class Admin extends Application {
      * @since 1.0
      */
     public function addMenu() {
-//        $this->hakAkses(2);
+        $this->hakAkses(8);
         $this->data['menu'] = $this->model_admin->getMenuSort('', '');
         $this->load->view('addMenu', $this->data);
     }
 
     public function addPerusahaan() {
-//        $this->hakAkses(2);
+        $this->hakAkses(20);
         $this->load->view('addPerusahaan', $this->data);
     }
 
@@ -164,7 +170,7 @@ class Admin extends Application {
      * @since 1.0
      */
     public function addKaryawan() {
-//        $this->hakAkses(75);
+        $this->hakAkses(12);
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->data['departemen'] = $this->model_admin->getDepartemen();
         $this->data['jabatan'] = $this->model_admin->getJabatan();
@@ -173,7 +179,7 @@ class Admin extends Application {
     }
 
     public function editKaryawan() {
-//        $this->hakAkses(75);
+        $this->hakAkses(12);
         $id = $this->input->GET('id');
         $kar = $this->model_admin->getKaryawanById($id);
         $this->data['kar'] = $kar;
@@ -192,7 +198,7 @@ class Admin extends Application {
      * @since 1.0
      */
     public function addRole() {
-//        $this->hakAkses(5);
+        $this->hakAkses(11);
         $this->data['content'] = 'addrole';
         $this->load->view('addrole', $this->data);
     }
@@ -203,7 +209,7 @@ class Admin extends Application {
      * @since 1.0
      */
     public function addCabang() {
-//        $this->hakAkses(76);
+        $this->hakAkses(9);
         $this->data['pt'] = $this->model_admin->getPerusahaan();
         $this->load->view('addcabang', $this->data);
     }
@@ -214,63 +220,10 @@ class Admin extends Application {
      * @since 1.0
      */
     public function addJabatan() {
-//        $this->hakAkses(74);
-//        $this->data['title'] = 'Tambah Jabatan';
+        $this->hakAkses(22);
         $this->data['departemen'] = $this->model_admin->getDepartemen();
         $this->load->view('addjabatan', $this->data);
     }
-
-    /**
-     * Function ini digunakan untuk mengambil data menus
-     */
-//    public function loadMenu() {
-//        $nama = isset($_POST['menu_nama']) ? trim($_POST['menu_nama']) : '';
-//        $result = array();
-//        $data = $this->model_admin->getMenuByNama($nama);
-//        $row = array();
-//        $result['total'] = count($data);
-//        if (count($data) > 0) {
-//            foreach ($data as $val) {
-//                $delete = 'deleteMenu("' . $val['menuid'] . '")';
-//                $ed = 'editMenu("' . $val['menuid'] . '")';
-//                $edit = "<a href='" . site_url('administrator/editMenu') . "/?id=" . $val['menuid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-pencil bigger-130'></i></a>";
-//                $del = "" . "<a href='javascript:void(0)' onclick='$delete' class='red' title='Delete'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>";
-//                if ($val['menu_parentid'] == '-1') {
-//                    $row[] = array(
-//                        'menuid' => $val['menuid'],
-//                        'menu_nama' => '<STRONG>' . $val['menu_nama'] . '</STRONG>',
-//                        'menu_url' => $val['menu_url'],
-//                        'menu_type' => $val['menu_type'],
-//                        'menu_deskripsi' => $val['menu_deskripsi'],
-//                        'menu_icon' => $val['menu_icon'],
-//                        'menu_isactive' => $val['menu_isactive'],
-//                        'edit' => $edit,
-//                        'delete' => $del,
-//                    );
-//                } else {
-//                    $row[] = array(
-//                        'menuid' => $val['menuid'],
-//                        'menu_nama' => '<STRONG>' . $val['menu_nama'] . '</STRONG>',
-//                        'menu_url' => $val['menu_url'],
-//                        'menu_type' => $val['menu_type'],
-//                        'menu_deskripsi' => $val['menu_deskripsi'],
-//                        'menu_icon' => $val['menu_icon'],
-//                        '_parentId' => $val['menu_parentid'],
-//                        'menu_isactive' => $val['menu_isactive'],
-//                        'edit' => $edit,
-//                        'delete' => $del,
-//                    );
-//                }
-//            }
-//        } else {
-//            $row[] = array(
-//                'description' => 'Data Not Found',
-//            );
-//        }
-//
-//        $result['rows'] = $row;
-//        echo json_encode($result);
-//    }
 
     function loadMenu() {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
@@ -823,7 +776,7 @@ class Admin extends Application {
     }
 
     function editRole() {
-//        $this->hakAkses(5);
+        $this->hakAkses(11);
         $id = $this->input->GET('id');
         $this->data['content'] = 'editRole';
         $this->data['role'] = $this->model_admin->getRoleById($id);
@@ -831,7 +784,7 @@ class Admin extends Application {
     }
 
     function editMenu() {
-//        $this->hakAkses(2);
+        $this->hakAkses(8);
         $id = $this->input->GET('id');
         $this->data['title'] = 'Edit Menu';
         $this->data['content'] = 'editMenu';
@@ -844,7 +797,7 @@ class Admin extends Application {
      * Digunakan untuk menampilkan form edit jabatan
      */
     function editJabatan() {
-//        $this->hakAkses(74);
+        $this->hakAkses(22);
         $id = $this->input->GET('id');
         $this->data['departemen'] = $this->model_admin->getDepartemen();
         $this->data['jab'] = $this->model_admin->getJabatanById($id);
@@ -855,7 +808,7 @@ class Admin extends Application {
      * Digunakan untuk menampilkan form edit cabang
      */
     function editCabang() {
-//        $this->hakAkses(76);
+        $this->hakAkses(9);
         $id = $this->input->GET('id');
         $this->data['pt'] = $this->model_admin->getPerusahaan();
         $this->data['cabang'] = $this->model_admin->getCabangById($id);
@@ -866,6 +819,7 @@ class Admin extends Application {
      * Dgunakan untuk edit role detail
      */
     function editRoleDetail() {
+        $this->hakAkses(11);
         $id = $this->input->GET('id');
         $cari = $this->input->GET('cari');
         $this->data['roleid'] = $id;
@@ -879,6 +833,7 @@ class Admin extends Application {
      * Dgunakan untuk edit role
      */
     function editUserRole() {
+        $this->hakAkses(25);
         $id = $this->input->GET('id');
         $role = $this->model_admin->getUserRoleByKrid($id);
         $isi = array();
@@ -929,6 +884,7 @@ class Admin extends Application {
      * Digunakan untk menambah user role
      */
     function addUserRole() {
+        $this->hakAkses(25);
         $id = $this->input->GET('id');
         $this->data['title'] = 'Edit Role';
         $this->data['content'] = 'addUserRole';
@@ -942,7 +898,7 @@ class Admin extends Application {
      * Digunakan untuk mengedit grouo cabang
      */
     function editGroupCabang() {
-//        $this->hakAkses(77);
+        $this->hakAkses(25);
         $id = $this->input->GET('id');
         $this->data['karyawan'] = $this->model_admin->getKaryawanById($id);
         $this->data['krid'] = $id;
@@ -1184,33 +1140,6 @@ class Admin extends Application {
         echo json_encode($hasil);
     }
 
-//    function simpanUserRole() {
-//        $this->form_validation->set_rules('krid', '<b>Fx</b>', 'xss_clean');
-//        if ($this->form_validation->run() == TRUE) {
-//            $krid = $this->input->post('user_krid');
-//            $roleid = $this->input->post('roleid');
-//            $arr = array();
-//            for ($i = 0; $i < count($roleid); $i++) {
-//                $check = 0;
-//                if ($this->input->post('check' . $roleid[$i]) == '1') {
-//                    $check = 1;
-//                }
-//                $arr[] = array(
-//                    'user_krid' => $krid,
-//                    'user_roleid' => $roleid[$i],
-//                    'check' => $check,
-//                );
-//            }
-//            $hasil = $this->model_admin->simpanUserRole($arr);
-//            if ($hasil) {
-//                $this->session->set_flashdata('msg', $this->sukses("Berhasil mengupdate user role"));
-//            } else {
-//                $this->session->set_flashdata('msg', $this->error("Gagal mengupdate user role"));
-//            }
-//        }
-//        redirect('administrator/karyawan');
-//    }
-
     /**
      * Digunakan untuk mengupdate group cabang masing2 user
      */
@@ -1242,49 +1171,6 @@ class Admin extends Application {
         echo json_encode($hasil);
     }
 
-    /**
-     * Function ini digunakan untuk mengambil data produk untuk ditampilkan di member manager
-     */
-//    public function loadKaryawan() {
-//        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
-//        $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 20;
-//        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'kr_nama';
-//        $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';
-//        $nama = isset($_POST['isi']) ? trim($_POST['isi']) : ' ';
-//        $kode = isset($_POST['kode']) ? trim($_POST['kode']) : '';
-//        $offset = ($page - 1) * $rows;
-//        $where = array('nama' => strtoupper($nama), 'sortby' => strtolower($kode));
-//        $result["total"] = $this->model_admin->getTotalKaryawan($where);
-//        $query = $this->model_admin->getAllKaryawan($sort, $order, $offset, $rows, $where);
-//        if (count($query) > 0) {
-//            foreach ($query as $row) {
-//
-//                $role = "<a href='" . site_url('administrator/addUserRole') . "/?id=" . $row['krid'] . "' class='green' title='Edit Role'><i class='ace-icon fa fa-cog  bigger-130'></i></a>";
-//                $password = "<a href='javascript:;' onclick='updatePasword(" . $row['krid'] . ")' class='green' title='Edit Role'><i class='icon-road bigger-130'></i></a>";
-//                $delete = 'deleteKaryawan("' . $row['krid'] . '")';
-//                $edit = "<a href='" . site_url('administrator/editKaryawan') . "/?id=" . $row['krid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-pencil bigger-130'></i></a>";
-//                $group = "<a href='" . site_url('administrator/editGroupCabang') . "/?id=" . $row['krid'] . "' class='green' title='Edit'><i class='ace-icon fa fa-cog bigger-130'></i></a>";
-//                $del = "" . "<a href='javascript:void(0)' onclick='$delete' class='red' title='Delete'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>";
-//                $result['rows'][] = array(
-//                    'nama' => $row['kr_nama'],
-//                    'username' => $row['kr_username'],
-//                    'nik' => $row['kr_nik'],
-//                    'alamat' => $row['kr_alamat'],
-//                    'hp' => $row['kr_hp'],
-//                    'group' => $group,
-//                    'ktp' => $row['kr_nomorktp'],
-//                    'role' => $role,
-//                    'jabatan' => $row['jabatan_deskripsi'],
-//                    'password' => $password,
-//                    'hapus' => $del,
-//                    'edit' => $edit,
-//                );
-//            }
-//        } else {
-//            $result['rows'][] = array('id' => "");
-//        }
-//        echo json_encode($result);
-//    }
 }
 
 ?>

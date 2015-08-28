@@ -125,9 +125,8 @@ class Application extends CI_Controller {
      */
 
     protected function isLogin() {
-        $login = isLogin;
-        if (empty($login)) {
-            redirect(site_url("welcome/index"));
+        if (isLogin != true) {
+            redirect(site_url("welcome/login"));
         }
     }
 

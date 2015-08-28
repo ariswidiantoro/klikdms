@@ -41,7 +41,7 @@ echo $this->session->flashdata('msg');
                 {name:'hapus',index:'hapus', width:10, align:"center"},
             ],
             rowNum:10,
-            height : 300,
+            height : 250,
             width: $(".page-content").width(),
             //height: 300,
             rowList:[10,20,30],

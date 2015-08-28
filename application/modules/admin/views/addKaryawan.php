@@ -19,7 +19,7 @@
                 </select>
             </span>
             <span style="float: left;width: 60%;margin-left: 10px; ">
-                <input type="text" id="kr_atasanid" name="kr_atasanid">
+                <input type="hidden" id="kr_atasanid" name="kr_atasanid">
                 <input type="text" name="kr_atasan" id="kr_atasan"  placeholder="Atasan" class="form-control col-xs-10" />
             </span>
         </div>

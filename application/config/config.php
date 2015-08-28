@@ -28,6 +28,7 @@ $config['base_url'] .= "://" . $_SERVER['HTTP_HOST'];
 $config['base_url'] .= preg_replace('@/+$@', '', dirname($_SERVER['SCRIPT_NAME'])) . '/';
 
 $config['path_css'] = $config['base_url'] . 'media/css/';
+$config['path_avatar'] = $config['base_url'] . 'media/avatars/';
 $config['path_docs'] = $config['base_url'] . 'media/docs/';
 $config['path_upload'] = $config['base_url'] . 'media/upload/';
 $config['path_font_icons'] = $config['base_url'] . 'media/font_icons/';
