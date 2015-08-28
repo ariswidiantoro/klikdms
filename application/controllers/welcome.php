@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 class Welcome extends Application {
 
+    // INI WELCOME BAWAH
     public function __construct() {
         parent::__construct();
     }
