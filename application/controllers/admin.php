@@ -6,11 +6,11 @@
  * 2013-11-11
  */
 class admin extends Application {
-
     // INI TEST ADMINNNNNNNNNNNNNNNNNNNNnn
-    
     // INI CONTROLLER BAWAH BAWAHHHHHHHHHH
-    
+    // INI CONTROLLER BAWAH BAWAHHHHHHHHHH
+    // INI CONTROLLER BAWAH BAWAHHHHHHHHHH
+
     /**
      * The new Admin_controller
      */
@@ -20,7 +20,11 @@ class admin extends Application {
 //        $this->hakAkses(1);
 //        $this->check_login();
     }
-    
+
+    // INI DARI CONTROLLER GITHUB
+    // INI JUGA DARI GITHUB
+
+
     public function index() {
         $this->data['content'] = 'atribut/admin';
         $this->data['parent'] = '6';
