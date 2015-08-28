@@ -10,6 +10,8 @@ class Welcome extends Application {
     public function __construct() {
         parent::__construct();
     }
+    
+    // INI WELCOME GITHUB ATAS
 
     /**
      * Index Page for this controller.
