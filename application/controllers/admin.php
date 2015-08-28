@@ -18,7 +18,7 @@ class admin extends Application {
 //        $this->check_login();
     }
     
-    
+    // INI DARI CONTROLLER GITHUB
     
 
     public function index() {
