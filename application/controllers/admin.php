@@ -17,6 +17,9 @@ class admin extends Application {
 //        $this->hakAkses(1);
 //        $this->check_login();
     }
+    
+    
+    
 
     public function index() {
         $this->data['content'] = 'atribut/admin';
