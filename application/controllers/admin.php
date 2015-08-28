@@ -9,6 +9,8 @@ class admin extends Application {
 
     // INI TEST ADMINNNNNNNNNNNNNNNNNNNNnn
     
+    // INI CONTROLLER BAWAH
+    
     /**
      * The new Admin_controller
      */
@@ -19,9 +21,6 @@ class admin extends Application {
 //        $this->check_login();
     }
     
-    // INI DARI CONTROLLER BAWAH
-    
-
     public function index() {
         $this->data['content'] = 'atribut/admin';
         $this->data['parent'] = '6';
