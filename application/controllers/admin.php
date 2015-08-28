@@ -20,8 +20,11 @@ class admin extends Application {
 //        $this->hakAkses(1);
 //        $this->check_login();
     }
-
-
+    
+    // INI DARI CONTROLLER GITHUB
+    // INI JUGA DARI GITHUB
+    // INI JUGA DARI GITHUB LAGI
+    
 
     public function index() {
         $this->data['content'] = 'atribut/admin';
