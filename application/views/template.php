@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="<?php echo path_css(); ?>datepicker.css" />
         <link rel="stylesheet" href="<?php echo path_css(); ?>ui.jqgrid.css" />
 
+
         <!-- text fonts -->
         <link rel="stylesheet" href="<?php echo path_css(); ?>ace-fonts.css" />
 
@@ -91,7 +92,7 @@
                             <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                                 <span class="user-info">
                                     <small>Welcome,</small>
-<?php echo ses_username; ?>
+                                    <?php echo ses_username; ?>
                                 </span>
 
                                 <i class="ace-icon fa fa-caret-down"></i>
@@ -177,7 +178,7 @@
             
                     window.jQuery || document.write("<script src='<?php echo path_js(); ?>jquery.js'>"+"<"+"/script>");
                 </script>
-<?php $this->load->view('attribut/menu') ?>
+                <?php $this->load->view('attribut/menu') ?>
 
 
                 <!-- #section:basics/sidebar.layout.minimize -->
@@ -376,6 +377,8 @@ window.jQuery || document.write("<script src='../../assets/js/jquery1x.js'>"+"<"
         </script>
         <script src="<?php echo path_js(); ?>bootstrap.js"></script>
         <script src="<?php echo path_js(); ?>jquery-ui.js"></script>
+        <script src="<?php echo path_js(); ?>validasi.js"></script>
+
 
         <!-- ace scripts -->
         <script src="<?php echo path_js(); ?>ace/elements.scroller.js"></script>

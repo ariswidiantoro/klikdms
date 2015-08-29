@@ -11,6 +11,79 @@ class Model_Service extends CI_Model {
         parent::__construct();
     }
 
+    /**
+     * Function ini digunakan untuk mendapatkan data cabang
+     * @param type $where
+     * @return int
+     */
+    public function getTotalFlateRate($where) {
+
+        $wh = "WHERE flat_type = 1 AND flat_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * Function ini digunakan untuk mencari semua jabatan
+     * @param type $sort
+     * @param type $order
+     * @param type $offset
+     * @param type $row
+     * @param type $where
+     * @return type
+     */
+    function getAllFlateRate($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('svc_frate');
+        $this->db->where('flat_cbid', ses_cabang);
+        $this->db->where('flat_type', 1);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    function saveBasicRate($data) {
+        try {
+            $str = $this->db->INSERT('svc_brate', $data);
+            if ($str) {
+                return true;
+            } else {
+                $errMessage = $this->db->_error_message();
+                if (strpos($errMessage, "duplicate key value") == TRUE) {
+                    $this->db->where('br_cbid', $data['br_cbid']);
+                    $this->db->update('svc_brate', $data);
+                    return true;
+                }
+            }
+        } catch (Exception $e) {
+            $e->getCode();
+        }
+        return false;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil rol
+     * @param type $data
+     * @return boolean
+     */
+    public function getBasicRate($id) {
+        $sql = $this->db->query("SELECT * FROM svc_brate WHERE br_cbid = '$id'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
 }
 
 ?>

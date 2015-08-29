@@ -13,13 +13,13 @@ class Master_Service extends Application {
     public function __construct() {
         parent::__construct();
         $this->load->model('model_admin');
+        $this->load->model('model_service');
 //        $this->hakAkses(1);
-        $this->check_login();
+        $this->isLogin();
     }
 
     public function index() {
         $this->data['content'] = 'service';
-        $this->data['header'] = $this->model_admin->getMenuModule();
         $this->data['menuid'] = '4';
         $this->load->view('template', $this->data);
     }
@@ -35,6 +35,16 @@ class Master_Service extends Application {
     }
 
     /**
+     * This function is used for display menu form
+     * @author Aris
+     * @since 1.0
+     */
+    public function basicRate() {
+        $this->hakAkses(48);
+        $this->load->view('basicRate', $this->data);
+    }
+
+    /**
      * This function is used for display the exmination form
      * @author Aris
      * @since 1.0
@@ -42,6 +52,50 @@ class Master_Service extends Application {
     public function addFlateRate() {
         $this->hakAkses(26);
         $this->load->view('addFlateRate', $this->data);
+    }
+
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function addBasicRate() {
+        $this->hakAkses(48);
+        $this->load->view('addBasicRate', $this->data);
+    }
+
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function editBasicRate() {
+        $this->hakAkses(48);
+        $id = $this->input->GET('id');
+        $this->data['data'] = $this->model_service->getBasicRate($id);
+        $this->load->view('editBasicRate', $this->data);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function saveBasicRate() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('br_rate', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $rate = $this->system->numeric($this->input->post('br_rate'));
+            $data = array(
+                'br_cbid' => ses_cabang,
+                'br_rate' => $rate
+            );
+            $hasil = $this->model_service->saveBasicRate($data);
+            if ($hasil) {
+                $hasil = $this->sukses("Berhasil menyimpan basic rate");
+            } else {
+                $hasil = $this->error("Gagal menyimpan basic rate");
+            }
+        }
+        echo json_encode($hasil);
     }
 
     function loadFlateRate() {
@@ -52,7 +106,7 @@ class Master_Service extends Application {
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;
         $where = whereLoad();
-        $count = $this->model_service->getTotalData($where, 'ms_menu');
+        $count = $this->model_service->getTotalFlateRate($where);
         if ($count > 0) {
             $total_pages = ceil($count / $limit);
         } else {
@@ -61,7 +115,7 @@ class Master_Service extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_menu');
+        $query = $this->model_admin->getAllFlateRate($start, $limit, $sidx, $sord, $where);
         $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
@@ -71,14 +125,51 @@ class Master_Service extends Application {
             foreach ($query as $row) {
                 $hapus = '-';
                 $edit = '-';
-                if ($row->menu_status == '0') {
-                    $del = "hapusMenu('" . $row->menuid . "')";
+                if ($row->flatid == '0') {
+                    $del = "hapusFlateRate('" . $row->flatid . "')";
                     $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#admin/editMenu?id=' . $row->menuid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                    $edit = '<a href="#admin/editFlateRate?id=' . $row->flatid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 }
-                $responce->rows[$i]['id'] = $row->menuid;
+                $responce->rows[$i]['id'] = $row->flatid;
                 $responce->rows[$i]['cell'] = array(
-                    $row->menu_nama, $row->menu_deskripsi, $row->menu_url, $edit, $hapus);
+                    $row->flat_kode, $row->flat_deskripsi, $row->flat_jam, $row->flat_fx, $row->flat_brate, $row->flat_total, $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    function loadBasicRate() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'br_cbid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_admin');
+        $count = $this->model_admin->getTotalData($where, 'svc_brate');
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'svc_brate');
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusBasicRate('" . $row->br_cbid . "')";
+                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_service/editBasicRate?id=' . $row->br_cbid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->br_cbid;
+                $responce->rows[$i]['cell'] = array(
+                    number_format($row->br_rate), $edit);
                 $i++;
             }
         echo json_encode($responce);
