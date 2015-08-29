@@ -1,5 +1,5 @@
 <?php
-
+if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -35,7 +35,7 @@ if (defined('ENVIRONMENT'))
 		case 'development':
 			error_reporting(E_ALL);
 		break;
-
+	
 		case 'testing':
 		case 'production':
 			error_reporting(0);
@@ -203,3 +203,4 @@ require_once BASEPATH.'core/CodeIgniter.php';
 
 /* End of file index.php */
 /* Location: ./index.php */
+?>
