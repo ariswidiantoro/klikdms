@@ -71,6 +71,33 @@ class Model_Service extends CI_Model {
         return false;
     }
 
+    function saveFlateRate($data) {
+        $this->db->trans_begin();
+        $tahun = substr(date('Y'), 0, 2);
+        $id = sprintf("%08s", $this->getCounter("FL" . $tahun));
+        $data['flatid'] = "FL" . $tahun . $id;
+        try {
+            $str = $this->db->INSERT('svc_frate', $data);
+            if (!$str) {
+                $errMessage = $this->db->_error_message();
+                if (strpos($errMessage, "duplicate key value") == TRUE) {
+                    $this->db->trans_rollback();
+                    return false;
+                }
+            }
+        } catch (Exception $e) {
+            $e->getCode();
+        }
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
+    }
+
     /**
      * Function ini digunakan untuk mengambil rol
      * @param type $data

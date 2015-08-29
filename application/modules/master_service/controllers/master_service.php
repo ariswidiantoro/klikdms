@@ -51,6 +51,7 @@ class Master_Service extends Application {
      */
     public function addFlateRate() {
         $this->hakAkses(26);
+        $this->data['basic'] = $this->model_service->getBasicRate(ses_cabang);
         $this->load->view('addFlateRate', $this->data);
     }
 
@@ -93,6 +94,32 @@ class Master_Service extends Application {
                 $hasil = $this->sukses("Berhasil menyimpan basic rate");
             } else {
                 $hasil = $this->error("Gagal menyimpan basic rate");
+            }
+        }
+        echo json_encode($hasil);
+    }
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function saveFlateRate() {
+        $this->form_validation->set_rules('flat_kode', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'flat_cbid' => ses_cabang,
+                'flat_kode' => $this->input->post('flat_kode'),
+                'flat_type' => 1,
+                'flat_deskripsi' => $this->input->post('flat_deskripsi'),
+                'flat_brate' => $this->system->numeric($this->input->post('flat_brate')),
+                'flat_jam' => $this->system->numeric($this->input->post('flat_jam')),
+                'flat_fx' => $this->system->numeric($this->input->post('flat_fx')),
+                'flat_total' => $this->system->numeric($this->input->post('flat_total')),
+                'flat_lc' => $this->system->numeric($this->input->post('flat_lc')),
+            );
+            $hasil = $this->model_service->saveFlateRate($data);
+            if ($hasil) {
+                $hasil = $this->sukses("Berhasil menyimpan flate rate");
+            } else {
+                $hasil = $this->error("Gagal menyimpan flate rate");
             }
         }
         echo json_encode($hasil);

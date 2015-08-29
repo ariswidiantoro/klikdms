@@ -1,3 +1,6 @@
+function replaceAll(txt, replace, with_this) {
+    return parseInt(txt.replace(new RegExp(replace, 'g'), with_this));
+}
 function nama_field(data){  
     var name= data;   
     var num = $('input[name='+name+']').val();
