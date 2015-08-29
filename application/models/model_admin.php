@@ -453,7 +453,7 @@ class Model_Admin extends CI_Model {
      */
     public function login($array) {
         $sql = $this->db->query("SELECT * FROM ms_karyawan LEFT JOIN ms_group_cabang"
-                . " ON group_krid = krid WHERE kr_username = '" . $array['username'] . "' AND group_cbid = '" . $array['cbid'] . "' AND kr_password = '" . $array['password'] . "'");
+                . " ON group_krid = krid WHERE kr_username = '" . $array['username'] . "' AND group_cbid = '" . $array['cbid'] . "' ");
         if ($sql->num_rows() > 0) {
             return true;
         }
