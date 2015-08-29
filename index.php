@@ -4,7 +4,11 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
  *---------------------------------------------------------------
- *
+ *.aksdhf.adjf.jsda.fkas 
+ * 
+ * 
+ * 
+ * 
  * You can load different configurations depending on your
  * current environment. Setting the environment also influences
  * things like logging and error reporting.
