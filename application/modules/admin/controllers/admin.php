@@ -244,6 +244,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_menu');
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
@@ -284,6 +285,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllKaryawan($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
@@ -327,6 +329,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllKaryawan($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
@@ -586,6 +589,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_role');
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
@@ -630,6 +634,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_company');
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
@@ -672,6 +677,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllJabatan($start, $limit, $sidx, $sord, $where, 'ms_jabatan');
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
@@ -715,6 +721,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_cabang');
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
@@ -758,6 +765,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_departemen');
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
