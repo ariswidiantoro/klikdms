@@ -244,6 +244,7 @@ class Admin extends Application {
         if ($page > $total_pages)
             $page = $total_pages;
         $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_menu');
+        $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
         $responce->records = $count;
