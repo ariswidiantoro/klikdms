@@ -14,7 +14,7 @@ class Master_Service extends Application {
         parent::__construct();
         $this->load->model('model_admin');
 //        $this->hakAkses(1);
-        $this->check_login();
+       // $this->check_login();
     }
 
     public function index() {
