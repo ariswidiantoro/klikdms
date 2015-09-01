@@ -25,6 +25,7 @@ class Model_Service extends CI_Model {
         $sql = $this->db->query("SELECT COUNT(*) AS total FROM svc_frate $wh");
         return $sql->row()->total;
     }
+
     /**
      * Function ini digunakan untuk mendapatkan data cabang
      * @param type $where
@@ -65,6 +66,7 @@ class Model_Service extends CI_Model {
         }
         return null;
     }
+
     /**
      * Function ini digunakan untuk mencari semua jabatan
      * @param type $sort
@@ -137,6 +139,22 @@ class Model_Service extends CI_Model {
         return false;
     }
 
+    function savePelanggan($data) {
+        $this->db->trans_begin();
+        $tahun = substr(date('Y'), 2, 2);
+        $id = sprintf("%08s", $this->getCounter("PE" . $tahun));
+        $data['pelid'] = "PE" . $tahun . $id;
+        $this->db->INSERT('ms_pelanggan', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
+    }
+
     /**
      * Function ini digunakan untuk mengambil rol
      * @param type $data
@@ -163,10 +181,36 @@ class Model_Service extends CI_Model {
         return null;
     }
 
+    /**
+     * 
+     * @param type $role
+     * @return boolean
+     */
+    function hapusPelanggan($data) {
+        $this->db->query("UPDATE ms_pelanggan SET pel_status = 1 WHERE pelid = '$data'");
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        }
+        return false;
+    }
+
     function updateFlateRate($data) {
         $this->db->trans_begin();
         $this->db->where('flatid', $data['flatid']);
         $this->db->update('svc_frate', $data);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    function updatePelanggan($data) {
+        $this->db->trans_begin();
+        $this->db->where('pelid', $data['pelid']);
+        $this->db->update('ms_pelanggan', $data);
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             return false;

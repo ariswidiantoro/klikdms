@@ -501,7 +501,7 @@ class Admin extends Application {
         if ($this->form_validation->run() == TRUE) {
             $tgl = $this->input->post('kr_tgl_lahir');
             if (empty($tgl)) {
-                $tgl = '2015-01-01';
+                $tgl = '9999-01-01';
             }
             $data = array(
                 'kr_nik' => $this->input->post('kr_nik'),
@@ -537,7 +537,7 @@ class Admin extends Application {
         if ($this->form_validation->run() == TRUE) {
             $tgl = $this->input->post('kr_tgl_lahir');
             if (empty($tgl)) {
-                $tgl = '2015-01-01';
+                $tgl = '9999-01-01';
             }
 //            $kota = $this->input->post('kr_kotaid');
 //            log_message('error', 'KOTA '.$kota);

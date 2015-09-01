@@ -24,6 +24,13 @@ class Model_Admin extends CI_Model {
         }
         return null;
     }
+    public function getPelangganById($id) {
+        $sql = $this->db->query("SELECT * FROM ms_pelanggan LEFT JOIN ms_kota ON kotaid = pel_kotaid WHERE pelid = '$id'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
 
     /**
      * Function ini digunakan untuk mengambil menu
