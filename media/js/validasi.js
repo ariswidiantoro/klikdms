@@ -63,6 +63,9 @@ function konversi(angka){
 }
 
 function formatDefault(num) {
+    if (num == "") {
+        num = "0";   
+    }
     num = num+"";
     num = num.toString().replace( /,/g, "" );
     var pecah = num.split(".");

@@ -8,9 +8,9 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_service/addFlateRate" class="btn btn-sm btn-primary">
+            <a href="#master_service/addFreeService" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Flate Rate</a>
+                Tambah Master Free Service</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
@@ -46,19 +46,20 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_service/loadFlateRate') ?>',      //another controller function for generating data
+            url:'<?php echo site_url('master_service/loadFreeService') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Kode','Deskripsi','Jam','Fx','Basic Rate','Total', 'Edit', 'Hapus'],       //Grid column headings
+            colNames:['Kode','Deskripsi','Jasa','Sparepart','Oli','Sub Material','Sub Order','Total', 'Edit'],       //Grid column headings
             colModel:[
                 {name:'flat_kode',index:'flat_kode', width:80, align:"left"},
                 {name:'flat_deskripsi',index:'flat_deskripsi', width:150, align:"left"},
-                {name:'flat_jam',index:'flat_jam', width:20, align:"right"},
-                {name:'flat_fx',index:'flat_fx', width:20, align:"right"},
-                {name:'flat_brate',index:'flat_brate', width:50, align:"right"},
+                {name:'flat_lc',index:'flat_lc', width:50, align:"right"},
+                {name:'flat_part',index:'flat_part', width:50, align:"right"},
+                {name:'flat_oli',index:'flat_oli', width:50, align:"right"},
+                {name:'flat_sm',index:'flat_sm', width:50, align:"right"},
+                {name:'flat_so',index:'flat_so', width:50, align:"right"},
                 {name:'flat_total',index:'flat_total', width:50, align:"right"},
                 {name:'edit',index:'edit', width:20, align:"center"},
-                {name:'hapus',index:'hapus', width:20, align:"center"},
             ],
             rowNum:10,
             height : 300,
@@ -70,7 +71,7 @@ echo $this->session->flashdata('msg');
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Flate Rate"
+            caption:"Daftar Master Free Service"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );

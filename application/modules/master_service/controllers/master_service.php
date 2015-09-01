@@ -39,6 +39,16 @@ class Master_Service extends Application {
      * @author Aris
      * @since 1.0
      */
+    public function freeService() {
+        $this->hakAkses(27);
+        $this->load->view('freeService', $this->data);
+    }
+
+    /**
+     * This function is used for display menu form
+     * @author Aris
+     * @since 1.0
+     */
     public function basicRate() {
         $this->hakAkses(48);
         $this->load->view('basicRate', $this->data);
@@ -53,6 +63,16 @@ class Master_Service extends Application {
         $this->hakAkses(26);
         $this->data['basic'] = $this->model_service->getBasicRate(ses_cabang);
         $this->load->view('addFlateRate', $this->data);
+    }
+
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function addFreeService() {
+        $this->hakAkses(27);
+        $this->load->view('addFreeService', $this->data);
     }
 
     /**
@@ -78,6 +98,29 @@ class Master_Service extends Application {
     }
 
     /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function editFlateRate() {
+        $this->hakAkses(26);
+        $id = $this->input->GET('id');
+        $this->data['data'] = $this->model_service->getFlateRate($id);
+        $this->load->view('editFlateRate', $this->data);
+    }
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function editFreeService() {
+        $this->hakAkses(27);
+        $id = $this->input->GET('id');
+        $this->data['data'] = $this->model_service->getFlateRate($id);
+        $this->load->view('editFreeService', $this->data);
+    }
+
+    /**
      * Function ini digunakan untuk menyimpan jabatan
      */
     public function saveBasicRate() {
@@ -98,6 +141,7 @@ class Master_Service extends Application {
         }
         echo json_encode($hasil);
     }
+
     /**
      * Function ini digunakan untuk menyimpan jabatan
      */
@@ -106,16 +150,110 @@ class Master_Service extends Application {
         if ($this->form_validation->run() == TRUE) {
             $data = array(
                 'flat_cbid' => ses_cabang,
-                'flat_kode' => $this->input->post('flat_kode'),
+                'flat_kode' => strtoupper($this->input->post('flat_kode')),
                 'flat_type' => 1,
-                'flat_deskripsi' => $this->input->post('flat_deskripsi'),
+                'flat_createby' => ses_username,
+                'flat_createon' => date('Y-m-d H:i:s'),
+                'flat_deskripsi' => strtoupper($this->input->post('flat_deskripsi')),
                 'flat_brate' => $this->system->numeric($this->input->post('flat_brate')),
                 'flat_jam' => $this->system->numeric($this->input->post('flat_jam')),
                 'flat_fx' => $this->system->numeric($this->input->post('flat_fx')),
                 'flat_total' => $this->system->numeric($this->input->post('flat_total')),
-                'flat_lc' => $this->system->numeric($this->input->post('flat_lc')),
+                'flat_lc' => $this->system->numeric($this->input->post('flat_total')),
             );
             $hasil = $this->model_service->saveFlateRate($data);
+            if ($hasil) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan flate rate");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan flate rate");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function saveFreeService() {
+        $this->form_validation->set_rules('flat_kode', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'flat_cbid' => ses_cabang,
+                'flat_kode' => strtoupper($this->input->post('flat_kode')),
+                'flat_free_jenis' => $this->input->post('flat_free_jenis'),
+                'flat_type' => 2,
+                'flat_createby' => ses_username,
+                'flat_createon' => date('Y-m-d H:i:s'),
+                'flat_deskripsi' => strtoupper($this->input->post('flat_deskripsi')),
+                'flat_part' => $this->system->numeric($this->input->post('flat_part')),
+                'flat_lc' => $this->system->numeric($this->input->post('flat_lc')),
+                'flat_oli' => $this->system->numeric($this->input->post('flat_oli')),
+                'flat_sm' => $this->system->numeric($this->input->post('flat_sm')),
+                'flat_so' => $this->system->numeric($this->input->post('flat_so')),
+                'flat_total' => $this->system->numeric($this->input->post('flat_total'))
+            );
+            $hasil = $this->model_service->saveFlateRate($data);
+            if ($hasil) {
+                $hasil = $this->sukses("Berhasil menyimpan Free Service");
+            } else {
+                $hasil = $this->error("Gagal menyimpan free Service");
+            }
+        }
+        echo json_encode($hasil);
+    }
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function updateFreeService() {
+        $this->form_validation->set_rules('flat_kode', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'flat_cbid' => ses_cabang,
+                'flatid' => strtoupper($this->input->post('flatid')),
+                'flat_kode' => strtoupper($this->input->post('flat_kode')),
+                'flat_free_jenis' => $this->input->post('flat_free_jenis'),
+                'flat_type' => 2,
+                'flat_lastupdate' => date('Y-m-d H:i:s'),
+                'flat_deskripsi' => strtoupper($this->input->post('flat_deskripsi')),
+                'flat_part' => $this->system->numeric($this->input->post('flat_part')),
+                'flat_lc' => $this->system->numeric($this->input->post('flat_lc')),
+                'flat_oli' => $this->system->numeric($this->input->post('flat_oli')),
+                'flat_sm' => $this->system->numeric($this->input->post('flat_sm')),
+                'flat_so' => $this->system->numeric($this->input->post('flat_so')),
+                'flat_total' => $this->system->numeric($this->input->post('flat_total'))
+            );
+            $hasil = $this->model_service->updateFlateRate($data);
+            if ($hasil) {
+                $hasil = $this->sukses("Berhasil menyimpan Free Service");
+            } else {
+                $hasil = $this->error("Gagal menyimpan free Service");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function updateFlateRate() {
+        $this->form_validation->set_rules('flat_kode', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'flat_cbid' => ses_cabang,
+                'flat_kode' => strtoupper($this->input->post('flat_kode')),
+                'flatid' => $this->input->post('flatid'),
+                'flat_type' => 1,
+                'flat_lastupdate' => date('Y-m-d H:i:s'),
+                'flat_deskripsi' => strtoupper($this->input->post('flat_deskripsi')),
+                'flat_brate' => $this->system->numeric($this->input->post('flat_brate')),
+                'flat_jam' => $this->system->numeric($this->input->post('flat_jam')),
+                'flat_fx' => $this->system->numeric($this->input->post('flat_fx')),
+                'flat_total' => $this->system->numeric($this->input->post('flat_total')),
+                'flat_lc' => $this->system->numeric($this->input->post('flat_total')),
+            );
+            $hasil = $this->model_service->updateFlateRate($data);
             if ($hasil) {
                 $hasil = $this->sukses("Berhasil menyimpan flate rate");
             } else {
@@ -142,7 +280,7 @@ class Master_Service extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_admin->getAllFlateRate($start, $limit, $sidx, $sord, $where);
+        $query = $this->model_service->getAllFlateRate($start, $limit, $sidx, $sord, $where);
         $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
@@ -150,16 +288,48 @@ class Master_Service extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $hapus = '-';
-                $edit = '-';
-                if ($row->flatid == '0') {
-                    $del = "hapusFlateRate('" . $row->flatid . "')";
-                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#admin/editFlateRate?id=' . $row->flatid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
-                }
+                $del = "hapusFlateRate('" . $row->flatid . "')";
+                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_service/editFlateRate?id=' . $row->flatid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->flatid;
                 $responce->rows[$i]['cell'] = array(
-                    $row->flat_kode, $row->flat_deskripsi, $row->flat_jam, $row->flat_fx, $row->flat_brate, $row->flat_total, $edit, $hapus);
+                    $row->flat_kode, $row->flat_deskripsi, $row->flat_jam, $row->flat_fx, number_format($row->flat_brate), number_format($row->flat_total), $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    function loadFreeService() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'flat_kode';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_service->getTotalFreeService($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_service->getAllFreeService($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusFlateRate('" . $row->flatid . "')";
+                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_service/editFreeService?id=' . $row->flatid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->flatid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->flat_kode, $row->flat_deskripsi, number_format($row->flat_lc), number_format($row->flat_part), number_format($row->flat_oli), number_format($row->flat_sm), number_format($row->flat_so), number_format($row->flat_total), $edit, $hapus);
                 $i++;
             }
         echo json_encode($responce);
