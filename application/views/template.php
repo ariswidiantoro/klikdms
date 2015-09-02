@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta charset="utf-8" />
-        <title>Welcome - Ace Admin</title>
+        <title>----</title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
@@ -330,8 +330,8 @@
                     <!-- #section:basics/footer -->
                     <div class="footer-content">
                         <span class="bigger-120">
-                            <span class="blue bolder">Ace</span>
-                            Application &copy; 2013-2014
+                            <span class="blue bolder">Klik DMS</span>
+                            Application &copy; 2015-2016
                         </span>
 
                         &nbsp; &nbsp;

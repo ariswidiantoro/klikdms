@@ -12,8 +12,11 @@ class Model_Finance extends CI_Model {
     }
 
     public function getCoa($data) {
+        $order = !empty($data['sort']) ? " ORDER BY " . $data['sort'] . " " . $data['order'] . "" : " ";
+        $limit = !empty($data['limit']) ? " LIMIT " . $data['limit'] . " OFFSET " . $data['offset'] . "" : " ";
+        $where = !empty($data['where']) ? " AND " . $data['field'] . " ".$data['operation']." " . $data['offset'] . "" : " ";
         $query = "SELECT * FROM ms_coa WHERE 
-           coa_cbid = " . $data['cbid'] . " AND coa_status = '1' ";
+           coa_cbid = " . $data['cbid'] . " AND coa_status = '1' ".$where." ".$limit;
         $sql = $this->db->query($query);
         return array('result' => $sql->result_array(), 'numrows' => $sql->num_rows());
     }
@@ -40,9 +43,7 @@ class Model_Finance extends CI_Model {
             return array('status' => FALSE, 'msg' => 'Kode COA gagal disimpan');
         }
     }
-    
-    
-    
-    
+
 }
+
 ?>
