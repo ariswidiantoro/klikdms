@@ -8,9 +8,9 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_service/addFlateRate" class="btn btn-sm btn-primary">
+            <a href="#master_service/addPelanggan" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Flate Rate</a>
+                Tambah Pelanggan</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
@@ -28,11 +28,11 @@ echo $this->session->flashdata('msg');
         //inline scripts related to this page
     });  
     
-    function hapusFlateRate(id) {
-        if (confirm("Yakin ingin menghapus baris ini ?")) {
+    function hapusPelanggan(id) {
+        if (confirm("Yakin ingin menghapus pelanggan ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('master_service/hapusFlateRate'); ?>',
+                url: '<?php echo site_url('master_service/hapusPelanggan'); ?>',
                 dataType: "json",
                 data: {
                     id: id
@@ -46,17 +46,18 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_service/loadFlateRate') ?>',      //another controller function for generating data
+            url:'<?php echo site_url('master_service/loadPelanggan') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Kode','Deskripsi','Jam','Fx','Basic Rate','Total', 'Edit', 'Hapus'],       //Grid column headings
+            colNames:['Kode','Nama','Alamat', 'HP', 'Telpon', 'NPWP', 'Email', 'Edit', 'Hapus'],       //Grid column headings
             colModel:[
-                {name:'flat_kode',index:'flat_kode', width:80, align:"left"},
-                {name:'flat_deskripsi',index:'flat_deskripsi', width:150, align:"left"},
-                {name:'flat_jam',index:'flat_jam', width:20, align:"right"},
-                {name:'flat_fx',index:'flat_fx', width:20, align:"right"},
-                {name:'flat_brate',index:'flat_brate', width:50, align:"right"},
-                {name:'flat_total',index:'flat_total', width:50, align:"right"},
+                {name:'pelid',index:'pelid', width:40, align:"left"},
+                {name:'pel_nama',index:'pel_nama', width:80, align:"left"},
+                {name:'pel_alamat',index:'pel_alamat', width:100, align:"left"},
+                {name:'pel_hp',index:'pel_hp', width:40, align:"left"},
+                {name:'pel_telpon',index:'pel_telpon', width:40, align:"left"},
+                {name:'pel_npwp',index:'pel_npwp', width:40, align:"left"},
+                {name:'pel_email',index:'pel_email', width:40, align:"left"},
                 {name:'edit',index:'edit', width:20, align:"center"},
                 {name:'hapus',index:'hapus', width:20, align:"center"},
             ],
@@ -66,7 +67,7 @@ echo $this->session->flashdata('msg');
             //height: 300,
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'flat_kode',
+            sortname: 'pel_nama',
             viewrecords: true,
             rownumbers: true,
             gridview: true,

@@ -1,16 +1,10 @@
-<?php
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
-echo $this->session->flashdata('msg');
-?> 
-
 <div id="result"></div>
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_service/addFlateRate" class="btn btn-sm btn-primary">
+            <a href="#master_service/addKendaraan" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Flate Rate</a>
+                Tambah Kendaraan</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
@@ -28,11 +22,11 @@ echo $this->session->flashdata('msg');
         //inline scripts related to this page
     });  
     
-    function hapusFlateRate(id) {
-        if (confirm("Yakin ingin menghapus baris ini ?")) {
+    function hapusKendaraan(id) {
+        if (confirm("Yakin ingin menghapus pelanggan ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('master_service/hapusFlateRate'); ?>',
+                url: '<?php echo site_url('master_service/hapusKendaraan'); ?>',
                 dataType: "json",
                 data: {
                     id: id
@@ -46,17 +40,16 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_service/loadFlateRate') ?>',      //another controller function for generating data
+            url:'<?php echo site_url('master_service/loadKendaraan') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Kode','Deskripsi','Jam','Fx','Basic Rate','Total', 'Edit', 'Hapus'],       //Grid column headings
+            colNames:['Nama Pemilik','No Polisi','No Rangka', 'No Mesin','Tahun', 'Edit', 'Hapus'],       //Grid column headings
             colModel:[
-                {name:'flat_kode',index:'flat_kode', width:80, align:"left"},
-                {name:'flat_deskripsi',index:'flat_deskripsi', width:150, align:"left"},
-                {name:'flat_jam',index:'flat_jam', width:20, align:"right"},
-                {name:'flat_fx',index:'flat_fx', width:20, align:"right"},
-                {name:'flat_brate',index:'flat_brate', width:50, align:"right"},
-                {name:'flat_total',index:'flat_total', width:50, align:"right"},
+                {name:'pel_nama',index:'pel_nama', width:100, align:"left"},
+                {name:'msc_nopol',index:'msc_nopol', width:50, align:"left"},
+                {name:'msc_norangka',index:'msc_norangka', width:70, align:"left"},
+                {name:'msc_nomesin',index:'msc_nomesin', width:70, align:"left"},
+                {name:'msc_tahun',index:'msc_tahun', width:50, align:"left"},
                 {name:'edit',index:'edit', width:20, align:"center"},
                 {name:'hapus',index:'hapus', width:20, align:"center"},
             ],
@@ -66,7 +59,7 @@ echo $this->session->flashdata('msg');
             //height: 300,
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'flat_kode',
+            sortname: 'msc_nopol',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
