@@ -50,7 +50,7 @@
                 <?php
                 if (count($kota) > 0) {
                     foreach ($kota as $value) {
-                        $select = ($data['kr_kotaid'] == $value->kotaid) ? 'selected' : '';
+                        $select = ($data['pel_kotaid'] == $value->kotaid) ? 'selected' : '';
                         ?>
                         <option value="<?php echo $value->kotaid; ?>"<?php echo $select; ?>><?php echo $value->kota_deskripsi ?></option> 
                         <?php
