@@ -1,6 +1,6 @@
 <div id="result"></div>
 <form class="form-horizontal" id="form" method="post" action="<?php echo site_url('master_service/savePelanggan'); ?>" name="form">
-
+// INI DARI ATAS/HEAD
     <div class="page-header">
         <h1>
             <small>
@@ -12,8 +12,8 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
             <input type="text" name="pel_nama" required="required" placeholder="Nama" class="upper ace col-xs-10 col-sm-5" />
-            <button class="btn btn-info ace col-xs-10 col-sm-4" type="button">
-                Add Pelanggan
+            <button class="btn btn-sm btn-primary ace col-xs-10 col-sm-4" type="button">
+                Tambah Pelanggan
             </button>
         </div>
     </div>
