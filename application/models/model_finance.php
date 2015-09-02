@@ -43,6 +43,23 @@ class Model_Finance extends CI_Model {
             return array('status' => FALSE, 'msg' => 'Kode COA gagal disimpan');
         }
     }
+    
+    function getAllFlateRate($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('svc_frate');
+        $this->db->where('flat_cbid', ses_cabang);
+        $this->db->where('flat_type', 1);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
 
 }
 
