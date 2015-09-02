@@ -91,9 +91,18 @@ class Master_Service extends Application {
      */
     public function addPelanggan() {
         $this->hakAkses(28);
-//        $this->load->model("model_admin");
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addPelanggan', $this->data);
+    }
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function addKendaraan() {
+        $this->hakAkses(33);
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->load->view('addKendaraan', $this->data);
     }
 
     /**
@@ -148,6 +157,7 @@ class Master_Service extends Application {
     public function editPelanggan() {
         $this->hakAkses(28);
         $id = $this->input->GET('id');
+//        log_message('error', 'AAAAAAAA '.$id);
         $data = $this->model_admin->getPelangganById($id);
         $this->data['data'] = $data;
 
@@ -478,7 +488,7 @@ class Master_Service extends Application {
                 if ($row->pel_status == '0') {
                     $del = "hapusPelanggan('" . $row->pelid . "')";
                     $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#master_service/editPelanggan?id=' . $row->pelid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                    $edit = '<a href="#master_service/editPelanggan?id=' . $row->pelid. '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 }
                 $responce->rows[$i]['id'] = $row->pelid;
                 $responce->rows[$i]['cell'] = array(

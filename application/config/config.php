@@ -248,7 +248,7 @@ $config['cache_path'] = APPPATH.'cache/';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = 'sun';
+$config['encryption_key'] = 'KlikDMS@21';
 
 /*
 |--------------------------------------------------------------------------
