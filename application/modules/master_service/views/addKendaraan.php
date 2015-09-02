@@ -1,6 +1,6 @@
 <div id="result"></div>
 <form class="form-horizontal" id="form" method="post" action="<?php echo site_url('master_service/savePelanggan'); ?>" name="form">
-// INI DARI ATAS/HEAD
+// INI BAWAH
     <div class="page-header">
         <h1>
             <small>
