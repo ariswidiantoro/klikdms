@@ -11,11 +11,9 @@ class Model_Prospect extends CI_Model {
         parent::__construct();
     }
 
-    public function listProspect($data){
+    public function loadProspect($data){
         
     }
-    
-    
     
     
 }
