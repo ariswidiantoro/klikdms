@@ -377,6 +377,12 @@ if (!function_exists("format_idr")) {
     }
 
 }
+if (!function_exists("defaultTgl")) {
+    function defaultTgl() {
+        return '01-01-9999';
+    }
+
+}
 /*
  * -----------------------------------------------------------------------------
  */
@@ -681,7 +687,7 @@ if (!function_exists("arrayToObject")) {
  */
 //$CI = & get_instance();
 
-$CI =& get_instance();
+$CI = & get_instance();
 
 $CI->load->library('session');
 

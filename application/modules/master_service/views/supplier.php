@@ -8,9 +8,9 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_service/addPelanggan" class="btn btn-sm btn-primary">
+            <a href="#master_service/addSupplier" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Pelanggan</a>
+                Tambah Supplier</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
@@ -28,11 +28,11 @@ echo $this->session->flashdata('msg');
         //inline scripts related to this page
     });  
     
-    function hapusPelanggan(id) {
+    function hapusSuplier(id) {
         if (confirm("Yakin ingin menghapus pelanggan ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('master_service/hapusPelanggan'); ?>',
+                url: '<?php echo site_url('master_service/hapusSuplier'); ?>',
                 dataType: "json",
                 data: {
                     id: id
@@ -46,7 +46,7 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_service/loadPelanggan') ?>',      //another controller function for generating data
+            url:'<?php echo site_url('master_service/loadSuplier') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
             colNames:['Kode','Nama','Alamat', 'HP', 'Telpon', 'NPWP', 'Email', 'Edit', 'Hapus'],       //Grid column headings

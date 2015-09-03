@@ -48,6 +48,16 @@ class Master_Service extends Application {
      * @author Aris
      * @since 1.0
      */
+    public function supplier() {
+        $this->hakAkses(29);
+        $this->load->view('supplier', $this->data);
+    }
+
+    /**
+     * This function is used for display menu form
+     * @author Aris
+     * @since 1.0
+     */
     public function dataKendaraan() {
         $this->hakAkses(33);
         $this->load->view('dataKendaraan', $this->data);
@@ -84,6 +94,23 @@ class Master_Service extends Application {
         $this->load->view('addFlateRate', $this->data);
     }
 
+    function jsonPelanggan() {
+        $nama = $this->input->post('param');
+        $cbid = ses_cabang;
+        $data['response'] = 'false';
+        $query = $this->model_service->getPelangganByNama($nama, $cbid);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array('value' => $row['pel_nama'], 'pelid' => $row['pelid'], 'desc' => $row['pel_alamat']);
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+        }
+        echo json_encode($data);
+    }
+
     /**
      * This function is used for display the exmination form
      * @author Aris
@@ -94,6 +121,17 @@ class Master_Service extends Application {
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addPelanggan', $this->data);
     }
+
+    function jsonModelKendaraan() {
+        $merkid = $this->input->post('merkid');
+        echo json_encode($this->model_service->getModelByMerk($merkid));
+    }
+
+    function jsonTypeKendaraan() {
+        $modelid = $this->input->post('modelid');
+        echo json_encode($this->model_service->getTypeByModel($modelid));
+    }
+
     /**
      * This function is used for display the exmination form
      * @author Aris
@@ -101,7 +139,8 @@ class Master_Service extends Application {
      */
     public function addKendaraan() {
         $this->hakAkses(33);
-        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->data['merk'] = $this->model_admin->getMerk();
+        $this->data['warna'] = $this->model_admin->getWarna();
         $this->load->view('addKendaraan', $this->data);
     }
 
@@ -157,13 +196,30 @@ class Master_Service extends Application {
     public function editPelanggan() {
         $this->hakAkses(28);
         $id = $this->input->GET('id');
-//        log_message('error', 'AAAAAAAA '.$id);
         $data = $this->model_admin->getPelangganById($id);
         $this->data['data'] = $data;
 
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->data['kota'] = $this->model_admin->getKotaByPropinsi($data['kota_propid']);
         $this->load->view('editPelanggan', $this->data);
+    }
+
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function editKendaraan() {
+        $this->hakAkses(28);
+        $id = $this->input->GET('id');
+        $data = $this->model_service->getKendaraanById($id);
+        $this->data['data'] = $data;
+
+        $this->data['merk'] = $this->model_admin->getMerk();
+        $this->data['model'] = $this->model_service->getModelByMerk($data['merkid']);
+        $this->data['type'] = $this->model_service->getTypeByModel($data['modelid']);
+        $this->data['warna'] = $this->model_admin->getWarna();
+        $this->load->view('editKendaraan', $this->data);
     }
 
     /**
@@ -201,6 +257,82 @@ class Master_Service extends Application {
     }
 
     /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function saveKendaraan() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('msc_nopol', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $stnkExp = $this->input->post("msc_stnkexp");
+            if (empty($stnkExp)) {
+                $stnkExp = defaultTgl();
+            }
+            $data = array(
+                'msc_pelid' => strtoupper($this->input->post('msc_pelid')),
+                'msc_nopol' => strtoupper(str_replace(' ', '', $this->input->post('msc_nopol'))),
+                'msc_norangka' => strtoupper($this->input->post('msc_norangka')),
+                'msc_nomesin' => strtoupper($this->input->post('msc_nomesin')),
+                'msc_warnaid' => $this->input->post('msc_warnaid'),
+                'msc_ctyid' => $this->input->post('msc_ctyid'),
+                'msc_tahun' => $this->input->post('msc_tahun'),
+                'msc_inextern' => $this->input->post('msc_inextern'),
+                'msc_createon' => date('Y-m-d H:i:s'),
+                'msc_createby' => ses_username,
+                'msc_stnkexp' => dateToIndo($stnkExp),
+                'msc_cbid' => ses_cabang
+            );
+            $return = array();
+            $hasil = $this->model_service->saveKendaraan($data);
+            if ($hasil) {
+                $return['result'] = true;
+                $return['msg'] = $this->sukses("Berhasil menyimpan kendaraan");
+            } else {
+                $return['result'] = false;
+                $return['msg'] = $this->error("Gagal menyimpan kendaraan");
+            }
+        }
+        echo json_encode($return);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan kendaraan
+     */
+    public function updateKendaraan() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('msc_nopol', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $stnkExp = $this->input->post("msc_stnkexp");
+            if (empty($stnkExp)) {
+                $stnkExp = defaultTgl();
+            }
+            $data = array(
+                'mscid' => $this->input->post('mscid'),
+                'msc_pelid' => strtoupper($this->input->post('msc_pelid')),
+                'msc_nopol' => strtoupper(str_replace(' ', '', $this->input->post('msc_nopol'))),
+                'msc_norangka' => strtoupper($this->input->post('msc_norangka')),
+                'msc_nomesin' => strtoupper($this->input->post('msc_nomesin')),
+                'msc_warnaid' => $this->input->post('msc_warnaid'),
+                'msc_ctyid' => $this->input->post('msc_ctyid'),
+                'msc_tahun' => $this->input->post('msc_tahun'),
+                'msc_inextern' => $this->input->post('msc_inextern'),
+                'msc_last_update' => date('Y-m-d H:i:s'),
+                'msc_stnkexp' => dateToIndo($stnkExp),
+                'msc_cbid' => ses_cabang
+            );
+            $return = array();
+            $hasil = $this->model_service->updateKendaraan($data);
+            if ($hasil) {
+                $return['result'] = true;
+                $return['msg'] = $this->sukses("Berhasil menyimpan kendaraan");
+            } else {
+                $return['result'] = false;
+                $return['msg'] = $this->error("Gagal menyimpan kendaraan");
+            }
+        }
+        echo json_encode($return);
+    }
+
+    /**
      * Function ini digunakan untuk menghapus pelanggan
      * @since 1.0
      * @author Aris
@@ -225,7 +357,7 @@ class Master_Service extends Application {
         if ($this->form_validation->run() == TRUE) {
             $tgl = $this->input->post('pel_tgl_lahir');
             if (empty($tgl)) {
-                $tgl = '01-01-9999';
+                $tgl = defaultTgl();
             }
             $data = array(
                 'pel_cbid' => ses_cabang,
@@ -266,7 +398,7 @@ class Master_Service extends Application {
         if ($this->form_validation->run() == TRUE) {
             $tgl = $this->input->post('pel_tgl_lahir');
             if (empty($tgl)) {
-                $tgl = '01-01-9999';
+                $tgl = defaultTgl();
             }
             $data = array(
                 'pelid' => $this->input->post('pelid'),
@@ -466,7 +598,7 @@ class Master_Service extends Application {
         $start = ($start < 0) ? 0 : $start;
         $where = whereLoad();
         $this->load->model('model_admin');
-        $count = $this->model_admin->getTotalData($where, 'ms_pelanggan');
+        $count = $this->model_service->getTotalPelanggan($where, 'ms_pelanggan');
         if ($count > 0) {
             $total_pages = ceil($count / $limit);
         } else {
@@ -475,7 +607,7 @@ class Master_Service extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_admin->getAllData($start, $limit, $sidx, $sord, $where, 'ms_pelanggan');
+        $query = $this->model_service->getAllPelanggan($start, $limit, $sidx, $sord, $where, 'ms_pelanggan');
         $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
@@ -488,7 +620,7 @@ class Master_Service extends Application {
                 if ($row->pel_status == '0') {
                     $del = "hapusPelanggan('" . $row->pelid . "')";
                     $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $edit = '<a href="#master_service/editPelanggan?id=' . $row->pelid. '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                    $edit = '<a href="#master_service/editPelanggan?id=' . $row->pelid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 }
                 $responce->rows[$i]['id'] = $row->pelid;
                 $responce->rows[$i]['cell'] = array(
@@ -501,6 +633,51 @@ class Master_Service extends Application {
                     $row->pel_email,
                     $edit,
                     $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    function loadKendaraan() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'msc_nopol';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_admin');
+        $count = $this->model_service->getTotalKendaraan($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_service->getAllKendaraan($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusKendaraan('" . $row->mscid . "')";
+                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_service/editKendaraan?id=' . $row->mscid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->mscid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->pel_nama,
+                    $row->msc_nopol,
+                    $row->msc_norangka,
+                    $row->msc_nomesin,
+                    $row->merk_deskripsi,
+                    $row->model_deskripsi,
+                    $row->cty_deskripsi,
+                    $row->msc_tahun,
+                    $edit);
                 $i++;
             }
         echo json_encode($responce);

@@ -71,7 +71,7 @@ echo $this->session->flashdata('msg');
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Flate Rate"
+            caption:"Daftar Pelanggan"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
