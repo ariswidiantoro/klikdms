@@ -2,14 +2,10 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-//if (!function_exists('path_css')) {
-
 function path_css() {
     $CI = & get_instance();
     return $CI->config->item('path_css');
 }
-
-//}
 
 if (!function_exists('path_css_admin')) {
 
@@ -28,9 +24,6 @@ if (!function_exists('path_avatar')) {
 
 }
 
-/**
- * 
- */
 if (!function_exists('path_js')) {
 
     function path_js($uri = '') {
@@ -39,9 +32,7 @@ if (!function_exists('path_js')) {
     }
 
 }
-/**
- * 
- */
+
 if (!function_exists('path_docs')) {
 
     function path_docs($uri = '') {
@@ -50,9 +41,7 @@ if (!function_exists('path_docs')) {
     }
 
 }
-/**
- * 
- */
+
 if (!function_exists('path_asset')) {
 
     function path_asset($uri = '') {
@@ -61,9 +50,7 @@ if (!function_exists('path_asset')) {
     }
 
 }
-/**
- * 
- */
+
 if (!function_exists('path_upload')) {
 
     function path_upload($uri = '') {
@@ -72,9 +59,7 @@ if (!function_exists('path_upload')) {
     }
 
 }
-/**
- * 
- */
+
 if (!function_exists('path_skin_images')) {
 
     function path_skin_images() {
@@ -83,9 +68,7 @@ if (!function_exists('path_skin_images')) {
     }
 
 }
-/**
- * 
- */
+
 if (!function_exists('path_slides')) {
 
     function path_slides() {
@@ -95,9 +78,6 @@ if (!function_exists('path_slides')) {
 
 }
 
-/**
- * 
- */
 if (!function_exists('path_js_plugin')) {
 
     function path_js_plugin($uri = '') {
@@ -106,9 +86,7 @@ if (!function_exists('path_js_plugin')) {
     }
 
 }
-/**
- * 
- */
+
 if (!function_exists('path_bootstrap')) {
 
     function path_bootstrap($uri = '') {
@@ -117,9 +95,7 @@ if (!function_exists('path_bootstrap')) {
     }
 
 }
-/**
- * 
- */
+
 if (!function_exists('path_font_icons')) {
 
     function path_font_icons($uri = '') {
@@ -128,9 +104,7 @@ if (!function_exists('path_font_icons')) {
     }
 
 }
-/**
- * 
- */
+
 if (!function_exists('path_js_admin')) {
 
     function path_js_admin($uri = '') {
@@ -169,28 +143,6 @@ if (!function_exists('path_img')) {
     }
 
 }
-
-//if (!function_exists('dateToIndo')) {
-//    function dateToIndo($date = '') {
-//        $part = explode(' ', $date);
-//        if (count($part) > 1) {
-//            $pecah = explode('-', $part[0]);
-//            if (count($pecah) > 2) {
-//                $getDate = $pecah[2] . '-' . $pecah[1] . '-' . $pecah[0];
-//            } else {
-//                $getDate = $date;
-//            }
-//            $getDate .= ' ' . $part[1];
-//        } else {
-//            $pecah = explode('-', $date);
-//            if (count($pecah) > 2) {
-//                $getDate = $pecah[2] . '-' . $pecah[1] . '-' . $pecah[0];
-//            } else {
-//                $getDate = $date;
-//            }
-//        }
-//        return $getDate;
-//    }
 
 if (!function_exists('create_cookie')) {
 
@@ -312,5 +264,96 @@ function whereLoad() {
     }
 }
 
-//}
+function datenotimes($tgl, $jam = true) {
+    //Contoh Format : 2007-08-15 01:27:45
+    if ($tgl == '0000-00-00' || empty($tgl)) {
+        return '-';
+    } else {
+        $tanggal = strtotime($tgl);
+        /* $bln_array = array (
+          '01'=>'Januari',
+          '02'=>'Februari',
+          '03'=>'Maret',
+          '04'=>'April',
+          '05'=>'Mei',
+          '06'=>'Juni',
+          '07'=>'Juli',
+          '08'=>'Agustus',
+          '09'=>'September',
+          '10'=>'Oktober',
+          '11'=>'November',
+          '12'=>'Desember'
+          ); */
+        $bln_array = array(
+            '01' => 'JAN',
+            '02' => 'FEB',
+            '03' => 'MAR',
+            '04' => 'APR',
+            '05' => 'MEI',
+            '06' => 'JUN',
+            '07' => 'JUL',
+            '08' => 'AGU',
+            '09' => 'SEP',
+            '10' => 'OKT',
+            '11' => 'NOV',
+            '12' => 'DES'
+        );
+        $hari_arr = array(
+            '0' => 'Minggu',
+            '1' => 'Senin',
+            '2' => 'Selasa',
+            '3' => 'Rabu',
+            '4' => 'Kamis',
+            '5' => 'Jum`at',
+            '6' => 'Sabtu'
+        );
+        $tggl = date('d', $tanggal);
+        $bln = @$bln_array[date('m', $tanggal)];
+        //$bln = date('m', $tanggal);
+        $thn = date('Y', $tanggal);
+        $Jam = $jam ? date('H:i:s', $tanggal) : '';
+        return "$tggl $bln $thn";
+    }
+}
+
+function datetimes($tgl, $jam = true) {
+    //Contoh Format : 2007-08-15 01:27:45
+    if ($tgl == '0000-00-00' || empty($tgl)) {
+        return '-';
+    } else {
+        $tanggal = strtotime($tgl);
+        $bln_array = array(
+            '01' => 'JAN',
+            '02' => 'FEB',
+            '03' => 'MAR',
+            '04' => 'APR',
+            '05' => 'MEI',
+            '06' => 'JUN',
+            '07' => 'JUL',
+            '08' => 'AGU',
+            '09' => 'SEP',
+            '10' => 'OKT',
+            '11' => 'NOV',
+            '12' => 'DES'
+        );
+        $hari_arr = array(
+            '0' => 'Minggu',
+            '1' => 'Senin',
+            '2' => 'Selasa',
+            '3' => 'Rabu',
+            '4' => 'Kamis',
+            '5' => 'Jum`at',
+            '6' => 'Sabtu'
+        );
+        $tggl = date('d', $tanggal);
+        $bln = @$bln_array[date('m', $tanggal)];
+        //$bln = date('m', $tanggal);
+        $thn = date('y', $tanggal);
+        $Jam = $jam ? date('H:i:s', $tanggal) : '';
+        return "$Jam - $tggl $bln $thn";
+    }
+}
+
+ 
+
 ?>
