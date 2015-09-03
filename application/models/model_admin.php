@@ -12,7 +12,7 @@ class Model_Admin extends CI_Model {
     }
 
     /** TEST ARISSSSkWHEHEHEHEHEHSSSSSSSSSSS
-    /**
+      /**
      * Function ini digunakan untuk mengambil menu
      * @param type $data
      * @return boolean
@@ -24,6 +24,7 @@ class Model_Admin extends CI_Model {
         }
         return null;
     }
+
     public function getPelangganById($id) {
         $sql = $this->db->query("SELECT * FROM ms_pelanggan LEFT JOIN ms_kota ON kotaid = pel_kotaid WHERE pelid = '$id'");
         if ($sql->num_rows() > 0) {
@@ -541,6 +542,32 @@ class Model_Admin extends CI_Model {
      */
     public function getCabang() {
         $sql = $this->db->query("SELECT * FROM ms_cabang WHERE cb_status = 0 ORDER BY cb_nama");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil merk
+     * @param type $data
+     * @return boolean
+     */
+    public function getMerk() {
+        $sql = $this->db->query("SELECT * FROM ms_car_merk ORDER BY merk_deskripsi");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil warna
+     * @param type $data
+     * @return boolean
+     */
+    public function getWarna() {
+        $sql = $this->db->query("SELECT * FROM ms_warna ORDER BY warna_deskripsi");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }

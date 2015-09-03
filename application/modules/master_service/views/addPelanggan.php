@@ -178,59 +178,7 @@
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });
-    $(this).ready(function() {
-        $("#kr_atasan").autocomplete({
-            minLength: 1,
-            source:
-                function(request, add) {
-                $.ajax({
-                    url: "<?php echo site_url('admin/jsonKaryawan'); ?>",
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {
-                        cbid : $("#kr_cbid").val(),
-                        param : $("#kr_atasan").val()
-                    },
-                    success:
-                        function(data) {
-                        if (data.response == "true")
-                        {
-                            add(data.message);
-                        }
-                        else
-                        {
-                            add(data.message);
-                        }
-                    }
-
-                });
-            },
-            select: function(event, ui) {
-                $('#kr_atasanid').val(ui.item.krid);
-                return true;
-            }
-        })
-    });
     
-    
-    function getJabatan()
-    {
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo site_url('admin/jsonJabatan') ?>',
-            dataType: "json",
-            async: false,
-            data: {
-                departemen : $("#jab_deptid").val()
-            },
-            success: function(data) {
-                $('#kr_jabid').html('');
-                $.each(data, function(messageIndex, message) {
-                    $('#kr_jabid').append('<option value="' + message.jabid + '">' + message.jab_deskripsi + '</option>');
-                });
-            }
-        })
-    }
     function getKota()
     {
         $.ajax({
