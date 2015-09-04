@@ -17,10 +17,14 @@ class Master_Sales extends Application {
         echo " ";
     }
     
+    public function masterMerk(){
+        $this->hakAkses('7050');
+    }
+    
     function loadMerk() {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
-        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'br_cbid';
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
         $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;
@@ -40,11 +44,11 @@ class Master_Sales extends Application {
         $responce->total = $total_pages;
         $responce->records = $count;
         $i = 0;
-        if (count($query) > 0)
+        if (count($query) > 0) 
             foreach ($query as $row) {
-                $del = "hapusBasicRate('" . $row->br_cbid . "')";
+                $del = "hapusMerk('" . $row->br_cbid . "')";
                 $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                $edit = '<a href="#master_service/editBasicRate?id=' . $row->br_cbid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $edit = '<a href="#master_sales/editMerk?id=' . $row->merkid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->br_cbid;
                 $responce->rows[$i]['cell'] = array(
                     number_format($row->br_rate), $edit);
