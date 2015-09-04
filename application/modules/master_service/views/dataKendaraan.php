@@ -43,15 +43,17 @@
             url:'<?php echo site_url('master_service/loadKendaraan') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Nama Pemilik','No Polisi','No Rangka', 'No Mesin','Tahun', 'Edit', 'Hapus'],       //Grid column headings
+            colNames:['Nama Pemilik','No Polisi','No Rangka', 'No Mesin','Merk', 'Model', 'Type','Tahun', 'Edit'],       //Grid column headings
             colModel:[
                 {name:'pel_nama',index:'pel_nama', width:100, align:"left"},
                 {name:'msc_nopol',index:'msc_nopol', width:50, align:"left"},
                 {name:'msc_norangka',index:'msc_norangka', width:70, align:"left"},
                 {name:'msc_nomesin',index:'msc_nomesin', width:70, align:"left"},
+                {name:'merk_deskripsi',index:'merk_deskripsi', width:70, align:"left"},
+                {name:'model_deskripsi',index:'model_deskripsi', width:70, align:"left"},
+                {name:'cty_deskripsi',index:'cty_deskripsi', width:70, align:"left"},
                 {name:'msc_tahun',index:'msc_tahun', width:50, align:"left"},
                 {name:'edit',index:'edit', width:20, align:"center"},
-                {name:'hapus',index:'hapus', width:20, align:"center"},
             ],
             rowNum:10,
             height : 300,
@@ -63,7 +65,7 @@
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Flate Rate"
+            caption:"Daftar Kendaraan"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );

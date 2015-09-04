@@ -178,6 +178,7 @@
             
                     window.jQuery || document.write("<script src='<?php echo path_js(); ?>jquery.js'>"+"<"+"/script>");
                 </script>
+                <!--<script src="<?php echo path_js(); ?>jquery.sun.js"></script>-->
                 <?php $this->load->view('attribut/menu') ?>
 
 
@@ -378,6 +379,7 @@ window.jQuery || document.write("<script src='../../assets/js/jquery1x.js'>"+"<"
         <script src="<?php echo path_js(); ?>bootstrap.js"></script>
         <script src="<?php echo path_js(); ?>jquery-ui.js"></script>
         <script src="<?php echo path_js(); ?>validasi.js"></script>
+        <script src="<?php echo path_js(); ?>typeahead.jquery.js"></script>
 
 
         <!-- ace scripts -->
