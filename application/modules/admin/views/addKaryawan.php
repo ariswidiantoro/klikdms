@@ -58,7 +58,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Karyawan</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_nama" required="required"  placeholder="Nama" class="ace col-xs-10 col-sm-5" />
+            <input type="text" name="kr_nama" required="required"  placeholder="Nama" class="upper ace col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="form-group">
@@ -70,7 +70,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea class="ace col-xs-10 col-sm-5" name="kr_alamat" rows="4"></textarea>
+            <textarea class="upper ace col-xs-10 col-sm-5" name="kr_alamat" rows="4"></textarea>
         </div>
     </div>
     <div class="form-group">
@@ -261,8 +261,10 @@
                 .serialize(),
                 success: function(data) {
                     window.scrollTo(0, 0);
-                    document.form.reset();
-                    $("#result").html(data).show().fadeIn("slow");
+                    if (data.result) {
+                        document.form.reset();
+                    }
+                    $("#result").html(data.msg).show().fadeIn("slow");
                 }
             })
             return false;

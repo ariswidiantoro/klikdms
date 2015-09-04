@@ -32,6 +32,13 @@ class Model_Admin extends CI_Model {
         }
         return null;
     }
+    public function getSupplierById($id) {
+        $sql = $this->db->query("SELECT * FROM ms_supplier LEFT JOIN ms_kota ON kotaid = sup_kotaid WHERE supid = '$id'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
 
     /**
      * Function ini digunakan untuk mengambil menu
@@ -379,7 +386,7 @@ class Model_Admin extends CI_Model {
     function saveKaryawan($data) {
         $this->db->trans_begin();
         $tahun = substr(date('Y'), 2, 2);
-        $id = sprintf("%03s", $this->getCounter("KR" . $tahun));
+        $id = sprintf("%08s", $this->getCounter("KR" . $tahun));
         $data['krid'] = "KR" . $tahun . $id;
         $this->db->INSERT('ms_karyawan', $data);
         $group = array(

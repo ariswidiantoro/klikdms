@@ -43,6 +43,7 @@ class Master_Service extends Application {
         $this->hakAkses(28);
         $this->load->view('pelanggan', $this->data);
     }
+
     /**
      * This function is used for display menu form
      * @author Aris
@@ -61,6 +62,74 @@ class Master_Service extends Application {
     public function dataKendaraan() {
         $this->hakAkses(33);
         $this->load->view('dataKendaraan', $this->data);
+    }
+
+    /**
+     * This function is used for display menu form
+     * @author Aris
+     * @since 1.0
+     */
+    public function stall() {
+        $this->hakAkses(31);
+        $this->load->view('stall', $this->data);
+    }
+
+    /**
+     * This function is used for display menu form
+     * @author Aris
+     * @since 1.0
+     */
+    public function absensiMekanik() {
+        $this->hakAkses(30);
+        $this->data['data'] = $this->model_service->getMekanikBelumAbsen(ses_cabang);
+        $this->load->view('absensiMekanik', $this->data);
+    }
+
+    /**
+     * This function is used for display menu form
+     * @author Aris
+     * @since 1.0
+     */
+    public function daftarAbsensi() {
+        $this->hakAkses(30);
+        $this->data['data'] = $this->model_service->getMekanikSudahAbsen(ses_cabang);
+        $this->load->view('daftarAbsensi', $this->data);
+    }
+
+    /**
+     * Digunakan untuk mengupdate group cabang masing2 user
+     */
+    function saveAbsensi() {
+        $this->form_validation->set_rules('krid', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $krid = $this->input->post('krid');
+            $start = $this->input->post('start');
+            $end = $this->input->post('end');
+            $total = $this->input->post('total');
+            $keterangan = $this->input->post('keterangan');
+            $arr = array();
+            for ($i = 0; $i < count($krid); $i++) {
+                if ($this->input->post('check' . $krid[$i]) == '1') {
+                    $arr[] = array(
+                        'abs_tgl' => date('Y-m-d'),
+                        'abs_krid' => $krid[$i],
+                        'abs_in' => $start[$i],
+                        'abs_out' => $end[$i],
+                        'abs_total' => $total[$i],
+                        'abs_deskripsi' => $keterangan[$i],
+                        'abs_cbid' => ses_cabang
+                    );
+                }
+            }
+            if ($this->model_service->saveAbsensi($arr)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan absensi");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan absensi");
+            }
+        }
+        echo json_encode($hasil);
     }
 
     /**
@@ -122,6 +191,17 @@ class Master_Service extends Application {
         $this->load->view('addPelanggan', $this->data);
     }
 
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function addSupplier() {
+        $this->hakAkses(29);
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->load->view('addSupplier', $this->data);
+    }
+
     function jsonModelKendaraan() {
         $merkid = $this->input->post('merkid');
         echo json_encode($this->model_service->getModelByMerk($merkid));
@@ -169,6 +249,16 @@ class Master_Service extends Application {
      * @author Aris
      * @since 1.0
      */
+    public function addStall() {
+        $this->hakAkses(31);
+        $this->load->view('addStall', $this->data);
+    }
+
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
     public function editBasicRate() {
         $this->hakAkses(48);
         $id = $this->input->GET('id');
@@ -202,6 +292,22 @@ class Master_Service extends Application {
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->data['kota'] = $this->model_admin->getKotaByPropinsi($data['kota_propid']);
         $this->load->view('editPelanggan', $this->data);
+    }
+
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
+    public function editSupplier() {
+        $this->hakAkses(29);
+        $id = $this->input->GET('id');
+        $data = $this->model_admin->getSupplierById($id);
+        $this->data['data'] = $data;
+
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->data['kota'] = $this->model_admin->getKotaByPropinsi($data['kota_propid']);
+        $this->load->view('editSupplier', $this->data);
     }
 
     /**
@@ -251,6 +357,29 @@ class Master_Service extends Application {
                 $hasil = $this->sukses("Berhasil menyimpan basic rate");
             } else {
                 $hasil = $this->error("Gagal menyimpan basic rate");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function saveStall() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('stall_nomer', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $nomer = $this->system->numeric($this->input->post('stall_nomer'));
+            $data = array(
+                'stall_cbid' => ses_cabang,
+                'stall_nomer' => $nomer
+            );
+            if ($this->model_service->saveStall($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Stall");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Stall");
             }
         }
         echo json_encode($hasil);
@@ -349,6 +478,22 @@ class Master_Service extends Application {
     }
 
     /**
+     * Function ini digunakan untuk menghapus pelanggan
+     * @since 1.0
+     * @author Aris
+     */
+    public function hapusSupplier() {
+        $id = $this->input->post('id');
+        $hasil = $this->model_service->hapusSupplier($id);
+        if ($hasil) {
+            $hasil = $this->sukses("Berhasil menghapus supplier");
+        } else {
+            $hasil = $this->error("Gagal menghapus supplier");
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
      * Function ini digunakan untuk menyimpan jabatan
      */
     public function savePelanggan() {
@@ -384,6 +529,71 @@ class Master_Service extends Application {
             } else {
                 $retur['result'] = false;
                 $retur['msg'] = $this->error("Gagal menyimpan pelanggan");
+            }
+        }
+        echo json_encode($retur);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function saveSupplier() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('sup_nama', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'sup_cbid' => ses_cabang,
+                'sup_nama' => strtoupper($this->input->post('sup_nama')),
+                'sup_createby' => ses_username,
+                'sup_createon' => date('Y-m-d H:i:s'),
+                'sup_alamat' => strtoupper($this->input->post('sup_alamat')),
+                'sup_kotaid' => $this->input->post('sup_kotaid'),
+                'sup_hp' => $this->input->post('sup_hp'),
+                'sup_npwp' => $this->input->post('sup_npwp'),
+                'sup_telpon' => $this->input->post('sup_telpon'),
+                'sup_fax' => $this->input->post('sup_fax'),
+            );
+            $hasil = $this->model_service->saveSupplier($data);
+            $retur = array();
+            if ($hasil) {
+                $retur['result'] = true;
+                $retur['msg'] = $this->sukses("Berhasil menyimpan supplier");
+            } else {
+                $retur['result'] = false;
+                $retur['msg'] = $this->error("Gagal menyimpan supplier");
+            }
+        }
+        echo json_encode($retur);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function updateSupplier() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('sup_nama', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'sup_cbid' => ses_cabang,
+                'sup_nama' => strtoupper($this->input->post('sup_nama')),
+                'sup_createby' => ses_username,
+                'sup_createon' => date('Y-m-d H:i:s'),
+                'sup_alamat' => strtoupper($this->input->post('sup_alamat')),
+                'sup_kotaid' => $this->input->post('sup_kotaid'),
+                'sup_hp' => $this->input->post('sup_hp'),
+                'supid' => $this->input->post('supid'),
+                'sup_npwp' => $this->input->post('sup_npwp'),
+                'sup_telpon' => $this->input->post('sup_telpon'),
+                'sup_fax' => $this->input->post('sup_fax'),
+            );
+            $hasil = $this->model_service->updateSupplier($data);
+            $retur = array();
+            if ($hasil) {
+                $retur['result'] = true;
+                $retur['msg'] = $this->sukses("Berhasil menyimpan supplier");
+            } else {
+                $retur['result'] = false;
+                $retur['msg'] = $this->error("Gagal menyimpan supplier");
             }
         }
         echo json_encode($retur);
@@ -631,6 +841,54 @@ class Master_Service extends Application {
                     $row->pel_telpon,
                     $row->pel_npwp,
                     $row->pel_email,
+                    $edit,
+                    $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    function loadSupplier() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'sup_nama';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_admin');
+        $count = $this->model_service->getTotalSupplier($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_service->getAllSupplier($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $hapus = '-';
+                $edit = '-';
+                if ($row->sup_status == '0') {
+                    $del = "hapusSupplier('" . $row->supid . "')";
+                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                    $edit = '<a href="#master_service/editSupplier?id=' . $row->supid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                }
+                $responce->rows[$i]['id'] = $row->supid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->supid,
+                    $row->sup_nama,
+                    $row->sup_alamat,
+                    $row->sup_hp,
+                    $row->sup_telpon,
+                    $row->sup_npwp,
                     $edit,
                     $hapus);
                 $i++;
