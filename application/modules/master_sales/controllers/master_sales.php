@@ -1,159 +1,22 @@
 <?php
 
 /**
- * Class Admin_Controller
- * @author Aris
+ * Class Master
+ * @author Rossi Erl
  * 2013-11-11
  */
 class Master_Sales extends Application {
 
-    /**
-     * The new Admin_controller
-     */
     public function __construct() {
         parent::__construct();
-        $this->load->model('model_admin');
-        $this->load->model('model_service');
-//        $this->hakAkses(1);
+        $this->load->model(array('model_admin', 'model_sales'));
         $this->isLogin();
     }
 
     public function index() {
-        $this->data['content'] = 'service';
-        $this->data['menuid'] = '4';
-        $this->load->view('template', $this->data);
+        echo " ";
     }
-
-    /**
-     * This function is used for display menu form
-     * @author Aris
-     * @since 1.0
-     */
-    public function flateRate() {
-        $this->hakAkses(26);
-        $this->load->view('flateRate', $this->data);
-    }
-
-    /**
-     * This function is used for display menu form
-     * @author Aris
-     * @since 1.0
-     */
-    public function pelanggan() {
-        $this->hakAkses(28);
-        $this->load->view('pelanggan', $this->data);
-    }
-    /**
-     * This function is used for display menu form
-     * @author Aris
-     * @since 1.0
-     */
-    public function dataKendaraan() {
-        $this->hakAkses(33);
-        $this->load->view('dataKendaraan', $this->data);
-    }
-
-    /**
-     * This function is used for display menu form
-     * @author Aris
-     * @since 1.0
-     */
-    public function freeService() {
-        $this->hakAkses(27);
-        $this->load->view('freeService', $this->data);
-    }
-
-    /**
-     * This function is used for display menu form
-     * @author Aris
-     * @since 1.0
-     */
-    public function basicRate() {
-        $this->hakAkses(48);
-        $this->load->view('basicRate', $this->data);
-    }
-
-    /**
-     * This function is used for display the exmination form
-     * @author Aris
-     * @since 1.0
-     */
-    public function addFlateRate() {
-        $this->hakAkses(26);
-        $this->data['basic'] = $this->model_service->getBasicRate(ses_cabang);
-        $this->load->view('addFlateRate', $this->data);
-    }
-
-    /**
-     * This function is used for display the exmination form
-     * @author Aris
-     * @since 1.0
-     */
-    public function addPelanggan() {
-        $this->hakAkses(28);
-        $this->data['propinsi'] = $this->model_admin->getPropinsi();
-        $this->load->view('addPelanggan', $this->data);
-    }
-    /**
-     * This function is used for display the exmination form
-     * @author Aris
-     * @since 1.0
-     */
-    public function addKendaraan() {
-        $this->hakAkses(33);
-        $this->data['propinsi'] = $this->model_admin->getPropinsi();
-        $this->load->view('addKendaraan', $this->data);
-    }
-
-    /**
-     * This function is used for display the exmination form
-     * @author Aris
-     * @since 1.0
-     */
-    public function addFreeService() {
-        $this->hakAkses(27);
-        $this->load->view('addFreeService', $this->data);
-    }
-
-    /**
-     * This function is used for display the exmination form
-     * @author Aris
-     * @since 1.0
-     */
-    public function addBasicRate() {
-        $this->hakAkses(48);
-        $this->load->view('addBasicRate', $this->data);
-    }
-
-    /**
-     * This function is used for display the exmination form
-     * @author Aris
-     * @since 1.0
-     */
-    public function editBasicRate() {
-        $this->hakAkses(48);
-        $id = $this->input->GET('id');
-        $this->data['data'] = $this->model_service->getBasicRate($id);
-        $this->load->view('editBasicRate', $this->data);
-    }
-
-    /**
-     * This function is used for display the exmination form
-     * @author Aris
-     * @since 1.0
-     */
-    public function editFlateRate() {
-        $this->hakAkses(26);
-        $id = $this->input->GET('id');
-        $this->data['data'] = $this->model_service->getFlateRate($id);
-        $this->load->view('editFlateRate', $this->data);
-    }
-
-    /**
-     * This function is used for display the exmination form
-     * @author Aris
-     * @since 1.0
-     */
+    
     public function editPelanggan() {
         $this->hakAkses(28);
         $id = $this->input->GET('id');
