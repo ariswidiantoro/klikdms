@@ -44,6 +44,19 @@ class Model_Service extends CI_Model {
      * @param type $where
      * @return int
      */
+    public function getTotalStall($where) {
+        $wh = "WHERE stall_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM svc_stall $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * Function ini digunakan untuk mendapatkan data cabang
+     * @param type $where
+     * @return int
+     */
     public function getTotalSupplier($where) {
         $wh = "WHERE sup_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
@@ -126,6 +139,20 @@ class Model_Service extends CI_Model {
         $this->db->where('pel_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $query = $this->db->get($table, $limit, $start);
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    function getAllStall($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->where('stall_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $query = $this->db->get('svc_stall', $limit, $start);
         if ($query->num_rows() > 0) {
             return $query->result();
         }
@@ -323,6 +350,7 @@ class Model_Service extends CI_Model {
         }
         return false;
     }
+
     function saveStall($data) {
         $this->db->trans_begin();
         $this->db->INSERT('svc_stall', $data);
@@ -379,6 +407,19 @@ class Model_Service extends CI_Model {
     }
 
     /**
+     * 
+     * @param type $id
+     * @return null
+     */
+    public function getStall($id) {
+        $sql = $this->db->query("SELECT * FROM svc_stall WHERE stallid = '$id'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
+    /**
      * Function ini digunakan untuk mengambil rol
      * @param type $data
      * @return boolean
@@ -392,6 +433,7 @@ class Model_Service extends CI_Model {
         }
         return null;
     }
+
     /**
      * Function ini digunakan untuk mengambil rol
      * @param type $data
@@ -445,6 +487,11 @@ class Model_Service extends CI_Model {
         return false;
     }
 
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
     function updateFlateRate($data) {
         $this->db->trans_begin();
         $this->db->where('flatid', $data['flatid']);
@@ -458,6 +505,11 @@ class Model_Service extends CI_Model {
         }
     }
 
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
     function updatePelanggan($data) {
         $this->db->trans_begin();
         $this->db->where('pelid', $data['pelid']);
@@ -471,6 +523,11 @@ class Model_Service extends CI_Model {
         }
     }
 
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
     function updateSupplier($data) {
         $this->db->trans_begin();
         $this->db->where('supid', $data['supid']);
@@ -484,6 +541,29 @@ class Model_Service extends CI_Model {
         }
     }
 
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
+    function updateStall($data) {
+        $this->db->trans_begin();
+        $this->db->where('stallid', $data['stallid']);
+        $this->db->update('svc_stall', $data);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
     function updateKendaraan($data) {
         $this->db->trans_begin();
         $this->db->where('mscid', $data['mscid']);

@@ -194,7 +194,7 @@ class Model_Admin extends CI_Model {
 
         $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON"
                 . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
-                . " WHERE menu_parent_id != -1 AND userro_krid = '" . ses_krid . "' ORDER BY menu_urut ASC");
+                . " WHERE menu_parent_id != -1 AND userro_krid = '" . ses_krid . "' ORDER BY menu_urut, menuid ASC");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }

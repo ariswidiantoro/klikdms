@@ -271,6 +271,18 @@ class Master_Service extends Application {
      * @author Aris
      * @since 1.0
      */
+    public function editStall() {
+        $this->hakAkses(31);
+        $id = $this->input->GET('id');
+        $this->data['data'] = $this->model_service->getStall($id);
+        $this->load->view('editStall', $this->data);
+    }
+
+    /**
+     * This function is used for display the exmination form
+     * @author Aris
+     * @since 1.0
+     */
     public function editFlateRate() {
         $this->hakAkses(26);
         $id = $this->input->GET('id');
@@ -369,12 +381,35 @@ class Master_Service extends Application {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('stall_nomer', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
-            $nomer = $this->system->numeric($this->input->post('stall_nomer'));
+            $nomer = $this->input->post('stall_nomer');
             $data = array(
                 'stall_cbid' => ses_cabang,
                 'stall_nomer' => $nomer
             );
             if ($this->model_service->saveStall($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Stall");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Stall");
+            }
+        }
+        echo json_encode($hasil);
+    }
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function updateStall() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('stall_nomer', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $nomer = $this->input->post('stall_nomer');
+            $data = array(
+                'stall_cbid' => ses_cabang,
+                'stall_nomer' => $nomer,
+                'stallid' => $this->input->post('stallid')
+            );
+            if ($this->model_service->updateStall($data)) {
                 $hasil['result'] = true;
                 $hasil['msg'] = $this->sukses("Berhasil menyimpan Stall");
             } else {
@@ -1009,6 +1044,43 @@ class Master_Service extends Application {
                 $responce->rows[$i]['id'] = $row->br_cbid;
                 $responce->rows[$i]['cell'] = array(
                     number_format($row->br_rate), $edit);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    function loadStall() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'stall_nomer';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_service');
+        $count = $this->model_service->getTotalStall($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_service->getAllStall($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusStall('" . $row->stallid . "')";
+                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_service/editStall?id=' . $row->stallid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->stallid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->stall_nomer, $edit);
                 $i++;
             }
         echo json_encode($responce);

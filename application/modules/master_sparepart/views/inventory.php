@@ -8,9 +8,9 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_service/addStall" class="btn btn-sm btn-primary">
+            <a href="#master_sparepart/addInventory" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Stall</a>
+                Tambah Inventory</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
@@ -27,11 +27,11 @@ echo $this->session->flashdata('msg');
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });
-    function hapusStall(id) {
+    function hapusJabatan(id) {
         if (confirm("Yakin ingin menghapus baris ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('master_service/hapusStall'); ?>',
+                url: '<?php echo site_url('master_service/hapusSparepart'); ?>',
                 dataType: "json",
                 data: {
                     id: id
@@ -45,13 +45,20 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_service/loadStall') ?>',      //another controller function for generating data
+            url:'<?php echo site_url('master_sparepart/loadInventory') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Nomer Stall','Edit'],       //Grid column headings
+            colNames:['Kode Barang','Barcode', 'Nama Barang','Jenis', 'Harga Beli Terakhir', 'Hpp', 'Harga Jual', 'Stock','Edit'],       //Grid column headings
             colModel:[
-                {name:'stall_nomer',index:'stall_nomer', width:50, align:"left"},
-                {name:'edit',index:'edit', width:10, align:"center"},
+                {name:'inve_kode',index:'inve_kode', width:50, align:"left"},
+                {name:'inve_barcode',index:'inve_barcode', width:50, align:"left"},
+                {name:'inve_nama',index:'inve_nama', width:50, align:"left"},
+                {name:'inve_jenis',index:'inve_jenis', width:50, align:"left"},
+                {name:'inve_harga_beli',index:'inve_harga_beli', width:50, align:"right"},
+                {name:'inve_hpp',index:'inve_hpp', width:50, align:"right"},
+                {name:'inve_harga',index:'inve_harga', width:50, align:"right"},
+                {name:'inve_qty',index:'inve_qty', width:50, align:"right"},
+                {name:'edit',index:'edit', width:20, align:"center"},
             ],
             rowNum:10,
             height : 300,
@@ -59,11 +66,11 @@ echo $this->session->flashdata('msg');
             //height: 300,
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'stall_nomer',
+            sortname: 'inve_kode',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Stall"
+            caption:"Daftar Inventory"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
