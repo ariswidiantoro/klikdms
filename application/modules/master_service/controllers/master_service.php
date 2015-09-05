@@ -186,7 +186,7 @@ class Master_Service extends Application {
      * @since 1.0
      */
     public function addPelanggan() {
-        $this->hakAkses(28);
+//        $this->hakAkses(28);
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addPelanggan', $this->data);
     }
@@ -197,7 +197,7 @@ class Master_Service extends Application {
      * @since 1.0
      */
     public function addSupplier() {
-        $this->hakAkses(29);
+//        $this->hakAkses(29);
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addSupplier', $this->data);
     }
@@ -296,7 +296,7 @@ class Master_Service extends Application {
      * @since 1.0
      */
     public function editPelanggan() {
-        $this->hakAkses(28);
+//        $this->hakAkses(28);
         $id = $this->input->GET('id');
         $data = $this->model_admin->getPelangganById($id);
         $this->data['data'] = $data;
@@ -312,7 +312,7 @@ class Master_Service extends Application {
      * @since 1.0
      */
     public function editSupplier() {
-        $this->hakAkses(29);
+//        $this->hakAkses(29);
         $id = $this->input->GET('id');
         $data = $this->model_admin->getSupplierById($id);
         $this->data['data'] = $data;

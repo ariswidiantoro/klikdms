@@ -39,6 +39,18 @@ class Master_Sparepart extends Application {
         $this->load->view('addInventory', $this->data);
     }
 
+    public function editInventory() {
+        $this->hakAkses(52);
+        $id = $this->input->GET('id');
+        $this->data['gudang'] = $this->model_sparepart->getGudang();
+        $data = $this->model_sparepart->getInventoryById($id);
+        $this->data['data'] = $data;
+        if (!empty($data['rak_gdgid'])) {
+            $this->data['rak'] = $this->model_sparepart->getRakByGudang($data['rak_gdgid']);
+        }
+        $this->load->view('editInventory', $this->data);
+    }
+
     public function inventory() {
         $this->hakAkses(52);
         $this->load->view('inventory', $this->data);
@@ -107,6 +119,51 @@ class Master_Sparepart extends Application {
         echo json_encode($responce);
     }
 
+    function loadInventory() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'inve_kode';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_sparepart');
+        $count = $this->model_sparepart->getTotalInventory($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sparepart->getAllInventory($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusGudang('" . $row->inveid . "')";
+                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_sparepart/editInventory?id=' . $row->inveid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->inveid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->inve_kode,
+                    $row->inve_barcode,
+                    $row->inve_nama,
+                    $row->inve_jenis,
+                    number_format($row->inve_harga_beli),
+                    number_format($row->inve_hpp),
+                    number_format($row->inve_harga),
+                    $row->inve_qty,
+                    $edit);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
     /**
      * Function ini digunakan untuk menyimpan jabatan
      */
@@ -155,6 +212,15 @@ class Master_Sparepart extends Application {
     public function rak() {
         $this->hakAkses(65);
         $this->load->view('rak', $this->data);
+    }
+
+    public function spesialItem() {
+        $this->hakAkses(53);
+        $this->load->view('spesialItem', $this->data);
+    }
+    public function uploadSpesialItem() {
+        $this->hakAkses(53);
+        $this->load->view('uploadSpesialItem', $this->data);
     }
 
     function jsonRak() {
@@ -231,6 +297,88 @@ class Master_Sparepart extends Application {
             } else {
                 $hasil['result'] = false;
                 $hasil['msg'] = $this->error("Gagal menyimpan Rak");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function saveInventory() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('inve_kode', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $min = $this->input->post('inve_qty_min');
+            if ($min == '') {
+                $min = 0;
+            }
+            $km = $this->input->post('inve_umur_km');
+            if ($km == '') {
+                $km = 0;
+            }
+            $bulan = $this->input->post('inve_umur_bulan');
+            if ($bulan == '') {
+                $bulan = 0;
+            }
+            $data = array(
+                'inve_cbid' => ses_cabang,
+                'inve_kode' => strtoupper($this->input->post('inve_kode')),
+                'inve_nama' => strtoupper($this->input->post('inve_nama')),
+                'inve_barcode' => $this->input->post('inve_barcode'),
+                'inve_rakid' => $this->input->post('inve_rakid'),
+                'inve_jenis' => $this->input->post('inve_jenis'),
+                'inve_qty_min' => $min,
+                'inve_umur_km' => $km,
+                'inve_umur_bulan' => $bulan,
+                'inve_harga' => $this->system->numeric($this->input->post('inve_harga')),
+            );
+            if ($this->model_sparepart->saveInventory($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Inventory");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Inventory");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function updateInventory() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('inve_kode', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $min = $this->input->post('inve_qty_min');
+            if ($min == '') {
+                $min = 0;
+            }
+            $km = $this->input->post('inve_umur_km');
+            if ($km == '') {
+                $km = 0;
+            }
+            $bulan = $this->input->post('inve_umur_bulan');
+            if ($bulan == '') {
+                $bulan = 0;
+            }
+            $data = array(
+                'inve_cbid' => ses_cabang,
+                'inve_kode' => strtoupper($this->input->post('inve_kode')),
+                'inve_nama' => strtoupper($this->input->post('inve_nama')),
+                'inve_barcode' => $this->input->post('inve_barcode'),
+                'inve_rakid' => $this->input->post('inve_rakid'),
+                'inve_jenis' => $this->input->post('inve_jenis'),
+                'inveid' => $this->input->post('inveid'),
+                'inve_qty_min' => $min,
+                'inve_umur_km' => $km,
+                'inve_umur_bulan' => $bulan,
+                'inve_harga' => $this->system->numeric($this->input->post('inve_harga')),
+            );
+            if ($this->model_sparepart->updateInventory($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Inventory");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Inventory");
             }
         }
         echo json_encode($hasil);
