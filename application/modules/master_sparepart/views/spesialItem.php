@@ -27,11 +27,11 @@ echo $this->session->flashdata('msg');
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });
-    function hapusJabatan(id) {
+    function hapusSpesialItem(id) {
         if (confirm("Yakin ingin menghapus baris ini ?")) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo site_url('master_service/hapusSparepart'); ?>',
+                url: '<?php echo site_url('master_sparepart/hapusSpesialItem'); ?>',
                 dataType: "json",
                 data: {
                     id: id
@@ -48,13 +48,15 @@ echo $this->session->flashdata('msg');
             url:'<?php echo site_url('master_sparepart/loadSpesialItem') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Kode Barang','Barcode', 'Nama Barang', 'Harga Jual','Edit'],       //Grid column headings
+            colNames:['Kode Barang','Barcode', 'Nama Barang', 'Harga Awal', 'Harga Spesial','Edit', 'Hapus'],       //Grid column headings
             colModel:[
                 {name:'inve_kode',index:'inve_kode', width:50, align:"left"},
                 {name:'inve_barcode',index:'inve_barcode', width:50, align:"left"},
                 {name:'inve_nama',index:'inve_nama', width:50, align:"left"},
                 {name:'inve_harga',index:'inve_harga', width:50, align:"right"},
+                {name:'spe_harga',index:'spe_harga', width:50, align:"right"},
                 {name:'edit',index:'edit', width:20, align:"center"},
+                {name:'hapus',index:'hapus', width:20, align:"center"},
             ],
             rowNum:10,
             height : 300,

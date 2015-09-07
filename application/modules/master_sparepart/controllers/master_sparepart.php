@@ -51,6 +51,14 @@ class Master_Sparepart extends Application {
         $this->load->view('editInventory', $this->data);
     }
 
+    public function editSpesialItem() {
+        $this->hakAkses(53);
+        $id = $this->input->GET('id');
+        $data = $this->model_sparepart->getSpesialItemById($id);
+        $this->data['data'] = $data;
+        $this->load->view('editSpesialItem', $this->data);
+    }
+
     public function inventory() {
         $this->hakAkses(52);
         $this->load->view('inventory', $this->data);
@@ -164,6 +172,50 @@ class Master_Sparepart extends Application {
         echo json_encode($responce);
     }
 
+    function loadSpesialItem() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'inve_kode';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_sparepart');
+        $count = $this->model_sparepart->getTotalSpesialItem($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sparepart->getAllSpesialItem($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusSpesialItem('" . $row->speid . "')";
+                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_sparepart/editSpesialItem?id=' . $row->speid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->speid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->inve_kode,
+                    $row->inve_barcode,
+                    $row->inve_nama,
+                    number_format($row->inve_harga),
+                    number_format($row->spe_harga),
+                    $edit,
+                    $hapus
+                );
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
     /**
      * Function ini digunakan untuk menyimpan jabatan
      */
@@ -218,6 +270,12 @@ class Master_Sparepart extends Application {
         $this->hakAkses(53);
         $this->load->view('spesialItem', $this->data);
     }
+
+    public function uploadPriceList() {
+        $this->hakAkses(54);
+        $this->load->view('uploadPriceList', $this->data);
+    }
+
     public function uploadSpesialItem() {
         $this->hakAkses(53);
         $this->load->view('uploadSpesialItem', $this->data);
@@ -226,6 +284,23 @@ class Master_Sparepart extends Application {
     function jsonRak() {
         $gudang = $this->input->post('gudang');
         echo json_encode($this->model_sparepart->getRakByGudang($gudang));
+    }
+
+    function jsonSupplier() {
+        $nama = $this->input->post('param');
+        $cbid = ses_cabang;
+        $data['response'] = 'false';
+        $query = $this->model_sparepart->getSupplierByNama($nama, $cbid);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array('value' => $row['sup_nama'], 'supid' => $row['supid'], 'desc' => $row['sup_alamat']);
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+        }
+        echo json_encode($data);
     }
 
     public function addRak() {
@@ -403,6 +478,118 @@ class Master_Sparepart extends Application {
                 $hasil['result'] = false;
                 $hasil['msg'] = $this->error("Gagal menyimpan Rak");
             }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function updateSpesialItem() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('speid', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'speid' => $this->input->post('speid'),
+                'spe_harga' => $this->system->numeric($this->input->post('spe_harga'))
+            );
+            if ($this->model_sparepart->updateSpesialItem($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Spesial Item");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Spesial Item");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function get_format_spesial() {
+        $this->load->view('format_spesial_item', $this->data);
+    }
+
+    public function get_format_pricelist() {
+        $this->load->view('format_pricelist', $this->data);
+    }
+
+    public function saveSpesialItem() {
+        $hasil = array();
+        if (isset($_FILES['spesial'])) {
+            $this->load->library("Spreadsheet_Excel_Reader");
+            $data = new Spreadsheet_Excel_Reader();
+            chmod($_FILES['spesial']['tmp_name'], 0755);
+            $data->read($_FILES['spesial']['tmp_name']);
+            $data->setOutputEncoding('CP1251');
+            $baris = $data->sheets[0]['numRows'];
+            $inventory = $this->model_sparepart->getIdInventory();
+            $spesial = array();
+            for ($i = 2; $i <= $baris; $i++) {
+                if (!empty($data->sheets[0]['cells'][$i][1])) {
+                    $inveid = $inventory[str_replace(" ", "", $data->sheets[0]['cells'][$i][1])];
+                    $harga = $data->sheets[0]['cells'][$i][3];
+                    $spesial[] = array(
+                        'spe_inveid' => $inveid,
+                        'spe_cbid' => ses_cabang,
+                        'spe_harga' => $this->system->numeric($harga),
+                    );
+                }
+            }
+            if ($this->model_sparepart->saveSpesialItem($spesial)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan spesial item");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan spesial item");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function savePriceList() {
+        $hasil = array();
+        if (isset($_FILES['price'])) {
+            $this->load->library("Spreadsheet_Excel_Reader");
+            $data = new Spreadsheet_Excel_Reader();
+            chmod($_FILES['price']['tmp_name'], 0755);
+            $data->read($_FILES['spesial']['tmp_name']);
+            $data->setOutputEncoding('CP1251');
+            $baris = $data->sheets[0]['numRows'];
+            $inventory = $this->model_sparepart->getIdInventory();
+            $spesial = array();
+            for ($i = 2; $i <= $baris; $i++) {
+                if (!empty($data->sheets[0]['cells'][$i][1])) {
+                    $inveid = $inventory[str_replace(" ", "", $data->sheets[0]['cells'][$i][1])];
+                    $harga = $data->sheets[0]['cells'][$i][3];
+                    $spesial[] = array(
+                        'pl_inveid' => $inveid,
+                        'pl_cbid' => ses_cabang,
+                        'pl_harga' => $this->system->numeric($harga),
+                    );
+                }
+            }
+            if ($this->model_sparepart->savePriceList($spesial)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan spesial item");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan spesial item");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menghapus pelanggan
+     * @since 1.0
+     * @author Aris
+     */
+    public function hapusSpesialItem() {
+        $id = $this->input->post('id');
+        $hasil = $this->model_sparepart->hapusSpesialItem($id);
+        if ($hasil) {
+            $hasil = $this->sukses("Berhasil menghapus spesial Item");
+        } else {
+            $hasil = $this->error("Gagal menghapus spesial item");
         }
         echo json_encode($hasil);
     }

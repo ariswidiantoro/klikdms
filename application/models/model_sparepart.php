@@ -82,6 +82,22 @@ class Model_Sparepart extends CI_Model {
         return null;
     }
 
+    /**
+     * 
+     * @param type $id
+     * @return null
+     */
+    public function getIdInventory() {
+        $data = array();
+        $sql = $this->db->query("SELECT * FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "'");
+        if ($sql->num_rows() > 0) {
+            foreach ($sql->result_array() as $value) {
+                $data[$value['inve_kode']] = $value['inveid'];
+            }
+        }
+        return $data;
+    }
+
     public function getGudang() {
         $sql = $this->db->query("SELECT * FROM spa_gudang WHERE gdg_cbid = '" . ses_cabang . "' ORDER BY gdg_deskripsi");
         if ($sql->num_rows() > 0) {
@@ -123,6 +139,23 @@ class Model_Sparepart extends CI_Model {
         return null;
     }
 
+    function getAllSpesialItem($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->where('spe_cbid', ses_cabang);
+        $this->db->from('spa_spesial');
+        $this->db->join('spa_inventory', 'inveid = spe_inveid', 'LEFT');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
     public function getTotalRak($where) {
         $wh = "WHERE rak_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
@@ -142,12 +175,98 @@ class Model_Sparepart extends CI_Model {
 
     /**
      * 
+     * @param type $where
+     * @return type
+     */
+    public function getTotalSpesialItem($where) {
+        $wh = "WHERE spe_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(speid) AS total FROM spa_spesial LEFT JOIN spa_inventory ON inveid = spe_inveid $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * 
      * @param type $data
      * @return boolean
      */
     function saveRak($data) {
         $this->db->trans_begin();
         $this->db->INSERT('spa_rak', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
+    function saveSpesialItem($data) {
+        $this->db->trans_begin();
+        $this->db->query("DELETE FROM spa_spesial WHERE spe_cbid = '" . ses_cabang . "'");
+        foreach ($data as $value) {
+            $this->db->insert('spa_spesial', $value);
+        }
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
+    function savePriceList($data) {
+        $this->db->trans_begin();
+        $this->db->query("DELETE FROM spa_pricelist WHERE pl_cbid = '" . ses_cabang . "'");
+        foreach ($data as $value) {
+            $this->db->insert('spa_pricelist', $value);
+        }
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil rol
+     * @param type $data
+     * @return boolean
+     */
+    public function getSupplierByNama($nama, $cbid) {
+        $sql = $this->db->query("SELECT * FROM ms_supplier WHERE sup_cbid = '$cbid' AND sup_nama LIKE '%" . strtoupper($nama) . "%' ORDER BY sup_nama LIMIT 40");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
+    function hapusSpesialItem($id) {
+        $this->db->trans_begin();
+        $this->db->query("DELETE FROM spa_spesial WHERE speid = '$id'");
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();
             return true;
@@ -217,6 +336,24 @@ class Model_Sparepart extends CI_Model {
 
     /**
      * 
+     * @param type $data
+     * @return boolean
+     */
+    function updateSpesialItem($data) {
+        $this->db->trans_begin();
+        $this->db->where('speid', $data['speid']);
+        $this->db->update('spa_spesial', $data);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    /**
+     * 
      * @param type $id
      * @return null
      */
@@ -235,6 +372,19 @@ class Model_Sparepart extends CI_Model {
      */
     public function getInventoryById($id) {
         $sql = $this->db->query("SELECT * FROM spa_inventory LEFT JOIN spa_rak ON rakid = inve_rakid WHERE inveid = '$id'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @return null
+     */
+    public function getSpesialItemById($id) {
+        $sql = $this->db->query("SELECT * FROM spa_spesial LEFT JOIN spa_inventory ON spe_inveid = inveid WHERE speid = '$id'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }

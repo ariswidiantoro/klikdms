@@ -13,7 +13,7 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Pilih File</label>
         <div class="col-sm-8">
             <input type="hidden" name="cek" value="cek">
-            <input type="file" name="spesial" id="spesial"  class="file-input col-xs-10 col-sm-5" />
+            <input type="file" name="price" id="spesial"  class="file-input col-xs-10 col-sm-5" />
         </div>
     </div>
 
@@ -38,7 +38,7 @@
         window.scrollTo(0, 0);
         var left = (screen.width / 2) - ((screen.width/2) / 2);
         var top = (screen.height / 2) - ((screen.height/2) / 2);
-        window.open('<?php echo site_url('master_sparepart/get_format_spesial'); ?>', '_blank',
+        window.open('<?php echo site_url('master_sparepart/get_format_pricelist'); ?>', '_blank',
         'toolbar=0,location=0,menubar=0,width='+screen.width/2+', height='+screen.height/2+', top=' + top + ', left=' + left);
     }
     
@@ -46,7 +46,7 @@
         $('#form').submit(function() {
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url('master_sparepart/saveSpesialItem'); ?>",
+                url: "<?php echo site_url('master_sparepart/savePriceList'); ?>",
                 dataType: "json",
                 async: false,
                 data: new FormData( this ),
