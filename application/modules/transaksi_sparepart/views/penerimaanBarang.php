@@ -40,6 +40,80 @@
                    id="trbr_credit_term" class="number col-xs-10 col-sm-3" />
         </div>
     </div>
+    <table id="simple-table" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Kode Barang</th>
+                <th>Nama Barang</th>
+                <th width="10%">Qty</th>
+                <th>Harga</th>
+                <th width="10%">Diskon</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <label>Nama Barang</label>
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+            </tr>
+            <tr>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                   <label>Nama Barang</label>
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+            </tr>
+            <tr>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <label>Nama Barang</label>
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+                <td class="center" width="10%">
+                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
             <button class="btn btn-info" type="submit">
