@@ -302,6 +302,21 @@ class Master_Sparepart extends Application {
         }
         echo json_encode($data);
     }
+    function jsonBarang() {
+        $nama = $this->input->post('param');
+        $data['response'] = 'false';
+        $query = $this->model_sparepart->getInventoryAutoComplete($nama);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array('value' => $row['inve_kode'], 'desc' => $row['inve_nama']);
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+        }
+        echo json_encode($data);
+    }
 
     public function addRak() {
         $this->hakAkses(65);

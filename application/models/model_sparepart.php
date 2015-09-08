@@ -260,6 +260,19 @@ class Model_Sparepart extends CI_Model {
     }
 
     /**
+     * Function ini digunakan untuk mengambil rol
+     * @param type $data
+     * @return boolean
+     */
+    public function getInventoryAutoComplete($nama) {
+        $sql = $this->db->query("SELECT inve_kode, inve_nama FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "' AND (inve_kode LIKE '%" . strtoupper($nama) . "%' OR inve_nama LIKE '%" . strtoupper($nama) . "%') ORDER BY inve_kode LIMIT 30");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
      * 
      * @param type $data
      * @return boolean

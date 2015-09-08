@@ -2,9 +2,11 @@
 <style type="text/css">
     input:required {
         box-shadow: 4px 4px 20px rgba(200, 0, 0, 0.85);
+
     }
+
 </style>
-<form class="form-horizontal" id="formRole" method="post" action="<?php echo site_url('transaksi_sparepart/savePenerimaanBarang'); ?>" name="formRole">
+<form class="form-horizontal" id="formRole" method="post" name="formRole">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Faktur</label>
         <div class="col-sm-8">
@@ -40,83 +42,65 @@
                    id="trbr_credit_term" class="number col-xs-10 col-sm-3" />
         </div>
     </div>
-    <table id="simple-table" class="table table-striped table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Kode Barang</th>
-                <th>Nama Barang</th>
-                <th width="10%">Qty</th>
-                <th>Harga</th>
-                <th width="10%">Diskon</th>
-                <th>Total</th>
-            </tr>
-        </thead>
+    <div class="hr hr-16 hr-dotted"></div>
+
+<!--    <table class="table table-striped table-bordered">
         <tbody>
             <tr>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                <td class="center" style="width: 20%">
+                    Kode Barang :
+                    <input type="text" style="width: 100%;" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-10 required">
                 </td>
-                <td class="center" width="10%">
+                <td class="center"  style="width: 30%">
                     <label>Nama Barang</label>
                 </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                <td class="center"  style="width: 10%">
+                    Qty :
+                    <input type="text" name="" style="width: 100%" class="upper ace col-xs-10 col-sm-10">
                 </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                <td class="center"  style="width: 10%">
+                    Harga :
+                    <input type="text" name="" style="width: 100%" class="upper ace col-xs-10 col-sm-10">
                 </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
+                <td class="center"  style="width: 20%">
+                    Diskon :
+                    <input type="text" name="" style="width: 100%" class="upper ace col-xs-10 col-sm-10">
                 </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-            </tr>
-            <tr>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-                <td class="center" width="10%">
-                   <label>Nama Barang</label>
-                </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-            </tr>
-            <tr>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-                <td class="center" width="10%">
-                    <label>Nama Barang</label>
-                </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
-                <td class="center" width="10%">
-                    <input type="text" name="" class="upper ace col-xs-10 col-sm-10">
-                </td>
+
             </tr>
         </tbody>
-    </table>
+    </table>-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Barang</label>
+        <div class="col-sm-8">
+            <input type="text" placeholder="KODE BARANG" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
+        </div>
+    </div>
+    <div class="table-header">
+        Daftar Barang
+    </div>
+    <div>
+        <table id="simple-table" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr  class="item-row">
+                    <th style="width: 5%">No</th>
+                    <th style="width: 20%">Kode Barang</th>
+                    <th  style="width: 30%">Nama Barang</th>
+                    <th style="width: 7%">Qty</th>
+                    <th  style="width: 15%">Harga</th>
+                    <th  style="width: 8%">Diskon</th>
+                    <th  style="width: 15%">Sub Total</th>
+                </tr>
+            </thead>
+            <tfoot>
+            <th colspan="5" style="text-align: right">TOTAL</th>
+            <th style="text-align: right">0</th>
+            </tfoot>
+        </table>
+    </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
-            <button class="btn btn-info" type="submit">
+            <button class="btn btn-info" type="submit" onclick="submit()">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Submit
             </button>
@@ -130,6 +114,49 @@
     </div>
 </form>
 <script type="text/javascript">
+    var inc = 0;
+    
+    
+    function getmaster2(id){
+        var cek = 0;
+        if($("#"+id).val() !=""){
+            $("#wait").attr("style","position: fixed;top: 0;left: 0;right: 0;height: 100%;opacity: 0.4;filter: alpha(opacity=40); background-color: #000;");
+            $("input[name^=dbl_mbkode]").each(function(){
+                if($(this).val() == $("#"+id).val()){
+                    cek = 1;
+                    var str = ($(this).attr("id"));
+                    var baris = str.replace('kode','');
+                    /* set QTY if exists */
+                    var setqty = parseInt($("#qty"+baris).val(),10) + 1;
+                    $("#qty"+baris).val(setqty);
+                    /* Jumlah Sub Total */
+                    total("harga"+baris,"qty"+baris,"total"+baris);
+                    /* Jumlah Total */
+                    var sum=0;
+                    $(".total").each(function(){
+                        if($(this).val() != "")
+                            sum += parseInt($(this).val());   
+                    });
+                    $("#subtotal").val(sum);
+                    /* set empty */
+                    $("#"+id).val("") 
+                    $("#wait").removeAttr("style","position: fixed;top: 0;left: 0;right: 0;height: 100%;opacity: 0.4;filter: alpha(opacity=40); background-color: #000;");
+                }
+            });
+            
+            if(cek == 0){
+                $.ajax({ 
+                    url: "",
+                    dataType: 'json',
+                    type: 'POST',
+                    data: 'kode='+$("#"+id).val(),
+                    success: function(data){
+                    }
+                });
+            }
+        }
+        
+    }
     //called when key is pressed in textbox
     $(".number").keypress(function (e) {
         //if the letter is not digit then display error and don't type anything
@@ -169,15 +196,42 @@
                 $("#supid").val(ui.item.supid);
             }
         })
+        $("#kodeBarang").autocomplete({
+            minLength: 1,
+            source: function(req, add) {
+                $.ajax({
+                    url: '<?php echo site_url('master_sparepart/jsonBarang'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {param : $("#kodeBarang").val()},
+                    success: function(data) {
+                        if (data.response == "true") {
+                            add(data.message);
+                        } else {
+                            add(data.value);
+                        }
+                    }
+                });
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                    .append("<a><strong>" + item.value + "</strong><br> Nama Barang : " + item.desc + "</a>")
+                    .appendTo(ul);
+                };
+            }
+        })
     });
     
     
-    $(this).ready(function() {
-        $('#formRole').submit(function() {
+    function submit()
+    {
+        $(this).ready(function() {
+            //            $('#formRole').submit(function() {
             //  if (confirm("Yakin data sudah benar ?")) {
             $.ajax({
                 type: 'POST',
-                url: $(this).attr('action'),
+                url: "<?php echo site_url('transaksi_sparepart/savePenerimaanBarang'); ?>",
                 dataType: "json",
                 async: false,
                 data: $(this)
@@ -191,7 +245,9 @@
             return false;
         });
 
-    });
+        //        });
+    }
+   
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page

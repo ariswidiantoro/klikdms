@@ -16,16 +16,16 @@
     <table id="simple-table" class="table table-striped table-bordered table-hover">
         <thead>
             <tr>
-                <th class="center" width="10%">
+                <th class="center">
                     <label class="pos-rel">
                         <input type="checkbox" class="ace" />
                         <span class="lbl"></span>
                     </label>
                 </th>
                 <th>Nama Mekanik</th>
-                <th  width="10%">Jam IN</th>
-                <th  width="10%">Jam Out</th>
-                <th  width="10%">Jam Tersedia</th>
+                <th >Jam IN</th>
+                <th >Jam Out</th>
+                <th >Jam Tersedia</th>
                 <th>Keterangan</th>
             </tr>
         </thead>
