@@ -505,9 +505,9 @@ class Admin extends Application {
             }
             $data = array(
                 'kr_nik' => $this->input->post('kr_nik'),
-                'kr_nama' => $this->input->post('kr_nama'),
+                'kr_nama' => strtoupper($this->input->post('kr_nama')),
                 'kr_kotaid' => $this->input->post('kr_kotaid'),
-                'kr_alamat' => $this->input->post('kr_alamat'),
+                'kr_alamat' => strtoupper($this->input->post('kr_alamat')),
                 'kr_jabid' => $this->input->post('kr_jabid'),
                 'kr_atasan' => $this->input->post('kr_atasanid'),
                 'kr_nomor_ktp' => $this->input->post('kr_nomor_ktp'),
@@ -519,11 +519,13 @@ class Admin extends Application {
                 'kr_tempat_lahir' => $this->input->post('kr_tempat_lahir'),
                 'kr_tgl_lahir' => dateToIndo($tgl),
             );
-            $hasil = $this->model_admin->saveKaryawan($data);
-            if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan karyawan");
+            $hasil = array();
+            if ($this->model_admin->saveKaryawan($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan karyawan");
             } else {
-                $hasil = $this->error("Gagal menyimpan karyawan");
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan karyawan");
             }
         }
         echo json_encode($hasil);
@@ -544,9 +546,9 @@ class Admin extends Application {
             $data = array(
                 'krid' => $this->input->post('krid'),
                 'kr_nik' => $this->input->post('kr_nik'),
-                'kr_nama' => $this->input->post('kr_nama'),
+                'kr_nama' => strtoupper($this->input->post('kr_nama')),
                 'kr_kotaid' => $this->input->post('kr_kotaid'),
-                'kr_alamat' => $this->input->post('kr_alamat'),
+                'kr_alamat' => strtoupper($this->input->post('kr_alamat')),
                 'kr_jabid' => $this->input->post('kr_jabid'),
                 'kr_atasan' => $this->input->post('kr_atasanid'),
                 'kr_nomor_ktp' => $this->input->post('kr_nomor_ktp'),

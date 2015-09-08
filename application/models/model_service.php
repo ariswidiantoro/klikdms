@@ -44,6 +44,32 @@ class Model_Service extends CI_Model {
      * @param type $where
      * @return int
      */
+    public function getTotalStall($where) {
+        $wh = "WHERE stall_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM svc_stall $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * Function ini digunakan untuk mendapatkan data cabang
+     * @param type $where
+     * @return int
+     */
+    public function getTotalSupplier($where) {
+        $wh = "WHERE sup_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(supid) AS total FROM ms_supplier $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * Function ini digunakan untuk mendapatkan data cabang
+     * @param type $where
+     * @return int
+     */
     public function getTotalKendaraan($where) {
         $wh = "WHERE msc_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
@@ -113,6 +139,43 @@ class Model_Service extends CI_Model {
         $this->db->where('pel_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $query = $this->db->get($table, $limit, $start);
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    function getAllStall($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->where('stall_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $query = $this->db->get('svc_stall', $limit, $start);
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mencari semua Cabang
+     * @param type $sort
+     * @param type $order
+     * @param type $offset
+     * @param type $row
+     * @param type $where
+     * @return type
+     */
+    function getAllSupplier($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->where('sup_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $query = $this->db->get('ms_supplier', $limit, $start);
         if ($query->num_rows() > 0) {
             return $query->result();
         }
@@ -272,6 +335,35 @@ class Model_Service extends CI_Model {
         return false;
     }
 
+    function saveSupplier($data) {
+        $this->db->trans_begin();
+        $tahun = substr(date('Y'), 2, 2);
+        $id = sprintf("%08s", $this->getCounter("SU" . $tahun));
+        $data['supid'] = "SU" . $tahun . $id;
+        $this->db->INSERT('ms_supplier', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
+    }
+
+    function saveStall($data) {
+        $this->db->trans_begin();
+        $this->db->INSERT('svc_stall', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
+    }
+
     function saveKendaraan($data) {
         $this->db->trans_begin();
         $tahun = substr(date('Y'), 2, 2);
@@ -315,6 +407,48 @@ class Model_Service extends CI_Model {
     }
 
     /**
+     * 
+     * @param type $id
+     * @return null
+     */
+    public function getStall($id) {
+        $sql = $this->db->query("SELECT * FROM svc_stall WHERE stallid = '$id'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil rol
+     * @param type $data
+     * @return boolean
+     */
+    public function getMekanikBelumAbsen($cbid) {
+        $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_jabid = 'JAB002'"
+                . " AND krid NOT IN(SELECT abs_krid FROM svc_absensi WHERE abs_tgl"
+                . " = '" . date('Y-m-d') . "' AND abs_cbid = '$cbid') AND kr_cbid = '$cbid'");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * Function ini digunakan untuk mengambil rol
+     * @param type $data
+     * @return boolean
+     */
+    public function getMekanikSudahAbsen($cbid) {
+        $sql = $this->db->query("SELECT * FROM ms_karyawan LEFT JOIN svc_absensi ON abs_krid = krid WHERE kr_jabid = 'JAB002' AND abs_tgl"
+                . " = '" . date('Y-m-d') . "' AND kr_cbid = '$cbid'");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
      * Function ini digunakan untuk mengambil rol
      * @param type $data
      * @return boolean
@@ -340,6 +474,24 @@ class Model_Service extends CI_Model {
         return false;
     }
 
+    /**
+     * 
+     * @param type $role
+     * @return boolean
+     */
+    function hapusSupplier($data) {
+        $this->db->query("UPDATE ms_supplier SET sup_status = 1 WHERE supid = '$data'");
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
     function updateFlateRate($data) {
         $this->db->trans_begin();
         $this->db->where('flatid', $data['flatid']);
@@ -353,6 +505,11 @@ class Model_Service extends CI_Model {
         }
     }
 
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
     function updatePelanggan($data) {
         $this->db->trans_begin();
         $this->db->where('pelid', $data['pelid']);
@@ -365,10 +522,71 @@ class Model_Service extends CI_Model {
             return true;
         }
     }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
+    function updateSupplier($data) {
+        $this->db->trans_begin();
+        $this->db->where('supid', $data['supid']);
+        $this->db->update('ms_supplier', $data);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
+    function updateStall($data) {
+        $this->db->trans_begin();
+        $this->db->where('stallid', $data['stallid']);
+        $this->db->update('svc_stall', $data);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
     function updateKendaraan($data) {
         $this->db->trans_begin();
         $this->db->where('mscid', $data['mscid']);
         $this->db->update('ms_car', $data);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    /**
+     * Digunakan untuk mengupdate group cabang masing2 user
+     * @param type $role
+     * @return boolean
+     */
+    function saveAbsensi($data) {
+        $this->db->trans_begin();
+        foreach ($data as $det) {
+            $this->db->INSERT('svc_absensi', $det);
+        }
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             return false;

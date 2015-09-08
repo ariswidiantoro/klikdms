@@ -70,7 +70,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Karyawan</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_nama"  value="<?php echo $kar['kr_nama'] ?>" required="required"  placeholder="Nama" class="ace col-xs-10 col-sm-5" />
+            <input type="text" name="kr_nama"  value="<?php echo $kar['kr_nama'] ?>" required="required"  placeholder="Nama" class="upper ace col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="form-group">
@@ -82,7 +82,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea class="ace col-xs-10 col-sm-5" name="kr_alamat" rows="4"><?php echo $kar['kr_alamat'] ?></textarea>
+            <textarea class="upper ace col-xs-10 col-sm-5" name="kr_alamat" rows="4"><?php echo $kar['kr_alamat'] ?></textarea>
         </div>
     </div>
     <div class="form-group">

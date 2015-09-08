@@ -26,6 +26,7 @@
 
         <!-- text fonts -->
         <link rel="stylesheet" href="<?php echo path_css(); ?>ace-fonts.css" />
+        <link rel="stylesheet" href="<?php echo path_css(); ?>bootstrap-timepicker.css" />
 
         <!-- ace styles -->
         <link rel="stylesheet" href="<?php echo path_css(); ?>ace.css" class="ace-main-stylesheet" id="main-ace-style" />
@@ -379,8 +380,13 @@ window.jQuery || document.write("<script src='../../assets/js/jquery1x.js'>"+"<"
         <script src="<?php echo path_js(); ?>bootstrap.js"></script>
         <script src="<?php echo path_js(); ?>jquery-ui.js"></script>
         <script src="<?php echo path_js(); ?>validasi.js"></script>
-        <script src="<?php echo path_js(); ?>typeahead.jquery.js"></script>
-        <script src="<?php echo path_js(); ?>bootbox.js"></script>
+
+
+        <script src="<?php echo path_js(); ?>dataTables/jquery.dataTables.js"></script>
+        <script src="<?php echo path_js(); ?>dataTables/jquery.dataTables.bootstrap.js"></script>
+        <script src="<?php echo path_js(); ?>dataTables/extensions/TableTools/js/dataTables.tableTools.js"></script>
+        <script src="<?php echo path_js(); ?>dataTables/extensions/ColVis/js/dataTables.colVis.js"></script>
+        <script src="<?php echo path_js(); ?>date-time/bootstrap-timepicker.js"></script>
 
 
         <!-- ace scripts -->
