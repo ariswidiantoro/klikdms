@@ -21,7 +21,7 @@ class Master_Sales extends Application {
         $this->hakAkses('7050');
     }
     
-    function loadMerk() {
+    public function loadMerk() {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
         $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
