@@ -396,6 +396,19 @@ class Model_Sparepart extends CI_Model {
      * @param type $id
      * @return null
      */
+    public function getInventoryByKodeBarang($kodeBarang) {
+        $sql = $this->db->query("SELECT * FROM spa_inventory WHERE inve_kode = '$kodeBarang'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @return null
+     */
     public function getSpesialItemById($id) {
         $sql = $this->db->query("SELECT * FROM spa_spesial LEFT JOIN spa_inventory ON spe_inveid = inveid WHERE speid = '$id'");
         if ($sql->num_rows() > 0) {
