@@ -210,7 +210,25 @@ class Model_Finance extends CI_Model {
             ");
         return $query->row_array();
     }
-
+    
+    /* Utility */
+    
+    /** 
+     * This function is used for feetching 
+     * Costcenter's data on Combo List
+     * @author Rossi on 2015-09-08
+     **/
+    public function cListCostCenter($data){
+        $this->db->where('cc_cbid', $data['cbid']);
+        $sql = $this->db->get('ms_cost_center');
+        return $sql->result_array();
+    }
+    
+    public function cListKota($data){
+        $this->db->where('cc_cbid', $data['cbid']);
+        $sql = $this->db->get('ms_cost_center');
+        return $sql->result_array();
+    }
 }
 
 ?>
