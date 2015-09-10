@@ -75,7 +75,7 @@
                         <?php
                         $this->load->model('model_admin');
                         $header = $this->model_admin->getMenuModule();
-                        if (count($header > 0)) {
+                        if (count($header) > 0) {
                             foreach ($header as $value) {
                                 ?>
                                 <li class="transparent">

@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.2.3
 -- Dumped by pg_dump version 9.2.3
--- Started on 2015-09-07 16:39:43
+-- Started on 2015-09-09 08:59:36
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -12,531 +12,11 @@ SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
---
--- TOC entry 282 (class 3079 OID 11727)
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- TOC entry 2728 (class 0 OID 0)
--- Dependencies: 282
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
-
---
--- TOC entry 240 (class 1259 OID 73263)
--- Name: ksr_dtrans; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ksr_dtrans (
-    dkst_kstid character varying(20),
-    dkst_coa character varying(20),
-    dkst_decrip character varying(50),
-    dkst_debit numeric(18,2),
-    dkst_kredit numeric(18,2),
-    dkst_nota character varying(20),
-    dkst_pelid character varying(12),
-    dkst_supkode character varying(12),
-    dkst_norangka character varying(20),
-    dkst_bank character varying(12),
-    dkst_ccid character varying(12),
-    dkst_flag smallint
-);
-
-
-ALTER TABLE public.ksr_dtrans OWNER TO postgres;
-
---
--- TOC entry 2729 (class 0 OID 0)
--- Dependencies: 240
--- Name: COLUMN ksr_dtrans.dkst_bank; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_dtrans.dkst_bank IS 'bank';
-
-
---
--- TOC entry 2730 (class 0 OID 0)
--- Dependencies: 240
--- Name: COLUMN ksr_dtrans.dkst_flag; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_dtrans.dkst_flag IS '1=> active; 0 => not';
-
-
---
--- TOC entry 241 (class 1259 OID 73266)
--- Name: ksr_ledger; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ksr_ledger (
-    trlid integer NOT NULL,
-    trl_cbid character varying(6),
-    trl_nomer character varying(20),
-    trl_coa character varying(20),
-    trl_descrip character varying(80),
-    trl_debit numeric(18,2) DEFAULT 0 NOT NULL,
-    trl_kredit numeric(18,2) DEFAULT 0 NOT NULL,
-    trl_croscoa character varying(20),
-    trl_nota character varying(20),
-    trl_pelid character varying(12),
-    trl_ccid character varying(12),
-    trl_supid character varying(12),
-    trl_norangka character varying(20),
-    trl_headstatus smallint,
-    trl_name character varying,
-    trl_trans character(1)
-);
-
-
-ALTER TABLE public.ksr_ledger OWNER TO postgres;
-
---
--- TOC entry 2731 (class 0 OID 0)
--- Dependencies: 241
--- Name: TABLE ksr_ledger; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE ksr_ledger IS 'transaction ledger';
-
-
---
--- TOC entry 2732 (class 0 OID 0)
--- Dependencies: 241
--- Name: COLUMN ksr_ledger.trl_headstatus; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_ledger.trl_headstatus IS '1=>head; 0=>not';
-
-
---
--- TOC entry 2733 (class 0 OID 0)
--- Dependencies: 241
--- Name: COLUMN ksr_ledger.trl_name; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_ledger.trl_name IS 'name transaction';
-
-
---
--- TOC entry 2734 (class 0 OID 0)
--- Dependencies: 241
--- Name: COLUMN ksr_ledger.trl_trans; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_ledger.trl_trans IS 'I => IN; O=> OUT';
-
-
---
--- TOC entry 242 (class 1259 OID 73269)
--- Name: ksr_ledger_trlid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ksr_ledger_trlid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ksr_ledger_trlid_seq OWNER TO postgres;
-
---
--- TOC entry 2735 (class 0 OID 0)
--- Dependencies: 242
--- Name: ksr_ledger_trlid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ksr_ledger_trlid_seq OWNED BY ksr_ledger.trlid;
-
-
---
--- TOC entry 245 (class 1259 OID 73299)
--- Name: ksr_saldo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ksr_saldo (
-    sldid integer NOT NULL,
-    sld_cbid character varying(6),
-    sld_tahun numeric(4,0),
-    sld_bulan numeric(2,0),
-    sld_saldo numeric(18,2),
-    sld_type smallint,
-    sld_nota character varying(20)
-);
-
-
-ALTER TABLE public.ksr_saldo OWNER TO postgres;
-
---
--- TOC entry 2736 (class 0 OID 0)
--- Dependencies: 245
--- Name: COLUMN ksr_saldo.sld_type; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_saldo.sld_type IS '1->Coa; 2; Piu Unit';
-
-
---
--- TOC entry 246 (class 1259 OID 73302)
--- Name: ksr_saldo_sldid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ksr_saldo_sldid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ksr_saldo_sldid_seq OWNER TO postgres;
-
---
--- TOC entry 2737 (class 0 OID 0)
--- Dependencies: 246
--- Name: ksr_saldo_sldid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ksr_saldo_sldid_seq OWNED BY ksr_saldo.sldid;
-
-
---
--- TOC entry 239 (class 1259 OID 73258)
--- Name: ksr_trans; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ksr_trans (
-    kstid character varying(20) NOT NULL,
-    kst_cbid character varying(6),
-    kst_type character varying(3),
-    kst_nomer character varying(20) NOT NULL,
-    kst_coa character varying(20),
-    kst_debit numeric(18,2),
-    kst_kredit numeric(18,2),
-    kst_trans character(1),
-    kst_printed smallint,
-    kst_printedon timestamp without time zone,
-    kst_printedby character varying(20),
-    kst_createby character varying(20) NOT NULL,
-    kst_createon timestamp without time zone NOT NULL,
-    kst_cancel smallint,
-    kst_canceler character varying(20),
-    kst_cancelon timestamp without time zone,
-    kst_lastupdate timestamp without time zone
-);
-
-
-ALTER TABLE public.ksr_trans OWNER TO postgres;
-
---
--- TOC entry 2738 (class 0 OID 0)
--- Dependencies: 239
--- Name: TABLE ksr_trans; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE ksr_trans IS 'Transaksi Kasir';
-
-
---
--- TOC entry 2739 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kstid; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kstid IS 'pk';
-
-
---
--- TOC entry 2740 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_type; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_type IS 'Tipe Transaksi : KAS, BNK, CEK, KWI';
-
-
---
--- TOC entry 2741 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_coa; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_coa IS 'coa transaction';
-
-
---
--- TOC entry 2742 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_trans; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_trans IS 'I=> In;  O=> Out';
-
-
---
--- TOC entry 2743 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_printed; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_printed IS '1=printed; 0=not printed';
-
-
---
--- TOC entry 2744 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_printedon; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_printedon IS 'date time print document';
-
-
---
--- TOC entry 2745 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_printedby; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_printedby IS 'username who prints document';
-
-
---
--- TOC entry 2746 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_createby; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_createby IS 'username creator document';
-
-
---
--- TOC entry 2747 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_createon; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_createon IS 'date time create document';
-
-
---
--- TOC entry 2748 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_cancel; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_cancel IS '1=> batal; 0=> not';
-
-
---
--- TOC entry 2749 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_canceler; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_canceler IS 'username who cancels transaction';
-
-
---
--- TOC entry 2750 (class 0 OID 0)
--- Dependencies: 239
--- Name: COLUMN ksr_trans.kst_cancelon; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ksr_trans.kst_cancelon IS 'datetime cancel transaction';
-
-
---
--- TOC entry 268 (class 1259 OID 73426)
--- Name: ms_aksesories; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_aksesories (
-    aksid integer NOT NULL,
-    aks_nama character varying(50),
-    aks_descrip character varying(50),
-    aks_harga numeric(18,2),
-    aks_status smallint,
-    aks_hpp numeric(18,0)
-);
-
-
-ALTER TABLE public.ms_aksesories OWNER TO postgres;
-
---
--- TOC entry 2751 (class 0 OID 0)
--- Dependencies: 268
--- Name: TABLE ms_aksesories; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE ms_aksesories IS 'Master Data Aksesories';
-
-
---
--- TOC entry 2752 (class 0 OID 0)
--- Dependencies: 268
--- Name: COLUMN ms_aksesories.aks_nama; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_aksesories.aks_nama IS 'nama aksesories';
-
-
---
--- TOC entry 2753 (class 0 OID 0)
--- Dependencies: 268
--- Name: COLUMN ms_aksesories.aks_descrip; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_aksesories.aks_descrip IS 'deskripsi';
-
-
---
--- TOC entry 2754 (class 0 OID 0)
--- Dependencies: 268
--- Name: COLUMN ms_aksesories.aks_harga; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_aksesories.aks_harga IS 'harga jual aksesoris';
-
-
---
--- TOC entry 269 (class 1259 OID 73429)
--- Name: ms_aksesories_aksid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ms_aksesories_aksid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ms_aksesories_aksid_seq OWNER TO postgres;
-
---
--- TOC entry 2755 (class 0 OID 0)
--- Dependencies: 269
--- Name: ms_aksesories_aksid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ms_aksesories_aksid_seq OWNED BY ms_aksesories.aksid;
-
-
---
--- TOC entry 243 (class 1259 OID 73288)
--- Name: ms_auto_jurnal; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_auto_jurnal (
-    atjid integer NOT NULL,
-    atj_cbid character varying(6),
-    atj_tipe_jurnal character varying(15),
-    atj_nama_jurnal character varying(20),
-    atj_coa character varying(20)
-);
-
-
-ALTER TABLE public.ms_auto_jurnal OWNER TO postgres;
-
---
--- TOC entry 2756 (class 0 OID 0)
--- Dependencies: 243
--- Name: TABLE ms_auto_jurnal; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE ms_auto_jurnal IS 'Master COA automatic jurnal';
-
-
---
--- TOC entry 244 (class 1259 OID 73291)
--- Name: ms_auto_jurnal_atjid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ms_auto_jurnal_atjid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ms_auto_jurnal_atjid_seq OWNER TO postgres;
-
---
--- TOC entry 2757 (class 0 OID 0)
--- Dependencies: 244
--- Name: ms_auto_jurnal_atjid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ms_auto_jurnal_atjid_seq OWNED BY ms_auto_jurnal.atjid;
-
-
---
--- TOC entry 238 (class 1259 OID 73253)
--- Name: ms_bank; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_bank (
-    bankid character varying(12) NOT NULL,
-    bank_name character varying(50),
-    bank_flag integer
-);
-
-
-ALTER TABLE public.ms_bank OWNER TO postgres;
-
---
--- TOC entry 2758 (class 0 OID 0)
--- Dependencies: 238
--- Name: TABLE ms_bank; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE ms_bank IS 'Master data Bank';
-
-
---
--- TOC entry 2759 (class 0 OID 0)
--- Dependencies: 238
--- Name: COLUMN ms_bank.bank_flag; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_bank.bank_flag IS '1 => Active; 0 => Inactive';
-
-
---
--- TOC entry 168 (class 1259 OID 72720)
--- Name: ms_cabang; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_cabang (
-    cbid character varying(6) NOT NULL,
-    cb_nama character varying(30),
-    cb_compid character(4),
-    cb_npwp character varying(30),
-    cb_telpon character varying(20),
-    cb_logo character varying(20),
-    cb_fax character varying(20),
-    cb_email character varying(50),
-    cb_status smallint,
-    cb_alamat text
-);
-
-
-ALTER TABLE public.ms_cabang OWNER TO postgres;
 
 --
 -- TOC entry 185 (class 1259 OID 72822)
@@ -571,7 +51,7 @@ CREATE TABLE ms_car (
 ALTER TABLE public.ms_car OWNER TO postgres;
 
 --
--- TOC entry 2760 (class 0 OID 0)
+-- TOC entry 2451 (class 0 OID 0)
 -- Dependencies: 185
 -- Name: COLUMN ms_car.msc_inextern; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -580,7 +60,7 @@ COMMENT ON COLUMN ms_car.msc_inextern IS '1 = intern, 2 = extern';
 
 
 --
--- TOC entry 2761 (class 0 OID 0)
+-- TOC entry 2452 (class 0 OID 0)
 -- Dependencies: 185
 -- Name: COLUMN ms_car.msc_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -617,7 +97,7 @@ CREATE SEQUENCE ms_car_merk_merkid_seq
 ALTER TABLE public.ms_car_merk_merkid_seq OWNER TO postgres;
 
 --
--- TOC entry 2762 (class 0 OID 0)
+-- TOC entry 2453 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: ms_car_merk_merkid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -655,7 +135,7 @@ CREATE SEQUENCE ms_car_model_modelid_seq
 ALTER TABLE public.ms_car_model_modelid_seq OWNER TO postgres;
 
 --
--- TOC entry 2763 (class 0 OID 0)
+-- TOC entry 2454 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: ms_car_model_modelid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -693,93 +173,12 @@ CREATE SEQUENCE ms_car_type_ctyid_seq
 ALTER TABLE public.ms_car_type_ctyid_seq OWNER TO postgres;
 
 --
--- TOC entry 2764 (class 0 OID 0)
+-- TOC entry 2455 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: ms_car_type_ctyid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE ms_car_type_ctyid_seq OWNED BY ms_car_type.ctyid;
-
-
---
--- TOC entry 236 (class 1259 OID 73239)
--- Name: ms_coa; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_coa (
-    coaid character varying(20) NOT NULL,
-    coa_cbid character varying(6),
-    coa_kode character varying(20),
-    coa_desc character varying(50),
-    coa_level character(1),
-    coa_type character varying(2),
-    coa_flag smallint DEFAULT 1 NOT NULL
-);
-
-
-ALTER TABLE public.ms_coa OWNER TO postgres;
-
---
--- TOC entry 2765 (class 0 OID 0)
--- Dependencies: 236
--- Name: TABLE ms_coa; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE ms_coa IS 'Master Chart of Account';
-
-
---
--- TOC entry 2766 (class 0 OID 0)
--- Dependencies: 236
--- Name: COLUMN ms_coa.coaid; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_coa.coaid IS 'PK';
-
-
---
--- TOC entry 2767 (class 0 OID 0)
--- Dependencies: 236
--- Name: COLUMN ms_coa.coa_kode; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_coa.coa_kode IS 'chart of account';
-
-
---
--- TOC entry 2768 (class 0 OID 0)
--- Dependencies: 236
--- Name: COLUMN ms_coa.coa_desc; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_coa.coa_desc IS 'description of coa';
-
-
---
--- TOC entry 2769 (class 0 OID 0)
--- Dependencies: 236
--- Name: COLUMN ms_coa.coa_level; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_coa.coa_level IS 'D=> Detail; G=> General';
-
-
---
--- TOC entry 2770 (class 0 OID 0)
--- Dependencies: 236
--- Name: COLUMN ms_coa.coa_type; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_coa.coa_type IS 'AS => Asset; LI => Liability; IN => Increament; EX => Expend';
-
-
---
--- TOC entry 2771 (class 0 OID 0)
--- Dependencies: 236
--- Name: COLUMN ms_coa.coa_flag; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_coa.coa_flag IS '1 => Active; 0 => Inactive';
 
 
 --
@@ -798,7 +197,7 @@ CREATE TABLE ms_company (
 ALTER TABLE public.ms_company OWNER TO postgres;
 
 --
--- TOC entry 2772 (class 0 OID 0)
+-- TOC entry 2456 (class 0 OID 0)
 -- Dependencies: 169
 -- Name: COLUMN ms_company.comp_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -806,200 +205,6 @@ ALTER TABLE public.ms_company OWNER TO postgres;
 COMMENT ON COLUMN ms_company.comp_status IS '0 = aktif
 1 = not aktif';
 
-
---
--- TOC entry 237 (class 1259 OID 73248)
--- Name: ms_cost_center; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_cost_center (
-    ccid character varying(12) NOT NULL,
-    cc_cbid character varying(6),
-    cc_kode integer,
-    cc_name character varying(20),
-    cc_flag integer
-);
-
-
-ALTER TABLE public.ms_cost_center OWNER TO postgres;
-
---
--- TOC entry 2773 (class 0 OID 0)
--- Dependencies: 237
--- Name: TABLE ms_cost_center; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE ms_cost_center IS 'Master Cost Center';
-
-
---
--- TOC entry 2774 (class 0 OID 0)
--- Dependencies: 237
--- Name: COLUMN ms_cost_center.ccid; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_cost_center.ccid IS 'pk';
-
-
---
--- TOC entry 2775 (class 0 OID 0)
--- Dependencies: 237
--- Name: COLUMN ms_cost_center.cc_kode; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_cost_center.cc_kode IS 'cost center code';
-
-
---
--- TOC entry 2776 (class 0 OID 0)
--- Dependencies: 237
--- Name: COLUMN ms_cost_center.cc_flag; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_cost_center.cc_flag IS '1=>Active; 0=>Inactive';
-
-
---
--- TOC entry 178 (class 1259 OID 72784)
--- Name: ms_departemen; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_departemen (
-    deptid integer NOT NULL,
-    dept_deskripsi character varying(30)
-);
-
-
-ALTER TABLE public.ms_departemen OWNER TO postgres;
-
---
--- TOC entry 179 (class 1259 OID 72787)
--- Name: ms_departemen_deptid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ms_departemen_deptid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ms_departemen_deptid_seq OWNER TO postgres;
-
---
--- TOC entry 2777 (class 0 OID 0)
--- Dependencies: 179
--- Name: ms_departemen_deptid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ms_departemen_deptid_seq OWNED BY ms_departemen.deptid;
-
-
---
--- TOC entry 181 (class 1259 OID 72800)
--- Name: ms_group_cabang; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_group_cabang (
-    groupid integer NOT NULL,
-    group_cbid character varying(6),
-    group_krid character varying(12)
-);
-
-
-ALTER TABLE public.ms_group_cabang OWNER TO postgres;
-
---
--- TOC entry 182 (class 1259 OID 72803)
--- Name: ms_group_cabang_groupid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ms_group_cabang_groupid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ms_group_cabang_groupid_seq OWNER TO postgres;
-
---
--- TOC entry 2778 (class 0 OID 0)
--- Dependencies: 182
--- Name: ms_group_cabang_groupid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ms_group_cabang_groupid_seq OWNED BY ms_group_cabang.groupid;
-
-
---
--- TOC entry 180 (class 1259 OID 72795)
--- Name: ms_jabatan; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_jabatan (
-    jabid character(6) NOT NULL,
-    jab_deptid integer,
-    jab_deskripsi character varying(30),
-    jab_status smallint DEFAULT 0
-);
-
-
-ALTER TABLE public.ms_jabatan OWNER TO postgres;
-
---
--- TOC entry 251 (class 1259 OID 73331)
--- Name: ms_jenis_kendaraan; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_jenis_kendaraan (
-    jknid integer NOT NULL,
-    jkn_nama character varying(30)
-);
-
-
-ALTER TABLE public.ms_jenis_kendaraan OWNER TO postgres;
-
---
--- TOC entry 252 (class 1259 OID 73334)
--- Name: ms_jenis_kendaraan_jknid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ms_jenis_kendaraan_jknid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ms_jenis_kendaraan_jknid_seq OWNER TO postgres;
-
---
--- TOC entry 2779 (class 0 OID 0)
--- Dependencies: 252
--- Name: ms_jenis_kendaraan_jknid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ms_jenis_kendaraan_jknid_seq OWNED BY ms_jenis_kendaraan.jknid;
-
-
---
--- TOC entry 234 (class 1259 OID 73228)
--- Name: ms_karoseri; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_karoseri (
-    karoid character varying(10),
-    karo_nama character varying(30),
-    karo_alamat text,
-    karo_kotaid character varying(13)
-);
-
-
-ALTER TABLE public.ms_karoseri OWNER TO postgres;
 
 --
 -- TOC entry 173 (class 1259 OID 72754)
@@ -1031,7 +236,7 @@ CREATE TABLE ms_karyawan (
 ALTER TABLE public.ms_karyawan OWNER TO postgres;
 
 --
--- TOC entry 2780 (class 0 OID 0)
+-- TOC entry 2457 (class 0 OID 0)
 -- Dependencies: 173
 -- Name: COLUMN ms_karyawan.kr_atasan; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -1040,44 +245,13 @@ COMMENT ON COLUMN ms_karyawan.kr_atasan IS 'diisi krid atasan';
 
 
 --
--- TOC entry 2781 (class 0 OID 0)
+-- TOC entry 2458 (class 0 OID 0)
 -- Dependencies: 173
 -- Name: COLUMN ms_karyawan.kr_status; Type: COMMENT; Schema: public; Owner: postgres
 --
 
 COMMENT ON COLUMN ms_karyawan.kr_status IS '0 = aktif, 1 = non aktif';
 
-
---
--- TOC entry 177 (class 1259 OID 72779)
--- Name: ms_kota; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_kota (
-    kotaid character varying(13) NOT NULL,
-    kota_propid character varying(13),
-    kota_deskripsi character varying(45)
-);
-
-
-ALTER TABLE public.ms_kota OWNER TO postgres;
-
---
--- TOC entry 247 (class 1259 OID 73310)
--- Name: ms_leasing; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_leasing (
-    leasid character varying(12) NOT NULL,
-    leas_nama character varying(25),
-    leas_cbid character varying(6),
-    leas_alamat character varying(50),
-    leas_telp character varying(20),
-    leas_kontak character varying(20)
-);
-
-
-ALTER TABLE public.ms_leasing OWNER TO postgres;
 
 --
 -- TOC entry 170 (class 1259 OID 72733)
@@ -1099,7 +273,7 @@ CREATE TABLE ms_menu (
 ALTER TABLE public.ms_menu OWNER TO postgres;
 
 --
--- TOC entry 2782 (class 0 OID 0)
+-- TOC entry 2459 (class 0 OID 0)
 -- Dependencies: 170
 -- Name: COLUMN ms_menu.menu_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -1139,7 +313,7 @@ CREATE TABLE ms_pelanggan (
 ALTER TABLE public.ms_pelanggan OWNER TO postgres;
 
 --
--- TOC entry 2783 (class 0 OID 0)
+-- TOC entry 2460 (class 0 OID 0)
 -- Dependencies: 175
 -- Name: COLUMN ms_pelanggan.pel_type; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -1148,7 +322,7 @@ COMMENT ON COLUMN ms_pelanggan.pel_type IS 'broker, fleet, gso, retail';
 
 
 --
--- TOC entry 2784 (class 0 OID 0)
+-- TOC entry 2461 (class 0 OID 0)
 -- Dependencies: 175
 -- Name: COLUMN ms_pelanggan.pel_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -1156,116 +330,6 @@ COMMENT ON COLUMN ms_pelanggan.pel_type IS 'broker, fleet, gso, retail';
 COMMENT ON COLUMN ms_pelanggan.pel_status IS '0 = aktif
 1 = non aktif';
 
-
---
--- TOC entry 270 (class 1259 OID 73437)
--- Name: ms_peltype; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_peltype (
-    pltid integer NOT NULL,
-    plt_nama character varying(20),
-    plt_descrip character varying(50),
-    plt_status smallint
-);
-
-
-ALTER TABLE public.ms_peltype OWNER TO postgres;
-
---
--- TOC entry 2785 (class 0 OID 0)
--- Dependencies: 270
--- Name: COLUMN ms_peltype.plt_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_peltype.plt_status IS '1=>active; 2 => not';
-
-
---
--- TOC entry 271 (class 1259 OID 73440)
--- Name: ms_peltype_pltid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ms_peltype_pltid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ms_peltype_pltid_seq OWNER TO postgres;
-
---
--- TOC entry 2786 (class 0 OID 0)
--- Dependencies: 271
--- Name: ms_peltype_pltid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ms_peltype_pltid_seq OWNED BY ms_peltype.pltid;
-
-
---
--- TOC entry 176 (class 1259 OID 72774)
--- Name: ms_propinsi; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_propinsi (
-    propid character varying(13) NOT NULL,
-    prop_deskripsi character varying(45)
-);
-
-
-ALTER TABLE public.ms_propinsi OWNER TO postgres;
-
---
--- TOC entry 171 (class 1259 OID 72742)
--- Name: ms_role; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_role (
-    roleid integer NOT NULL,
-    role_nama character varying(30),
-    role_status integer DEFAULT 0
-);
-
-
-ALTER TABLE public.ms_role OWNER TO postgres;
-
---
--- TOC entry 2787 (class 0 OID 0)
--- Dependencies: 171
--- Name: COLUMN ms_role.role_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN ms_role.role_status IS '0 = aktif, 1 = non aktif';
-
-
---
--- TOC entry 172 (class 1259 OID 72751)
--- Name: ms_role_det; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_role_det (
-    roledet_roleid integer,
-    roledet_menuid integer
-);
-
-
-ALTER TABLE public.ms_role_det OWNER TO postgres;
-
---
--- TOC entry 248 (class 1259 OID 73315)
--- Name: ms_segment; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE ms_segment (
-    segid character varying(12) NOT NULL,
-    seg_nama character varying(20)
-);
-
-
-ALTER TABLE public.ms_segment OWNER TO postgres;
 
 --
 -- TOC entry 183 (class 1259 OID 72811)
@@ -1291,7 +355,7 @@ CREATE TABLE ms_supplier (
 ALTER TABLE public.ms_supplier OWNER TO postgres;
 
 --
--- TOC entry 2788 (class 0 OID 0)
+-- TOC entry 2462 (class 0 OID 0)
 -- Dependencies: 183
 -- Name: COLUMN ms_supplier.sup_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -1355,1336 +419,12 @@ CREATE SEQUENCE ms_warna_warnaid_seq
 ALTER TABLE public.ms_warna_warnaid_seq OWNER TO postgres;
 
 --
--- TOC entry 2789 (class 0 OID 0)
+-- TOC entry 2463 (class 0 OID 0)
 -- Dependencies: 196
 -- Name: ms_warna_warnaid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE ms_warna_warnaid_seq OWNED BY ms_warna.warnaid;
-
-
---
--- TOC entry 254 (class 1259 OID 73347)
--- Name: pen_bbn; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_bbn (
-    bbnid integer NOT NULL,
-    bbn_cbid character varying(6),
-    bbn_norangka character varying(20),
-    bbn_tglproses date,
-    bbn_tglstnk_in date,
-    bbn_tglstnk_out date,
-    bbn_tglterima_stnk date,
-    bbn_penerima_stnk character varying(20),
-    bbn_nobuku character varying(20),
-    bbn_nobpkb character varying(20),
-    bbn_tglbpkb_in date,
-    bbn_tglbpkb_out date,
-    bbn_penerima_bpkb character varying(20),
-    bbn_status character varying,
-    bbn_lastupdate timestamp without time zone,
-    bbn_spkid character varying(12),
-    bbn_idbirojasa character varying,
-    bbn_notice date,
-    bbn_nopol character varying(20),
-    bbn_createby character varying(12),
-    bbn_createon timestamp without time zone
-);
-
-
-ALTER TABLE public.pen_bbn OWNER TO postgres;
-
---
--- TOC entry 2790 (class 0 OID 0)
--- Dependencies: 254
--- Name: TABLE pen_bbn; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_bbn IS 'pngurusan bbn';
-
-
---
--- TOC entry 2791 (class 0 OID 0)
--- Dependencies: 254
--- Name: COLUMN pen_bbn.bbn_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_bbn.bbn_status IS '1-> pengurusan bbn; 2->pihak luar';
-
-
---
--- TOC entry 255 (class 1259 OID 73350)
--- Name: pen_bbn_bbnid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_bbn_bbnid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_bbn_bbnid_seq OWNER TO postgres;
-
---
--- TOC entry 2792 (class 0 OID 0)
--- Dependencies: 255
--- Name: pen_bbn_bbnid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_bbn_bbnid_seq OWNED BY pen_bbn.bbnid;
-
-
---
--- TOC entry 253 (class 1259 OID 73342)
--- Name: pen_bpk; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_bpk (
-    bpkid character varying(12) NOT NULL,
-    bpk_cbid character varying(6),
-    bpk_tgl date,
-    bpk_nomer character varying(12),
-    bpk_tglref date,
-    bpk_mscid character varying(12),
-    bpk_supid character varying(12),
-    bpk_nopo character varying(20),
-    bpk_nodo character varying(20),
-    bpk_tgldo date,
-    bpk_tglpo date,
-    bpk_hpp numeric(18,2),
-    bpk_ff numeric(18,2),
-    bpk_disc numeric(18,2),
-    bpk_ppn numeric(18,2),
-    bpk_ppnbm numeric(18,2),
-    bpk_pph22 numeric(18,2),
-    bpk_keterangan character varying(50),
-    bpk_status character varying(15),
-    bpk_print smallint,
-    bpk_printon timestamp without time zone,
-    bpk_printby character varying(12),
-    bpk_batal smallint,
-    bpk_batalon timestamp without time zone,
-    bpk_batalby character varying(12),
-    bpk_alasan_batal character varying(25),
-    bpk_statin smallint
-);
-
-
-ALTER TABLE public.pen_bpk OWNER TO postgres;
-
---
--- TOC entry 2793 (class 0 OID 0)
--- Dependencies: 253
--- Name: TABLE pen_bpk; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_bpk IS 'Penerimaan Kendaraan';
-
-
---
--- TOC entry 2794 (class 0 OID 0)
--- Dependencies: 253
--- Name: COLUMN pen_bpk.bpk_supid; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_bpk.bpk_supid IS 'supplier id';
-
-
---
--- TOC entry 2795 (class 0 OID 0)
--- Dependencies: 253
--- Name: COLUMN pen_bpk.bpk_tgldo; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_bpk.bpk_tgldo IS 'Tanggal delivery order';
-
-
---
--- TOC entry 2796 (class 0 OID 0)
--- Dependencies: 253
--- Name: COLUMN pen_bpk.bpk_tglpo; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_bpk.bpk_tglpo IS 'Tanggal purchase order';
-
-
---
--- TOC entry 2797 (class 0 OID 0)
--- Dependencies: 253
--- Name: COLUMN pen_bpk.bpk_ff; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_bpk.bpk_ff IS 'facility fund';
-
-
---
--- TOC entry 2798 (class 0 OID 0)
--- Dependencies: 253
--- Name: COLUMN pen_bpk.bpk_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_bpk.bpk_status IS 'antar cabang; atpm';
-
-
---
--- TOC entry 2799 (class 0 OID 0)
--- Dependencies: 253
--- Name: COLUMN pen_bpk.bpk_statin; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_bpk.bpk_statin IS '0-> new; 1-> hpp; 2->faktur';
-
-
---
--- TOC entry 256 (class 1259 OID 73361)
--- Name: pen_ceklist; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_ceklist (
-    pecekid integer NOT NULL,
-    pec_spkid character varying(12),
-    pec_nomer character varying(20),
-    pec_status smallint,
-    pec_type smallint,
-    pec_approve smallint,
-    pec_cetak smallint,
-    pec_batal smallint,
-    pec_tgl_approve date,
-    pec_nik_approve character varying(12)
-);
-
-
-ALTER TABLE public.pen_ceklist OWNER TO postgres;
-
---
--- TOC entry 2800 (class 0 OID 0)
--- Dependencies: 256
--- Name: COLUMN pen_ceklist.pec_nomer; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_ceklist.pec_nomer IS 'rangka';
-
-
---
--- TOC entry 257 (class 1259 OID 73364)
--- Name: pen_ceklist_pecekid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_ceklist_pecekid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_ceklist_pecekid_seq OWNER TO postgres;
-
---
--- TOC entry 2801 (class 0 OID 0)
--- Dependencies: 257
--- Name: pen_ceklist_pecekid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_ceklist_pecekid_seq OWNED BY pen_ceklist.pecekid;
-
-
---
--- TOC entry 264 (class 1259 OID 73405)
--- Name: pen_do; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_do (
-    doid integer NOT NULL,
-    do_fkpid character varying(12),
-    do_tgl date,
-    do_status smallint,
-    do_batal smallint,
-    do_cetak smallint,
-    do_flag smallint,
-    do_nomer character varying(20),
-    do_reprint smallint,
-    do_alasan_retur smallint
-);
-
-
-ALTER TABLE public.pen_do OWNER TO postgres;
-
---
--- TOC entry 265 (class 1259 OID 73408)
--- Name: pen_do_doid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_do_doid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_do_doid_seq OWNER TO postgres;
-
---
--- TOC entry 2802 (class 0 OID 0)
--- Dependencies: 265
--- Name: pen_do_doid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_do_doid_seq OWNED BY pen_do.doid;
-
-
---
--- TOC entry 277 (class 1259 OID 73471)
--- Name: pen_faktur; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_faktur (
-    fkpid character varying(12) NOT NULL,
-    fkp_spkid character varying(12),
-    fkp_nofaktur character varying(20),
-    fkp_tgl date,
-    fkp_status smallint,
-    fkp_namabpkb character varying(25),
-    fkp_addrbpkb character varying(50),
-    fkp_refund numeric(18,2),
-    fkp_tglrefund date,
-    fkp_print smallint,
-    fkp_printon timestamp without time zone,
-    fkp_printby character varying(12),
-    fkp_batal smallint,
-    fkp_tglbatal date,
-    fkp_pembatal character varying(12),
-    fkp_keterangan character varying(50),
-    fkp_fpkid character varying(12),
-    fkp_createon timestamp without time zone,
-    fkp_createby character varying(30)
-);
-
-
-ALTER TABLE public.pen_faktur OWNER TO postgres;
-
---
--- TOC entry 2803 (class 0 OID 0)
--- Dependencies: 277
--- Name: TABLE pen_faktur; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_faktur IS 'Faktur Penjualan Unit';
-
-
---
--- TOC entry 2804 (class 0 OID 0)
--- Dependencies: 277
--- Name: COLUMN pen_faktur.fkp_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_faktur.fkp_status IS '1=> aktiv; 0=>batal';
-
-
---
--- TOC entry 2805 (class 0 OID 0)
--- Dependencies: 277
--- Name: COLUMN pen_faktur.fkp_namabpkb; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_faktur.fkp_namabpkb IS 'nama bpkb';
-
-
---
--- TOC entry 2806 (class 0 OID 0)
--- Dependencies: 277
--- Name: COLUMN pen_faktur.fkp_addrbpkb; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_faktur.fkp_addrbpkb IS 'alamat bpkb';
-
-
---
--- TOC entry 2807 (class 0 OID 0)
--- Dependencies: 277
--- Name: COLUMN pen_faktur.fkp_printby; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_faktur.fkp_printby IS 'nik pencetak';
-
-
---
--- TOC entry 2808 (class 0 OID 0)
--- Dependencies: 277
--- Name: COLUMN pen_faktur.fkp_pembatal; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_faktur.fkp_pembatal IS 'nik pembatal';
-
-
---
--- TOC entry 249 (class 1259 OID 73320)
--- Name: pen_faktur_payment; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_faktur_payment (
-    byrid integer NOT NULL,
-    byr_fkpid character varying(12),
-    byr_um numeric(18,2),
-    byr_asuransi numeric(18,2),
-    byr_aksesoris numeric(18,2),
-    byr_admin numeric(18,2),
-    byr_lain numeric(18,2),
-    byr_tunai numeric(18,2),
-    byr_total numeric(18,2),
-    byr_sisatunai numeric(18,2),
-    byr_sisaleasing numeric(18,2),
-    byr_bunga_leasing numeric(18,2),
-    byr_tipe_bunga character varying(15),
-    byr_jangka_angsuran numeric(3,0),
-    byr_cicilan_bulanan numeric(18,2),
-    byr_leasid character varying(14)
-);
-
-
-ALTER TABLE public.pen_faktur_payment OWNER TO postgres;
-
---
--- TOC entry 2809 (class 0 OID 0)
--- Dependencies: 249
--- Name: TABLE pen_faktur_payment; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_faktur_payment IS 'detil pembayaran faktur';
-
-
---
--- TOC entry 250 (class 1259 OID 73323)
--- Name: pen_faktur_payment_byrid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_faktur_payment_byrid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_faktur_payment_byrid_seq OWNER TO postgres;
-
---
--- TOC entry 2810 (class 0 OID 0)
--- Dependencies: 250
--- Name: pen_faktur_payment_byrid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_faktur_payment_byrid_seq OWNED BY pen_faktur_payment.byrid;
-
-
---
--- TOC entry 267 (class 1259 OID 73421)
--- Name: pen_fat; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_fat (
-    fatid character varying(12) NOT NULL,
-    fat_fptid character varying(12),
-    fat_aksid smallint,
-    fat_harga numeric(18,2),
-    fpt_hpp numeric(12,0),
-    fat_cetak smallint
-);
-
-
-ALTER TABLE public.pen_fat OWNER TO postgres;
-
---
--- TOC entry 2811 (class 0 OID 0)
--- Dependencies: 267
--- Name: TABLE pen_fat; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_fat IS 'Form aksesoris tambahan';
-
-
---
--- TOC entry 2812 (class 0 OID 0)
--- Dependencies: 267
--- Name: COLUMN pen_fat.fat_aksid; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fat.fat_aksid IS 'Accesories ID';
-
-
---
--- TOC entry 2813 (class 0 OID 0)
--- Dependencies: 267
--- Name: COLUMN pen_fat.fat_harga; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fat.fat_harga IS 'Harga yg ditagihkan';
-
-
---
--- TOC entry 2814 (class 0 OID 0)
--- Dependencies: 267
--- Name: COLUMN pen_fat.fpt_hpp; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fat.fpt_hpp IS 'harga pokok penjualan aksesories';
-
-
---
--- TOC entry 266 (class 1259 OID 73416)
--- Name: pen_fpk; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_fpk (
-    fpkid character varying(12) NOT NULL,
-    fpk_spkid character varying(12),
-    fpk_cbid character varying(6),
-    fpk_um numeric(18,2),
-    fpk_hargaotr numeric(18,2),
-    fpk_angsuran numeric(18,2),
-    fpk_admin numeric(18,2),
-    fpk_asuransi numeric(18,2),
-    fpk_tgl date,
-    fpk_leasid character varying(12),
-    fpk_bunga numeric(3,2),
-    fpk_jangka numeric(4,0),
-    fpk_redit numeric(3,0),
-    fpk_batal smallint,
-    fpk_premi numeric(18,2)
-);
-
-
-ALTER TABLE public.pen_fpk OWNER TO postgres;
-
---
--- TOC entry 2815 (class 0 OID 0)
--- Dependencies: 266
--- Name: TABLE pen_fpk; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_fpk IS 'Form Pembiayaan Konsumen';
-
-
---
--- TOC entry 2816 (class 0 OID 0)
--- Dependencies: 266
--- Name: COLUMN pen_fpk.fpk_tgl; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpk.fpk_tgl IS 'Tanggal pembuatan FPK';
-
-
---
--- TOC entry 2817 (class 0 OID 0)
--- Dependencies: 266
--- Name: COLUMN pen_fpk.fpk_bunga; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpk.fpk_bunga IS 'bunga leasing';
-
-
---
--- TOC entry 2818 (class 0 OID 0)
--- Dependencies: 266
--- Name: COLUMN pen_fpk.fpk_jangka; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpk.fpk_jangka IS 'jangka pinjaman';
-
-
---
--- TOC entry 233 (class 1259 OID 73199)
--- Name: pen_fpt; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_fpt (
-    fptid character varying(12) NOT NULL,
-    fpt_prosid character varying(12),
-    fpt_cbid character varying(6),
-    fpt_tgl date,
-    fpt_komisi numeric(10,2),
-    fpt_penerima_komisi character varying(30),
-    fpt_cashback numeric(12,2),
-    fpt_diskon numeric(12,2),
-    fpt_kondisi character varying(15),
-    fpt_uang_muka numeric(12,2),
-    fpt_note character varying(50),
-    fpt_ctyid integer,
-    fpt_modelid integer,
-    fpt_merkid integer,
-    fpt_warnaid integer,
-    fpt_karoid character varying(10),
-    fpt_pay_method character varying(15),
-    fpt_approve smallint,
-    fpt_harga_method smallint DEFAULT 1,
-    fpt_hargako numeric(12,2) DEFAULT 0,
-    fpt_bbn numeric(12,2) DEFAULT 0,
-    fpt_asuransi numeric(12,2) DEFAULT 0,
-    fpt_karoseri numeric(12,2) DEFAULT 0,
-    fpt_administrasi numeric(12,2) DEFAULT 0,
-    fpt_total numeric(12,2),
-    fpt_status smallint,
-    fpt_createon timestamp without time zone,
-    fpt_createby character varying(30)
-);
-
-
-ALTER TABLE public.pen_fpt OWNER TO postgres;
-
---
--- TOC entry 2819 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_note; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_note IS 'diisi catatan di form fpt';
-
-
---
--- TOC entry 2820 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_pay_method; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_pay_method IS 'tunai, kredit';
-
-
---
--- TOC entry 2821 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_approve; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_approve IS '0 = belum diupprove, 1 = di approve, 2 = ditolak';
-
-
---
--- TOC entry 2822 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_harga_method; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_harga_method IS '1 = on the road, 2 = harga kosong';
-
-
---
--- TOC entry 2823 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_hargako; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_hargako IS 'diisi harga kosong kendaraan';
-
-
---
--- TOC entry 2824 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_bbn; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_bbn IS 'untuk biaya harga bbn';
-
-
---
--- TOC entry 2825 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_asuransi; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_asuransi IS 'diisi biaya asuransi';
-
-
---
--- TOC entry 2826 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_karoseri; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_karoseri IS 'diisi biaya/harga karoseri';
-
-
---
--- TOC entry 2827 (class 0 OID 0)
--- Dependencies: 233
--- Name: COLUMN pen_fpt.fpt_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_fpt.fpt_status IS '0 = aktif, 1 = batal';
-
-
---
--- TOC entry 258 (class 1259 OID 73372)
--- Name: pen_retbeli; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_retbeli (
-    rtbid integer NOT NULL,
-    rtb_cbid character varying(6),
-    rtb_nomer character varying(20),
-    rtb_tgl date,
-    rtb_bpkid character varying(12),
-    rtb_alasan_retur character varying(50),
-    rtb_status smallint
-);
-
-
-ALTER TABLE public.pen_retbeli OWNER TO postgres;
-
---
--- TOC entry 2828 (class 0 OID 0)
--- Dependencies: 258
--- Name: COLUMN pen_retbeli.rtb_nomer; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_retbeli.rtb_nomer IS 'nomor retur';
-
-
---
--- TOC entry 2829 (class 0 OID 0)
--- Dependencies: 258
--- Name: COLUMN pen_retbeli.rtb_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_retbeli.rtb_status IS 'flag = 0 /1';
-
-
---
--- TOC entry 259 (class 1259 OID 73375)
--- Name: pen_retbeli_rtbid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_retbeli_rtbid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_retbeli_rtbid_seq OWNER TO postgres;
-
---
--- TOC entry 2830 (class 0 OID 0)
--- Dependencies: 259
--- Name: pen_retbeli_rtbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_retbeli_rtbid_seq OWNED BY pen_retbeli.rtbid;
-
-
---
--- TOC entry 260 (class 1259 OID 73383)
--- Name: pen_retjual; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_retjual (
-    rtjid integer NOT NULL,
-    rtj_cbid character varying(6),
-    rtj_nomer character varying(20),
-    rtj_tgl date,
-    rtj_fkpid character varying(12),
-    rtj_alasan_retur character varying(50)
-);
-
-
-ALTER TABLE public.pen_retjual OWNER TO postgres;
-
---
--- TOC entry 2831 (class 0 OID 0)
--- Dependencies: 260
--- Name: TABLE pen_retjual; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_retjual IS 'retur penjualan';
-
-
---
--- TOC entry 2832 (class 0 OID 0)
--- Dependencies: 260
--- Name: COLUMN pen_retjual.rtj_tgl; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_retjual.rtj_tgl IS 'tgl retur';
-
-
---
--- TOC entry 261 (class 1259 OID 73386)
--- Name: pen_retjual_rtjid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_retjual_rtjid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_retjual_rtjid_seq OWNER TO postgres;
-
---
--- TOC entry 2833 (class 0 OID 0)
--- Dependencies: 261
--- Name: pen_retjual_rtjid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_retjual_rtjid_seq OWNED BY pen_retjual.rtjid;
-
-
---
--- TOC entry 235 (class 1259 OID 73234)
--- Name: pen_spk; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_spk (
-    spkid character varying(12) NOT NULL,
-    spk_cbid character varying(6),
-    spk_fptid character varying(12),
-    spk_bpkid character varying(12),
-    spk_no character varying(20),
-    spk_tglspks date,
-    spk_nokontrak character varying(15),
-    spk_sales character varying(12),
-    spk_stcid character varying(12),
-    spk_decrip character varying(50),
-    spk_kategori character varying(12),
-    spk_hargako numeric(18,2),
-    spk_bbn numeric(18,2),
-    spk_cback numeric(18,2),
-    spk_disc numeric(18,0),
-    spk_asuransi numeric(18,2),
-    spk_aksesoris numeric(18,2),
-    spk_ctyid smallint,
-    spk_status smallint,
-    spk_ccoid character varying(12),
-    spk_lastedit timestamp without time zone,
-    spk_print smallint,
-    spk_printby character varying(12),
-    spk_printon timestamp without time zone,
-    spk_crbyr smallint,
-    spk_validasi smallint,
-    spk_tglbatal timestamp without time zone,
-    spk_batal smallint,
-    spk_pembatal character varying(12),
-    spk_createby character varying(12),
-    spk_createon timestamp without time zone
-);
-
-
-ALTER TABLE public.pen_spk OWNER TO postgres;
-
---
--- TOC entry 2834 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_sales; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_sales IS 'nik sales';
-
-
---
--- TOC entry 2835 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_decrip; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_decrip IS 'catatan singkat spk';
-
-
---
--- TOC entry 2836 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_kategori; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_kategori IS 'kategori spk, agac, non agac';
-
-
---
--- TOC entry 2837 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_hargako; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_hargako IS 'harga kosong';
-
-
---
--- TOC entry 2838 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_bbn; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_bbn IS 'biaya balik nama';
-
-
---
--- TOC entry 2839 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_cback; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_cback IS 'cash back';
-
-
---
--- TOC entry 2840 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_disc; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_disc IS 'discount';
-
-
---
--- TOC entry 2841 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_asuransi; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_asuransi IS 'Asuransi Kendaraan';
-
-
---
--- TOC entry 2842 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_aksesoris; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_aksesoris IS 'Aksesoris tambahan';
-
-
---
--- TOC entry 2843 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_ctyid; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_ctyid IS 'Car type id';
-
-
---
--- TOC entry 2844 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_status IS '0 = aktif, 1 = batal';
-
-
---
--- TOC entry 2845 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_ccoid; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_ccoid IS 'Car Color ID';
-
-
---
--- TOC entry 2846 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_lastedit; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_lastedit IS 'Tgl terakhir update data';
-
-
---
--- TOC entry 2847 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_print; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_print IS 'Flag cetak : 1-> cetak; 0 -> belum';
-
-
---
--- TOC entry 2848 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_printby; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_printby IS 'Nik pencetak';
-
-
---
--- TOC entry 2849 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_printon; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_printon IS 'Tanggal cetak';
-
-
---
--- TOC entry 2850 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_crbyr; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_crbyr IS 'Metode pembayaran 1=> leasing; 0 => cash';
-
-
---
--- TOC entry 2851 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_validasi; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_validasi IS 'Flag validasi SPK 1=> validate; 0 => belum';
-
-
---
--- TOC entry 2852 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_tglbatal; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_tglbatal IS 'tanggal batal';
-
-
---
--- TOC entry 2853 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_batal; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_batal IS 'Flag batal 1= batal ; 0 = active';
-
-
---
--- TOC entry 2854 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_pembatal; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_pembatal IS 'NIK pembatal';
-
-
---
--- TOC entry 2855 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_createby; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_createby IS 'Penginput SPK';
-
-
---
--- TOC entry 2856 (class 0 OID 0)
--- Dependencies: 235
--- Name: COLUMN pen_spk.spk_createon; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk.spk_createon IS 'Tgl Buat SPK';
-
-
---
--- TOC entry 272 (class 1259 OID 73446)
--- Name: pen_spk_atribut; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_spk_atribut (
-    atrid integer NOT NULL,
-    atr_validasi smallint,
-    atr_createby character varying(12),
-    atr_tgl date,
-    atr_status smallint,
-    atr_validator character varying(12),
-    atr_validateon date,
-    atr_ketvalidasi character varying(20),
-    atr_cbid character varying(6),
-    atr_spkid character varying(12)
-);
-
-
-ALTER TABLE public.pen_spk_atribut OWNER TO postgres;
-
---
--- TOC entry 2857 (class 0 OID 0)
--- Dependencies: 272
--- Name: TABLE pen_spk_atribut; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_spk_atribut IS 'Atribut Spk';
-
-
---
--- TOC entry 2858 (class 0 OID 0)
--- Dependencies: 272
--- Name: COLUMN pen_spk_atribut.atr_createby; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk_atribut.atr_createby IS 'nik creator';
-
-
---
--- TOC entry 2859 (class 0 OID 0)
--- Dependencies: 272
--- Name: COLUMN pen_spk_atribut.atr_validator; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pen_spk_atribut.atr_validator IS 'nik validator';
-
-
---
--- TOC entry 273 (class 1259 OID 73449)
--- Name: pen_spk_atribut_atrid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_spk_atribut_atrid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_spk_atribut_atrid_seq OWNER TO postgres;
-
---
--- TOC entry 2860 (class 0 OID 0)
--- Dependencies: 273
--- Name: pen_spk_atribut_atrid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_spk_atribut_atrid_seq OWNED BY pen_spk_atribut.atrid;
-
-
---
--- TOC entry 274 (class 1259 OID 73457)
--- Name: pen_spk_followup; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_spk_followup (
-    spfid integer NOT NULL,
-    spf_spkid character varying(12),
-    spf_keterangan character varying(25),
-    spf_tgl date
-);
-
-
-ALTER TABLE public.pen_spk_followup OWNER TO postgres;
-
---
--- TOC entry 2861 (class 0 OID 0)
--- Dependencies: 274
--- Name: TABLE pen_spk_followup; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_spk_followup IS 'Follow up spk';
-
-
---
--- TOC entry 275 (class 1259 OID 73460)
--- Name: pen_spk_followup_spfid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_spk_followup_spfid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_spk_followup_spfid_seq OWNER TO postgres;
-
---
--- TOC entry 2862 (class 0 OID 0)
--- Dependencies: 275
--- Name: pen_spk_followup_spfid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_spk_followup_spfid_seq OWNED BY pen_spk_followup.spfid;
-
-
---
--- TOC entry 262 (class 1259 OID 73394)
--- Name: pen_spk_validasi; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pen_spk_validasi (
-    vspkid integer NOT NULL,
-    vspk_keterangan character varying(50),
-    vspk_tgl timestamp without time zone,
-    vspk_nik character varying(12),
-    vspk_spkid character varying(12)
-);
-
-
-ALTER TABLE public.pen_spk_validasi OWNER TO postgres;
-
---
--- TOC entry 2863 (class 0 OID 0)
--- Dependencies: 262
--- Name: TABLE pen_spk_validasi; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE pen_spk_validasi IS 'validasi spk';
-
-
---
--- TOC entry 263 (class 1259 OID 73397)
--- Name: pen_spk_validasi_vspkid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pen_spk_validasi_vspkid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pen_spk_validasi_vspkid_seq OWNER TO postgres;
-
---
--- TOC entry 2864 (class 0 OID 0)
--- Dependencies: 263
--- Name: pen_spk_validasi_vspkid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pen_spk_validasi_vspkid_seq OWNED BY pen_spk_validasi.vspkid;
-
-
---
--- TOC entry 231 (class 1259 OID 73189)
--- Name: pros_agenda; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pros_agenda (
-    agenid character varying(12) NOT NULL,
-    agen_prosid character varying(12),
-    agen_tgl timestamp without time zone,
-    agen_deskripsi character varying(50),
-    agen_cbid character varying(6),
-    agen_createon timestamp without time zone
-);
-
-
-ALTER TABLE public.pros_agenda OWNER TO postgres;
-
---
--- TOC entry 227 (class 1259 OID 73167)
--- Name: pros_data; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pros_data (
-    prosid character varying(12) NOT NULL,
-    pros_kode character varying(10),
-    pros_cbid character varying(6),
-    pros_pelid character varying(12),
-    pros_sumber_info smallint,
-    pros_status smallint,
-    pros_salesman smallint,
-    pros_jumlah_fpt smallint,
-    pros_status_hot smallint,
-    pros_createon timestamp without time zone,
-    pros_createby character varying(30)
-);
-
-
-ALTER TABLE public.pros_data OWNER TO postgres;
-
---
--- TOC entry 2865 (class 0 OID 0)
--- Dependencies: 227
--- Name: COLUMN pros_data.pros_status; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pros_data.pros_status IS '0 = aktif, 1 = non aktif';
-
-
---
--- TOC entry 2866 (class 0 OID 0)
--- Dependencies: 227
--- Name: COLUMN pros_data.pros_salesman; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pros_data.pros_salesman IS 'diisi krid salesman';
-
-
---
--- TOC entry 2867 (class 0 OID 0)
--- Dependencies: 227
--- Name: COLUMN pros_data.pros_status_hot; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN pros_data.pros_status_hot IS '0 = baru prospek, 1 = warm, 2 = hot, 3 = sudah spk';
-
-
---
--- TOC entry 230 (class 1259 OID 73186)
--- Name: pros_data_car; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pros_data_car (
-    car_prosid character varying(12),
-    car_ctyid integer,
-    car_qty integer
-);
-
-
-ALTER TABLE public.pros_data_car OWNER TO postgres;
-
---
--- TOC entry 232 (class 1259 OID 73194)
--- Name: pros_follow; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pros_follow (
-    followid character varying(12) NOT NULL,
-    follow_agenid character varying(12),
-    follow_tgl timestamp without time zone,
-    follow_metode character varying(20),
-    follow_deskripsi character varying(50),
-    follow_createon timestamp without time zone
-);
-
-
-ALTER TABLE public.pros_follow OWNER TO postgres;
-
---
--- TOC entry 228 (class 1259 OID 73172)
--- Name: pros_sumber_info; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE pros_sumber_info (
-    infoid integer NOT NULL,
-    info_deskripsi character varying
-);
-
-
-ALTER TABLE public.pros_sumber_info OWNER TO postgres;
-
---
--- TOC entry 229 (class 1259 OID 73175)
--- Name: pros_sumber_info_infoid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE pros_sumber_info_infoid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pros_sumber_info_infoid_seq OWNER TO postgres;
-
---
--- TOC entry 2868 (class 0 OID 0)
--- Dependencies: 229
--- Name: pros_sumber_info_infoid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE pros_sumber_info_infoid_seq OWNED BY pros_sumber_info.infoid;
 
 
 --
@@ -2747,7 +487,7 @@ CREATE TABLE spa_gudang (
 ALTER TABLE public.spa_gudang OWNER TO postgres;
 
 --
--- TOC entry 2869 (class 0 OID 0)
+-- TOC entry 2464 (class 0 OID 0)
 -- Dependencies: 206
 -- Name: COLUMN spa_gudang.gdg_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2771,7 +511,7 @@ CREATE SEQUENCE spa_gudang_gdgid_seq
 ALTER TABLE public.spa_gudang_gdgid_seq OWNER TO postgres;
 
 --
--- TOC entry 2870 (class 0 OID 0)
+-- TOC entry 2465 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: spa_gudang_gdgid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -2806,7 +546,7 @@ CREATE TABLE spa_inventory (
 ALTER TABLE public.spa_inventory OWNER TO postgres;
 
 --
--- TOC entry 2871 (class 0 OID 0)
+-- TOC entry 2466 (class 0 OID 0)
 -- Dependencies: 205
 -- Name: COLUMN spa_inventory.inve_qty_rusak; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2815,7 +555,7 @@ COMMENT ON COLUMN spa_inventory.inve_qty_rusak IS 'jumlah barang yang rusak';
 
 
 --
--- TOC entry 2872 (class 0 OID 0)
+-- TOC entry 2467 (class 0 OID 0)
 -- Dependencies: 205
 -- Name: COLUMN spa_inventory.inve_qty_min; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2824,7 +564,7 @@ COMMENT ON COLUMN spa_inventory.inve_qty_min IS 'batas minimum barang';
 
 
 --
--- TOC entry 2873 (class 0 OID 0)
+-- TOC entry 2468 (class 0 OID 0)
 -- Dependencies: 205
 -- Name: COLUMN spa_inventory.inve_jenis; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2858,7 +598,7 @@ CREATE TABLE spa_kartu_stock (
 ALTER TABLE public.spa_kartu_stock OWNER TO postgres;
 
 --
--- TOC entry 2874 (class 0 OID 0)
+-- TOC entry 2469 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: COLUMN spa_kartu_stock.ks_type; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2882,7 +622,7 @@ CREATE SEQUENCE spa_kartu_stock_ksid_seq
 ALTER TABLE public.spa_kartu_stock_ksid_seq OWNER TO postgres;
 
 --
--- TOC entry 2875 (class 0 OID 0)
+-- TOC entry 2470 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: spa_kartu_stock_ksid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -2917,7 +657,7 @@ CREATE TABLE spa_nota (
 ALTER TABLE public.spa_nota OWNER TO postgres;
 
 --
--- TOC entry 2876 (class 0 OID 0)
+-- TOC entry 2471 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: COLUMN spa_nota.not_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2926,7 +666,7 @@ COMMENT ON COLUMN spa_nota.not_status IS '0 = aktif, 1 = batal';
 
 
 --
--- TOC entry 2877 (class 0 OID 0)
+-- TOC entry 2472 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: COLUMN spa_nota.not_kasir; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2935,7 +675,7 @@ COMMENT ON COLUMN spa_nota.not_kasir IS 'diisi nomer krid kasir';
 
 
 --
--- TOC entry 2878 (class 0 OID 0)
+-- TOC entry 2473 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: COLUMN spa_nota.not_pay_method; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2944,7 +684,7 @@ COMMENT ON COLUMN spa_nota.not_pay_method IS 'diisi tunai, kredit';
 
 
 --
--- TOC entry 2879 (class 0 OID 0)
+-- TOC entry 2474 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: COLUMN spa_nota.not_tampil_ppn; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -2983,7 +723,7 @@ CREATE SEQUENCE spa_pricelist_plid_seq
 ALTER TABLE public.spa_pricelist_plid_seq OWNER TO postgres;
 
 --
--- TOC entry 2880 (class 0 OID 0)
+-- TOC entry 2475 (class 0 OID 0)
 -- Dependencies: 280
 -- Name: spa_pricelist_plid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -3008,7 +748,7 @@ CREATE TABLE spa_rak (
 ALTER TABLE public.spa_rak OWNER TO postgres;
 
 --
--- TOC entry 2881 (class 0 OID 0)
+-- TOC entry 2476 (class 0 OID 0)
 -- Dependencies: 208
 -- Name: COLUMN spa_rak.rak_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3032,7 +772,7 @@ CREATE SEQUENCE spa_rak_rakid_seq
 ALTER TABLE public.spa_rak_rakid_seq OWNER TO postgres;
 
 --
--- TOC entry 2882 (class 0 OID 0)
+-- TOC entry 2477 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: spa_rak_rakid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -3096,7 +836,7 @@ CREATE TABLE spa_retjual (
 ALTER TABLE public.spa_retjual OWNER TO postgres;
 
 --
--- TOC entry 2883 (class 0 OID 0)
+-- TOC entry 2478 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: TABLE spa_retjual; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3105,7 +845,7 @@ COMMENT ON TABLE spa_retjual IS 'digunakan untuk menyimpan retur penjualan spare
 
 
 --
--- TOC entry 2884 (class 0 OID 0)
+-- TOC entry 2479 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: COLUMN spa_retjual.rj_notid; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3164,7 +904,7 @@ CREATE SEQUENCE spa_spesial_speid_seq
 ALTER TABLE public.spa_spesial_speid_seq OWNER TO postgres;
 
 --
--- TOC entry 2885 (class 0 OID 0)
+-- TOC entry 2480 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: spa_spesial_speid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -3203,7 +943,7 @@ CREATE TABLE spa_supply (
 ALTER TABLE public.spa_supply OWNER TO postgres;
 
 --
--- TOC entry 2886 (class 0 OID 0)
+-- TOC entry 2481 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: COLUMN spa_supply.spp_pay_method; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3212,7 +952,7 @@ COMMENT ON COLUMN spa_supply.spp_pay_method IS 'tunai, kredit';
 
 
 --
--- TOC entry 2887 (class 0 OID 0)
+-- TOC entry 2482 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: COLUMN spa_supply.spp_tagihan; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3221,7 +961,7 @@ COMMENT ON COLUMN spa_supply.spp_tagihan IS 'digunakan untuk melihat supply ini 
 
 
 --
--- TOC entry 2888 (class 0 OID 0)
+-- TOC entry 2483 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: COLUMN spa_supply.spp_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3230,7 +970,7 @@ COMMENT ON COLUMN spa_supply.spp_status IS '0 = aktif, 1 = batal';
 
 
 --
--- TOC entry 2889 (class 0 OID 0)
+-- TOC entry 2484 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: COLUMN spa_supply.spp_inextern; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3239,7 +979,7 @@ COMMENT ON COLUMN spa_supply.spp_inextern IS '1 = intern, 2 = extern, 3 = group,
 
 
 --
--- TOC entry 2890 (class 0 OID 0)
+-- TOC entry 2485 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: COLUMN spa_supply.spp_kredit_term; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3248,7 +988,7 @@ COMMENT ON COLUMN spa_supply.spp_kredit_term IS 'jangka waktu kredit';
 
 
 --
--- TOC entry 2891 (class 0 OID 0)
+-- TOC entry 2486 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: COLUMN spa_supply.spp_jenis; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3298,7 +1038,7 @@ CREATE TABLE spa_trbr (
 ALTER TABLE public.spa_trbr OWNER TO postgres;
 
 --
--- TOC entry 2892 (class 0 OID 0)
+-- TOC entry 2487 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: COLUMN spa_trbr.trbr_inc_pajak; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3307,7 +1047,7 @@ COMMENT ON COLUMN spa_trbr.trbr_inc_pajak IS '0 =  include, 1 = tidak include pa
 
 
 --
--- TOC entry 2893 (class 0 OID 0)
+-- TOC entry 2488 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: COLUMN spa_trbr.trbr_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3372,7 +1112,7 @@ CREATE SEQUENCE svc_absensi_absid_seq
 ALTER TABLE public.svc_absensi_absid_seq OWNER TO postgres;
 
 --
--- TOC entry 2894 (class 0 OID 0)
+-- TOC entry 2489 (class 0 OID 0)
 -- Dependencies: 278
 -- Name: svc_absensi_absid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -3411,7 +1151,7 @@ CREATE TABLE svc_clock (
 ALTER TABLE public.svc_clock OWNER TO postgres;
 
 --
--- TOC entry 2895 (class 0 OID 0)
+-- TOC entry 2490 (class 0 OID 0)
 -- Dependencies: 203
 -- Name: COLUMN svc_clock.clo_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3463,7 +1203,7 @@ CREATE TABLE svc_frate (
 ALTER TABLE public.svc_frate OWNER TO postgres;
 
 --
--- TOC entry 2896 (class 0 OID 0)
+-- TOC entry 2491 (class 0 OID 0)
 -- Dependencies: 200
 -- Name: COLUMN svc_frate.flat_type; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3472,7 +1212,7 @@ COMMENT ON COLUMN svc_frate.flat_type IS '1 = service umum, 2 = free service';
 
 
 --
--- TOC entry 2897 (class 0 OID 0)
+-- TOC entry 2492 (class 0 OID 0)
 -- Dependencies: 200
 -- Name: COLUMN svc_frate.flat_free_jenis; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3517,7 +1257,7 @@ CREATE TABLE svc_invoice (
 ALTER TABLE public.svc_invoice OWNER TO postgres;
 
 --
--- TOC entry 2898 (class 0 OID 0)
+-- TOC entry 2493 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN svc_invoice.inv_fchecker; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3526,7 +1266,7 @@ COMMENT ON COLUMN svc_invoice.inv_fchecker IS 'diisi nomor krid final checker';
 
 
 --
--- TOC entry 2899 (class 0 OID 0)
+-- TOC entry 2494 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN svc_invoice.inv_kasir; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3535,7 +1275,7 @@ COMMENT ON COLUMN svc_invoice.inv_kasir IS 'diisi krid kasir';
 
 
 --
--- TOC entry 2900 (class 0 OID 0)
+-- TOC entry 2495 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN svc_invoice.inv_pay_method; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3544,7 +1284,7 @@ COMMENT ON COLUMN svc_invoice.inv_pay_method IS 'tunai, kredit';
 
 
 --
--- TOC entry 2901 (class 0 OID 0)
+-- TOC entry 2496 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN svc_invoice.inv_inextern; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3553,7 +1293,7 @@ COMMENT ON COLUMN svc_invoice.inv_inextern IS '1 = intern, 2 = extern, 3 = group
 
 
 --
--- TOC entry 2902 (class 0 OID 0)
+-- TOC entry 2497 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN svc_invoice.inv_tampil_ppn; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3562,7 +1302,7 @@ COMMENT ON COLUMN svc_invoice.inv_tampil_ppn IS '0 = tidak tampil, 1 = tampil';
 
 
 --
--- TOC entry 2903 (class 0 OID 0)
+-- TOC entry 2498 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN svc_invoice.inv_tagihan; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3571,7 +1311,7 @@ COMMENT ON COLUMN svc_invoice.inv_tagihan IS '0 = belum tagihan, 1 = sudah tagih
 
 
 --
--- TOC entry 2904 (class 0 OID 0)
+-- TOC entry 2499 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN svc_invoice.inv_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3630,7 +1370,7 @@ CREATE SEQUENCE svc_stall_stallid_seq
 ALTER TABLE public.svc_stall_stallid_seq OWNER TO postgres;
 
 --
--- TOC entry 2905 (class 0 OID 0)
+-- TOC entry 2500 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: svc_stall_stallid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -3674,7 +1414,7 @@ CREATE TABLE svc_wo (
 ALTER TABLE public.svc_wo OWNER TO postgres;
 
 --
--- TOC entry 2906 (class 0 OID 0)
+-- TOC entry 2501 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: COLUMN svc_wo.wo_sa; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3683,7 +1423,7 @@ COMMENT ON COLUMN svc_wo.wo_sa IS 'krid service advisor';
 
 
 --
--- TOC entry 2907 (class 0 OID 0)
+-- TOC entry 2502 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: COLUMN svc_wo.wo_mekanik; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3692,7 +1432,7 @@ COMMENT ON COLUMN svc_wo.wo_mekanik IS 'krid mekanik';
 
 
 --
--- TOC entry 2908 (class 0 OID 0)
+-- TOC entry 2503 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: COLUMN svc_wo.wo_km; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3701,7 +1441,7 @@ COMMENT ON COLUMN svc_wo.wo_km IS 'km kendaraan saat masuk';
 
 
 --
--- TOC entry 2909 (class 0 OID 0)
+-- TOC entry 2504 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: COLUMN svc_wo.wo_inextern; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3710,7 +1450,7 @@ COMMENT ON COLUMN svc_wo.wo_inextern IS '1 = intern, 2 = extern, 3 = group, 4 = 
 
 
 --
--- TOC entry 2910 (class 0 OID 0)
+-- TOC entry 2505 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: COLUMN svc_wo.wo_inv_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3719,7 +1459,7 @@ COMMENT ON COLUMN svc_wo.wo_inv_status IS '0 = belum invoice, 1 = sudah invoice'
 
 
 --
--- TOC entry 2911 (class 0 OID 0)
+-- TOC entry 2506 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: COLUMN svc_wo.wo_status; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3728,7 +1468,7 @@ COMMENT ON COLUMN svc_wo.wo_status IS '0 = aktif, 1 = batal';
 
 
 --
--- TOC entry 2912 (class 0 OID 0)
+-- TOC entry 2507 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: COLUMN svc_wo.wo_booking; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3737,7 +1477,7 @@ COMMENT ON COLUMN svc_wo.wo_booking IS '0 = tidak booking, 1 = booking';
 
 
 --
--- TOC entry 2913 (class 0 OID 0)
+-- TOC entry 2508 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: COLUMN svc_wo.wo_ismws; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -3780,7 +1520,7 @@ CREATE SEQUENCE svc_wo_det_wodid_seq
 ALTER TABLE public.svc_wo_det_wodid_seq OWNER TO postgres;
 
 --
--- TOC entry 2914 (class 0 OID 0)
+-- TOC entry 2509 (class 0 OID 0)
 -- Dependencies: 198
 -- Name: svc_wo_det_wodid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -3818,7 +1558,7 @@ CREATE SEQUENCE svc_wo_wo_uploaded_seq
 ALTER TABLE public.svc_wo_wo_uploaded_seq OWNER TO postgres;
 
 --
--- TOC entry 2915 (class 0 OID 0)
+-- TOC entry 2510 (class 0 OID 0)
 -- Dependencies: 193
 -- Name: svc_wo_wo_uploaded_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -3827,39 +1567,7 @@ ALTER SEQUENCE svc_wo_wo_uploaded_seq OWNED BY svc_wo.wo_uploaded;
 
 
 --
--- TOC entry 2393 (class 2604 OID 73271)
--- Name: trlid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ksr_ledger ALTER COLUMN trlid SET DEFAULT nextval('ksr_ledger_trlid_seq'::regclass);
-
-
---
--- TOC entry 2397 (class 2604 OID 73304)
--- Name: sldid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ksr_saldo ALTER COLUMN sldid SET DEFAULT nextval('ksr_saldo_sldid_seq'::regclass);
-
-
---
--- TOC entry 2406 (class 2604 OID 73431)
--- Name: aksid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_aksesories ALTER COLUMN aksid SET DEFAULT nextval('ms_aksesories_aksid_seq'::regclass);
-
-
---
--- TOC entry 2396 (class 2604 OID 73293)
--- Name: atjid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_auto_jurnal ALTER COLUMN atjid SET DEFAULT nextval('ms_auto_jurnal_atjid_seq'::regclass);
-
-
---
--- TOC entry 2334 (class 2604 OID 72874)
+-- TOC entry 2247 (class 2604 OID 72874)
 -- Name: merkid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -3867,7 +1575,7 @@ ALTER TABLE ONLY ms_car_merk ALTER COLUMN merkid SET DEFAULT nextval('ms_car_mer
 
 
 --
--- TOC entry 2335 (class 2604 OID 72886)
+-- TOC entry 2248 (class 2604 OID 72886)
 -- Name: modelid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -3875,7 +1583,7 @@ ALTER TABLE ONLY ms_car_model ALTER COLUMN modelid SET DEFAULT nextval('ms_car_m
 
 
 --
--- TOC entry 2336 (class 2604 OID 72897)
+-- TOC entry 2249 (class 2604 OID 72897)
 -- Name: ctyid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -3883,39 +1591,7 @@ ALTER TABLE ONLY ms_car_type ALTER COLUMN ctyid SET DEFAULT nextval('ms_car_type
 
 
 --
--- TOC entry 2320 (class 2604 OID 72789)
--- Name: deptid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_departemen ALTER COLUMN deptid SET DEFAULT nextval('ms_departemen_deptid_seq'::regclass);
-
-
---
--- TOC entry 2322 (class 2604 OID 72805)
--- Name: groupid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_group_cabang ALTER COLUMN groupid SET DEFAULT nextval('ms_group_cabang_groupid_seq'::regclass);
-
-
---
--- TOC entry 2399 (class 2604 OID 73336)
--- Name: jknid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_jenis_kendaraan ALTER COLUMN jknid SET DEFAULT nextval('ms_jenis_kendaraan_jknid_seq'::regclass);
-
-
---
--- TOC entry 2407 (class 2604 OID 73442)
--- Name: pltid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_peltype ALTER COLUMN pltid SET DEFAULT nextval('ms_peltype_pltid_seq'::regclass);
-
-
---
--- TOC entry 2343 (class 2604 OID 72942)
+-- TOC entry 2256 (class 2604 OID 72942)
 -- Name: warnaid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -3923,87 +1599,7 @@ ALTER TABLE ONLY ms_warna ALTER COLUMN warnaid SET DEFAULT nextval('ms_warna_war
 
 
 --
--- TOC entry 2400 (class 2604 OID 73352)
--- Name: bbnid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_bbn ALTER COLUMN bbnid SET DEFAULT nextval('pen_bbn_bbnid_seq'::regclass);
-
-
---
--- TOC entry 2401 (class 2604 OID 73366)
--- Name: pecekid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_ceklist ALTER COLUMN pecekid SET DEFAULT nextval('pen_ceklist_pecekid_seq'::regclass);
-
-
---
--- TOC entry 2405 (class 2604 OID 73410)
--- Name: doid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_do ALTER COLUMN doid SET DEFAULT nextval('pen_do_doid_seq'::regclass);
-
-
---
--- TOC entry 2398 (class 2604 OID 73325)
--- Name: byrid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_faktur_payment ALTER COLUMN byrid SET DEFAULT nextval('pen_faktur_payment_byrid_seq'::regclass);
-
-
---
--- TOC entry 2402 (class 2604 OID 73377)
--- Name: rtbid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_retbeli ALTER COLUMN rtbid SET DEFAULT nextval('pen_retbeli_rtbid_seq'::regclass);
-
-
---
--- TOC entry 2403 (class 2604 OID 73388)
--- Name: rtjid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_retjual ALTER COLUMN rtjid SET DEFAULT nextval('pen_retjual_rtjid_seq'::regclass);
-
-
---
--- TOC entry 2408 (class 2604 OID 73451)
--- Name: atrid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_spk_atribut ALTER COLUMN atrid SET DEFAULT nextval('pen_spk_atribut_atrid_seq'::regclass);
-
-
---
--- TOC entry 2409 (class 2604 OID 73462)
--- Name: spfid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_spk_followup ALTER COLUMN spfid SET DEFAULT nextval('pen_spk_followup_spfid_seq'::regclass);
-
-
---
--- TOC entry 2404 (class 2604 OID 73399)
--- Name: vspkid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_spk_validasi ALTER COLUMN vspkid SET DEFAULT nextval('pen_spk_validasi_vspkid_seq'::regclass);
-
-
---
--- TOC entry 2385 (class 2604 OID 73177)
--- Name: infoid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pros_sumber_info ALTER COLUMN infoid SET DEFAULT nextval('pros_sumber_info_infoid_seq'::regclass);
-
-
---
--- TOC entry 2365 (class 2604 OID 73007)
+-- TOC entry 2278 (class 2604 OID 73007)
 -- Name: gdgid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4011,7 +1607,7 @@ ALTER TABLE ONLY spa_gudang ALTER COLUMN gdgid SET DEFAULT nextval('spa_gudang_g
 
 
 --
--- TOC entry 2384 (class 2604 OID 73161)
+-- TOC entry 2297 (class 2604 OID 73161)
 -- Name: ksid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4019,7 +1615,7 @@ ALTER TABLE ONLY spa_kartu_stock ALTER COLUMN ksid SET DEFAULT nextval('spa_kart
 
 
 --
--- TOC entry 2412 (class 2604 OID 73886)
+-- TOC entry 2300 (class 2604 OID 73886)
 -- Name: plid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4027,7 +1623,7 @@ ALTER TABLE ONLY spa_pricelist ALTER COLUMN plid SET DEFAULT nextval('spa_pricel
 
 
 --
--- TOC entry 2367 (class 2604 OID 73022)
+-- TOC entry 2280 (class 2604 OID 73022)
 -- Name: rakid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4035,7 +1631,7 @@ ALTER TABLE ONLY spa_rak ALTER COLUMN rakid SET DEFAULT nextval('spa_rak_rakid_s
 
 
 --
--- TOC entry 2376 (class 2604 OID 73081)
+-- TOC entry 2289 (class 2604 OID 73081)
 -- Name: speid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4043,7 +1639,7 @@ ALTER TABLE ONLY spa_spesial ALTER COLUMN speid SET DEFAULT nextval('spa_spesial
 
 
 --
--- TOC entry 2410 (class 2604 OID 73833)
+-- TOC entry 2298 (class 2604 OID 73833)
 -- Name: absid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4051,7 +1647,7 @@ ALTER TABLE ONLY svc_absensi ALTER COLUMN absid SET DEFAULT nextval('svc_absensi
 
 
 --
--- TOC entry 2357 (class 2604 OID 72979)
+-- TOC entry 2270 (class 2604 OID 72979)
 -- Name: stallid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4059,7 +1655,7 @@ ALTER TABLE ONLY svc_stall ALTER COLUMN stallid SET DEFAULT nextval('svc_stall_s
 
 
 --
--- TOC entry 2341 (class 2604 OID 72924)
+-- TOC entry 2254 (class 2604 OID 72924)
 -- Name: wo_uploaded; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4067,7 +1663,7 @@ ALTER TABLE ONLY svc_wo ALTER COLUMN wo_uploaded SET DEFAULT nextval('svc_wo_wo_
 
 
 --
--- TOC entry 2344 (class 2604 OID 72951)
+-- TOC entry 2257 (class 2604 OID 72951)
 -- Name: wodid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -4075,109 +1671,7 @@ ALTER TABLE ONLY svc_wo_det ALTER COLUMN wodid SET DEFAULT nextval('svc_wo_det_w
 
 
 --
--- TOC entry 2679 (class 0 OID 73263)
--- Dependencies: 240
--- Data for Name: ksr_dtrans; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2680 (class 0 OID 73266)
--- Dependencies: 241
--- Data for Name: ksr_ledger; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2916 (class 0 OID 0)
--- Dependencies: 242
--- Name: ksr_ledger_trlid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ksr_ledger_trlid_seq', 1, false);
-
-
---
--- TOC entry 2684 (class 0 OID 73299)
--- Dependencies: 245
--- Data for Name: ksr_saldo; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2917 (class 0 OID 0)
--- Dependencies: 246
--- Name: ksr_saldo_sldid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ksr_saldo_sldid_seq', 1, false);
-
-
---
--- TOC entry 2678 (class 0 OID 73258)
--- Dependencies: 239
--- Data for Name: ksr_trans; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2707 (class 0 OID 73426)
--- Dependencies: 268
--- Data for Name: ms_aksesories; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2918 (class 0 OID 0)
--- Dependencies: 269
--- Name: ms_aksesories_aksid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ms_aksesories_aksid_seq', 1, false);
-
-
---
--- TOC entry 2682 (class 0 OID 73288)
--- Dependencies: 243
--- Data for Name: ms_auto_jurnal; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2919 (class 0 OID 0)
--- Dependencies: 244
--- Name: ms_auto_jurnal_atjid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ms_auto_jurnal_atjid_seq', 1, false);
-
-
---
--- TOC entry 2677 (class 0 OID 73253)
--- Dependencies: 238
--- Data for Name: ms_bank; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2607 (class 0 OID 72720)
--- Dependencies: 168
--- Data for Name: ms_cabang; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO ms_cabang (cbid, cb_nama, cb_compid, cb_npwp, cb_telpon, cb_logo, cb_fax, cb_email, cb_status, cb_alamat) VALUES ('100085', '1212', 'C001', NULL, '11212', NULL, '121212', '', 0, 'SOLO');
-INSERT INTO ms_cabang (cbid, cb_nama, cb_compid, cb_npwp, cb_telpon, cb_logo, cb_fax, cb_email, cb_status, cb_alamat) VALUES ('100086', 'SSM SO', 'C001', '0', '3323', NULL, '2323', 'aris@gmail.com', 0, 'SOLO');
-
-
---
--- TOC entry 2624 (class 0 OID 72822)
+-- TOC entry 2400 (class 0 OID 72822)
 -- Dependencies: 185
 -- Data for Name: ms_car; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -4186,7 +1680,7 @@ INSERT INTO ms_car (mscid, msc_nopol, msc_norangka, msc_nomesin, msc_cbid, msc_c
 
 
 --
--- TOC entry 2625 (class 0 OID 72869)
+-- TOC entry 2401 (class 0 OID 72869)
 -- Dependencies: 186
 -- Data for Name: ms_car_merk; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -4195,7 +1689,7 @@ INSERT INTO ms_car_merk (merkid, merk_deskripsi) VALUES (1, 'MITSUBISHI');
 
 
 --
--- TOC entry 2920 (class 0 OID 0)
+-- TOC entry 2511 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: ms_car_merk_merkid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -4204,7 +1698,7 @@ SELECT pg_catalog.setval('ms_car_merk_merkid_seq', 1, false);
 
 
 --
--- TOC entry 2627 (class 0 OID 72881)
+-- TOC entry 2403 (class 0 OID 72881)
 -- Dependencies: 188
 -- Data for Name: ms_car_model; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -4213,7 +1707,7 @@ INSERT INTO ms_car_model (modelid, model_merkid, model_deskripsi) VALUES (1, 1, 
 
 
 --
--- TOC entry 2921 (class 0 OID 0)
+-- TOC entry 2512 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: ms_car_model_modelid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -4222,7 +1716,7 @@ SELECT pg_catalog.setval('ms_car_model_modelid_seq', 1, false);
 
 
 --
--- TOC entry 2629 (class 0 OID 72892)
+-- TOC entry 2405 (class 0 OID 72892)
 -- Dependencies: 190
 -- Data for Name: ms_car_type; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -4231,7 +1725,7 @@ INSERT INTO ms_car_type (ctyid, cty_modelid, cty_deskripsi) VALUES (1, 1, 'PAJER
 
 
 --
--- TOC entry 2922 (class 0 OID 0)
+-- TOC entry 2513 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: ms_car_type_ctyid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -4240,15 +1734,7 @@ SELECT pg_catalog.setval('ms_car_type_ctyid_seq', 1, false);
 
 
 --
--- TOC entry 2675 (class 0 OID 73239)
--- Dependencies: 236
--- Data for Name: ms_coa; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2608 (class 0 OID 72725)
+-- TOC entry 2393 (class 0 OID 72725)
 -- Dependencies: 169
 -- Data for Name: ms_company; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -4257,91 +1743,7 @@ INSERT INTO ms_company (compid, comp_nama, comp_alamat, comp_status) VALUES ('C0
 
 
 --
--- TOC entry 2676 (class 0 OID 73248)
--- Dependencies: 237
--- Data for Name: ms_cost_center; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2617 (class 0 OID 72784)
--- Dependencies: 178
--- Data for Name: ms_departemen; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO ms_departemen (deptid, dept_deskripsi) VALUES (1, 'MARKETING');
-INSERT INTO ms_departemen (deptid, dept_deskripsi) VALUES (2, 'SERVICE');
-INSERT INTO ms_departemen (deptid, dept_deskripsi) VALUES (3, 'SPAREPART');
-
-
---
--- TOC entry 2923 (class 0 OID 0)
--- Dependencies: 179
--- Name: ms_departemen_deptid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ms_departemen_deptid_seq', 1, false);
-
-
---
--- TOC entry 2620 (class 0 OID 72800)
--- Dependencies: 181
--- Data for Name: ms_group_cabang; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO ms_group_cabang (groupid, group_cbid, group_krid) VALUES (1, '100086', 'KR1500000001');
-INSERT INTO ms_group_cabang (groupid, group_cbid, group_krid) VALUES (2, '100086', 'KR1500000002');
-
-
---
--- TOC entry 2924 (class 0 OID 0)
--- Dependencies: 182
--- Name: ms_group_cabang_groupid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ms_group_cabang_groupid_seq', 2, true);
-
-
---
--- TOC entry 2619 (class 0 OID 72795)
--- Dependencies: 180
--- Data for Name: ms_jabatan; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO ms_jabatan (jabid, jab_deptid, jab_deskripsi, jab_status) VALUES ('JAB001', 1, 'Admin Sales', 0);
-INSERT INTO ms_jabatan (jabid, jab_deptid, jab_deskripsi, jab_status) VALUES ('JAB002', 2, 'Mekanik', 0);
-INSERT INTO ms_jabatan (jabid, jab_deptid, jab_deskripsi, jab_status) VALUES ('JAB003', 2, 'Service Advisor', 0);
-INSERT INTO ms_jabatan (jabid, jab_deptid, jab_deskripsi, jab_status) VALUES ('JAB004', 2, 'Final Checker', 0);
-
-
---
--- TOC entry 2690 (class 0 OID 73331)
--- Dependencies: 251
--- Data for Name: ms_jenis_kendaraan; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2925 (class 0 OID 0)
--- Dependencies: 252
--- Name: ms_jenis_kendaraan_jknid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ms_jenis_kendaraan_jknid_seq', 1, false);
-
-
---
--- TOC entry 2673 (class 0 OID 73228)
--- Dependencies: 234
--- Data for Name: ms_karoseri; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2612 (class 0 OID 72754)
+-- TOC entry 2395 (class 0 OID 72754)
 -- Dependencies: 173
 -- Data for Name: ms_karyawan; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -4351,420 +1753,7 @@ INSERT INTO ms_karyawan (krid, kr_nik, kr_nama, kr_alamat, kr_hp, kr_jabid, kr_n
 
 
 --
--- TOC entry 2616 (class 0 OID 72779)
--- Dependencies: 177
--- Data for Name: ms_kota; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.01.00.0000', '11.00.00.0000', 'ACEH SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.02.00.0000', '11.00.00.0000', 'ACEH TENGGARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.03.00.0000', '11.00.00.0000', 'ACEH TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.04.00.0000', '11.00.00.0000', 'ACEH TENGAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.05.00.0000', '11.00.00.0000', 'ACEH BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.06.00.0000', '11.00.00.0000', 'ACEH BESAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.07.00.0000', '11.00.00.0000', 'PIDIE');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.08.00.0000', '11.00.00.0000', 'ACEH UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.09.00.0000', '11.00.00.0000', 'SIMEULUE');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.10.00.0000', '11.00.00.0000', 'ACEH SINGKIL');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.11.00.0000', '11.00.00.0000', 'BIREUEN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.12.00.0000', '11.00.00.0000', 'ACEH BARAT DAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.13.00.0000', '11.00.00.0000', 'GAYO LUES');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.14.00.0000', '11.00.00.0000', 'ACEH JAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.15.00.0000', '11.00.00.0000', 'NAGAN RAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.16.00.0000', '11.00.00.0000', 'ACEH TAMIANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.17.00.0000', '11.00.00.0000', 'BENER MERIAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.71.00.0000', '11.00.00.0000', 'BANDA ACEH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.72.00.0000', '11.00.00.0000', 'SABANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.73.00.0000', '11.00.00.0000', 'LHOKSEUMAWE');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('11.74.00.0000', '11.00.00.0000', 'LANGSA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.01.00.0000', '12.00.00.0000', 'TAPANULI TENGAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.02.00.0000', '12.00.00.0000', 'TAPANULI UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.03.00.0000', '12.00.00.0000', 'TAPANULI  SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.04.00.0000', '12.00.00.0000', 'NIAS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.05.00.0000', '12.00.00.0000', 'LANGKAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.06.00.0000', '12.00.00.0000', 'KARO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.07.00.0000', '12.00.00.0000', 'DELI SERDANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.08.00.0000', '12.00.00.0000', 'SIMALUNGUN.');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.09.00.0000', '12.00.00.0000', 'ASAHAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.10.00.0000', '12.00.00.0000', 'LABUHAN BATU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.11.00.0000', '12.00.00.0000', 'DAIRI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.12.00.0000', '12.00.00.0000', 'TOBA SAMOSIR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.13.00.0000', '12.00.00.0000', 'MANDAILING NATAL');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.14.00.0000', '12.00.00.0000', 'NIAS SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.15.00.0000', '12.00.00.0000', 'PAKPAK BHARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.16.00.0000', '12.00.00.0000', 'HUMBANG HASUNDUTAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.17.00.0000', '12.00.00.0000', 'SAMOSIR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.18.00.0000', '12.00.00.0000', 'SERDANG BEDAGAI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.71.00.0000', '12.00.00.0000', 'MEDAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.72.00.0000', '12.00.00.0000', 'PEMATANG SIANTAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.73.00.0000', '12.00.00.0000', 'SIBOLGA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.74.00.0000', '12.00.00.0000', 'TANJUNG BALAI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.75.00.0000', '12.00.00.0000', 'BINJAI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.76.00.0000', '12.00.00.0000', 'TEBING TINGGI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('12.77.00.0000', '12.00.00.0000', 'PADANG SIDIMPUAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.01.00.0000', '13.00.00.0000', 'PESISIR SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.02.00.0000', '13.00.00.0000', 'SOLOK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.03.00.0000', '13.00.00.0000', 'SAWAHLUNTO/SIJUNJUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.04.00.0000', '13.00.00.0000', 'TANAH DATAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.05.00.0000', '13.00.00.0000', 'PADANG PARIAMAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.06.00.0000', '13.00.00.0000', 'AGAM');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.07.00.0000', '13.00.00.0000', 'PATEN LIMA PULUH KOTA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.08.00.0000', '13.00.00.0000', 'PASAMAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.09.00.0000', '13.00.00.0000', 'KEPULAUAN MENTAWAI.');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.10.00.0000', '13.00.00.0000', 'DHARMASRAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.11.00.0000', '13.00.00.0000', 'SOLOK SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.12.00.0000', '13.00.00.0000', 'PASAMAN BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.71.00.0000', '13.00.00.0000', 'PADANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.73.00.0000', '13.00.00.0000', 'SAWAHLUNTO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.74.00.0000', '13.00.00.0000', 'PADANG PANJANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.75.00.0000', '13.00.00.0000', 'BUKIT TINGGI ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.76.00.0000', '13.00.00.0000', 'PAYAKUMBUH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('13.77.00.0000', '13.00.00.0000', 'PARIAMAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.01.00.0000', '14.00.00.0000', 'KAMPAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.02.00.0000', '14.00.00.0000', 'INDRAGIRI HULU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.03.00.0000', '14.00.00.0000', 'BENGKALIS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.04.00.0000', '14.00.00.0000', 'INDRAGIRI HILIR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.05.00.0000', '14.00.00.0000', 'PELALAWAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.06.00.0000', '14.00.00.0000', 'ROKAN HULU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.07.00.0000', '14.00.00.0000', 'ROKAN HILIR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.08.00.0000', '14.00.00.0000', 'SIAK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.09.00.0000', '14.00.00.0000', 'KUANTAN SINGINGI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.71.00.0000', '14.00.00.0000', 'PEKANBARU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('14.72.00.0000', '14.00.00.0000', 'DUMAI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.01.00.0000', '15.00.00.0000', 'KERINCI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.02.00.0000', '15.00.00.0000', 'MERANGIN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.03.00.0000', '15.00.00.0000', 'SAROLANGUN ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.04.00.0000', '15.00.00.0000', 'BATANG HARI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.06.00.0000', '15.00.00.0000', 'TANJUNG JABUNG BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.07.00.0000', '15.00.00.0000', 'TANJUNG JABUNG TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.08.00.0000', '15.00.00.0000', 'BUNGO ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.09.00.0000', '15.00.00.0000', 'TEBO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.71.00.0000', '15.00.00.0000', 'JAMBI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.01.00.0000', '16.00.00.0000', 'OGAN KOMERING ULU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.02.00.0000', '16.00.00.0000', 'OGAN KOMERING ILIR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.03.00.0000', '16.00.00.0000', 'MUARA ENIM');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.04.00.0000', '16.00.00.0000', 'LAHAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.05.00.0000', '16.00.00.0000', 'MUSI RAWAS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.06.00.0000', '16.00.00.0000', 'MUSI BANYUASIN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.07.00.0000', '16.00.00.0000', 'BANYUASIN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.08.00.0000', '16.00.00.0000', 'OGAN KOMERING ULU TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.09.00.0000', '16.00.00.0000', 'OGAN KOMERING ULU SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.10.00.0000', '16.00.00.0000', 'OGAN  ILIR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.71.00.0000', '16.00.00.0000', 'PALEMBANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.72.00.0000', '16.00.00.0000', 'PAGAR ALAM ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.73.00.0000', '16.00.00.0000', 'LUBUK LINGGAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('16.74.00.0000', '16.00.00.0000', 'PRABUMULIH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.01.00.0000', '17.00.00.0000', 'BENGKULU SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.02.00.0000', '17.00.00.0000', 'REJANG LEBONG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.03.00.0000', '17.00.00.0000', 'BENGKULU UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.04.00.0000', '17.00.00.0000', 'MUKOMUKO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.07.00.0000', '17.00.00.0000', 'LEBONG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.08.00.0000', '17.00.00.0000', 'KEPAHIANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.71.00.0000', '17.00.00.0000', 'BENGKULU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.01.00.0000', '18.00.00.0000', 'LAMPUNG SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.02.00.0000', '18.00.00.0000', 'LAMPUNG TENGAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.03.00.0000', '18.00.00.0000', 'LAMPUNG UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.04.00.0000', '18.00.00.0000', 'LAMPUNG BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('15.05.00.0000', '15.00.00.0000', 'MUARO JAMBI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.05.00.0000', '17.00.00.0000', 'SELUMA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.05.00.0000', '18.00.00.0000', 'TULANG BAWANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.06.00.0000', '18.00.00.0000', 'TANGGAMUS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.07.00.0000', '18.00.00.0000', 'LAMPUNG TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.08.00.0000', '18.00.00.0000', 'WAY KANAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.71.00.0000', '18.00.00.0000', 'BANDAR LAMPUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('18.72.00.0000', '18.00.00.0000', 'METRO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('19.01.00.0000', '19.00.00.0000', 'BANGKA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('19.02.00.0000', '19.00.00.0000', 'BELITUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('19.03.00.0000', '19.00.00.0000', 'BANGKA SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('19.04.00.0000', '19.00.00.0000', 'BANGKA TENGAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('19.05.00.0000', '19.00.00.0000', 'BANGKA BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('19.06.00.0000', '19.00.00.0000', 'BELITUNG TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('19.71.00.0000', '19.00.00.0000', 'PANGKALPINANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('21.01.00.0000', '21.00.00.0000', 'KEPULAUAN RIAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('21.02.00.0000', '21.00.00.0000', 'KARIMUN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('21.03.00.0000', '21.00.00.0000', 'NATUNA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('21.04.00.0000', '21.00.00.0000', 'LINGGA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('21.71.00.0000', '21.00.00.0000', 'BATAM');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('21.72.00.0000', '21.00.00.0000', 'TANJUNG PINANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('31.71.00.0000', '31.00.00.0000', 'JAKARTA PUSAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('31.72.00.0000', '31.00.00.0000', 'JAKARTA UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('31.73.00.0000', '31.00.00.0000', 'JAKARTA BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('31.74.00.0000', '31.00.00.0000', 'JAKARTA SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('31.75.00.0000', '31.00.00.0000', 'JAKARTA TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('31.76.00.0000', '31.00.00.0000', 'KEPULAUAN SERIBU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.01.00.0000', '32.00.00.0000', 'BOGOR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.02.00.0000', '32.00.00.0000', 'SUKABUMI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.03.00.0000', '32.00.00.0000', 'CIANJUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.05.00.0000', '32.00.00.0000', 'GARUT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.07.00.0000', '32.00.00.0000', 'CIAMIS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.08.00.0000', '32.00.00.0000', 'KUNINGAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.09.00.0000', '32.00.00.0000', 'CIREBON');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.10.00.0000', '32.00.00.0000', 'MAJALENGKA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.11.00.0000', '32.00.00.0000', 'SUMEDANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.12.00.0000', '32.00.00.0000', 'INDRAMAYU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.13.00.0000', '32.00.00.0000', 'SUBANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.14.00.0000', '32.00.00.0000', 'PURWAKARTA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.15.00.0000', '32.00.00.0000', 'KARAWANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.16.00.0000', '32.00.00.0000', 'BEKASI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.73.00.0000', '32.00.00.0000', 'BANDUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.76.00.0000', '32.00.00.0000', 'DEPOK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.77.00.0000', '32.00.00.0000', 'CIMAHI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.78.00.0000', '32.00.00.0000', 'TASIKMALAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('32.79.00.0000', '32.00.00.0000', 'BANJAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33 20.00.0000', '33.00.00.0000', 'JEPARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.01.00.0000', '33.00.00.0000', 'CILACAP');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.02.00.0000', '33.00.00.0000', 'BANYUMAS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.03.00.0000', '33.00.00.0000', 'PURBALINGGA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.04.00.0000', '33.00.00.0000', 'BANJARNEGARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.05.00.0000', '33.00.00.0000', 'KEBUMEN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.06.00.0000', '33.00.00.0000', 'PURWOREJO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.07.00.0000', '33.00.00.0000', 'WONOSOBO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.08.00.0000', '33.00.00.0000', 'MAGELANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.09.00.0000', '33.00.00.0000', 'BOYOLALI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.10.00.0000', '33.00.00.0000', 'KLATEN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.11.00.0000', '33.00.00.0000', 'SUKOHARJO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.12.00.0000', '33.00.00.0000', 'WONOGIRI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.13.00.0000', '33.00.00.0000', 'KARANGANYAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.14.00.0000', '33.00.00.0000', 'SRAGEN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.15.00.0000', '33.00.00.0000', 'GROBOGAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.16.00.0000', '33.00.00.0000', 'BLORA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.17.00.0000', '33.00.00.0000', 'REMBANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.18.00.0000', '33.00.00.0000', 'PATI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.19.00.0000', '33.00.00.0000', 'KUDUS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.21.00.0000', '33.00.00.0000', 'DEMAK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.22.00.0000', '33.00.00.0000', 'SEMARANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.23.00.0000', '33.00.00.0000', 'TEMANGGUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.24.00.0000', '33.00.00.0000', 'KENDAL');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.25.00.0000', '33.00.00.0000', 'BATANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.27.00.0000', '33.00.00.0000', 'PEMALANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.28.00.0000', '33.00.00.0000', 'TEGAL');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.29.00.0000', '33.00.00.0000', 'BREBES');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.72.00.0000', '33.00.00.0000', 'SURAKARTA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.73.00.0000', '33.00.00.0000', 'SALATIGA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('33.75.00.0000', '33.00.00.0000', 'PEKALONGAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('34.01.00.0000', '34.00.00.0000', 'KULONPROGO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('34.02.00.0000', '34.00.00.0000', 'BANTUL');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('34.03.00.0000', '34.00.00.0000', 'GUNUNG KIDUL');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('34.04.00.0000', '34.00.00.0000', 'SLEMAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('34.71.00.0000', '34.00.00.0000', 'YOGYAKARTA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.01.00.0000', '35.00.00.0000', 'PACITAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.02.00.0000', '35.00.00.0000', 'PONOROGO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.03.00.0000', '35.00.00.0000', 'TRENGGALEK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.04.00.0000', '35.00.00.0000', 'TULUNGAGUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.05.00.0000', '35.00.00.0000', 'BLITAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.06.00.0000', '35.00.00.0000', 'KEDIRI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.08.00.0000', '35.00.00.0000', 'LUMAJANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.09.00.0000', '35.00.00.0000', 'JEMBER');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.10.00.0000', '35.00.00.0000', 'BANYUWANGI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.11.00.0000', '35.00.00.0000', 'BONDOWOSO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.12.00.0000', '35.00.00.0000', 'SITUBONDO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.13.00.0000', '35.00.00.0000', 'PROBOLINGGO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.15.00.0000', '35.00.00.0000', 'SIDOARJO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.16.00.0000', '35.00.00.0000', 'MOJOKERTO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.17.00.0000', '35.00.00.0000', 'JOMBANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.18.00.0000', '35.00.00.0000', 'NGANJUK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.19.00.0000', '35.00.00.0000', 'MADIUN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.20.00.0000', '35.00.00.0000', 'MAGETAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.21.00.0000', '35.00.00.0000', 'NGAWI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.22.00.0000', '35.00.00.0000', 'BOJONEGORO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.23.00.0000', '35.00.00.0000', 'TUBAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.24.00.0000', '35.00.00.0000', 'LAMONGAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.25.00.0000', '35.00.00.0000', 'GRESIK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.26.00.0000', '35.00.00.0000', 'BANGKALAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.27.00.0000', '35.00.00.0000', 'SAMPANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.28.00.0000', '35.00.00.0000', 'PAMEKASAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.29.00.0000', '35.00.00.0000', 'SUMENEP');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.73.00.0000', '35.00.00.0000', 'MALANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.75.00.0000', '35.00.00.0000', 'PASURUAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.78.00.0000', '35.00.00.0000', 'SURABAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('35.79.00.0000', '35.00.00.0000', 'BATU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('36.01.00.0000', '36.00.00.0000', 'PANDEGLANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('36.02.00.0000', '36.00.00.0000', 'LEBAK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('36.04.00.0000', '36.00.00.0000', 'SERANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('36.05.00.0000', '36.00.00.0000', 'TANGGERANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('36.72.00.0000', '36.00.00.0000', 'CILEGON');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.01.00.0000', '51.00.00.0000', 'JEMBRANA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.02.00.0000', '51.00.00.0000', 'TABANAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.03.00.0000', '51.00.00.0000', 'BADUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.04.00.0000', '51.00.00.0000', 'GIANYAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.05.00.0000', '51.00.00.0000', 'KLUNGKUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.06.00.0000', '51.00.00.0000', 'BANGLI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.07.00.0000', '51.00.00.0000', 'KARANG ASEM');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.08.00.0000', '51.00.00.0000', 'BULELENG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('51.71.00.0000', '51.00.00.0000', 'DENPASAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('52.01.00.0000', '52.00.00.0000', 'LOMBOK BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('52.02.00.0000', '52.00.00.0000', 'LOMBOK TENGAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('52.03.00.0000', '52.00.00.0000', 'LOMBOK TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('52.04.00.0000', '52.00.00.0000', 'SUMBAWA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('52.05.00.0000', '52.00.00.0000', 'DOMPU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('52.06.00.0000', '52.00.00.0000', 'BIMA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('52.07.00.0000', '52.00.00.0000', 'SUMBAWA BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('52.71.00.0000', '52.00.00.0000', 'MATARAM');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.02.00.0000', '53.00.00.0000', 'TIMOR TENGAH SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.03.00.0000', '53.00.00.0000', 'TIMOR TENGAH  UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.04.00.0000', '53.00.00.0000', 'B E L U');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.05.00.0000', '53.00.00.0000', 'ALOR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.06.00.0000', '53.00.00.0000', 'FLORES TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.07.00.0000', '53.00.00.0000', 'SIKKA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.08.00.0000', '53.00.00.0000', 'ENDE');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.09.00.0000', '53.00.00.0000', 'NGADA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.10.00.0000', '53.00.00.0000', 'MANGGARAI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.11.00.0000', '53.00.00.0000', 'SUMBA TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.12.00.0000', '53.00.00.0000', 'SUMBA BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.13.00.0000', '53.00.00.0000', 'LEMBATA.');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.14.00.0000', '53.00.00.0000', 'ROTE NDAO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.15.00.0000', '53.00.00.0000', 'MANGGARAI BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('53.71.00.0000', '53.00.00.0000', 'KUPANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.01.00.0000', '61.00.00.0000', 'SEKADAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.03.00.0000', '61.00.00.0000', 'SANGGAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.04.00.0000', '61.00.00.0000', 'KETAPANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.05.00.0000', '61.00.00.0000', 'SINTANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.06.00.0000', '61.00.00.0000', 'KAPUAS HULU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.07.00.0000', '61.00.00.0000', 'BENGKAYANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.08.00.0000', '61.00.00.0000', 'LANDAK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.09.00.0000', '61.00.00.0000', 'MELAWI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.71.00.0000', '61.00.00.0000', 'PONTIANAK');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('61.72.00.0000', '61.00.00.0000', 'SINGKAWANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.01.00.0000', '62.00.00.0000', 'PATEN KOTA WARINGIN BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.02.00.0000', '62.00.00.0000', 'PATEN KOTA WARINGIN TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.03.00.0000', '62.00.00.0000', 'KAPUAS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.04.00.0000', '62.00.00.0000', 'BARITO SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.05.00.0000', '62.00.00.0000', 'BARITO UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.06.00.0000', '62.00.00.0000', 'KATINGAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.07.00.0000', '62.00.00.0000', 'SERUYAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.08.00.0000', '62.00.00.0000', 'SUKAMARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.09.00.0000', '62.00.00.0000', 'LAMANDAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.10.00.0000', '62.00.00.0000', 'GUNUNG MAS');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.11.00.0000', '62.00.00.0000', 'PULANG PISAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.12.00.0000', '62.00.00.0000', 'MURUNG RAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.13.00.0000', '62.00.00.0000', 'BARITO TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('62.71.00.0000', '62.00.00.0000', 'PALANGKARAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.01.00.0000', '63.00.00.0000', 'TANAH LAUT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.02.00.0000', '63.00.00.0000', 'PATEN KOTA BARU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.03.00.0000', '63.00.00.0000', 'BANJAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.04.00.0000', '63.00.00.0000', 'BARITO KUALA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.05.00.0000', '63.00.00.0000', 'TAPIN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.06.00.0000', '63.00.00.0000', 'HULU SUNGAI SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.07.00.0000', '63.00.00.0000', 'HULU SUNGAI TENGAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.08.00.0000', '63.00.00.0000', 'HULU SUNGAI UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.09.00.0000', '63.00.00.0000', 'TABALONG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.10.00.0000', '63.00.00.0000', 'TANAH BUMBU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.11.00.0000', '63.00.00.0000', 'BALANGAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.71.00.0000', '63.00.00.0000', 'BANJARMASIN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('63.72.00.0000', '63.00.00.0000', 'BANJAR BARU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.01.00.0000', '64.00.00.0000', 'PASIR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.02.00.0000', '64.00.00.0000', 'KUTAI KARTANEGARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.03.00.0000', '64.00.00.0000', 'BERAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.04.00.0000', '64.00.00.0000', 'BULUNGAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.05.00.0000', '64.00.00.0000', 'NUNUKAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.06.00.0000', '64.00.00.0000', 'MALINAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.07.00.0000', '64.00.00.0000', 'KUTAI BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.08.00.0000', '64.00.00.0000', 'KUTAI TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.09.00.0000', '64.00.00.0000', 'PENAJAM PASER UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.71.00.0000', '64.00.00.0000', 'BALIKPAPAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.72.00.0000', '64.00.00.0000', 'SAMARINDA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.73.00.0000', '64.00.00.0000', 'TARAKAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('64.74.00.0000', '64.00.00.0000', 'BONTANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('71.01.00.0000', '71.00.00.0000', 'KAB. BOLOANG MONGONDOW');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('71.02.00.0000', '71.00.00.0000', 'KAB. MINAHASA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('71.03.00.0000', '71.00.00.0000', 'KAB. KEPULAUAN SANGIHE');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('71.04.00.0000', '71.00.00.0000', 'KAB. KEPULAUAN TALAUD');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('71.05.00.0000', '71.00.00.0000', 'KAB. MINAHASA SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('71.71.00.0000', '71.00.00.0000', 'MANADO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('71.72.00.0000', '71.00.00.0000', 'BITUNG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('71.73.00.0000', '71.00.00.0000', 'TOMOHON');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.01.00.0000', '72.00.00.0000', 'BANGGAI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.02.00.0000', '72.00.00.0000', 'POSO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.03.00.0000', '72.00.00.0000', 'DONGGALA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.04.00.0000', '72.00.00.0000', 'TOLI TOLI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.05.00.0000', '72.00.00.0000', 'BANGGAI KEPULAUAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.06.00.0000', '72.00.00.0000', 'MOROWALI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.07.00.0000', '72.00.00.0000', 'BUOL');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.08.00.0000', '72.00.00.0000', 'PARIGI MOUTONG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.09.00.0000', '72.00.00.0000', 'TOJO UNA UNA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('72.71.00.0000', '72.00.00.0000', 'PALU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('73.01.00.0000', '73.00.00.0000', 'SELAYAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('73.02.00.0000', '73.00.00.0000', 'BULUKUMBA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('73.03.00.0000', '73.00.00.0000', 'BANTAENG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('73.04.00.0000', '73.00.00.0000', 'JENEPONTO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('73.05.00.0000', '73.00.00.0000', 'TAKALAR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('73.06.00.0000', '73.00.00.0000', 'GOWA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('73.07.00.0000', '73.00.00.0000', 'SINJAI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.01.00.0000', '74.00.00.0000', 'KOLAKA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.02.00.0000', '74.00.00.0000', 'KENDARI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.03.00.0000', '74.00.00.0000', 'MUNA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.04.00.0000', '74.00.00.0000', 'BUTON');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.05.00.0000', '74.00.00.0000', 'KONAWE SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.06.00.0000', '74.00.00.0000', 'BOMBANA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.07.00.0000', '74.00.00.0000', 'WAKATOBI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.08.00.0000', '74.00.00.0000', 'KOLAKA TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.71.00.0000', '74.00.00.0000', 'KENDARI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('74.72.00.0000', '74.00.00.0000', 'BAU BAU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('75.02.00.0000', '75.00.00.0000', 'BOALEMO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('75.03.00.0000', '75.00.00.0000', 'BONE BOLANGO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('75.04.00.0000', '75.00.00.0000', 'POHUWATO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('75.71.00.0000', '75.00.00.0000', 'GORONTALO');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('81.01.00.0000', '81.00.00.0000', 'MALUKU TENGGARA  BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('81.02.00.0000', '81.00.00.0000', 'MALUKU TENGGARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('81.03.00.0000', '81.00.00.0000', 'MALUKU TENGAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('81.04.00.0000', '81.00.00.0000', 'BURU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('81.05.00.0000', '81.00.00.0000', 'SERAM BAGIAN BARAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('81.06.00.0000', '81.00.00.0000', 'SERAM BAGIAN TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('81.07.00.0000', '81.00.00.0000', 'KEPULAUAN ARU');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('81.71.00.0000', '81.00.00.0000', 'AMBON');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('82.01.00.0000', '82.00.00.0000', 'MALUKU UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('82.02.00.0000', '82.00.00.0000', 'HALMAHERA TENGAH');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('82.03.00.0000', '82.00.00.0000', 'HALMAHERA UTARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('82.04.00.0000', '82.00.00.0000', 'HALMAHERA SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('82.05.00.0000', '82.00.00.0000', 'KEPULAUAN SULA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('82.06.00.0000', '82.00.00.0000', 'HALMAHERA TIMUR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('82.07.00.0000', '82.00.00.0000', 'TIDORE KEPULAUAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('82.71.00.0000', '82.00.00.0000', 'TERNATE');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.01.00.0000', '91.00.00.0000', 'PUNCAK JAYA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.02.00.0000', '91.00.00.0000', 'WAROPEN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.04.00.0000', '91.00.00.0000', 'NABIRE ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.05.00.0000', '91.00.00.0000', 'FAK FAK ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.06.00.0000', '91.00.00.0000', 'SORONG ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.07.00.0000', '91.00.00.0000', 'MANOKWARI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.08.00.0000', '91.00.00.0000', 'YAPEN WAROPEN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.09.00.0000', '91.00.00.0000', 'BIAK NUMFOR');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.11.00.0000', '91.00.00.0000', 'PANIAI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.12.00.0000', '91.00.00.0000', 'MIMIKA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.13.00.0000', '91.00.00.0000', 'SARMI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.14.00.0000', '91.00.00.0000', 'KEEROM');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.15.00.0000', '91.00.00.0000', 'SORONG SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.16.00.0000', '91.00.00.0000', 'RAJA AMPAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.17.00.0000', '91.00.00.0000', 'PEGUNUNGAN BINTANG');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.18.00.0000', '91.00.00.0000', 'YAHUKIMO  ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.19.00.0000', '91.00.00.0000', 'TOLIKARA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.21.00.0000', '91.00.00.0000', 'KAIMANA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.22.00.0000', '91.00.00.0000', 'BOVEN DIGUL');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.23.00.0000', '91.00.00.0000', 'MAPPI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.24.00.0000', '91.00.00.0000', 'ASMAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.25.00.0000', '91.00.00.0000', 'SUPIORI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.26.00.0000', '91.00.00.0000', 'TELUK WONDAMA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('91.71.00.0000', '91.00.00.0000', 'JAYAPURA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('92.05.00.0000', '92.00.00.0000', 'FAK FAK ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('92.06.00.0000', '92.00.00.0000', 'SORONG ');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('92.07.00.0000', '92.00.00.0000', 'MANOKWARI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('92.15.00.0000', '92.00.00.0000', 'SORONG SELATAN');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('92.16.00.0000', '92.00.00.0000', 'RAJA AMPAT');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('92.21.00.0000', '92.00.00.0000', 'KAIMANA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('92.25.00.0000', '92.00.00.0000', 'TELUK BINTUNI');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('92.26.00.0000', '92.00.00.0000', 'TELUK WONDAMA');
-INSERT INTO ms_kota (kotaid, kota_propid, kota_deskripsi) VALUES ('17.06.00.0000', '17.00.00.0000', 'KAUR');
-
-
---
--- TOC entry 2686 (class 0 OID 73310)
--- Dependencies: 247
--- Data for Name: ms_leasing; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2609 (class 0 OID 72733)
+-- TOC entry 2394 (class 0 OID 72733)
 -- Dependencies: 170
 -- Data for Name: ms_menu; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -4835,7 +1824,7 @@ INSERT INTO ms_menu (menuid, menu_nama, menu_url, menu_deskripsi, menu_parent_id
 
 
 --
--- TOC entry 2614 (class 0 OID 72765)
+-- TOC entry 2397 (class 0 OID 72765)
 -- Dependencies: 175
 -- Data for Name: ms_pelanggan; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -4845,158 +1834,11 @@ INSERT INTO ms_pelanggan (pelid, pel_nama, pel_alamat, pel_alamat_surat, pel_hp,
 INSERT INTO ms_pelanggan (pelid, pel_nama, pel_alamat, pel_alamat_surat, pel_hp, pel_telpon, pel_email, pel_npwp, pel_cbid, pel_type, pel_gender, pel_tempat_lahir, pel_tgl_lahir, pel_kotaid, pel_agama, pel_fax, pel_marital, pel_nokontrak, pel_nomor_id, pel_status) VALUES ('PE1500000004', 'BROKER', 'BROKER', 'solo', '0909', '0909', '', NULL, '100086', 'broker', '0', '0909', '2015-09-28', '15.04.00.0000', '0', '0909', NULL, NULL, '9090', 1);
 INSERT INTO ms_pelanggan (pelid, pel_nama, pel_alamat, pel_alamat_surat, pel_hp, pel_telpon, pel_email, pel_npwp, pel_cbid, pel_type, pel_gender, pel_tempat_lahir, pel_tgl_lahir, pel_kotaid, pel_agama, pel_fax, pel_marital, pel_nokontrak, pel_nomor_id, pel_status) VALUES ('PE1500000003', 'ARIS', 'SOLO', '', '085647069106', '1212121212', '', NULL, '100086', 'retail', 'L', 'SOLO', '2015-09-28', '17.07.00.0000', 'kristen', '12', NULL, NULL, '098.097.081', 0);
 INSERT INTO ms_pelanggan (pelid, pel_nama, pel_alamat, pel_alamat_surat, pel_hp, pel_telpon, pel_email, pel_npwp, pel_cbid, pel_type, pel_gender, pel_tempat_lahir, pel_tgl_lahir, pel_kotaid, pel_agama, pel_fax, pel_marital, pel_nokontrak, pel_nomor_id, pel_status) VALUES ('PE1500000002', 'ARIS', 'JUWANA PATI', '', '085647069106', '1212121212', '', NULL, '100086', 'retail', 'L', 'SOLO', '2015-09-28', '17.71.00.0000', 'kristen', '12', NULL, NULL, '098.097.081', 0);
+INSERT INTO ms_pelanggan (pelid, pel_nama, pel_alamat, pel_alamat_surat, pel_hp, pel_telpon, pel_email, pel_npwp, pel_cbid, pel_type, pel_gender, pel_tempat_lahir, pel_tgl_lahir, pel_kotaid, pel_agama, pel_fax, pel_marital, pel_nokontrak, pel_nomor_id, pel_status) VALUES ('PE1500000006', 'KUNCO', 'JALAN IR. JUANDA SOLO', 'solo', '0867232323', '232323', 'aris.jenong@gmail.com', NULL, '100086', 'retail', 'L', 'SOLO', '1986-09-03', '33.04.00.0000', 'islam', '232323', NULL, NULL, '2323', 0);
 
 
 --
--- TOC entry 2709 (class 0 OID 73437)
--- Dependencies: 270
--- Data for Name: ms_peltype; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2926 (class 0 OID 0)
--- Dependencies: 271
--- Name: ms_peltype_pltid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ms_peltype_pltid_seq', 1, false);
-
-
---
--- TOC entry 2615 (class 0 OID 72774)
--- Dependencies: 176
--- Data for Name: ms_propinsi; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('11.00.00.0000', 'Nanggroe Aceh Darussalaam');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('12.00.00.0000', 'Sumatra Utara');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('13.00.00.0000', 'Sumatra Barat');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('14.00.00.0000', 'Riau');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('15.00.00.0000', 'Jambi');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('16.00.00.0000', 'Sumatra Selatan');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('17.00.00.0000', 'Bengkulu');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('18.00.00.0000', 'Lampung');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('19.00.00.0000', 'Kep. Bangka Belitung');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('21.00.00.0000', 'Kep. Riau');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('31.00.00.0000', 'DKI Jakarta');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('32.00.00.0000', 'Jawa Barat');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('33.00.00.0000', 'Jawa Tengah');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('34.00.00.0000', 'DI Yogyakarta');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('35.00.00.0000', 'Jawa Timur');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('36.00.00.0000', 'Banten');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('51.00.00.0000', 'Bali');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('52.00.00.0000', 'Nusa Tenggara Barat');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('53.00.00.0000', 'Nusa Tenggara Timur');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('61.00.00.0000', 'Kalimantan Barat');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('62.00.00.0000', 'Kalimantan Tengah');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('63.00.00.0000', 'Kalimantan Selatan');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('64.00.00.0000', 'Kalimantan Timur');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('71.00.00.0000', 'Sulawesi Utara');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('72.00.00.0000', 'Sulawesi Tengah');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('73.00.00.0000', 'Sulawesi Selatan');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('74.00.00.0000', 'Sulawesi Tenggara');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('75.00.00.0000', 'Gorontalo');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('81.00.00.0000', 'Maluku');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('82.00.00.0000', 'Maluku Utara');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('91.00.00.0000', 'Papua');
-INSERT INTO ms_propinsi (propid, prop_deskripsi) VALUES ('92.00.00.0000', 'Irian Jaya Barat');
-
-
---
--- TOC entry 2610 (class 0 OID 72742)
--- Dependencies: 171
--- Data for Name: ms_role; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO ms_role (roleid, role_nama, role_status) VALUES (1, 'Service Advisor', 0);
-INSERT INTO ms_role (roleid, role_nama, role_status) VALUES (3, 'Developer', 0);
-
-
---
--- TOC entry 2611 (class 0 OID 72751)
--- Dependencies: 172
--- Data for Name: ms_role_det; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (1, 6);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (1, 9);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 6);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 9);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 23);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 21);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 22);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 12);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 7);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 8);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 11);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 20);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 25);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 5);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 1);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 2);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 16);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 14);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 15);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 4);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 18);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 41);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 40);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 47);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 46);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 44);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 45);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 42);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 43);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 13);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 30);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 48);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 33);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 26);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 27);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 28);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 32);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 31);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 29);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 17);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 34);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 36);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 39);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 38);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 37);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 35);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 3);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 56);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 19);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 50);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 64);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 52);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 49);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 65);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 53);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 51);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 54);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 55);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 62);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 63);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 60);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 57);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 58);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 61);
-INSERT INTO ms_role_det (roledet_roleid, roledet_menuid) VALUES (3, 59);
-
-
---
--- TOC entry 2687 (class 0 OID 73315)
--- Dependencies: 248
--- Data for Name: ms_segment; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2622 (class 0 OID 72811)
+-- TOC entry 2398 (class 0 OID 72811)
 -- Dependencies: 183
 -- Data for Name: ms_supplier; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5006,7 +1848,7 @@ INSERT INTO ms_supplier (supid, sup_nama, sup_alamat, sup_npwp, sup_telpon, sup_
 
 
 --
--- TOC entry 2715 (class 0 OID 73468)
+-- TOC entry 2442 (class 0 OID 73468)
 -- Dependencies: 276
 -- Data for Name: ms_type_jurnal; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5014,7 +1856,7 @@ INSERT INTO ms_supplier (supid, sup_nama, sup_alamat, sup_npwp, sup_telpon, sup_
 
 
 --
--- TOC entry 2613 (class 0 OID 72762)
+-- TOC entry 2396 (class 0 OID 72762)
 -- Dependencies: 174
 -- Data for Name: ms_user_role; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5023,7 +1865,7 @@ INSERT INTO ms_user_role (userro_roleid, userro_krid) VALUES (3, 'KR1500000001')
 
 
 --
--- TOC entry 2634 (class 0 OID 72937)
+-- TOC entry 2410 (class 0 OID 72937)
 -- Dependencies: 195
 -- Data for Name: ms_warna; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5033,7 +1875,7 @@ INSERT INTO ms_warna (warnaid, warna_deskripsi) VALUES (2, 'SILVER');
 
 
 --
--- TOC entry 2927 (class 0 OID 0)
+-- TOC entry 2514 (class 0 OID 0)
 -- Dependencies: 196
 -- Name: ms_warna_warnaid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5042,257 +1884,7 @@ SELECT pg_catalog.setval('ms_warna_warnaid_seq', 1, false);
 
 
 --
--- TOC entry 2693 (class 0 OID 73347)
--- Dependencies: 254
--- Data for Name: pen_bbn; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2928 (class 0 OID 0)
--- Dependencies: 255
--- Name: pen_bbn_bbnid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_bbn_bbnid_seq', 1, false);
-
-
---
--- TOC entry 2692 (class 0 OID 73342)
--- Dependencies: 253
--- Data for Name: pen_bpk; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2695 (class 0 OID 73361)
--- Dependencies: 256
--- Data for Name: pen_ceklist; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2929 (class 0 OID 0)
--- Dependencies: 257
--- Name: pen_ceklist_pecekid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_ceklist_pecekid_seq', 1, false);
-
-
---
--- TOC entry 2703 (class 0 OID 73405)
--- Dependencies: 264
--- Data for Name: pen_do; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2930 (class 0 OID 0)
--- Dependencies: 265
--- Name: pen_do_doid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_do_doid_seq', 1, false);
-
-
---
--- TOC entry 2716 (class 0 OID 73471)
--- Dependencies: 277
--- Data for Name: pen_faktur; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2688 (class 0 OID 73320)
--- Dependencies: 249
--- Data for Name: pen_faktur_payment; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2931 (class 0 OID 0)
--- Dependencies: 250
--- Name: pen_faktur_payment_byrid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_faktur_payment_byrid_seq', 1, false);
-
-
---
--- TOC entry 2706 (class 0 OID 73421)
--- Dependencies: 267
--- Data for Name: pen_fat; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2705 (class 0 OID 73416)
--- Dependencies: 266
--- Data for Name: pen_fpk; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2672 (class 0 OID 73199)
--- Dependencies: 233
--- Data for Name: pen_fpt; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2697 (class 0 OID 73372)
--- Dependencies: 258
--- Data for Name: pen_retbeli; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2932 (class 0 OID 0)
--- Dependencies: 259
--- Name: pen_retbeli_rtbid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_retbeli_rtbid_seq', 1, false);
-
-
---
--- TOC entry 2699 (class 0 OID 73383)
--- Dependencies: 260
--- Data for Name: pen_retjual; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2933 (class 0 OID 0)
--- Dependencies: 261
--- Name: pen_retjual_rtjid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_retjual_rtjid_seq', 1, false);
-
-
---
--- TOC entry 2674 (class 0 OID 73234)
--- Dependencies: 235
--- Data for Name: pen_spk; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2711 (class 0 OID 73446)
--- Dependencies: 272
--- Data for Name: pen_spk_atribut; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2934 (class 0 OID 0)
--- Dependencies: 273
--- Name: pen_spk_atribut_atrid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_spk_atribut_atrid_seq', 1, false);
-
-
---
--- TOC entry 2713 (class 0 OID 73457)
--- Dependencies: 274
--- Data for Name: pen_spk_followup; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2935 (class 0 OID 0)
--- Dependencies: 275
--- Name: pen_spk_followup_spfid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_spk_followup_spfid_seq', 1, false);
-
-
---
--- TOC entry 2701 (class 0 OID 73394)
--- Dependencies: 262
--- Data for Name: pen_spk_validasi; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2936 (class 0 OID 0)
--- Dependencies: 263
--- Name: pen_spk_validasi_vspkid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pen_spk_validasi_vspkid_seq', 1, false);
-
-
---
--- TOC entry 2670 (class 0 OID 73189)
--- Dependencies: 231
--- Data for Name: pros_agenda; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2666 (class 0 OID 73167)
--- Dependencies: 227
--- Data for Name: pros_data; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2669 (class 0 OID 73186)
--- Dependencies: 230
--- Data for Name: pros_data_car; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2671 (class 0 OID 73194)
--- Dependencies: 232
--- Data for Name: pros_follow; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2667 (class 0 OID 73172)
--- Dependencies: 228
--- Data for Name: pros_sumber_info; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 2937 (class 0 OID 0)
--- Dependencies: 229
--- Name: pros_sumber_info_infoid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('pros_sumber_info_infoid_seq', 1, false);
-
-
---
--- TOC entry 2623 (class 0 OID 72819)
+-- TOC entry 2399 (class 0 OID 72819)
 -- Dependencies: 184
 -- Data for Name: setting; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5302,16 +1894,16 @@ INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('C', 1, NULL);
 INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('R', 3, NULL);
 INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('FL20', 1, NULL);
 INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('FL15', 2, NULL);
-INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('PE15', 5, NULL);
 INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('CA15', 4, NULL);
 INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('JAB', 4, NULL);
 INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('KR15', 2, NULL);
-INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('IN15', 2, NULL);
 INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('SU15', 2, NULL);
+INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('PE15', 6, NULL);
+INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('IN15', 3, NULL);
 
 
 --
--- TOC entry 2651 (class 0 OID 73068)
+-- TOC entry 2427 (class 0 OID 73068)
 -- Dependencies: 212
 -- Data for Name: spa_grade; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5319,7 +1911,7 @@ INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('SU15', 2, NULL);
 
 
 --
--- TOC entry 2652 (class 0 OID 73073)
+-- TOC entry 2428 (class 0 OID 73073)
 -- Dependencies: 213
 -- Data for Name: spa_grade_det; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5327,7 +1919,7 @@ INSERT INTO setting (set_key, set_value, set_cbid) VALUES ('SU15', 2, NULL);
 
 
 --
--- TOC entry 2645 (class 0 OID 73002)
+-- TOC entry 2421 (class 0 OID 73002)
 -- Dependencies: 206
 -- Data for Name: spa_gudang; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5336,7 +1928,7 @@ INSERT INTO spa_gudang (gdgid, gdg_deskripsi, gdg_cbid, gdg_status) VALUES (1, '
 
 
 --
--- TOC entry 2938 (class 0 OID 0)
+-- TOC entry 2515 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: spa_gudang_gdgid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5345,17 +1937,18 @@ SELECT pg_catalog.setval('spa_gudang_gdgid_seq', 1, true);
 
 
 --
--- TOC entry 2644 (class 0 OID 72997)
+-- TOC entry 2420 (class 0 OID 72997)
 -- Dependencies: 205
 -- Data for Name: spa_inventory; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO spa_inventory (inveid, inve_cbid, inve_kode, inve_nama, inve_barcode, inve_qty, inve_qty_rusak, inve_qty_min, inve_hpp, inve_harga, inve_jenis, inve_harga_beli, inve_umur_km, inve_umur_bulan, inve_rakid) VALUES ('IN1500000002', '100086', '121121211111111', 'RODA', '12121212', 0, 0, 1, 0.00, 2000000.00, 'sp', 0.00, 11, 0, 1);
 INSERT INTO spa_inventory (inveid, inve_cbid, inve_kode, inve_nama, inve_barcode, inve_qty, inve_qty_rusak, inve_qty_min, inve_hpp, inve_harga, inve_jenis, inve_harga_beli, inve_umur_km, inve_umur_bulan, inve_rakid) VALUES ('IN1500000001', '100086', '11212', 'CAT', '11312', 0, 0, 1, 0.00, 10000.00, 'sm', 0.00, 0, 0, 1);
+INSERT INTO spa_inventory (inveid, inve_cbid, inve_kode, inve_nama, inve_barcode, inve_qty, inve_qty_rusak, inve_qty_min, inve_hpp, inve_harga, inve_jenis, inve_harga_beli, inve_umur_km, inve_umur_bulan, inve_rakid) VALUES ('IN1500000003', '100086', '2211212', 'CAT HITAM', '1212121', 0, 0, 1, 0.00, 100000.00, 'sp', 0.00, 0, 0, 1);
 
 
 --
--- TOC entry 2664 (class 0 OID 73156)
+-- TOC entry 2440 (class 0 OID 73156)
 -- Dependencies: 225
 -- Data for Name: spa_kartu_stock; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5363,7 +1956,7 @@ INSERT INTO spa_inventory (inveid, inve_cbid, inve_kode, inve_nama, inve_barcode
 
 
 --
--- TOC entry 2939 (class 0 OID 0)
+-- TOC entry 2516 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: spa_kartu_stock_ksid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5372,7 +1965,7 @@ SELECT pg_catalog.setval('spa_kartu_stock_ksid_seq', 1, false);
 
 
 --
--- TOC entry 2657 (class 0 OID 73105)
+-- TOC entry 2433 (class 0 OID 73105)
 -- Dependencies: 218
 -- Data for Name: spa_nota; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5380,7 +1973,7 @@ SELECT pg_catalog.setval('spa_kartu_stock_ksid_seq', 1, false);
 
 
 --
--- TOC entry 2720 (class 0 OID 73883)
+-- TOC entry 2446 (class 0 OID 73883)
 -- Dependencies: 281
 -- Data for Name: spa_pricelist; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5388,7 +1981,7 @@ SELECT pg_catalog.setval('spa_kartu_stock_ksid_seq', 1, false);
 
 
 --
--- TOC entry 2940 (class 0 OID 0)
+-- TOC entry 2517 (class 0 OID 0)
 -- Dependencies: 280
 -- Name: spa_pricelist_plid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5397,7 +1990,7 @@ SELECT pg_catalog.setval('spa_pricelist_plid_seq', 1, false);
 
 
 --
--- TOC entry 2647 (class 0 OID 73017)
+-- TOC entry 2423 (class 0 OID 73017)
 -- Dependencies: 208
 -- Data for Name: spa_rak; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5406,7 +1999,7 @@ INSERT INTO spa_rak (rakid, rak_gdgid, rak_cbid, rak_deskripsi, rak_status) VALU
 
 
 --
--- TOC entry 2941 (class 0 OID 0)
+-- TOC entry 2518 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: spa_rak_rakid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5415,7 +2008,7 @@ SELECT pg_catalog.setval('spa_rak_rakid_seq', 1, true);
 
 
 --
--- TOC entry 2660 (class 0 OID 73130)
+-- TOC entry 2436 (class 0 OID 73130)
 -- Dependencies: 221
 -- Data for Name: spa_retbeli; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5423,7 +2016,7 @@ SELECT pg_catalog.setval('spa_rak_rakid_seq', 1, true);
 
 
 --
--- TOC entry 2661 (class 0 OID 73135)
+-- TOC entry 2437 (class 0 OID 73135)
 -- Dependencies: 222
 -- Data for Name: spa_retbeli_det; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5431,7 +2024,7 @@ SELECT pg_catalog.setval('spa_rak_rakid_seq', 1, true);
 
 
 --
--- TOC entry 2658 (class 0 OID 73122)
+-- TOC entry 2434 (class 0 OID 73122)
 -- Dependencies: 219
 -- Data for Name: spa_retjual; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5439,7 +2032,7 @@ SELECT pg_catalog.setval('spa_rak_rakid_seq', 1, true);
 
 
 --
--- TOC entry 2659 (class 0 OID 73127)
+-- TOC entry 2435 (class 0 OID 73127)
 -- Dependencies: 220
 -- Data for Name: spa_retjual_det; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5447,7 +2040,7 @@ SELECT pg_catalog.setval('spa_rak_rakid_seq', 1, true);
 
 
 --
--- TOC entry 2653 (class 0 OID 73076)
+-- TOC entry 2429 (class 0 OID 73076)
 -- Dependencies: 214
 -- Data for Name: spa_spesial; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5455,7 +2048,7 @@ SELECT pg_catalog.setval('spa_rak_rakid_seq', 1, true);
 
 
 --
--- TOC entry 2942 (class 0 OID 0)
+-- TOC entry 2519 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: spa_spesial_speid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5464,7 +2057,7 @@ SELECT pg_catalog.setval('spa_spesial_speid_seq', 8, true);
 
 
 --
--- TOC entry 2649 (class 0 OID 73032)
+-- TOC entry 2425 (class 0 OID 73032)
 -- Dependencies: 210
 -- Data for Name: spa_supply; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5472,7 +2065,7 @@ SELECT pg_catalog.setval('spa_spesial_speid_seq', 8, true);
 
 
 --
--- TOC entry 2650 (class 0 OID 73065)
+-- TOC entry 2426 (class 0 OID 73065)
 -- Dependencies: 211
 -- Data for Name: spa_supply_det; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5480,7 +2073,7 @@ SELECT pg_catalog.setval('spa_spesial_speid_seq', 8, true);
 
 
 --
--- TOC entry 2655 (class 0 OID 73085)
+-- TOC entry 2431 (class 0 OID 73085)
 -- Dependencies: 216
 -- Data for Name: spa_trbr; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5488,7 +2081,7 @@ SELECT pg_catalog.setval('spa_spesial_speid_seq', 8, true);
 
 
 --
--- TOC entry 2656 (class 0 OID 73098)
+-- TOC entry 2432 (class 0 OID 73098)
 -- Dependencies: 217
 -- Data for Name: spa_trbr_det; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5496,25 +2089,26 @@ SELECT pg_catalog.setval('spa_spesial_speid_seq', 8, true);
 
 
 --
--- TOC entry 2718 (class 0 OID 73830)
+-- TOC entry 2444 (class 0 OID 73830)
 -- Dependencies: 279
 -- Data for Name: svc_absensi; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO svc_absensi (absid, abs_tgl, abs_krid, abs_in, abs_out, abs_total, abs_status, abs_deskripsi, abs_cbid, abs_lastupdate) VALUES (1, '2015-09-04', 'KR1500000002', '08:30:00', '16:30:00', 7, 0, '', '100086', NULL);
+INSERT INTO svc_absensi (absid, abs_tgl, abs_krid, abs_in, abs_out, abs_total, abs_status, abs_deskripsi, abs_cbid, abs_lastupdate) VALUES (2, '2015-09-07', 'KR1500000002', '08:30:00', '18:30:00', 9, 0, '', '100086', NULL);
 
 
 --
--- TOC entry 2943 (class 0 OID 0)
+-- TOC entry 2520 (class 0 OID 0)
 -- Dependencies: 278
 -- Name: svc_absensi_absid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('svc_absensi_absid_seq', 1, true);
+SELECT pg_catalog.setval('svc_absensi_absid_seq', 2, true);
 
 
 --
--- TOC entry 2638 (class 0 OID 72959)
+-- TOC entry 2414 (class 0 OID 72959)
 -- Dependencies: 199
 -- Data for Name: svc_brate; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5523,7 +2117,7 @@ INSERT INTO svc_brate (br_cbid, br_rate, br_merkid, br_modelid) VALUES ('100086'
 
 
 --
--- TOC entry 2642 (class 0 OID 72985)
+-- TOC entry 2418 (class 0 OID 72985)
 -- Dependencies: 203
 -- Data for Name: svc_clock; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5531,7 +2125,7 @@ INSERT INTO svc_brate (br_cbid, br_rate, br_merkid, br_modelid) VALUES ('100086'
 
 
 --
--- TOC entry 2643 (class 0 OID 72994)
+-- TOC entry 2419 (class 0 OID 72994)
 -- Dependencies: 204
 -- Data for Name: svc_clock_det; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5539,7 +2133,7 @@ INSERT INTO svc_brate (br_cbid, br_rate, br_merkid, br_modelid) VALUES ('100086'
 
 
 --
--- TOC entry 2639 (class 0 OID 72962)
+-- TOC entry 2415 (class 0 OID 72962)
 -- Dependencies: 200
 -- Data for Name: svc_frate; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5550,7 +2144,7 @@ INSERT INTO svc_frate (flatid, flat_cbid, flat_kode, flat_deskripsi, flat_fx, fl
 
 
 --
--- TOC entry 2662 (class 0 OID 73138)
+-- TOC entry 2438 (class 0 OID 73138)
 -- Dependencies: 223
 -- Data for Name: svc_invoice; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5558,7 +2152,7 @@ INSERT INTO svc_frate (flatid, flat_cbid, flat_kode, flat_deskripsi, flat_fx, fl
 
 
 --
--- TOC entry 2663 (class 0 OID 73153)
+-- TOC entry 2439 (class 0 OID 73153)
 -- Dependencies: 224
 -- Data for Name: svc_invoice_det; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5566,7 +2160,7 @@ INSERT INTO svc_frate (flatid, flat_cbid, flat_kode, flat_deskripsi, flat_fx, fl
 
 
 --
--- TOC entry 2640 (class 0 OID 72974)
+-- TOC entry 2416 (class 0 OID 72974)
 -- Dependencies: 201
 -- Data for Name: svc_stall; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5576,7 +2170,7 @@ INSERT INTO svc_stall (stallid, stall_nomer, stall_cbid) VALUES (2, '00111', '10
 
 
 --
--- TOC entry 2944 (class 0 OID 0)
+-- TOC entry 2521 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: svc_stall_stallid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5585,7 +2179,7 @@ SELECT pg_catalog.setval('svc_stall_stallid_seq', 2, true);
 
 
 --
--- TOC entry 2631 (class 0 OID 72903)
+-- TOC entry 2407 (class 0 OID 72903)
 -- Dependencies: 192
 -- Data for Name: svc_wo; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5593,7 +2187,7 @@ SELECT pg_catalog.setval('svc_stall_stallid_seq', 2, true);
 
 
 --
--- TOC entry 2636 (class 0 OID 72946)
+-- TOC entry 2412 (class 0 OID 72946)
 -- Dependencies: 197
 -- Data for Name: svc_wo_det; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5601,7 +2195,7 @@ SELECT pg_catalog.setval('svc_stall_stallid_seq', 2, true);
 
 
 --
--- TOC entry 2945 (class 0 OID 0)
+-- TOC entry 2522 (class 0 OID 0)
 -- Dependencies: 198
 -- Name: svc_wo_det_wodid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5610,7 +2204,7 @@ SELECT pg_catalog.setval('svc_wo_det_wodid_seq', 1, false);
 
 
 --
--- TOC entry 2633 (class 0 OID 72934)
+-- TOC entry 2409 (class 0 OID 72934)
 -- Dependencies: 194
 -- Data for Name: svc_wo_jenis; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -5618,7 +2212,7 @@ SELECT pg_catalog.setval('svc_wo_det_wodid_seq', 1, false);
 
 
 --
--- TOC entry 2946 (class 0 OID 0)
+-- TOC entry 2523 (class 0 OID 0)
 -- Dependencies: 193
 -- Name: svc_wo_wo_uploaded_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -5627,7 +2221,7 @@ SELECT pg_catalog.setval('svc_wo_wo_uploaded_seq', 1, false);
 
 
 --
--- TOC entry 2550 (class 2606 OID 73851)
+-- TOC entry 2364 (class 2606 OID 73851)
 -- Name: absensi_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5636,52 +2230,7 @@ ALTER TABLE ONLY svc_absensi
 
 
 --
--- TOC entry 2494 (class 2606 OID 73193)
--- Name: agenda_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pros_agenda
-    ADD CONSTRAINT agenda_pk PRIMARY KEY (agenid);
-
-
---
--- TOC entry 2542 (class 2606 OID 73436)
--- Name: aksesoris_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_aksesories
-    ADD CONSTRAINT aksesoris_pk PRIMARY KEY (aksid);
-
-
---
--- TOC entry 2512 (class 2606 OID 73298)
--- Name: atj_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_auto_jurnal
-    ADD CONSTRAINT atj_pk PRIMARY KEY (atjid);
-
-
---
--- TOC entry 2544 (class 2606 OID 73456)
--- Name: atr_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_spk_atribut
-    ADD CONSTRAINT atr_pk PRIMARY KEY (atrid);
-
-
---
--- TOC entry 2506 (class 2606 OID 73257)
--- Name: bank_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_bank
-    ADD CONSTRAINT bank_pk PRIMARY KEY (bankid);
-
-
---
--- TOC entry 2453 (class 2606 OID 73768)
+-- TOC entry 2327 (class 2606 OID 73768)
 -- Name: basic_rate_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5690,43 +2239,7 @@ ALTER TABLE ONLY svc_brate
 
 
 --
--- TOC entry 2526 (class 2606 OID 73360)
--- Name: bbn_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_bbn
-    ADD CONSTRAINT bbn_pk PRIMARY KEY (bbnid);
-
-
---
--- TOC entry 2524 (class 2606 OID 73346)
--- Name: bpk_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_bpk
-    ADD CONSTRAINT bpk_pk PRIMARY KEY (bpkid);
-
-
---
--- TOC entry 2520 (class 2606 OID 73330)
--- Name: byr_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_faktur_payment
-    ADD CONSTRAINT byr_pk PRIMARY KEY (byrid);
-
-
---
--- TOC entry 2414 (class 2606 OID 72724)
--- Name: cabang_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_cabang
-    ADD CONSTRAINT cabang_pk PRIMARY KEY (cbid);
-
-
---
--- TOC entry 2447 (class 2606 OID 72902)
+-- TOC entry 2321 (class 2606 OID 72902)
 -- Name: car_type_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5735,25 +2248,7 @@ ALTER TABLE ONLY ms_car_type
 
 
 --
--- TOC entry 2504 (class 2606 OID 73252)
--- Name: cc_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_cost_center
-    ADD CONSTRAINT cc_pk PRIMARY KEY (ccid);
-
-
---
--- TOC entry 2528 (class 2606 OID 73371)
--- Name: ceklist_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_ceklist
-    ADD CONSTRAINT ceklist_pk PRIMARY KEY (pecekid);
-
-
---
--- TOC entry 2462 (class 2606 OID 72993)
+-- TOC entry 2336 (class 2606 OID 72993)
 -- Name: clock_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5762,16 +2257,7 @@ ALTER TABLE ONLY svc_clock
 
 
 --
--- TOC entry 2502 (class 2606 OID 73247)
--- Name: coa_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_coa
-    ADD CONSTRAINT coa_pk PRIMARY KEY (coaid);
-
-
---
--- TOC entry 2416 (class 2606 OID 72732)
+-- TOC entry 2302 (class 2606 OID 72732)
 -- Name: company_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5780,43 +2266,7 @@ ALTER TABLE ONLY ms_company
 
 
 --
--- TOC entry 2431 (class 2606 OID 72794)
--- Name: departemen_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_departemen
-    ADD CONSTRAINT departemen_pk PRIMARY KEY (deptid);
-
-
---
--- TOC entry 2536 (class 2606 OID 73415)
--- Name: do_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_do
-    ADD CONSTRAINT do_pk PRIMARY KEY (doid);
-
-
---
--- TOC entry 2540 (class 2606 OID 73425)
--- Name: fat_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_fat
-    ADD CONSTRAINT fat_pk PRIMARY KEY (fatid);
-
-
---
--- TOC entry 2548 (class 2606 OID 73475)
--- Name: fkp_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_faktur
-    ADD CONSTRAINT fkp_pk PRIMARY KEY (fkpid);
-
-
---
--- TOC entry 2455 (class 2606 OID 72972)
+-- TOC entry 2329 (class 2606 OID 72972)
 -- Name: flat_unik; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5825,7 +2275,7 @@ ALTER TABLE ONLY svc_frate
 
 
 --
--- TOC entry 2458 (class 2606 OID 72970)
+-- TOC entry 2332 (class 2606 OID 72970)
 -- Name: flate_rate_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5834,34 +2284,7 @@ ALTER TABLE ONLY svc_frate
 
 
 --
--- TOC entry 2496 (class 2606 OID 73198)
--- Name: followup_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pros_follow
-    ADD CONSTRAINT followup_pk PRIMARY KEY (followid);
-
-
---
--- TOC entry 2538 (class 2606 OID 73420)
--- Name: fpk_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_fpk
-    ADD CONSTRAINT fpk_pk PRIMARY KEY (fpkid);
-
-
---
--- TOC entry 2498 (class 2606 OID 73227)
--- Name: fpt_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_fpt
-    ADD CONSTRAINT fpt_pk PRIMARY KEY (fptid);
-
-
---
--- TOC entry 2474 (class 2606 OID 73072)
+-- TOC entry 2348 (class 2606 OID 73072)
 -- Name: grade_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5870,16 +2293,7 @@ ALTER TABLE ONLY spa_grade
 
 
 --
--- TOC entry 2435 (class 2606 OID 72810)
--- Name: group_cabang_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_group_cabang
-    ADD CONSTRAINT group_cabang_pk PRIMARY KEY (groupid);
-
-
---
--- TOC entry 2468 (class 2606 OID 73016)
+-- TOC entry 2342 (class 2606 OID 73016)
 -- Name: gudang_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5888,7 +2302,7 @@ ALTER TABLE ONLY spa_gudang
 
 
 --
--- TOC entry 2464 (class 2606 OID 73870)
+-- TOC entry 2338 (class 2606 OID 73870)
 -- Name: inventory_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5897,7 +2311,7 @@ ALTER TABLE ONLY spa_inventory
 
 
 --
--- TOC entry 2466 (class 2606 OID 73878)
+-- TOC entry 2340 (class 2606 OID 73878)
 -- Name: inventory_unik; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5906,7 +2320,7 @@ ALTER TABLE ONLY spa_inventory
 
 
 --
--- TOC entry 2486 (class 2606 OID 73152)
+-- TOC entry 2360 (class 2606 OID 73152)
 -- Name: invoice_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5915,25 +2329,7 @@ ALTER TABLE ONLY svc_invoice
 
 
 --
--- TOC entry 2433 (class 2606 OID 72799)
--- Name: jabatan_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_jabatan
-    ADD CONSTRAINT jabatan_pk PRIMARY KEY (jabid);
-
-
---
--- TOC entry 2522 (class 2606 OID 73341)
--- Name: jkn_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_jenis_kendaraan
-    ADD CONSTRAINT jkn_pk PRIMARY KEY (jknid);
-
-
---
--- TOC entry 2488 (class 2606 OID 73166)
+-- TOC entry 2362 (class 2606 OID 73166)
 -- Name: kartu_stock_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5942,7 +2338,7 @@ ALTER TABLE ONLY spa_kartu_stock
 
 
 --
--- TOC entry 2422 (class 2606 OID 72761)
+-- TOC entry 2306 (class 2606 OID 72761)
 -- Name: karyawan_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5951,34 +2347,7 @@ ALTER TABLE ONLY ms_karyawan
 
 
 --
--- TOC entry 2429 (class 2606 OID 72783)
--- Name: kota_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_kota
-    ADD CONSTRAINT kota_pk PRIMARY KEY (kotaid);
-
-
---
--- TOC entry 2508 (class 2606 OID 73262)
--- Name: kst_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ksr_trans
-    ADD CONSTRAINT kst_pk PRIMARY KEY (kstid);
-
-
---
--- TOC entry 2516 (class 2606 OID 73314)
--- Name: leas_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_leasing
-    ADD CONSTRAINT leas_pk PRIMARY KEY (leasid);
-
-
---
--- TOC entry 2418 (class 2606 OID 72741)
+-- TOC entry 2304 (class 2606 OID 72741)
 -- Name: menu_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5987,7 +2356,7 @@ ALTER TABLE ONLY ms_menu
 
 
 --
--- TOC entry 2443 (class 2606 OID 72879)
+-- TOC entry 2317 (class 2606 OID 72879)
 -- Name: merk_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -5996,7 +2365,7 @@ ALTER TABLE ONLY ms_car_merk
 
 
 --
--- TOC entry 2445 (class 2606 OID 72891)
+-- TOC entry 2319 (class 2606 OID 72891)
 -- Name: model_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6005,7 +2374,7 @@ ALTER TABLE ONLY ms_car_model
 
 
 --
--- TOC entry 2439 (class 2606 OID 72866)
+-- TOC entry 2313 (class 2606 OID 72866)
 -- Name: ms_cars_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6014,7 +2383,7 @@ ALTER TABLE ONLY ms_car
 
 
 --
--- TOC entry 2480 (class 2606 OID 73121)
+-- TOC entry 2354 (class 2606 OID 73121)
 -- Name: nota_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6023,7 +2392,7 @@ ALTER TABLE ONLY spa_nota
 
 
 --
--- TOC entry 2425 (class 2606 OID 72772)
+-- TOC entry 2309 (class 2606 OID 72772)
 -- Name: pelanggan_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6032,7 +2401,7 @@ ALTER TABLE ONLY ms_pelanggan
 
 
 --
--- TOC entry 2553 (class 2606 OID 73888)
+-- TOC entry 2367 (class 2606 OID 73888)
 -- Name: pricelist_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6041,25 +2410,7 @@ ALTER TABLE ONLY spa_pricelist
 
 
 --
--- TOC entry 2427 (class 2606 OID 72778)
--- Name: propinsi_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_propinsi
-    ADD CONSTRAINT propinsi_pk PRIMARY KEY (propid);
-
-
---
--- TOC entry 2490 (class 2606 OID 73171)
--- Name: prospek_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pros_data
-    ADD CONSTRAINT prospek_pk PRIMARY KEY (prosid);
-
-
---
--- TOC entry 2470 (class 2606 OID 73031)
+-- TOC entry 2344 (class 2606 OID 73031)
 -- Name: rak_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6068,7 +2419,7 @@ ALTER TABLE ONLY spa_rak
 
 
 --
--- TOC entry 2484 (class 2606 OID 73134)
+-- TOC entry 2358 (class 2606 OID 73134)
 -- Name: retur_beli_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6077,7 +2428,7 @@ ALTER TABLE ONLY spa_retbeli
 
 
 --
--- TOC entry 2482 (class 2606 OID 73126)
+-- TOC entry 2356 (class 2606 OID 73126)
 -- Name: retur_jual_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6086,52 +2437,7 @@ ALTER TABLE ONLY spa_retjual
 
 
 --
--- TOC entry 2420 (class 2606 OID 72750)
--- Name: role_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_role
-    ADD CONSTRAINT role_pk PRIMARY KEY (roleid);
-
-
---
--- TOC entry 2530 (class 2606 OID 73382)
--- Name: rtbeli_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_retbeli
-    ADD CONSTRAINT rtbeli_pk PRIMARY KEY (rtbid);
-
-
---
--- TOC entry 2532 (class 2606 OID 73393)
--- Name: rtjid_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_retjual
-    ADD CONSTRAINT rtjid_pk PRIMARY KEY (rtjid);
-
-
---
--- TOC entry 2518 (class 2606 OID 73319)
--- Name: seg_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ms_segment
-    ADD CONSTRAINT seg_pk PRIMARY KEY (segid);
-
-
---
--- TOC entry 2514 (class 2606 OID 73309)
--- Name: sld_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ksr_saldo
-    ADD CONSTRAINT sld_pk PRIMARY KEY (sldid);
-
-
---
--- TOC entry 2476 (class 2606 OID 73880)
+-- TOC entry 2350 (class 2606 OID 73880)
 -- Name: spesial_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6140,25 +2446,7 @@ ALTER TABLE ONLY spa_spesial
 
 
 --
--- TOC entry 2546 (class 2606 OID 73467)
--- Name: spf_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_spk_followup
-    ADD CONSTRAINT spf_pk PRIMARY KEY (spfid);
-
-
---
--- TOC entry 2500 (class 2606 OID 73238)
--- Name: spk_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_spk
-    ADD CONSTRAINT spk_pk PRIMARY KEY (spkid);
-
-
---
--- TOC entry 2460 (class 2606 OID 72984)
+-- TOC entry 2334 (class 2606 OID 72984)
 -- Name: stallid_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6167,16 +2455,7 @@ ALTER TABLE ONLY svc_stall
 
 
 --
--- TOC entry 2492 (class 2606 OID 73185)
--- Name: sumber_informasi_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pros_sumber_info
-    ADD CONSTRAINT sumber_informasi_pk PRIMARY KEY (infoid);
-
-
---
--- TOC entry 2437 (class 2606 OID 72818)
+-- TOC entry 2311 (class 2606 OID 72818)
 -- Name: supplier_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6185,7 +2464,7 @@ ALTER TABLE ONLY ms_supplier
 
 
 --
--- TOC entry 2472 (class 2606 OID 73064)
+-- TOC entry 2346 (class 2606 OID 73064)
 -- Name: supply_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6194,7 +2473,7 @@ ALTER TABLE ONLY spa_supply
 
 
 --
--- TOC entry 2478 (class 2606 OID 73097)
+-- TOC entry 2352 (class 2606 OID 73097)
 -- Name: trbr_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6203,25 +2482,7 @@ ALTER TABLE ONLY spa_trbr
 
 
 --
--- TOC entry 2510 (class 2606 OID 73287)
--- Name: trl_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY ksr_ledger
-    ADD CONSTRAINT trl_pk PRIMARY KEY (trlid);
-
-
---
--- TOC entry 2534 (class 2606 OID 73404)
--- Name: vspk_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY pen_spk_validasi
-    ADD CONSTRAINT vspk_pk PRIMARY KEY (vspkid);
-
-
---
--- TOC entry 2451 (class 2606 OID 73811)
+-- TOC entry 2325 (class 2606 OID 73811)
 -- Name: warnaid_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6230,7 +2491,7 @@ ALTER TABLE ONLY ms_warna
 
 
 --
--- TOC entry 2449 (class 2606 OID 72933)
+-- TOC entry 2323 (class 2606 OID 72933)
 -- Name: wo_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6239,7 +2500,7 @@ ALTER TABLE ONLY svc_wo
 
 
 --
--- TOC entry 2551 (class 1259 OID 73857)
+-- TOC entry 2365 (class 1259 OID 73857)
 -- Name: fki_absensi_fk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6247,7 +2508,7 @@ CREATE INDEX fki_absensi_fk ON svc_absensi USING btree (abs_krid);
 
 
 --
--- TOC entry 2456 (class 1259 OID 72973)
+-- TOC entry 2330 (class 1259 OID 72973)
 -- Name: flate_rate_index; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6255,7 +2516,7 @@ CREATE INDEX flate_rate_index ON svc_frate USING btree (flat_kode);
 
 
 --
--- TOC entry 2440 (class 1259 OID 72867)
+-- TOC entry 2314 (class 1259 OID 72867)
 -- Name: msc_nopol_index; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6263,7 +2524,7 @@ CREATE INDEX msc_nopol_index ON ms_car USING btree (msc_nopol);
 
 
 --
--- TOC entry 2441 (class 1259 OID 72868)
+-- TOC entry 2315 (class 1259 OID 72868)
 -- Name: norangka_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6271,7 +2532,7 @@ CREATE INDEX norangka_idx ON ms_car USING btree (msc_norangka);
 
 
 --
--- TOC entry 2423 (class 1259 OID 72773)
+-- TOC entry 2307 (class 1259 OID 72773)
 -- Name: pelanggan_nama_index; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -6279,7 +2540,7 @@ CREATE INDEX pelanggan_nama_index ON ms_pelanggan USING btree (pel_nama);
 
 
 --
--- TOC entry 2606 (class 2606 OID 73864)
+-- TOC entry 2392 (class 2606 OID 73864)
 -- Name: absensi_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6288,34 +2549,7 @@ ALTER TABLE ONLY svc_absensi
 
 
 --
--- TOC entry 2587 (class 2606 OID 73641)
--- Name: agenda_propekid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pros_agenda
-    ADD CONSTRAINT agenda_propekid_fk FOREIGN KEY (agen_prosid) REFERENCES pros_data(prosid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2603 (class 2606 OID 73721)
--- Name: atr_fk_spk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_spk_atribut
-    ADD CONSTRAINT atr_fk_spk FOREIGN KEY (atr_spkid) REFERENCES pen_spk(spkid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2554 (class 2606 OID 73750)
--- Name: cabang_foreign_key; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_cabang
-    ADD CONSTRAINT cabang_foreign_key FOREIGN KEY (cb_compid) REFERENCES ms_company(compid) MATCH FULL;
-
-
---
--- TOC entry 2568 (class 2606 OID 73546)
+-- TOC entry 2375 (class 2606 OID 73546)
 -- Name: car_type_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6324,16 +2558,7 @@ ALTER TABLE ONLY ms_car_type
 
 
 --
--- TOC entry 2595 (class 2606 OID 73681)
--- Name: cek_fk_spk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_ceklist
-    ADD CONSTRAINT cek_fk_spk FOREIGN KEY (pec_spkid) REFERENCES pen_spk(spkid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2573 (class 2606 OID 73571)
+-- TOC entry 2380 (class 2606 OID 73571)
 -- Name: clock_detail_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6342,7 +2567,7 @@ ALTER TABLE ONLY svc_clock_det
 
 
 --
--- TOC entry 2572 (class 2606 OID 73566)
+-- TOC entry 2379 (class 2606 OID 73566)
 -- Name: clock_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6351,7 +2576,7 @@ ALTER TABLE ONLY svc_clock
 
 
 --
--- TOC entry 2576 (class 2606 OID 73586)
+-- TOC entry 2383 (class 2606 OID 73586)
 -- Name: detail_grade_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6360,7 +2585,7 @@ ALTER TABLE ONLY spa_grade_det
 
 
 --
--- TOC entry 2577 (class 2606 OID 73591)
+-- TOC entry 2384 (class 2606 OID 73591)
 -- Name: detail_trbr_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6369,97 +2594,7 @@ ALTER TABLE ONLY spa_trbr_det
 
 
 --
--- TOC entry 2592 (class 2606 OID 73666)
--- Name: dkst_fk_kst; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ksr_dtrans
-    ADD CONSTRAINT dkst_fk_kst FOREIGN KEY (dkst_kstid) REFERENCES ksr_trans(kstid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2593 (class 2606 OID 73671)
--- Name: faktur_paymen_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_faktur_payment
-    ADD CONSTRAINT faktur_paymen_fk FOREIGN KEY (byr_fkpid) REFERENCES pen_faktur(fkpid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2602 (class 2606 OID 73716)
--- Name: fat_fk_aksesories; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_fat
-    ADD CONSTRAINT fat_fk_aksesories FOREIGN KEY (fat_aksid) REFERENCES ms_aksesories(aksid) MATCH FULL ON UPDATE CASCADE;
-
-
---
--- TOC entry 2601 (class 2606 OID 73711)
--- Name: fat_fk_fpt; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_fat
-    ADD CONSTRAINT fat_fk_fpt FOREIGN KEY (fat_fptid) REFERENCES pen_fpt(fptid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2605 (class 2606 OID 73731)
--- Name: fkp_fk_spkid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_faktur
-    ADD CONSTRAINT fkp_fk_spkid FOREIGN KEY (fkp_spkid) REFERENCES pen_spk(spkid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2588 (class 2606 OID 73646)
--- Name: followup_agenda_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pros_follow
-    ADD CONSTRAINT followup_agenda_fk FOREIGN KEY (follow_agenid) REFERENCES pros_agenda(agenid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2600 (class 2606 OID 73706)
--- Name: fpk_fk_spkid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_fpk
-    ADD CONSTRAINT fpk_fk_spkid FOREIGN KEY (fpk_spkid) REFERENCES pen_spk(spkid) MATCH FULL ON UPDATE CASCADE;
-
-
---
--- TOC entry 2589 (class 2606 OID 73651)
--- Name: fpt_prospek_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_fpt
-    ADD CONSTRAINT fpt_prospek_fk FOREIGN KEY (fpt_prosid) REFERENCES pros_data(prosid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2563 (class 2606 OID 73521)
--- Name: group_cabang_cbid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_group_cabang
-    ADD CONSTRAINT group_cabang_cbid_fk FOREIGN KEY (group_cbid) REFERENCES ms_cabang(cbid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2564 (class 2606 OID 73526)
--- Name: group_cabang_krid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_group_cabang
-    ADD CONSTRAINT group_cabang_krid_fk FOREIGN KEY (group_krid) REFERENCES ms_karyawan(krid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2584 (class 2606 OID 73626)
+-- TOC entry 2391 (class 2606 OID 73626)
 -- Name: invoice_detail_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6468,7 +2603,7 @@ ALTER TABLE ONLY svc_invoice_det
 
 
 --
--- TOC entry 2583 (class 2606 OID 73621)
+-- TOC entry 2390 (class 2606 OID 73621)
 -- Name: invoice_wo_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6477,25 +2612,7 @@ ALTER TABLE ONLY svc_invoice
 
 
 --
--- TOC entry 2562 (class 2606 OID 73762)
--- Name: jabatan_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_jabatan
-    ADD CONSTRAINT jabatan_fk FOREIGN KEY (jab_deptid) REFERENCES ms_departemen(deptid) MATCH FULL ON UPDATE CASCADE;
-
-
---
--- TOC entry 2561 (class 2606 OID 73511)
--- Name: kota_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_kota
-    ADD CONSTRAINT kota_fk FOREIGN KEY (kota_propid) REFERENCES ms_propinsi(propid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2567 (class 2606 OID 73541)
+-- TOC entry 2374 (class 2606 OID 73541)
 -- Name: model_merk_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6504,7 +2621,7 @@ ALTER TABLE ONLY ms_car_model
 
 
 --
--- TOC entry 2566 (class 2606 OID 73536)
+-- TOC entry 2373 (class 2606 OID 73536)
 -- Name: mscars_type_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6513,7 +2630,7 @@ ALTER TABLE ONLY ms_car
 
 
 --
--- TOC entry 2578 (class 2606 OID 73596)
+-- TOC entry 2385 (class 2606 OID 73596)
 -- Name: not_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6522,7 +2639,7 @@ ALTER TABLE ONLY spa_nota
 
 
 --
--- TOC entry 2559 (class 2606 OID 73800)
+-- TOC entry 2370 (class 2606 OID 73800)
 -- Name: pelanggan_cabang_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6531,7 +2648,7 @@ ALTER TABLE ONLY ms_pelanggan
 
 
 --
--- TOC entry 2560 (class 2606 OID 73805)
+-- TOC entry 2371 (class 2606 OID 73805)
 -- Name: pelanggan_kota_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6540,25 +2657,7 @@ ALTER TABLE ONLY ms_pelanggan
 
 
 --
--- TOC entry 2586 (class 2606 OID 73636)
--- Name: prospek_car_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pros_data_car
-    ADD CONSTRAINT prospek_car_fk FOREIGN KEY (car_prosid) REFERENCES pros_data(prosid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2585 (class 2606 OID 73631)
--- Name: prospek_pelanggan_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pros_data
-    ADD CONSTRAINT prospek_pelanggan_fk FOREIGN KEY (pros_pelid) REFERENCES ms_pelanggan(pelid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2574 (class 2606 OID 73576)
+-- TOC entry 2381 (class 2606 OID 73576)
 -- Name: rak_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6567,7 +2666,7 @@ ALTER TABLE ONLY spa_rak
 
 
 --
--- TOC entry 2582 (class 2606 OID 73616)
+-- TOC entry 2389 (class 2606 OID 73616)
 -- Name: retur_beli_detail_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6576,7 +2675,7 @@ ALTER TABLE ONLY spa_retbeli_det
 
 
 --
--- TOC entry 2581 (class 2606 OID 73611)
+-- TOC entry 2388 (class 2606 OID 73611)
 -- Name: retur_beli_fki; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6585,7 +2684,7 @@ ALTER TABLE ONLY spa_retbeli
 
 
 --
--- TOC entry 2580 (class 2606 OID 73606)
+-- TOC entry 2387 (class 2606 OID 73606)
 -- Name: retur_jual_detail_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6594,7 +2693,7 @@ ALTER TABLE ONLY spa_retjual_det
 
 
 --
--- TOC entry 2579 (class 2606 OID 73601)
+-- TOC entry 2386 (class 2606 OID 73601)
 -- Name: retur_jual_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6603,88 +2702,7 @@ ALTER TABLE ONLY spa_retjual
 
 
 --
--- TOC entry 2597 (class 2606 OID 73691)
--- Name: retur_jual_unit_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_retjual
-    ADD CONSTRAINT retur_jual_unit_fk FOREIGN KEY (rtj_fkpid) REFERENCES pen_faktur(fkpid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2556 (class 2606 OID 73486)
--- Name: role_detail_menu_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_role_det
-    ADD CONSTRAINT role_detail_menu_fk FOREIGN KEY (roledet_menuid) REFERENCES ms_menu(menuid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2555 (class 2606 OID 73481)
--- Name: role_detail_pk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ms_role_det
-    ADD CONSTRAINT role_detail_pk FOREIGN KEY (roledet_roleid) REFERENCES ms_role(roleid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2596 (class 2606 OID 73686)
--- Name: rtb_fk_bpk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_retbeli
-    ADD CONSTRAINT rtb_fk_bpk FOREIGN KEY (rtb_bpkid) REFERENCES pen_bpk(bpkid) MATCH FULL;
-
-
---
--- TOC entry 2604 (class 2606 OID 73726)
--- Name: spf_fk_spk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_spk_followup
-    ADD CONSTRAINT spf_fk_spk FOREIGN KEY (spf_spkid) REFERENCES pen_spk(spkid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2599 (class 2606 OID 73701)
--- Name: spk_do_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_do
-    ADD CONSTRAINT spk_do_fk FOREIGN KEY (do_fkpid) REFERENCES pen_faktur(fkpid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- TOC entry 2590 (class 2606 OID 73656)
--- Name: spk_fk_bpk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_spk
-    ADD CONSTRAINT spk_fk_bpk FOREIGN KEY (spk_bpkid) REFERENCES pen_bpk(bpkid) MATCH FULL ON UPDATE CASCADE;
-
-
---
--- TOC entry 2591 (class 2606 OID 73661)
--- Name: spk_fk_fpt; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_spk
-    ADD CONSTRAINT spk_fk_fpt FOREIGN KEY (spk_fptid) REFERENCES pen_fpt(fptid) MATCH FULL ON UPDATE CASCADE;
-
-
---
--- TOC entry 2594 (class 2606 OID 73676)
--- Name: spk_mscid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_bpk
-    ADD CONSTRAINT spk_mscid FOREIGN KEY (bpk_mscid) REFERENCES ms_car(mscid) MATCH FULL ON UPDATE CASCADE;
-
-
---
--- TOC entry 2565 (class 2606 OID 73823)
+-- TOC entry 2372 (class 2606 OID 73823)
 -- Name: sup_kota_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6693,7 +2711,7 @@ ALTER TABLE ONLY ms_supplier
 
 
 --
--- TOC entry 2575 (class 2606 OID 73581)
+-- TOC entry 2382 (class 2606 OID 73581)
 -- Name: supply_detail_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6702,7 +2720,7 @@ ALTER TABLE ONLY spa_supply_det
 
 
 --
--- TOC entry 2558 (class 2606 OID 73496)
+-- TOC entry 2369 (class 2606 OID 73496)
 -- Name: user_role_krid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6711,7 +2729,7 @@ ALTER TABLE ONLY ms_user_role
 
 
 --
--- TOC entry 2557 (class 2606 OID 73491)
+-- TOC entry 2368 (class 2606 OID 73491)
 -- Name: user_role_roleid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6720,16 +2738,7 @@ ALTER TABLE ONLY ms_user_role
 
 
 --
--- TOC entry 2598 (class 2606 OID 73696)
--- Name: vspk_fk_spk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY pen_spk_validasi
-    ADD CONSTRAINT vspk_fk_spk FOREIGN KEY (vspk_spkid) REFERENCES pen_spk(spkid) MATCH FULL ON UPDATE CASCADE;
-
-
---
--- TOC entry 2571 (class 2606 OID 73561)
+-- TOC entry 2378 (class 2606 OID 73561)
 -- Name: wo_jasa_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6738,7 +2747,7 @@ ALTER TABLE ONLY svc_wo_det
 
 
 --
--- TOC entry 2569 (class 2606 OID 73551)
+-- TOC entry 2376 (class 2606 OID 73551)
 -- Name: wo_mscid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6747,7 +2756,7 @@ ALTER TABLE ONLY svc_wo
 
 
 --
--- TOC entry 2570 (class 2606 OID 73556)
+-- TOC entry 2377 (class 2606 OID 73556)
 -- Name: wo_pelid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -6755,19 +2764,7 @@ ALTER TABLE ONLY svc_wo
     ADD CONSTRAINT wo_pelid_fk FOREIGN KEY (wo_pelid) REFERENCES ms_pelanggan(pelid) MATCH FULL ON UPDATE CASCADE;
 
 
---
--- TOC entry 2727 (class 0 OID 0)
--- Dependencies: 5
--- Name: public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
-
-
--- Completed on 2015-09-07 16:39:48
+-- Completed on 2015-09-09 08:59:38
 
 --
 -- PostgreSQL database dump complete

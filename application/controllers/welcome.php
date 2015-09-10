@@ -87,6 +87,8 @@ class Welcome extends Application {
                 $this->session->set_userdata('username', $username);
                 $this->session->set_userdata('nama', $data_user['kr_nama']);
                 $this->session->set_userdata('cbid', $cbid);
+                $this->session->set_userdata('dealer', $data_user['cb_nama']);
+                $this->session->set_userdata('alamat', $data_user['cb_alamat']);
                 $this->session->set_userdata('cb_nama', $cbg['cb_nama']);
                 $this->session->set_userdata('krid', $data_user['krid']);
                 $this->session->set_userdata('isLogin', 'true');

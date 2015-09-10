@@ -587,7 +587,7 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     public function getUser($username) {
-        $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_username = '$username'");
+        $sql = $this->db->query("SELECT * FROM ms_karyawan LEFT JOIN ms_cabang ON cbid = kr_cbid WHERE kr_username = '$username'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }

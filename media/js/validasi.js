@@ -62,6 +62,14 @@ function konversi(angka){
     return uang+koma;
 }
 
+function cekDefaultNol(data)
+{
+    if (data.replace(/,/g, "") == '') {
+        return 0;
+    }
+    return data;
+}
+
 function formatDefault(num) {
     if (num == "") {
         num = "0";   

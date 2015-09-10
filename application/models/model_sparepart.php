@@ -260,6 +260,19 @@ class Model_Sparepart extends CI_Model {
     }
 
     /**
+     * Function ini digunakan untuk mengambil rol
+     * @param type $data
+     * @return boolean
+     */
+    public function getInventoryAutoComplete($nama) {
+        $sql = $this->db->query("SELECT inve_kode, inve_nama FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "' AND (inve_kode LIKE '%" . strtoupper($nama) . "%' OR inve_nama LIKE '%" . strtoupper($nama) . "%') ORDER BY inve_kode LIMIT 30");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
      * 
      * @param type $data
      * @return boolean
@@ -372,6 +385,19 @@ class Model_Sparepart extends CI_Model {
      */
     public function getInventoryById($id) {
         $sql = $this->db->query("SELECT * FROM spa_inventory LEFT JOIN spa_rak ON rakid = inve_rakid WHERE inveid = '$id'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @return null
+     */
+    public function getInventoryByKodeBarang($kodeBarang) {
+        $sql = $this->db->query("SELECT * FROM spa_inventory WHERE inve_kode = '$kodeBarang'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
