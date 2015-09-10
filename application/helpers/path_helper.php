@@ -24,6 +24,37 @@ if (!function_exists('path_avatar')) {
 
 }
 
+function sukses($msg = "") {
+    return '<div class="alert alert-block alert-success">
+											<button type="button" class="close" data-dismiss="alert">
+												<i class="ace-icon fa fa-times"></i>
+											</button>
+
+											<p>
+												<strong>
+													<i class="ace-icon fa fa-check"></i>
+												</strong>
+												' . $msg . '
+											</p>
+										</div>';
+}
+
+function error($msg = "") {
+    return '<div class="alert alert-danger">
+											<button type="button" class="close" data-dismiss="alert">
+												<i class="ace-icon fa fa-times"></i>
+											</button>
+
+											<strong>
+												<i class="ace-icon fa fa-times"></i>
+												Error
+											</strong>
+
+											' . $msg . '
+											<br />
+										</div>';
+}
+
 if (!function_exists('path_js')) {
 
     function path_js($uri = '') {
@@ -264,6 +295,11 @@ function whereLoad() {
     }
 }
 
+function numeric($data) {
+    $numeric = str_replace(',', '', $data);
+    return $numeric;
+}
+
 function datenotimes($tgl, $jam = true) {
     //Contoh Format : 2007-08-15 01:27:45
     if ($tgl == '0000-00-00' || empty($tgl)) {
@@ -353,7 +389,5 @@ function datetimes($tgl, $jam = true) {
         return "$Jam - $tggl $bln $thn";
     }
 }
-
- 
 
 ?>
