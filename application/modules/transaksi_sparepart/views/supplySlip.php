@@ -13,32 +13,66 @@
     * html .ui-autocomplete {
         height: 200px;
     }
-
+    input:focus {
+        background-color: yellow;
+    } 
+    #wo,#pel_nama,#spp_pelid { border: 1px solid #ff6666; background-color: #ffcccc;}
 </style>
-<form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/saveReturPembelian'); ?>" method="post" name="form">
+<form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/saveSupplySlip'); ?>" method="post" name="form">
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Faktur Terima</label>
+        <label class="col-sm-2 control-label no-padding-right" required="required" for="form-field-1">Kategori</label>
         <div class="col-sm-8">
-            <input type="text" required="required" autocomplete="off" name="trbr_faktur" maxlength="30" id="trbr_faktur" class="upper ace col-xs-10 col-sm-3" />
-            <input type="hidden"  autocomplete="off" name="trbrid" id="trbrid"/>
+            <select name="spp_jenis" id="spp_jenis" class="ace col-xs-10 col-sm-3">
+                <option value="">Pilih</option>
+                <option value="ps">Part Shop</option>
+                <option value="sp">Service -> Sparepart</option>
+                <option value="sm">Service -> Sub Material</option>
+                <option value="ol">Service -> Oli</option>
+                <option value="so">Service -> Sub Order</option>
+            </select>
+        </div>
+    </div>
+    <div class="service" id="service" style="display: none">
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Work Order</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" required="required" name="wo" id="wo" class="upper col-xs-10 col-sm-3" />
+                <i id="sukses" class="ace-icon fa fa-check-circle bigger-200 green"></i>
+                <i id="error" class="ace-icon fa fa-times-circle bigger-200 red"></i>
+            </div>
+        </div>
+    </div>
+    <div class="sparepart">
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Pelanggan</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" required="required" name="pel_nama" id="pel_nama" class="upper col-xs-10 col-sm-3" />
+            </div>
+        </div>
+    </div>
+    <div class="sparepart">
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Pelanggan</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" required="required" name="spp_pelid" id="spp_pelid" class="upper col-xs-10 col-sm-3" />
+            </div>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Supplier</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Pay Method</label>
         <div class="col-sm-8">
-            <input type="text" autocomplete="off" required="required" name="supplier" id="supplier" class="upper col-xs-10 col-sm-3" />
+            <select name="spp_pay_method" required="required" class="ace col-xs-10 col-sm-3">
+                <option value="">Pilih</option>
+                <option value="tunai">Tunai</option>
+                <option value="kredit">Kredit</option>
+            </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Supplier</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kredit Term</label>
         <div class="col-sm-8">
-            <input type="text" required="required"  id="trbr_supid" name="trbr_supid" class="upper col-xs-10 col-sm-3" />* Otomatis terisi saat nama supplier dipilih
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alasan Retur</label>
-        <div class="col-sm-8">
-            <textarea name="rb_alasan" required="required" class="ace col-xs-10 col-sm-5" rows="4"></textarea>
+            <input type="text" value="0" autocomplete="off" name="spp_kredit_term" 
+                   id="spp_kredit_term" class="number col-xs-10 col-sm-2" />
         </div>
     </div>
     <div class="hr hr-16 hr-dotted"></div>
@@ -102,7 +136,7 @@
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
-            <button class="btn btn-info" type="submit">
+            <button class="btn btn-info" id="button" type="button">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Submit
             </button>
@@ -117,6 +151,48 @@
 </form>
 <script type="text/javascript">
     $("#waiting").hide();
+    $('#button').attr("disabled", true);
+    document.getElementById("sukses").style.display = 'none';
+    document.getElementById("error").style.display = 'none';
+    $("#spp_jenis").change(function(e) {
+        var jenis = $('#spp_jenis').val();
+        if (jenis == 'ps') {
+            document.getElementById("service").style.display = 'none';
+            document.getElementById("spp_pelid").readOnly = false;
+            document.getElementById("pel_nama").readOnly = false;
+        } else if (jenis != '') {
+            document.getElementById("service").style.display = '';
+            document.getElementById("spp_pelid").readOnly = true;
+            document.getElementById("pel_nama").readOnly = true;
+        }
+        $("#spp_pelid").val("");
+        $("#pel_nama").val("");
+        $("#wo").val("");
+        document.getElementById("sukses").style.display = 'none';
+        document.getElementById("error").style.display = 'none';
+    })
+    
+    $("#wo").change(function(e) {
+        $.ajax({
+            url: '<?php echo site_url('transaksi_service/jsonWo'); ?>',
+            dataType: 'json',
+            type: 'POST',
+            data: {param : $("#wo").val()},
+            success: function(data) {
+                if (data.response) {
+                    $('#button').removeAttr("disabled", true);
+                    document.getElementById("sukses").style.display = '';
+                    document.getElementById("error").style.display = 'none';
+                } else {
+                    $('#button').attr("disabled", true);
+                    document.getElementById("sukses").style.display = 'none';
+                    document.getElementById("error").style.display = '';
+                }
+            }
+        });
+        
+    })
+    
     $('#check').click(function() {
         if ($(this).is(':checked')) {
             $('#kodeBarang').autocomplete("enable");
@@ -162,6 +238,36 @@
     //    function simpan()
     //    {
     $(this).ready(function() {
+        
+        $("#pel_nama").autocomplete({
+            minLength: 1,
+            source: function(req, add) {
+                $.ajax({
+                    url: '<?php echo site_url('master_service/jsonPelanggan'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {param : $("#pel_nama").val()},
+                    success: function(data) {
+                        if (data.response == "true") {
+                            add(data.message);
+                        } else {
+                            add(data.value);
+                        }
+                    }
+                });
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                    .append('<a><strong>' + item.label + '</strong><br>' + item.desc + '</a>')
+                    .appendTo(ul);
+                };
+            },
+            select: function(event, ui) {
+                $("#spp_pelid").val(ui.item.pelid);
+            }
+        })
+        
         $('#form').submit(function() {
             $.ajax({
                 type: 'POST',
@@ -244,12 +350,12 @@
             });
             if(cek == 0){
                 $.ajax({ 
-                    url: '<?php echo site_url('master_sparepart/jsonDataBarangTerima'); ?>',
+                    url: '<?php echo site_url('master_sparepart/jsonDataBarang'); ?>',
                     dataType: 'json',
                     type: 'POST',
                     data: {
                         param : $("#kodeBarang").val(),
-                        faktur : $("#trbr_faktur").val()},
+                        jenis : $("#spp_jenis").val()},
                     success: function(data){
                         if (data['response']) {
                             inc++;
@@ -258,11 +364,10 @@
                             $("#dtr_inveid"+inc).val(data['inveid']);
                             $("#dtr_inve_kode"+inc).val(data['inve_kode']);
                             $("#inve_nama"+inc).html(data['inve_nama']);
-                            $("#dtr_qty"+inc).val(0);
-                            $("#dtr_qty_min"+inc).val(data['dtr_qty']);
-                            $("#dtr_diskon"+inc).val(data['dtr_diskon']);
-                            $("#dtr_harga"+inc).val(formatDefault(data['dtr_harga']));
-                            $("#dtr_subtotal"+inc).val(0);
+                            $("#dtr_qty"+inc).val(1);
+                            $("#dtr_diskon"+inc).val(0);
+                            $("#dtr_harga"+inc).val(formatDefault(data['inve_harga_beli']));
+                            $("#dtr_subtotal"+inc).val(formatDefault(data['inve_harga_beli']));
                             total();
                         }else{
                             bootbox.dialog({
@@ -287,37 +392,6 @@
     }
     
     $(document).ready(function(){
-        //        $('#kodeBarang').autocomplete("disable");
-        $("#trbr_faktur").autocomplete({
-            minLength: 1,
-            source: function(req, add) {
-                $.ajax({
-                    url: '<?php echo site_url('transaksi_sparepart/jsonFakturTerima'); ?>',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {param : $("#trbr_faktur").val()},
-                    success: function(data) {
-                        if (data.response == "true") {
-                            add(data.message);
-                        } else {
-                            add(data.value);
-                        }
-                    }
-                });
-            },
-            create: function () {
-                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li>')
-                    .append("<a><strong>" + item.value + "</strong><br>" + item.desc + "</a>")
-                    .appendTo(ul);
-                };
-            },
-            select: function(event, ui) {
-                $("#trbr_supid").val(ui.item.supid);
-                $("#supplier").val(ui.item.desc);
-                $("#trbrid").val(ui.item.id);
-            }
-        })
         $("#kodeBarang").autocomplete({
             minLength: 1,
             source: function(req, add) {
@@ -325,7 +399,10 @@
                     url: '<?php echo site_url('master_sparepart/jsonBarang'); ?>',
                     dataType: 'json',
                     type: 'POST',
-                    data: {param : $("#kodeBarang").val()},
+                    data: {
+                        param : $("#kodeBarang").val(),
+                        jenis : $("#spp_jenis").val()
+                    },
                     success: function(data) {
                         if (data.response == "true") {
                             add(data.message);

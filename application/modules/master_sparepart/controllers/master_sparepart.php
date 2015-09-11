@@ -302,12 +302,12 @@ class Master_Sparepart extends Application {
         }
         echo json_encode($data);
     }
-    
 
     function jsonBarang() {
         $nama = $this->input->post('param');
+        $jenis = isset($_POST['jenis']) ? $_POST['jenis'] : 'ps';
         $data['response'] = 'false';
-        $query = $this->model_sparepart->getInventoryAutoComplete(strtoupper($nama));
+        $query = $this->model_sparepart->getInventoryAutoComplete(strtoupper($nama), $jenis);
         if (!empty($query)) {
             $data['response'] = 'true';
             $data['message'] = array();
@@ -325,7 +325,8 @@ class Master_Sparepart extends Application {
      */
     function jsonDataBarang() {
         $nama = $this->input->post('param');
-        $query = $this->model_sparepart->getInventoryByKodeBarang(strtoupper($nama));
+        $jenis = isset($_POST['jenis']) ? $_POST['jenis'] : 'ps';
+        $query = $this->model_sparepart->getInventoryByKodeBarang(strtoupper($nama), $jenis);
         if (count($query) > 0) {
             $query['response'] = true;
         } else {
@@ -333,6 +334,7 @@ class Master_Sparepart extends Application {
         }
         echo json_encode($query);
     }
+
     function jsonDataBarangTerima() {
         $nama = $this->input->post('param');
         $faktur = $this->input->post('faktur');

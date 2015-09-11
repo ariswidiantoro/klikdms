@@ -58,7 +58,7 @@ class Transaksi_Sparepart extends Application {
         $return = false;
         $this->form_validation->set_rules('trbr_faktur', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
         if ($this->form_validation->run() == TRUE) {
-            $term = $this->input->post('trbr_credit_term');
+            $term = $this->input->post('trbr_kredit_term');
             if (empty($term)) {
                 $term = 0;
             }
@@ -71,7 +71,7 @@ class Transaksi_Sparepart extends Application {
                 'trbr_total' => numeric($this->input->post('trbr_total')),
                 'trbr_pay_method' => $this->input->post('trbr_pay_method'),
                 'trbr_inc_pajak' => $this->input->post('trbr_inc_pajak'),
-                'trbr_credit_term' => $term,
+                'trbr_kredit_term' => $term,
                 'trbr_cbid' => ses_cabang,
             );
             $dtr_inveid = $this->input->post('dtr_inveid');

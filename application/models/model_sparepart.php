@@ -264,8 +264,12 @@ class Model_Sparepart extends CI_Model {
      * @param type $data
      * @return boolean
      */
-    public function getInventoryAutoComplete($nama) {
-        $sql = $this->db->query("SELECT inve_kode, inve_nama FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "' AND (inve_kode LIKE '%" . strtoupper($nama) . "%' OR inve_nama LIKE '%" . strtoupper($nama) . "%') ORDER BY inve_kode LIMIT 30");
+    public function getInventoryAutoComplete($nama, $jenis) {
+        $wh = "";
+        if ($jenis != 'ps') {
+            $wh = "AND inve_jenis = '$jenis'";
+        }
+        $sql = $this->db->query("SELECT inve_kode, inve_nama FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "' $wh AND (inve_kode LIKE '%" . strtoupper($nama) . "%' OR inve_nama LIKE '%" . strtoupper($nama) . "%') ORDER BY inve_kode LIMIT 30");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -396,16 +400,21 @@ class Model_Sparepart extends CI_Model {
      * @param type $id
      * @return null
      */
-    public function getInventoryByKodeBarang($kodeBarang) {
-        $sql = $this->db->query("SELECT * FROM spa_inventory WHERE inve_kode = '$kodeBarang'");
+    public function getInventoryByKodeBarang($kodeBarang, $jenis) {
+        $wh = "";
+        if ($jenis != 'ps') {
+            $wh = "AND inve_jenis = '$jenis'";
+        }
+        $sql = $this->db->query("SELECT inve_kode, inve_nama, inve_qty, inve_harga, inve_hpp,inve_harga_beli FROM spa_inventory WHERE inve_kode = '$kodeBarang' $wh AND inve_cbid = '" . ses_cabang . "'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
         return null;
     }
+
     public function getInventoryBarangTerima($kodeBarang, $faktur) {
         $sql = $this->db->query("SELECT inve_kode, inveid,inve_nama,dtr_harga,(dtr_qty-dtr_qty_retur) AS dtr_qty,dtr_diskon FROM spa_trbr_det LEFT JOIN spa_trbr ON trbrid = dtr_trbrid LEFT JOIN"
-                ." spa_inventory ON inveid = dtr_inveid WHERE inve_kode = '$kodeBarang' AND trbr_faktur = '$faktur'");
+                . " spa_inventory ON inveid = dtr_inveid WHERE inve_kode = '$kodeBarang' AND trbr_faktur = '$faktur'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
