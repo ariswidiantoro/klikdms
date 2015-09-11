@@ -302,6 +302,7 @@ class Master_Sparepart extends Application {
         }
         echo json_encode($data);
     }
+    
 
     function jsonBarang() {
         $nama = $this->input->post('param');
@@ -325,6 +326,17 @@ class Master_Sparepart extends Application {
     function jsonDataBarang() {
         $nama = $this->input->post('param');
         $query = $this->model_sparepart->getInventoryByKodeBarang(strtoupper($nama));
+        if (count($query) > 0) {
+            $query['response'] = true;
+        } else {
+            $query['response'] = false;
+        }
+        echo json_encode($query);
+    }
+    function jsonDataBarangTerima() {
+        $nama = $this->input->post('param');
+        $faktur = $this->input->post('faktur');
+        $query = $this->model_sparepart->getInventoryBarangTerima(strtoupper($nama), strtoupper($faktur));
         if (count($query) > 0) {
             $query['response'] = true;
         } else {

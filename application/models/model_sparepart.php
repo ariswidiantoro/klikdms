@@ -403,6 +403,14 @@ class Model_Sparepart extends CI_Model {
         }
         return null;
     }
+    public function getInventoryBarangTerima($kodeBarang, $faktur) {
+        $sql = $this->db->query("SELECT inve_kode, inveid,inve_nama,dtr_harga,(dtr_qty-dtr_qty_retur) AS dtr_qty,dtr_diskon FROM spa_trbr_det LEFT JOIN spa_trbr ON trbrid = dtr_trbrid LEFT JOIN"
+                ." spa_inventory ON inveid = dtr_inveid WHERE inve_kode = '$kodeBarang' AND trbr_faktur = '$faktur'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
 
     /**
      * 

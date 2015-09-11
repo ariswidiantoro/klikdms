@@ -23,9 +23,35 @@ class Transaksi_Sparepart extends Application {
         $this->hakAkses(57);
         $this->load->view('penerimaanBarang', $this->data);
     }
+
+    function jsonFakturTerima() {
+        $faktur = $this->input->post('param');
+        $cbid = ses_cabang;
+        $data['response'] = 'false';
+        $query = $this->model_trspart->getFakturTerimaAutoComplete($faktur);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array(
+                    'value' => $row['trbr_faktur'],
+                    'supid' => $row['trbr_supid'],
+                    'desc' => $row['sup_nama'],
+                    'id' => $row['trbrid'] );
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+        }
+        echo json_encode($data);
+    }
+
     public function returPembelian() {
         $this->hakAkses(58);
         $this->load->view('returPembelian', $this->data);
+    }
+    public function supplySlip() {
+        $this->hakAkses(59);
+        $this->load->view('supplySlip', $this->data);
     }
 
     function savePenerimaanBarang() {
@@ -70,11 +96,53 @@ class Transaksi_Sparepart extends Application {
         }
         echo json_encode($return);
     }
+    function saveReturPembelian() {
+        $return = false;
+        $this->form_validation->set_rules('trbr_faktur', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        $this->form_validation->set_rules('supplier', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        $this->form_validation->set_rules('trbr_supid', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'rb_tgl' => date('Y-m-d'),
+                'rb_createon' => date('Y-m-d H:i:s'),
+                'rb_createby' => ses_username,
+                'rb_trbrid' => $this->input->post('trbrid'),
+                'rb_total' => numeric($this->input->post('trbr_total')),
+                'rb_alasan' => $this->input->post('rb_alasan'),
+                'rb_cbid' => ses_cabang,
+            );
+            $dtr_inveid = $this->input->post('dtr_inveid');
+            $dtr_inve_kode = $this->input->post('dtr_inve_kode');
+            $dtr_qty = $this->input->post('dtr_qty');
+            $dtr_harga = $this->input->post('dtr_harga');
+            $dtr_diskon = $this->input->post('dtr_diskon');
+            $dtr_subtotal = $this->input->post('dtr_subtotal');
+            // get array spare part from table 
+            $detail = array();
+            for ($i = 0; $i < count($dtr_inveid); $i++) {
+                $detail[] = array(
+                    'detb_inveid' => $dtr_inveid[$i],
+                    'detb_inve_kode' => $dtr_inve_kode[$i],
+                    'detb_qty' => $dtr_qty[$i],
+                    'detb_harga' => numeric($dtr_harga[$i]),
+                    'detb_diskon' => $dtr_diskon[$i],
+                    'detb_subtotal' => numeric($dtr_subtotal[$i]),
+                );
+            }
+            $return = $this->model_trspart->saveReturPembelian($data, $detail);
+        }
+        echo json_encode($return);
+    }
 
     function printTerimaBarang($kode) {
         $this->data['faktur'] = $this->model_trspart->dataFakturTerima($kode);
         $this->data['barang'] = $this->model_trspart->dataFakturTerimaDetail($kode);
         $this->load->view('printTerimaBarang', $this->data);
+    }
+    function printReturBeli($kode) {
+        $this->data['faktur'] = $this->model_trspart->dataReturBeli($kode);
+        $this->data['barang'] = $this->model_trspart->dataReturBeliDetail($kode);
+        $this->load->view('printReturBeli', $this->data);
     }
 
 }

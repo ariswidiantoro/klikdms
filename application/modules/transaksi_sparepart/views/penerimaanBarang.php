@@ -53,11 +53,30 @@
         </div>
     </div>
     <div class="hr hr-16 hr-dotted"></div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bantuan</label>
+        <div class="col-sm-8">
+            <div class="radio" style="margin-left: 0">
+                <label>
+                    <input name="auto" id="check" type="radio" value="auto" class="ace" />
+                    <span class="lbl">Auto Complete</span>
+                </label>
+            </div>
+            <div class="radio" style="margin-left: 0">
+                <label>
+                    <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
+                    <span class="lbl">Tanpa Auto Complete</span>
+                </label>
+            </div>
 
+
+        </div>
+    </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Barang</label>
         <div class="col-sm-8">
             <input type="text" placeholder="KODE BARANG" autocomplete="off" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
+            <i class="ace-icon fa fa-spinner fa-spin orange bigger-200" id="waiting"></i>
         </div>
     </div>
     <div class="table-header">
@@ -107,7 +126,17 @@
     </div>
 </form>
 <script type="text/javascript">
-      
+    $("#waiting").hide();
+    $('#check').click(function() {
+        if ($(this).is(':checked')) {
+            $('#kodeBarang').autocomplete("enable");
+        }
+    })
+    $('#noncheck').click(function() {
+        if ($(this).is(':checked')) {
+            $('#kodeBarang').autocomplete("disable");
+        }
+    })
                              
     //called when key is pressed in textbox
     $(".number").keypress(function (e) {
@@ -305,6 +334,7 @@
                 };
             }
         })
+        $('#kodeBarang').autocomplete("disable");
     });
     
     

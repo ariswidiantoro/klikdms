@@ -591,6 +591,7 @@ class Model_Admin extends CI_Model {
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
+//        $this->db->close();
         return null;
     }
 
