@@ -21,7 +21,10 @@ class Model_Setting extends CI_Model {
             return $back;
         }
         
-        $sql = "SELECT nmr_value FROM ms_numerator WHERE  nmr_key = '" . $nomer . "' FOR UPDATE ";
+        $whereCbid = (empty($data['cbid']))?" ":" AND nmr_cbid = '".$data['cbid']."'";
+        $data['cbid'] = (empty($data['cbid']))?" ":$data['cbid'];
+        
+        $sql = "SELECT nmr_value FROM ms_numerator WHERE  nmr_key = '" . $nomer . "' ".$whereCbid." FOR UPDATE ";
         $sql = $this->db->query($sql);
         if ($sql->num_rows() > 0) {
             $row = $sql->row();
@@ -30,10 +33,10 @@ class Model_Setting extends CI_Model {
             $datas = array(
                 'nmr_value' => $counter
             );
-            $query = "UPDATE " . $this->tab_numerator . " SET nmr_value = '" . $counter . "' WHERE nmr_key = '" . $nomer . "'";
+            $query = "UPDATE ms_numerator SET nmr_value = '" . $counter . "' WHERE nmr_key = '" . $nomer . "' ".$whereCbid."";
             $cek = $this->db->query($query);
         } else {
-            $cek = $this->db->insert($this->tab_numerator, array('nmr_key' => $nomer, 'nmr_value' => '000000001'));
+            $cek = $this->db->insert('ms_numerator', array('nmr_key' => $nomer, 'nmr_value' => '000000001', 'nmr_cbid' => $data['cbid']));
             $counter = '000000001';
         }
 

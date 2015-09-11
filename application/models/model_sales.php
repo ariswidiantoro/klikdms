@@ -11,6 +11,45 @@ class Model_Sales extends CI_Model {
         parent::__construct();
     }
 
+    /* UTILITY */
+
+    public function cListMerk() {
+        $this->db->order_by('merk_deskripsi', 'ASC');
+        $query = $this->db->get('ms_car_merk');
+        return $query->result_array();
+    }
+    
+    public function cListWarna() {
+        $this->db->order_by('warna_deskripsi', 'ASC');
+        $query = $this->db->get('ms_warna');
+        return $query->result_array();
+    }
+
+    public function cListModel($data) {
+        $this->db->where('model_merkid', $data['merkid']);
+        $query = $this->db->get('ms_car_model');
+        return $query->result_array();
+    }
+
+    public function cListType($data) {
+        $this->db->where('cty_modelid', $data['modelid']);
+        $query = $this->db->get('ms_car_type');
+        return $query->result_array();
+    }
+
+    public function cListSegment() {
+        $query = $this->db->get('ms_segment');
+        return $query->result_array();
+    }
+
+    public function getModelByMerk($merkid) {
+        $sql = $this->db->query("SELECT * FROM ms_car_model WHERE model_merkid = '$merkid' ORDER BY model_deskripsi");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
     /** MERK KENDARAAN 
      * @author Rossi Erl
      * 2015-09-03
@@ -20,7 +59,7 @@ class Model_Sales extends CI_Model {
         return $sql->row()->total;
     }
 
-    public function getAllMerk($start, $limit, $sidx, $sord, $where) {
+    public function getDataMerk($start, $limit, $sidx, $sord, $where) {
         $this->db->select('*');
         $this->db->limit($limit);
         if ($where != NULL)
@@ -35,25 +74,88 @@ class Model_Sales extends CI_Model {
         return null;
     }
 
-    public function insertCarMerk($data) {
+    public function addMerk($data) {
         if ($this->db->insert('ms_car_merk', $data)) {
-            return TRUE;
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['merk_deskripsi'] . ' berhasil disimpan');
         } else {
-            return FALSE;
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['merk_deskripsi'] . ' gagal disimpan');
         }
     }
 
-    public function updateCarMerk($data, $where) {
+    public function getMerk($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_car_merk WHERE merkid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function updateMerk($data, $where) {
         $this->db->where('merkid', $where);
         if ($this->db->update('ms_car_merk', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['merk_deskripsi'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['merk_deskripsi'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteMerk($data) {
+        if ($this->db->query('DELETE FROM ms_car_merk WHERE merkid = ' . $data)) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
 
-    public function deleteCarMerk($data) {
-        if ($this->db->query('DELETE FROM ms_car_merk WHERE merkid = ' . $data)) {
+    /** SEGMENT KENDARAAN 
+     * @author Rossi Erl
+     * 2015-09-03
+     */
+    public function getTotalSegment() {
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_segment ");
+        return $sql->row()->total;
+    }
+
+    public function getDataSegment($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_segment');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function addSegment($data) {
+        if ($this->db->insert('ms_segment', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['seg_nama'] . ' berhasil disimpan');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['seg_nama'] . ' gagal disimpan');
+        }
+    }
+
+    public function getSegment($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_segment WHERE segid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function updateSegment($data, $where) {
+        $this->db->where('segid', $where);
+        if ($this->db->update('ms_segment', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['seg_nama'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['seg_nama'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteSegment($data) {
+        if ($this->db->query("DELETE FROM ms_segment WHERE segid = '" . $data . "'")) {
             return TRUE;
         } else {
             return FALSE;
@@ -69,12 +171,14 @@ class Model_Sales extends CI_Model {
         return $sql->row()->total;
     }
 
-    public function getAllModel($start, $limit, $sidx, $sord, $where) {
+    public function getDataModel($start, $limit, $sidx, $sord, $where) {
         $this->db->select('*');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_car_model');
+        $this->db->join('ms_car_merk', 'merkid=model_merkid', 'left');
+        $this->db->join('ms_segment', 'segid=model_segment', 'left');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -84,39 +188,41 @@ class Model_Sales extends CI_Model {
         return null;
     }
 
-    public function insertCarModel($data) {
+    public function addModel($data) {
         $qcek = $this->db->query("SELECT modelid FROM ms_car_model WHERE 
             model_deskripsi = '" . $data['model_deskripsi'] . "'");
         if ($qcek->num_rows() > 0) {
             return array('status' => FALSE, 'msg' => 'MODEL SUDAH TERDAFTAR');
         } else {
-            try {
-                $this->db->trans_begin();
-                $this->load->model('model_setting');
-                $code = $this->model_setting->newCode(array('type' => 'MDL'));
-                if ($code['status'] == FALSE) {
-                    $warn = "FAILED GENERATE CODE";
-                    throw new Exception($warn);
-                } else {
-                    $data['modelid'] = $code['code'];
-                }
-
-                if ($this->db->insert('ms_car_model', $data) == FALSE) {
-                    $warn = "INSERT CAR MODEL FAILED";
-                    throw new Exception($warn);
-                }
-
-                if ($this->db->trans_status() == TRUE) {
-                    $this->db->trans_commit();
-                    return array('status' => TRUE, 'msg' => 'MODEL BERHASIL DITAMBAHKAN');
-                } else {
-                    $warn = "INSERT CAR MODEL FAILED";
-                    throw new Exception($warn);
-                }
-            } catch (Exception $e) {
-                $this->db->trans_rollback();
-                return array('status' => 0, 'msg' => $e->getMessage());
+            if ($this->db->insert('ms_car_model', $data)) {
+                return array('status' => TRUE, 'msg' => 'Data ' . $data['model_deskripsi'] . ' berhasil ditambahkan');
+            } else {
+                return array('status' => FALSE, 'msg' => 'Data ' . $data['model_deskripsi'] . ' gagal ditambahkan');
             }
+        }
+    }
+
+    public function getModel($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_car_model WHERE modelid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function updateModel($data, $where) {
+        $this->db->where('modelid', $where);
+        if ($this->db->update('ms_car_model', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['model_deskripsi'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['model_deskripsi'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteModel($data) {
+        if ($this->db->query('DELETE FROM ms_car_model WHERE modelid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
         }
     }
 
@@ -129,12 +235,14 @@ class Model_Sales extends CI_Model {
         return $sql->row()->total;
     }
 
-    public function getAllCarType($start, $limit, $sidx, $sord, $where) {
+    public function getDataCarType($start, $limit, $sidx, $sord, $where) {
         $this->db->select('*');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_car_type');
+        $this->db->join('ms_car_model', 'modelid=cty_modelid', 'left');
+        $this->db->join('ms_car_merk', 'merkid=model_merkid', 'left');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -144,39 +252,80 @@ class Model_Sales extends CI_Model {
         return null;
     }
 
-    public function insertCarType($data) {
+    /* public function addCarType($data) {
+      $qcek = $this->db->query("SELECT ctyid FROM ms_car_type WHERE
+      cty_deskripsi = '" . $data['cty_deskripsi'] . "'");
+      if ($qcek->num_rows() > 0) {
+      return array('status' => FALSE, 'msg' => 'TIPE KENDARAAN SUDAH TERDAFTAR');
+      } else {
+      try {
+      $this->db->trans_begin();
+      $this->load->model('model_setting');
+      $code = $this->model_setting->newCode(array('type' => 'CTY'));
+      if ($code['status'] == FALSE) {
+      $warn = "FAILED GENERATE CODE";
+      throw new Exception($warn);
+      } else {
+      $data['ctyid'] = $code['code'];
+      }
+
+      if ($this->db->insert('ms_car_type', $data) == FALSE) {
+      $warn = "INPUT TIPE KENDARAAN GAGAL";
+      throw new Exception($warn);
+      }
+
+      if ($this->db->trans_status() == TRUE) {
+      $this->db->trans_commit();
+      return array('status' => TRUE, 'msg' => 'TIPE KENDARAAN BERHASIL DITAMBAHKAN');
+      } else {
+      $warn = "INPUT TIPE KENDARAAN GAGAL";
+      throw new Exception($warn);
+      }
+      } catch (Exception $e) {
+      $this->db->trans_rollback();
+      return array('status' => 0, 'msg' => $e->getMessage());
+      }
+      }
+      } */
+
+    public function addCarType($data) {
         $qcek = $this->db->query("SELECT ctyid FROM ms_car_type WHERE 
             cty_deskripsi = '" . $data['cty_deskripsi'] . "'");
         if ($qcek->num_rows() > 0) {
             return array('status' => FALSE, 'msg' => 'TIPE KENDARAAN SUDAH TERDAFTAR');
         } else {
-            try {
-                $this->db->trans_begin();
-                $this->load->model('model_setting');
-                $code = $this->model_setting->newCode(array('type' => 'CTY'));
-                if ($code['status'] == FALSE) {
-                    $warn = "FAILED GENERATE CODE";
-                    throw new Exception($warn);
-                } else {
-                    $data['ctyid'] = $code['code'];
-                }
-
-                if ($this->db->insert('ms_car_type', $data) == FALSE) {
-                    $warn = "INPUT TIPE KENDARAAN GAGAL";
-                    throw new Exception($warn);
-                }
-
-                if ($this->db->trans_status() == TRUE) {
-                    $this->db->trans_commit();
-                    return array('status' => TRUE, 'msg' => 'TIPE KENDARAAN BERHASIL DITAMBAHKAN');
-                } else {
-                    $warn = "INPUT TIPE KENDARAAN GAGAL";
-                    throw new Exception($warn);
-                }
-            } catch (Exception $e) {
-                $this->db->trans_rollback();
-                return array('status' => 0, 'msg' => $e->getMessage());
+            if ($this->db->insert('ms_car_type', $data) == TRUE) {
+                return array('status' => TRUE, 'msg' => 'TIPE KENDARAAN BERHASIL DITAMBAHKAN');
+            } else {
+                return array('status' => FALSE, 'msg' => 'TIPE KENDARAAN GAGAL DITAMBAHKAN');
             }
+        }
+    }
+    
+    public function getCarType($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_car_type 
+            LEFT JOIN ms_car_model ON cty_modelid = modelid
+            LEFT JOIN ms_car_merk ON model_merkid = merkid
+            WHERE ctyid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function updateCarType($data, $where) {
+        $this->db->where('ctyid', $where);
+        if ($this->db->update('ms_car_type', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['cty_deskripsi'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['cty_deskripsi'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteCarType($data) {
+        if ($this->db->query('DELETE FROM ms_car_type WHERE ctyid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
         }
     }
 
@@ -189,7 +338,7 @@ class Model_Sales extends CI_Model {
         return $sql->row()->total;
     }
 
-    public function getAllWarna($start, $limit, $sidx, $sord, $where) {
+    public function getDataWarna($start, $limit, $sidx, $sord, $where) {
         $this->db->select('*');
         $this->db->limit($limit);
         if ($where != NULL)
@@ -204,20 +353,27 @@ class Model_Sales extends CI_Model {
         return null;
     }
 
-    public function insertWarna($data) {
+    public function addWarna($data) {
         if ($this->db->insert('ms_warna', $data)) {
-            return TRUE;
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['warna_deskripsi'] . ' berhasil disimpan');
         } else {
-            return FALSE;
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['warna_deskripsi'] . ' gagal disimpan');
         }
+    }
+
+    public function getWarna($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_warna WHERE warnaid = " . $data . "
+            ");
+        return $query->row_array();
     }
 
     public function updateWarna($data, $where) {
         $this->db->where('warnaid', $where);
         if ($this->db->update('ms_warna', $data)) {
-            return TRUE;
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['warna_deskripsi'] . ' berhasil diupdate');
         } else {
-            return FALSE;
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['warna_deskripsi'] . ' gagal diupdate');
         }
     }
 
