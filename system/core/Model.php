@@ -68,6 +68,22 @@ class CI_Model {
         }
         return $counter;
     }
+    function getCounterCabang($key) {
+        $sql = "SELECT set_value FROM setting WHERE set_key = '" . $key . "' AND set_cbid = '".ses_cabang."' FOR UPDATE";
+        $sql = $this->db->QUERY($sql);
+        if ($sql->num_rows() > 0) {
+            $row = $sql->row();
+            $counter = intval($row->set_value) + 1;
+            $datas = array(
+                'set_value' => $counter
+            );
+            $this->db->UPDATE('setting', $datas, array('set_key' => $key, 'set_cbid' => ses_cabang));
+        } else {
+            $this->db->INSERT('setting', array('set_key' => $key, 'set_value' => '1', 'set_cbid' => ses_cabang));
+            $counter = '1';
+        }
+        return $counter;
+    }
 
 }
 

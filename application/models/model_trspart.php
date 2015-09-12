@@ -43,6 +43,42 @@ class Model_Trspart extends CI_Model {
      * @param type $detail
      * @return type
      */
+    function saveSupplySlip($data, $detail) {
+        $result = array();
+        $this->db->trans_begin();
+        $tahun = substr(date('Y'), 2, 2);
+        // ambil sppid
+        $id = sprintf("%08s", $this->getCounter("SS" . $tahun));
+        $data['sppid'] = "SS" . $tahun . $id;
+        // ambil no slip
+        $noslip = sprintf("%06s", $this->getCounter("SP" . $tahun));
+        $data['spa_noslip'] = "SP" . $tahun . $noslip;
+        // simpan data supply
+        $this->db->INSERT('spa_supply', $data);
+        foreach ($detail as $value) {
+            $value['dsupp_sppid'] = "SS" . $tahun . $id;
+            $this->db->INSERT('spa_supply_det', $value);
+        }
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['kode'] = "SS" . $tahun . $id;
+            $result['msg'] = sukses("Berhasil menyimpan supply");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['kode'] = "";
+            $result['msg'] = error("Gagal menyimpan supply");
+        }
+        return $result;
+    }
+
+    /**
+     * 
+     * @param array $data
+     * @param type $detail
+     * @return type
+     */
     function saveReturPembelian($data, $detail) {
         $result = array();
         $this->db->trans_begin();
@@ -119,8 +155,8 @@ class Model_Trspart extends CI_Model {
      */
     function dataReturBeliDetail($trbrid) {
         $sql = $this->db->query("SELECT inve_kode, inve_nama,detb_inveid, detb_qty,"
-                ."detb_harga,detb_diskon,detb_subtotal FROM spa_retbeli_det LEFT JOIN"
-                ." spa_inventory ON inveid = detb_inveid WHERE detb_rbid = '$trbrid'");
+                . "detb_harga,detb_diskon,detb_subtotal FROM spa_retbeli_det LEFT JOIN"
+                . " spa_inventory ON inveid = detb_inveid WHERE detb_rbid = '$trbrid'");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }

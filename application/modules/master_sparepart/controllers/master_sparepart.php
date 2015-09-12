@@ -69,6 +69,11 @@ class Master_Sparepart extends Application {
         $this->load->view('gudang', $this->data);
     }
 
+    public function gradeToko() {
+        $this->hakAkses(50);
+        $this->load->view('gradeToko', $this->data);
+    }
+
     /**
      * 
      */
@@ -85,6 +90,24 @@ class Master_Sparepart extends Application {
         $id = $this->input->GET('id');
         $this->data['data'] = $this->model_sparepart->getGudangById($id);
         $this->load->view('editGudang', $this->data);
+    }
+
+    /**
+     * 
+     */
+    public function editGradeToko() {
+        $this->hakAkses(50);
+        $id = $this->input->GET('id');
+        $this->data['data'] = $this->model_sparepart->getGradeById($id);
+        $this->load->view('editGradeToko', $this->data);
+    }
+
+    /**
+     * 
+     */
+    public function addGradeToko() {
+        $this->hakAkses(50);
+        $this->load->view('addGradeToko', $this->data);
     }
 
     /**
@@ -125,6 +148,74 @@ class Master_Sparepart extends Application {
                 $i++;
             }
         echo json_encode($responce);
+    }
+
+    /**
+     * 
+     */
+    function loadGradeToko() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'pel_nama';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_sparepart');
+        $count = $this->model_sparepart->getTotalGradeToko($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sparepart->getAllGradeToko($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusGrade('" . $row->gradid . "')";
+                $hapus = '-';
+                $edit = '-';
+                if ($row->grad_status == '0') {
+                    $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                    $edit = '<a href="#master_sparepart/editGradeToko?id=' . $row->gradid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                }
+
+                $responce->rows[$i]['id'] = $row->gradid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->pel_nama,
+                    $row->pel_alamat,
+                    $row->grad_1,
+                    $row->grad_2,
+                    $row->grad_3,
+                    $edit,
+                    $hapus
+                );
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    /**
+     * Function ini digunakan untuk menghapus pelanggan
+     * @since 1.0
+     * @author Aris
+     */
+    public function hapusGrade() {
+        $id = $this->input->post('id');
+        $hasil = $this->model_sparepart->hapusGrade($id);
+        if ($hasil) {
+            $hasil = $this->sukses("Berhasil menghapus Grade");
+        } else {
+            $hasil = $this->error("Gagal menghapus Grade");
+        }
+        echo json_encode($hasil);
     }
 
     function loadInventory() {
@@ -416,6 +507,57 @@ class Master_Sparepart extends Application {
             } else {
                 $hasil['result'] = false;
                 $hasil['msg'] = $this->error("Gagal menyimpan Rak");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function saveGradeToko() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('pelid', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'grad_cbid' => ses_cabang,
+                'grad_pelid' => $this->input->post('pelid'),
+                'grad_1' => $this->input->post('grad_1'),
+                'grad_2' => $this->input->post('grad_2'),
+                'grad_3' => $this->input->post('grad_3')
+            );
+            if ($this->model_sparepart->saveGradeToko($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Grade Toko");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Grade Toko");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * Function ini digunakan untuk menyimpan jabatan
+     */
+    public function updateGradeToko() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('pelid', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'grad_cbid' => ses_cabang,
+                'grad_pelid' => $this->input->post('pelid'),
+                'gradid' => $this->input->post('gradid'),
+                'grad_1' => $this->input->post('grad_1'),
+                'grad_2' => $this->input->post('grad_2'),
+                'grad_3' => $this->input->post('grad_3')
+            );
+            if ($this->model_sparepart->updateGradeToko($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Grade Toko");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Grade Toko");
             }
         }
         echo json_encode($hasil);

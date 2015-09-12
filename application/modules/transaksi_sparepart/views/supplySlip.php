@@ -36,7 +36,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Work Order</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" required="required" name="wo" id="wo" class="upper col-xs-10 col-sm-3" />
+                <input type="text" autocomplete="off" name="wo" id="wo" class="upper col-xs-10 col-sm-3" />
                 <i id="sukses" class="ace-icon fa fa-check-circle bigger-200 green"></i>
                 <i id="error" class="ace-icon fa fa-times-circle bigger-200 red"></i>
             </div>
@@ -71,7 +71,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kredit Term</label>
         <div class="col-sm-8">
-            <input type="text" value="0" autocomplete="off" name="spp_kredit_term" 
+            <input type="text" value="0" maxlength="2" autocomplete="off" name="spp_kredit_term" 
                    id="spp_kredit_term" class="number col-xs-10 col-sm-2" />
         </div>
     </div>
@@ -101,6 +101,8 @@
         <div class="col-sm-8">
             <input type="text" placeholder="KODE BARANG" autocomplete="off" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
             <i class="ace-icon fa fa-spinner fa-spin orange bigger-200" id="waiting"></i>
+            <div id="msg" style="font-size: 16px;font-weight: bold" class="msg help-block col-xs-12 col-sm-reset inline">
+            </div>
         </div>
     </div>
     <div class="table-header">
@@ -129,14 +131,14 @@
             <tfoot>
             <th colspan="6" style="text-align: right">TOTAL</th>
             <th  class="ace col-xs-10 col-sm-10">
-                <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="trbr_total" id="trbr_total" class="trbr_total col-xs-10 col-sm-10" />  
+                <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="spp_total" id="spp_total" class="spp_total col-xs-10 col-sm-10" />  
             </th>
             </tfoot>
         </table>
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
-            <button class="btn btn-info" id="button" type="button">
+            <button class="btn btn-info" id="button" type="submit">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Submit
             </button>
@@ -170,26 +172,29 @@
         $("#wo").val("");
         document.getElementById("sukses").style.display = 'none';
         document.getElementById("error").style.display = 'none';
+        $('#button').removeAttr("disabled", true);
     })
     
     $("#wo").change(function(e) {
-        $.ajax({
-            url: '<?php echo site_url('transaksi_service/jsonWo'); ?>',
-            dataType: 'json',
-            type: 'POST',
-            data: {param : $("#wo").val()},
-            success: function(data) {
-                if (data.response) {
-                    $('#button').removeAttr("disabled", true);
-                    document.getElementById("sukses").style.display = '';
-                    document.getElementById("error").style.display = 'none';
-                } else {
-                    $('#button').attr("disabled", true);
-                    document.getElementById("sukses").style.display = 'none';
-                    document.getElementById("error").style.display = '';
+        if ($("#wo").val() != '') {
+            $.ajax({
+                url: '<?php echo site_url('transaksi_service/jsonWo'); ?>',
+                dataType: 'json',
+                type: 'POST',
+                data: {param : $("#wo").val()},
+                success: function(data) {
+                    if (data.response) {
+                        
+                        document.getElementById("sukses").style.display = '';
+                        document.getElementById("error").style.display = 'none';
+                    } else {
+                        //                        $('#button').attr("disabled", true);
+                        document.getElementById("sukses").style.display = 'none';
+                        document.getElementById("error").style.display = '';
+                    }
                 }
-            }
-        });
+            });
+        }
         
     })
     
@@ -235,6 +240,34 @@
     }
    
         
+    $(this).ready(function() {
+        $('#form').submit(function() {
+            if (confirm("Yakin Data Sudah Benar ?")) {
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    dataType: "json",
+                    async: false,
+                    data: $(this)
+                    .serialize(),
+                    success: function(data) {
+                        window.scrollTo(0, 0);
+                        if (data.result) {
+                            var params  = 'width=1000';
+                            params += ', height='+screen.height;
+                            params += ', fullscreen=yes,scrollbars=yes';
+                            document.form.reset();
+                            clearForm();
+                            window.open("<?php echo site_url("transaksi_sparepart/printReturBeli"); ?>/"+data.kode,'_blank', params);
+                        }
+                        $("#result").html(data.msg).show().fadeIn("slow");
+                    }
+                }) 
+            }
+            return false;
+        });
+    });
+        
     //    function simpan()
     //    {
     $(this).ready(function() {
@@ -268,29 +301,7 @@
             }
         })
         
-        $('#form').submit(function() {
-            $.ajax({
-                type: 'POST',
-                url: $(this).attr('action'),
-                dataType: "json",
-                async: false,
-                data: $(this)
-                .serialize(),
-                success: function(data) {
-                    window.scrollTo(0, 0);
-                    if (data.result) {
-                        var params  = 'width=1000';
-                        params += ', height='+screen.height;
-                        params += ', fullscreen=yes,scrollbars=yes';
-                        document.form.reset();
-                        clearForm();
-                        window.open("<?php echo site_url("transaksi_sparepart/printReturBeli"); ?>/"+data.kode,'_blank', params);
-                    }
-                    $("#result").html(data.msg).show().fadeIn("slow");
-                }
-            })
-            return false;
-        });
+        
         //                }
         //            });  
     });
@@ -309,11 +320,11 @@
         total();
     }
     function subTotal(inc) {
-        var qty = cekDefaultNol($("#dtr_qty"+inc).val().replace(/,/g, ""));
-        var harga = cekDefaultNol($("#dtr_harga"+inc).val().replace(/,/g, ""));
-        var diskon = cekDefaultNol($("#dtr_diskon"+inc).val().replace(/,/g, ""));
+        var qty = cekDefaultNol($("#dsupp_qty"+inc).val().replace(/,/g, ""));
+        var harga = cekDefaultNol($("#dsupp_harga"+inc).val().replace(/,/g, ""));
+        var diskon = cekDefaultNol($("#dsupp_diskon"+inc).val().replace(/,/g, ""));
         var subtotal = (qty * harga)*((100-diskon)/100);
-        $("#dtr_subtotal"+inc).val(formatDefault(subtotal));
+        $("#dsupp_subtotal"+inc).val(formatDefault(subtotal));
         total();
     }
     
@@ -321,27 +332,28 @@
     {
         var total = 0;
         var price;
-        $("input[name^=dtr_subtotal]").each(function() {
+        $("input[name^=dsupp_subtotal]").each(function() {
             price = $(this).val().replace(/,/g, "");
             total += Number(price);
         });
-        $("#trbr_total").val(formatDefault(total));
+        $("#spp_total").val(formatDefault(total));
     }
     
     
     function getData(id){
         var cek = 0;
         $("#waiting").show();
+        $("#msg").show();
         if($("#"+id).val() !=""){
             $("#wait").attr("style","position: fixed;top: 0;left: 0;right: 0;height: 100%;opacity: 0.4;filter: alpha(opacity=40); background-color: #000;");
-            $("input[name^=dtr_inve_kode]").each(function(){
+            $("input[name^=dsupp_inveid]").each(function(){
                 if($(this).val() == $("#"+id).val()){
                     cek = 1;
                     var str = ($(this).attr("id"));
-                    var baris = str.replace('dtr_inve_kode','');
+                    var baris = str.replace('dsupp_inveid','');
                     /* set QTY if exists */
-                    var setqty = parseInt($("#dtr_qty"+baris).val(),10) + 1;
-                    $("#dtr_qty"+baris).val(setqty);
+                    var setqty = parseInt($("#dsupp_qty"+baris).val(),10) + 1;
+                    $("#dsupp_qty"+baris).val(setqty);
                     subTotal(baris);
                     /* set empty */
                     $('#'+id).focus();
@@ -358,29 +370,21 @@
                         jenis : $("#spp_jenis").val()},
                     success: function(data){
                         if (data['response']) {
+                            alert(data['inveid']);
                             inc++;
                             addRow(inc);
                             $("#kodeBrg"+inc).html(data['inve_kode']);
-                            $("#dtr_inveid"+inc).val(data['inveid']);
-                            $("#dtr_inve_kode"+inc).val(data['inve_kode']);
+                            $("#dsupp_inveid"+inc).val(data['inveid']);
                             $("#inve_nama"+inc).html(data['inve_nama']);
-                            $("#dtr_qty"+inc).val(1);
-                            $("#dtr_diskon"+inc).val(0);
-                            $("#dtr_harga"+inc).val(formatDefault(data['inve_harga_beli']));
-                            $("#dtr_subtotal"+inc).val(formatDefault(data['inve_harga_beli']));
+                            $("#dsupp_hpp"+inc).val(data['inve_hpp']);
+                            $("#dsupp_qty"+inc).val(1);
+                            $("#dsupp_diskon"+inc).val(0);
+                            $("#dsupp_harga"+inc).val(formatDefault(data['inve_harga']));
+                            $("#dsupp_subtotal"+inc).val(formatDefault(data['inve_harga']));
                             total();
+                            $("#msg").html("").show();
                         }else{
-                            bootbox.dialog({
-                                message: "<span class='bigger-110'>Kode Barang Ini Tidak Terdaftar</span>",
-                                buttons: 			
-                                    {
-                                    "button" :
-                                        {
-                                        "label" : "Ok",
-                                        "className" : "btn-sm info"
-                                    }
-                                }
-                            });
+                            $("#msg").html("Kode Barang Ini Tidak Terdaftar").show().fadeIn("fast");
                         }
                         $("#"+id).val(""); 
                         $('#'+id).focus();
@@ -425,8 +429,8 @@
     
     function cekQty(inc)
     {
-        var qty = $("#dtr_qty"+inc).val();
-        var min = $("#dtr_qty_min"+inc).val();
+        var qty = $("#dsupp_qty"+inc).val();
+        var min = $("#dsupp_qty_min"+inc).val();
         if (parseFloat(qty) > parseFloat(min)) {
             bootbox.dialog({
                 message: "<span class='bigger-110'>Retur Maksimal "+min+"</span>",
@@ -439,8 +443,8 @@
                     }
                 }
             });
-            $("#dtr_qty"+inc).val("0");
-            $("#dtr_qty"+inc).focus();
+            $("#dsupp_qty"+inc).val("0");
+            $("#dsupp_qty"+inc).focus();
         }
         
     }
@@ -451,24 +455,24 @@
                     <td class="nomororder">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
                          <td>\n\
                              <span id="kodeBrg' + inc + '"></span>\n\
-                            <input type="hidden" style="width:90%" id="dtr_inve_kode' + inc + '" name="dtr_inve_kode[]" />\n\
-                            <input type="hidden" style="width:90%" id="dtr_inveid' + inc + '" name="dtr_inveid[]" />\n\
+                            <input type="hidden" style="width:90%" id="dsupp_inveid' + inc + '" name="dsupp_inveid[]" />\n\
+                            <input type="hidden" style="width:90%" id="dsupp_hpp' + inc + '" name="dsupp_hpp[]" />\n\
                          </td>\n\
                          <td>\n\
                                 <span id="inve_nama' + inc + '"></span>\n\
                         </td>\n\
                         <td>\n\
-                            <input type="text" onchange="cekQty('+inc+')" autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dtr_qty' + inc + '" name="dtr_qty[]" />\n\
-                            <input type="hidden" id="dtr_qty_min' + inc + '" name="dtr_qty_min[]" />\n\
+                            <input type="text" onchange="cekQty('+inc+')" autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dsupp_qty' + inc + '" name="dsupp_qty[]" />\n\
+                            <input type="hidden" id="dsupp_qty_min' + inc + '" name="dsupp_qty_min[]" />\n\
                          </td>\n\
                          <td>\n\
-                             <input type="text" readonly="readonly" autocomplete="off" onchange="$(\'#\'+this.id).val(formatDefault(this.value));" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dtr_harga' + inc + '" name="dtr_harga[]" />\n\
+                             <input type="text" autocomplete="off" onchange="$(\'#\'+this.id).val(formatDefault(this.value));" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dsupp_harga' + inc + '" name="dsupp_harga[]" />\n\
                          </td>\n\
                          <td>\n\
-                             <input type="text" readonly="readonly" autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dtr_diskon' + inc + '" name="dtr_diskon[]" />\n\
+                             <input type="text"  autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dsupp_diskon' + inc + '" name="dsupp_diskon[]" />\n\
                          </td>\n\
                          <td>\n\
-                             <input type="text" class="subtotal ace col-xs-10 col-sm-10" readonly="readonly" style="width:100%;text-align: right" id="dtr_subtotal' + inc + '" name="dtr_subtotal[]" />\n\
+                             <input type="text" class="subtotal ace col-xs-10 col-sm-10" readonly="readonly" style="width:100%;text-align: right" id="dsupp_subtotal' + inc + '" name="dsupp_subtotal[]" />\n\
                          </td>\n\
                          <td style="text-align: center">\n\
                              <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\

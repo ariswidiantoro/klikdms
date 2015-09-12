@@ -8761,7 +8761,7 @@ input[type="color"]:focus {
     box-shadow: none;
     color: #696969;
     border-color: #f59942;
-    background-color: transparent;
+    background-color: #ffffff;
     outline: none;
 }
 input::-webkit-input-placeholder,
