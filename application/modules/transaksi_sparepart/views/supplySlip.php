@@ -16,7 +16,7 @@
     input:focus {
         background-color: yellow;
     } 
-    #wo,#pel_nama,#spp_pelid { border: 1px solid #ff6666; background-color: #ffcccc;}
+    #wo,#pel_nama,#spp_pelid {background-color: #ffcccc;}
 </style>
 <form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/saveSupplySlip'); ?>" method="post" name="form">
     <div class="form-group">

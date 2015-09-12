@@ -8716,7 +8716,7 @@ input[type="color"] {
     border-radius: 0 !important;
     color: #858585;
     background-color: #ffffff;
-    border: 1px solid #ff6666;
+    border: 1px solid #00aced;
     padding: 5px 4px 6px;
     font-size: 14px;
     font-family: inherit;
@@ -8761,7 +8761,7 @@ input[type="color"]:focus {
     box-shadow: none;
     color: #696969;
     border-color: #f59942;
-    background-color: #ffffff;
+    background-color: transparent;
     outline: none;
 }
 input::-webkit-input-placeholder,
@@ -8789,7 +8789,7 @@ select {
     box-shadow: none !important;
     color: #858585;
     background-color: #ffffff;
-    border: 1px solid #d5d5d5;
+    border: 1px solid #00aced;
 }
 .form-control:focus,
 select:focus {
