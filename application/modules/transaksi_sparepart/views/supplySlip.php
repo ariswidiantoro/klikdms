@@ -76,65 +76,113 @@
         </div>
     </div>
     <div class="hr hr-16 hr-dotted"></div>
+    <div id="sparepart">
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bantuan</label>
+            <div class="col-sm-8">
+                <div class="radio" style="margin-left: 0">
+                    <label>
+                        <input name="auto" id="check" type="radio" value="auto" class="ace" />
+                        <span class="lbl">Auto Complete</span>
+                    </label>
+                </div>
+                <div class="radio" style="margin-left: 0">
+                    <label>
+                        <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
+                        <span class="lbl">Tanpa Auto Complete</span>
+                    </label>
+                </div>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bantuan</label>
-        <div class="col-sm-8">
-            <div class="radio" style="margin-left: 0">
-                <label>
-                    <input name="auto" id="check" type="radio" value="auto" class="ace" />
-                    <span class="lbl">Auto Complete</span>
-                </label>
-            </div>
-            <div class="radio" style="margin-left: 0">
-                <label>
-                    <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
-                    <span class="lbl">Tanpa Auto Complete</span>
-                </label>
-            </div>
 
-
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Barang</label>
-        <div class="col-sm-8">
-            <input type="text" placeholder="KODE BARANG" autocomplete="off" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
-            <i class="ace-icon fa fa-spinner fa-spin orange bigger-200" id="waiting"></i>
-            <div id="msg" style="font-size: 16px;font-weight: bold" class="msg help-block col-xs-12 col-sm-reset inline">
             </div>
         </div>
-    </div>
-    <div class="table-header">
-        Daftar Barang
-    </div>
-    <div>
-        <table id="simple-table" class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th style="width: 5%">No</th>
-                    <th style="width: 20%">Kode Barang</th>
-                    <th  style="width: 30%">Nama Barang</th>
-                    <th style="width: 7%">Qty</th>
-                    <th  style="width: 10%">Harga</th>
-                    <th  style="width: 8%">Diskon</th>
-                    <th  style="width: 15%">Sub Total</th>
-                    <th  style="width: 15%">Hapus</th>
-                </tr>
-            </thead>
 
-            <tbody>
-                <tr  class="item-row" style="display: none">
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Barang</label>
+            <div class="col-sm-8">
+                <input type="text" placeholder="KODE BARANG" autocomplete="off" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
+                <i class="ace-icon fa fa-spinner fa-spin orange bigger-200" id="waiting"></i>
+                <div id="msg" style="font-size: 16px;font-weight: bold" class="msg help-block col-xs-12 col-sm-reset inline">
+                </div>
+            </div>
+        </div>
+        <div class="table-header">
+            Daftar Barang
+        </div>
+        <div>
+            <table id="simple-table" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">No</th>
+                        <th style="width: 20%">Kode Barang</th>
+                        <th  style="width: 30%">Nama Barang</th>
+                        <th style="width: 7%">Qty</th>
+                        <th  style="width: 10%">Harga</th>
+                        <th  style="width: 8%">Diskon</th>
+                        <th  style="width: 15%">Sub Total</th>
+                        <th  style="width: 15%">Hapus</th>
+                    </tr>
+                </thead>
 
-                </tr>
-            </tbody>
-            <tfoot>
-            <th colspan="6" style="text-align: right">TOTAL</th>
-            <th  class="ace col-xs-10 col-sm-10">
-                <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="spp_total" id="spp_total" class="spp_total col-xs-10 col-sm-10" />  
-            </th>
-            </tfoot>
-        </table>
+                <tbody>
+                    <tr  class="item-row" style="display: none">
+
+                    </tr>
+                </tbody>
+                <tfoot>
+                <th colspan="6" style="text-align: right">TOTAL</th>
+                <th  class="ace col-xs-10 col-sm-10">
+                    <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="spp_total" id="spp_total" class="spp_total col-xs-10 col-sm-10" />  
+                </th>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div id="so" style="display: none">
+        <div class="table-header">
+            Daftar Sub Order
+        </div>
+        <div>
+            <table id="simple-table-so" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">No</th>
+                        <th style="width: 50%">Nama Perbaikan</th>
+                        <th  style="width: 15%">Harga</th>
+                        <th  style="width: 15%">Add</th>
+                        <th  style="width: 15%">Hapus</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr  class="item-row-so">
+                        <td class="nomorso">
+                            1
+                        </td>
+                        <td>
+                            <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dsupp_nama[]" />
+                        </td>
+                        <td>
+                            <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));totalSo()"  autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dsupp_hargaso1" name="dsupp_hargaso[]" />
+                        </td>
+                        <td>
+                            <a class="green btnAdd"  onclick="addRowOrder()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
+                        </td>
+                        <td>
+                            <a class="red btnDeleteOrder" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                <th colspan="2" style="text-align: right">TOTAL</th>
+                <th  class="ace col-xs-10 col-sm-10">
+                    <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="spp_totalso" id="spp_totalso" class="spp_total col-xs-10 col-sm-10" />  
+                </th>
+                <th></th>
+                <th></th>
+                </tfoot>
+            </table>
+        </div>
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
@@ -160,12 +208,22 @@
         var jenis = $('#spp_jenis').val();
         if (jenis == 'ps') {
             document.getElementById("service").style.display = 'none';
+            document.getElementById("sparepart").style.display = '';
+            document.getElementById("so").style.display = 'none';
             document.getElementById("spp_pelid").readOnly = false;
             document.getElementById("pel_nama").readOnly = false;
         } else if (jenis != '') {
+            if (jenis == 'so') {
+                document.getElementById("sparepart").style.display = 'none';
+                document.getElementById("so").style.display = ''; 
+            }else{
+                document.getElementById("sparepart").style.display = '';
+                document.getElementById("so").style.display = 'none';
+            }
             document.getElementById("service").style.display = '';
             document.getElementById("spp_pelid").readOnly = true;
             document.getElementById("pel_nama").readOnly = true;
+            
         }
         $("#spp_pelid").val("");
         $("#pel_nama").val("");
@@ -213,13 +271,12 @@
 
     //called when key is pressed in textbox
     $(".number").keypress(function (e) {
-        //if the letter is not digit then display error and don't type anything
         if (e.which != 8 && e.which != 47 && e.which != 0 && (e.which < 46 || e.which > 57)){
-            //display error message
-            //        $("#errmsg").html("Digits Only").show().fadeOut("slow");
             return false;
         }
     });
+    
+   
     
                            
     
@@ -301,11 +358,7 @@
             }
         })
         
-        
-        //                }
-        //            });  
     });
-    //    }
         
        
         
@@ -318,6 +371,11 @@
         var par = $(this).parent().parent(); //tr
         par.remove();
         total();
+    }
+    function DeleteOrder() {
+        var par = $(this).parent().parent(); //tr
+        par.remove();
+        totalSo();
     }
     function subTotal(inc) {
         var qty = cekDefaultNol($("#dsupp_qty"+inc).val().replace(/,/g, ""));
@@ -337,6 +395,16 @@
             total += Number(price);
         });
         $("#spp_total").val(formatDefault(total));
+    }
+    function totalSo()
+    {
+        var total = 0;
+        var price;
+        $("input[name^=dsupp_hargaso]").each(function() {
+            price = $(this).val().replace(/,/g, "");
+            total += Number(price);
+        });
+        $("#spp_totalso").val(formatDefault(total));
     }
     
     
@@ -480,7 +548,29 @@
                        </tr>\n\
                     </tr>');
                                  $(".btnDelete").bind("click", Delete);
+                                 numberOnly();
                              }
-    
+                             function addRowOrder() {
+                                 var inc = $('.nomorso').length+1;
+                                 $(".item-row-so:last").after(
+                                 '<tr class="item-row-so">\n\
+               <td class="nomorso">' + inc +'</td>\n\
+                    <td>\n\
+                        <input type="text" id="dsupp_nama' + inc + '"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dsupp_nama[]" />\n\
+                    </td>\n\
+                    <td>\n\
+                           <input type="text" id="dsupp_hargaso' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dsupp_hargaso[]" />\n\
+                   </td>\n\
+                   <td>\n\
+                       <a class="green btnAdd"  onclick="addRowOrder()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
+                    </td>\n\
+                    <td>\n\
+                        <a class="red btnDeleteOrder" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
+                  </tr>\n\
+               </tr>');
+                            $(".btnDeleteOrder").bind("click", DeleteOrder);
+                            numberOnly();
+                        }
+
     
 </script> 
