@@ -396,6 +396,7 @@ class Master_Service extends Application {
         }
         echo json_encode($hasil);
     }
+
     /**
      * Function ini digunakan untuk menyimpan jabatan
      */
@@ -680,6 +681,7 @@ class Master_Service extends Application {
      * Function ini digunakan untuk menyimpan jabatan
      */
     public function saveFlateRate() {
+        $retur = array();
         $this->form_validation->set_rules('flat_kode', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
             $data = array(
@@ -695,16 +697,15 @@ class Master_Service extends Application {
                 'flat_total' => $this->system->numeric($this->input->post('flat_total')),
                 'flat_lc' => $this->system->numeric($this->input->post('flat_total')),
             );
-            $hasil = $this->model_service->saveFlateRate($data);
-            if ($hasil) {
-                $hasil['result'] = true;
-                $hasil['msg'] = $this->sukses("Berhasil menyimpan flate rate");
+            if ($this->model_service->saveFlateRate($data)) {
+                $retur['result'] = true;
+                $retur['msg'] = $this->sukses("Berhasil menyimpan flate rate");
             } else {
-                $hasil['result'] = false;
-                $hasil['msg'] = $this->error("Gagal menyimpan flate rate");
+                $retur['result'] = false;
+                $retur['msg'] = $this->error("Gagal menyimpan flate rate");
             }
         }
-        echo json_encode($hasil);
+        echo json_encode($retur);
     }
 
     /**
@@ -788,14 +789,15 @@ class Master_Service extends Application {
                 'flat_total' => $this->system->numeric($this->input->post('flat_total')),
                 'flat_lc' => $this->system->numeric($this->input->post('flat_total')),
             );
-            $hasil = $this->model_service->updateFlateRate($data);
-            if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan flate rate");
+            if ($this->model_service->updateFlateRate($data)) {
+                $retur['result'] = true;
+                $retur['msg'] = $this->sukses("Berhasil menyimpan flate rate");
             } else {
-                $hasil = $this->error("Gagal menyimpan flate rate");
+                $retur['result'] = false;
+                $retur['msg'] = $this->error("Gagal menyimpan flate rate");
             }
         }
-        echo json_encode($hasil);
+        echo json_encode($retur);
     }
 
     function loadFlateRate() {

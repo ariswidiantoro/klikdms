@@ -148,38 +148,53 @@
                     <tr>
                         <th style="width: 5%">No</th>
                         <th style="width: 50%">Nama Perbaikan</th>
-                        <th  style="width: 15%">Harga</th>
-                        <th  style="width: 15%">Add</th>
-                        <th  style="width: 15%">Hapus</th>
+                        <th style="width: 10%">Hpp</th>
+                        <th style="width: 10%">Harga</th>
+                        <th style="width: 7%">Add</th>
+                        <th style="width: 8%">Hapus</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr  class="item-row-so">
-                        <td class="nomorso">
+                        <td class="nomorso" style="text-align: center;">
                             1
                         </td>
                         <td>
                             <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dsupp_nama[]" />
                         </td>
                         <td>
+                            <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));totalHppSo()"  autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dsupp_hppso1" name="dsupp_hppso[]" />
+                        </td>
+                        <td>
                             <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));totalSo()"  autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dsupp_hargaso1" name="dsupp_hargaso[]" />
                         </td>
-                        <td>
+                        <td class="center">
                             <a class="green btnAdd"  onclick="addRowOrder()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
                         </td>
-                        <td>
+                        <td  class="center">
                             <a class="red btnDeleteOrder" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
                         </td>
                     </tr>
                 </tbody>
                 <tfoot>
-                <th colspan="2" style="text-align: right">TOTAL</th>
-                <th  class="ace col-xs-10 col-sm-10">
-                    <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="spp_totalso" id="spp_totalso" class="spp_total col-xs-10 col-sm-10" />  
-                </th>
-                <th></th>
-                <th></th>
+                    <tr>
+                        <th colspan="2" style="text-align: right">
+                            TOTAL
+                        </th>
+                        <th>
+                            <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="spp_totalhppso" id="spp_totalhppso" class="spp_totalhppso col-xs-10 col-sm-10" />  
+                        </th>
+                        <th>
+                            <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="spp_totalso" id="spp_totalso" class="spp_total col-xs-10 col-sm-10" />  
+                        </th>
+                        <th class="center">
+                            &nbsp;
+                        </th>
+                        <th  class="center">
+                            &nbsp;
+                        </th>
+                    </tr>
                 </tfoot>
             </table>
         </div>
@@ -242,7 +257,6 @@
                 data: {param : $("#wo").val()},
                 success: function(data) {
                     if (data.response) {
-                        
                         document.getElementById("sukses").style.display = '';
                         document.getElementById("error").style.display = 'none';
                     } else {
@@ -396,6 +410,7 @@
         });
         $("#spp_total").val(formatDefault(total));
     }
+    
     function totalSo()
     {
         var total = 0;
@@ -405,6 +420,16 @@
             total += Number(price);
         });
         $("#spp_totalso").val(formatDefault(total));
+    }
+    function totalHppSo()
+    {
+        var total = 0;
+        var price;
+        $("input[name^=dsupp_hppso]").each(function() {
+            price = $(this).val().replace(/,/g, "");
+            total += Number(price);
+        });
+        $("#spp_totalhppso").val(formatDefault(total));
     }
     
     
@@ -438,7 +463,6 @@
                         jenis : $("#spp_jenis").val()},
                     success: function(data){
                         if (data['response']) {
-                            alert(data['inveid']);
                             inc++;
                             addRow(inc);
                             $("#kodeBrg"+inc).html(data['inve_kode']);
@@ -554,17 +578,20 @@
                                  var inc = $('.nomorso').length+1;
                                  $(".item-row-so:last").after(
                                  '<tr class="item-row-so">\n\
-               <td class="nomorso">' + inc +'</td>\n\
+               <td class="nomorso"  style="text-align: center;">' + inc +'</td>\n\
                     <td>\n\
                         <input type="text" id="dsupp_nama' + inc + '"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dsupp_nama[]" />\n\
                     </td>\n\
                     <td>\n\
+                           <input type="text" id="dsupp_hppso' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalHppSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dsupp_hppso[]" />\n\
+                   </td>\n\
+                    <td>\n\
                            <input type="text" id="dsupp_hargaso' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dsupp_hargaso[]" />\n\
                    </td>\n\
-                   <td>\n\
+                   <td class="center">\n\
                        <a class="green btnAdd"  onclick="addRowOrder()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
                     </td>\n\
-                    <td>\n\
+                    <td class="center">\n\
                         <a class="red btnDeleteOrder" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
                   </tr>\n\
                </tr>');
