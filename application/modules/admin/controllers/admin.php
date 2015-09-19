@@ -434,7 +434,7 @@ class Admin extends Application {
         $this->form_validation->set_rules('jab_deskripsi', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
             $data = array(
-                'jab_deskripsi' => $this->input->post('jab_deskripsi'),
+                'jab_deskripsi' => strtoupper($this->input->post('jab_deskripsi')),
                 'jab_deptid' => $this->input->post('jab_deptid')
             );
             $hasil = $this->model_admin->saveJabatan($data);
@@ -972,7 +972,7 @@ class Admin extends Application {
             $data = array(
                 'jabid' => $this->input->post('jabid'),
                 'jab_deptid' => $this->input->post('jab_deptid'),
-                'jab_deskripsi' => $this->input->post('jab_deskripsi'),
+                'jab_deskripsi' => strtoupper($this->input->post('jab_deskripsi')),
             );
             $hasil = $this->model_admin->updateJabatan($data);
             if ($hasil) {

@@ -21,7 +21,7 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Jabatan</label>
         <div class="col-sm-8">
             <input type="hidden" value="<?php echo $jab['jabid']; ?>" name="jabid">
-            <input type="text" name="jab_deskripsi" id="jab_deskripsi" placeholder="Nama Jabatan" value="<?php echo $jab['jab_deskripsi']; ?>" class="col-xs-10 col-sm-5" />
+            <input type="text" name="jab_deskripsi" id="jab_deskripsi" placeholder="Nama Jabatan" value="<?php echo $jab['jab_deskripsi']; ?>" class="upper col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="clearfix form-actions">

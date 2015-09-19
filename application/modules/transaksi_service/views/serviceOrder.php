@@ -13,19 +13,19 @@
         '<tr class="item-row-keluhan">\n\
                <td class="nomorjasa"  style="text-align: center;">' + inc +'</td>\n\
                     <td>\n\
-                        <input type="text" maxlength="60"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="wod_keluhan' + inc + '"  name="wod_keluhan[]" /><input type="hidden" id="flatid' + inc + '" name="flatid[]" />\n\
+                        <input type="text" maxlength="60"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="woj_keluhan' + inc + '"  name="woj_keluhan[]" /><input type="hidden" id="woj_flatid' + inc + '" name="woj_flatid[]" />\n\
                     </td>\n\
                     <td>\n\
                           <input type="text"  autocomplete="off" onkeyup="autoCompleteJasa(' + inc + ')" class="upper kodejasa ace col-xs-10 col-sm-10" style="width:100%;" id="wod_kode' + inc + '" name="wod_kode[]" />\n\
                    </td>\n\
                     <td>\n\
-                           <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="wod_nama' + inc + '" name="wod_nama[]" />\n\
+                           <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="woj_namajasa' + inc + '" name="woj_namajasa[]" />\n\
                    </td>\n\
                     <td>\n\
-                           <input type="text" readonly="readonly" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_harga' + inc + '" name="wod_harga[]" />\n\
+                           <input type="text" readonly="readonly" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="woj_rate' + inc + '" name="woj_rate[]" />\n\
                    </td>\n\
                     <td>\n\
-                           <input type="text" readonly="readonly" autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_subtotal' + inc + '" name="wod_subtotal[]" />\n\
+                           <input type="text" readonly="readonly" autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="woj_subtotal' + inc + '" name="woj_subtotal[]" />\n\
                    </td>\n\
                    <td class="center">\n\
                        <a class="green btnAdd"  onclick="addRowJasa()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
@@ -45,19 +45,19 @@
                             '<tr class="item-row-sp">\n\
                <td class="nomorsp"  style="text-align: center;">' + inc +'</td>\n\
                     <td>\n\
-                         <input type="text"  autocomplete="off" onkeyup="autoCompleteSp(' + inc + ')"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="wod_kodesp' + inc + '" name="wod_kodesp[]" /><input type="hidden" id="inveid' + inc + '" name="inveid[]" />\n\
+                         <input type="text"  autocomplete="off" onkeyup="autoCompleteSp(' + inc + ')"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="wod_kodesp' + inc + '" name="wod_kodesp[]" /><input type="hidden" id="wop_inveid' + inc + '" name="wop_inveid[]" />\n\
                     </td>\n\
                     <td>\n\
-                          <input type="text" readonly="readonly"  autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="wod_namasp' + inc + '" name="wod_namasp[]" />\n\
+                          <input type="text" readonly="readonly"  autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="inve_nama' + inc + '" name="inve_nama[]" />\n\
                    </td>\n\
                     <td>\n\
-                           <input type="text" value="0" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_qtysp' + inc + '" name="wod_qtysp[]" />\n\
+                           <input type="text" value="0" autocomplete="off" onchange="subTotalSp(' + inc + ')"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wop_qty' + inc + '" name="wop_qty[]" />\n\
                    </td>\n\
                     <td>\n\
-                           <input type="text" value="0" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_hargasp' + inc + '" name="wod_hargasp[]" />\n\
+                           <input type="text" readonly="readonly" value="0" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wop_harga' + inc + '" name="wop_harga[]" />\n\
                    </td>\n\
                     <td>\n\
-                           <input type="text" readonly="readonly" autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_subtotalsp' + inc + '" name="wod_subtotalsp[]" />\n\
+                           <input type="text" readonly="readonly" autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wop_subtotal' + inc + '" name="wop_subtotal[]" />\n\
                    </td>\n\
                    <td class="center">\n\
                        <a class="green btnAdd"  onclick="addRowSp()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
@@ -77,10 +77,10 @@
                             '<tr class="item-row-so">\n\
                <td class="nomorso"  style="text-align: center;">' + inc +'</td>\n\
                     <td>\n\
-                          <input type="text"  autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="wod_namaso' + inc + '" name="wod_namaso[]" />\n\
+                          <input type="text"  autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="wos_nama' + inc + '" name="wos_nama[]" />\n\
                    </td>\n\
                     <td>\n\
-                           <input type="text" value="0" onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_hargaso' + inc + '" name="wod_hargaso[]" />\n\
+                           <input type="text" value="0" onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wos_harga' + inc + '" name="wos_harga[]" />\n\
                    </td>\n\
                    <td class="center">\n\
                        <a class="green btnAdd"  onclick="addRowSo()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
@@ -94,7 +94,7 @@
                             numberOnly();
                         }
 </script>
-<form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/savePenerimaanBarang'); ?>" method="post" name="form">
+<form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_service/saveWo'); ?>" method="post" name="form">
     <table style="width: 100%">
         <tr>
             <td style="width: 48%">
@@ -117,7 +117,7 @@
                     <div class="col-sm-7">
                         <input type="text" autocomplete="off" required="required" onchange="getDataKendaraan(this.id)" name="nopol" id="nopol" class="upper col-xs-10 col-sm-5" />
                         <input type="hidden"  id="wo_mscid" name="wo_mscid" />
-                        <input type="hidden"  id="type" name="type" value="<?php echo $type; ?>"  />
+                        <input type="hidden"  id="type" name="type" value="<?php echo $type; ?>"/>
                         <input type="hidden"  id="wo_inextern" name="wo_inextern"/>
                         <a href="#master_service/addKendaraan" class="btn btn-sm btn-primary">
                             <i class="ace-icon fa fa-plus"></i>
@@ -158,7 +158,7 @@
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Estimasi Diserahkan</label>
                     <div class="col-sm-7">
                         <div class='input-group date col-xs-10 col-sm-10' id='datetimepicker1'>
-                            <input type='text' readonly="readonly" value="<?php echo date('d-m-Y H:i'); ?>" class="form-control" />
+                            <input type='text' readonly="readonly" value="<?php echo date('d-m-Y H:i'); ?>" name="wo_selesai" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -170,7 +170,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Kode Pelanggan</label>
                     <div class="col-sm-7">
-                        <input type="text" required="required"  id="pelid" name="pelid" class="upper col-xs-10 col-sm-10" />
+                        <input type="text" required="required"  id="pelid" name="wo_pelid" class="upper col-xs-10 col-sm-10" />
                     </div>
                 </div>
             </td>
@@ -180,7 +180,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Pembawa</label>
                     <div class="col-sm-7">
-                        <input type="text" required="required"  id="merk" name="merk" class="upper col-xs-10 col-sm-10" />
+                        <input type="text" required="required" autocomplete="off"  id="wo_pembawa" name="wo_pembawa" class="upper col-xs-10 col-sm-10" />
                     </div>
                 </div>
             </td>
@@ -202,7 +202,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Nomerator Kertas</label>
                     <div class="col-sm-7">
-                        <input type="text" required="required"  id="merk" name="merk" class="upper col-xs-10 col-sm-10" />
+                        <input type="text" required="required" autocomplete="off"  id="wo_numerator" name="wo_numerator" class="upper col-xs-10 col-sm-10" />
                     </div>
                 </div>
             </td>
@@ -210,7 +210,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Km</label>
                     <div class="col-sm-7">
-                        <input type="text" required="required"  id="merk" name="merk" class="number col-xs-10 col-sm-7" />
+                        <input type="text" required="required" autocomplete="off"  id="wo_km" name="wo_km" class="number col-xs-10 col-sm-7" />
                     </div>
                 </div>
             </td>
@@ -220,7 +220,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Stall</label>
                     <div class="col-sm-7">
-                        <select name="wo_tunggu" required="required" class="ace col-xs-10 col-sm-5">
+                        <select name="wo_stallid" required="required" class="ace col-xs-10 col-sm-5">
                             <option value="">Pilih</option>
                             <?php
                             if (count($stall) > 0) {
@@ -247,7 +247,7 @@
             Daftar Analisa Pekerjaan
         </div>
         <div>
-            <table id="simple-table-keluhan" class="table table-striped table-bordered table-hover">
+            <table id="simple-table-jasa" class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
                         <th style="width: 3%">No</th>
@@ -267,20 +267,20 @@
                             1
                         </td>
                         <td>
-                            <input type="text" maxlength="60" required="required" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="wod_keluhan[]" />
+                            <input type="text" maxlength="60"  required="required" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="woj_keluhan[]" />
                         </td>
                         <td>
                             <input type="text"  autocomplete="off" onkeyup="autoCompleteJasa(1)" class="upper kodejasa ace col-xs-10 col-sm-10" style="width:100%;" id="wod_kode1" name="wod_kode[]" />
-                            <input type="hidden" id="flatid1" name="flatid[]" />
+                            <input type="hidden" id="woj_flatid1" name="woj_flatid[]" />
                         </td>
                         <td>
-                            <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="wod_nama1" name="wod_nama[]" />
+                            <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="woj_namajasa1" name="woj_namajasa[]" />
                         </td>
                         <td>
-                            <input type="text" readonly="readonly" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_harga1" name="wod_harga[]" />
+                            <input type="text" readonly="readonly" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="woj_rate1" name="woj_rate[]" />
                         </td>
                         <td>
-                            <input type="text" readonly="readonly" autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_subtotal1" name="wod_subtotal[]" />
+                            <input type="text" readonly="readonly" autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="woj_subtotal1" name="woj_subtotal[]" />
                         </td>
                         <td class="center">
                             <a class="green btnAdd"  onclick="addRowJasa()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
@@ -334,20 +334,20 @@
                             1
                         </td>
                         <td>
-                            <input type="text" onkeyup="autoCompleteSp(1)"  autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="wod_kodesp1" name="wod_kodesp[]" />
-                            <input type="hidden" id="inveid1" name="inveid[]" />
+                            <input type="text" onkeyup="autoCompleteSp(1)"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="wod_kodesp1" name="wod_kodesp[]" />
+                            <input type="hidden" id="wop_inveid1" name="wop_inveid[]" />
                         </td>
                         <td>
-                            <input type="text" readonly="readonly"  autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="wod_namasp1" name="wod_namasp[]" />
+                            <input type="text" readonly="readonly"  autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="inve_nama1" name="inve_nama[]" />
                         </td>
                         <td>
-                            <input type="text" value="0" autocomplete="off" onchange="subTotalSp(this.id)"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_qtysp1" name="wod_qtysp[]" />
+                            <input type="text" value="0" autocomplete="off" onchange="subTotalSp('1')"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wop_qty1" name="wop_qty[]" />
                         </td>
                         <td>
-                            <input type="text" value="0" readonly="readonly" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_hargasp1" name="wod_hargasp[]" />
+                            <input type="text" value="0" readonly="readonly" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wop_harga1" name="wop_harga[]" />
                         </td>
                         <td>
-                            <input type="text" readonly="readonly" autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_subtotalsp1" name="wod_subtotalsp[]" />
+                            <input type="text" readonly="readonly" autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wop_subtotal1" name="wop_subtotal[]" />
                         </td>
                         <td class="center">
                             <a class="green btnAdd"  onclick="addRowSp()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
@@ -398,10 +398,10 @@
                             1
                         </td>
                         <td>
-                            <input type="text"  autocomplete="off"  class="ace col-xs-10 col-sm-10" style="width:100%;" id="wod_namaso1" name="wod_namaso[]" />
+                            <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="wos_nama1" name="wos_nama[]" />
                         </td>
                         <td>
-                            <input type="text" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wod_hargaso1" name="wod_hargaso[]" />
+                            <input type="text" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="wos_harga1" name="wos_harga[]" />
                         </td>
                         <td class="center">
                             <a class="green btnAdd"  onclick="addRowSo()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
@@ -465,8 +465,9 @@
                 if (data.response) {
                     $("#pel_nama").val(data.data['pel_nama']);
                     $("#pelid").val(data.data['pelid']);
-                    $("#wo_mscid").val(data.data['wo_mscid']);
+                    $("#wo_mscid").val(data.data['mscid']);
                     $("#merk").val(data.data['merk_deskripsi']);
+                    $("#wo_inextern").val(data.data['msc_inextern']);
                     $("#model").val(data.data['model_deskripsi']);
                 }else{
                     bootbox.dialog({
@@ -508,9 +509,19 @@
     });
     function clearForm()
     {
-        //        $("#barang1").val('');
-        //        $("#pelkode").val('');
-        var otable = document.getElementById('simple-table');
+        var otable = document.getElementById('simple-table-jasa');
+        var counti = otable.rows.length - 2;
+        while (counti > 1) {
+            otable.deleteRow(counti);
+            counti--;
+        }
+        var otable = document.getElementById('simple-table-sp');
+        var counti = otable.rows.length - 2;
+        while (counti > 1) {
+            otable.deleteRow(counti);
+            counti--;
+        }
+        var otable = document.getElementById('simple-table-so');
         var counti = otable.rows.length - 2;
         while (counti > 1) {
             otable.deleteRow(counti);
@@ -518,13 +529,10 @@
         }
     }
    
-        
-    function simpan()
-    {
-        $(this).ready(function() {
+    $(this).ready(function() {
+        $('#form').submit(function() {
             //            bootbox.confirm("Simpan Data ?", function(result) {
-            //                if(result) {
-            $('#form').submit(function() {
+            if (confirm("Yakin Data Sudah Benar ?")) {
                 $.ajax({
                     type: 'POST',
                     url: $(this).attr('action'),
@@ -540,16 +548,16 @@
                             params += ', fullscreen=yes,scrollbars=yes';
                             document.form.reset();
                             clearForm();
-                            window.open("<?php echo site_url("transaksi_sparepart/printTerimaBarang"); ?>/"+data.kode,'_blank', params);
+                            window.open("<?php echo site_url("transaksi_service/printWo"); ?>/"+data.kode,'_blank', params);
                         }
                         $("#result").html(data.msg).show().fadeIn("slow");
                     }
                 })
-                return false;
-            });
+            }
+            return false;
+            //            });    
         });
-    }
-   
+    });
     
     var inc = 0;
     function Delete() {
@@ -573,7 +581,7 @@
     {
         var total = 0;
         var price;
-        $("input[name^=wod_subtotal]").each(function() {
+        $("input[name^=woj_subtotal]").each(function() {
             price = $(this).val().replace(/,/g, "");
             total += Number(price);
         });
@@ -583,7 +591,7 @@
     {
         var total = 0;
         var price;
-        $("input[name^=wod_subtotalsp]").each(function() {
+        $("input[name^=wop_subtotal]").each(function() {
             price = $(this).val().replace(/,/g, "");
             total += Number(price);
         });
@@ -593,7 +601,7 @@
     {
         var total = 0;
         var price;
-        $("input[name^=wod_hargaso]").each(function() {
+        $("input[name^=wos_harga]").each(function() {
             price = $(this).val().replace(/,/g, "");
             total += Number(price);
         });
@@ -602,9 +610,9 @@
                         
     function subTotalSp(inc)
     {
-        var qty = cekDefaultNol($("#wod_qtysp"+inc).val().replace(/,/g, ""));
-        var harga = cekDefaultNol($("#wod_hargasp"+inc).val().replace(/,/g, ""));
-        $("#wod_subtotalsp").val(formatDefault(qty*harga));
+        var qty = cekDefaultNol($("#wop_qty"+inc).val().replace(/,/g, ""));
+        var harga = cekDefaultNol($("#wop_harga"+inc).val().replace(/,/g, ""));
+        $("#wop_subtotal"+inc).val(formatDefault(qty*harga));
         totalSp();
     }
     
@@ -722,10 +730,16 @@
             },
             success: function(data){
                 if (data['response']) {
-                    $("#wod_nama"+inc).val(data.data['flat_deskripsi']);
-                    $("#flatid"+inc).val(data.data['flatid']);
-                    $("#wod_harga"+inc).val(formatDefault(data.data['flat_total']));
-                    $("#wod_subtotal"+inc).val(formatDefault(data.data['flat_total']));
+                    $("#woj_namajasa"+inc).val(data.data['flat_deskripsi']);
+                    $("#woj_flatid"+inc).val(data.data['flatid']);
+                    $("#woj_rate"+inc).val(formatDefault(data.data['flat_total']));
+                    $("#woj_subtotal"+inc).val(formatDefault(data.data['flat_total']));
+                    totalJasa();
+                }else{
+                    $("#woj_namajasa"+inc).val('');
+                    $("#woj_flatid"+inc).val('');
+                    $("#woj_rate"+inc).val(0);
+                    $("#woj_subtotal"+inc).val(0);
                     totalJasa();
                 }
             }
@@ -741,11 +755,18 @@
             data: {param : kode},
             success: function(data){
                 if (data['response']) {
-                    $("#wod_namasp"+inc).val(data['inve_nama']);
-                    $("#inveid"+inc).val(data['inveid']);
-                    $("#wod_hargasp"+inc).val(formatDefault(data['inve_harga']));
-                    $("#wod_qtysp"+inc).val(1);
-                    $("#wod_subtotalsp"+inc).val(formatDefault(data['inve_harga']));
+                    $("#inve_nama"+inc).val(data['inve_nama']);
+                    $("#wop_inveid"+inc).val(data['inveid']);
+                    $("#wop_harga"+inc).val(formatDefault(data['inve_harga']));
+                    $("#wop_qty"+inc).val(1);
+                    $("#wop_subtotal"+inc).val(formatDefault(data['inve_harga']));
+                    totalSp();
+                }else{
+                    $("#inve_nama"+inc).val('');
+                    $("#wop_inveid"+inc).val('');
+                    $("#wop_harga"+inc).val(0);
+                    $("#wop_qty"+inc).val(0);
+                    $("#wop_subtotal"+inc).val();
                     totalSp();
                 }
             }

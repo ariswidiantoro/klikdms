@@ -264,6 +264,15 @@ class Model_Admin extends CI_Model {
                 . " = kotaid LEFT JOIN ms_jabatan ON jabid = kr_jabid WHERE krid = '$id'");
         return $sql->row_array();
     }
+    /**
+     * Function ini digunakan untuk mendapatkan data karyawab
+     * @param type $where
+     * @return int
+     */
+    public function getKaryawanByJabatan($id) {
+        $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_jabid = '$id'");
+        return $sql->result_array();
+    }
 
     function getRole() {
         $sql = $this->db->query("SELECT * FROM ms_role ORDER BY role_nama");
