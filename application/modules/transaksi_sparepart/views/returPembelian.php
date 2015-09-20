@@ -46,20 +46,25 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bantuan</label>
         <div class="col-sm-8">
-            <div class="radio" style="margin-left: 0">
-                <label>
-                    <input name="auto" id="check" type="radio" value="auto" class="ace" />
-                    <span class="lbl">Auto Complete</span>
-                </label>
-            </div>
-            <div class="radio" style="margin-left: 0">
-                <label>
-                    <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
-                    <span class="lbl">Tanpa Auto Complete</span>
-                </label>
-            </div>
+            <!--            <div class="radio" style="margin-left: 0">
+                            <label>
+                                <input name="auto" id="check" type="radio" value="auto" class="ace" />
+                                <span class="lbl">Auto Complete</span>
+                            </label>
+                        </div>
+                        <div class="radio" style="margin-left: 0">
+                            <label>
+                                <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
+                                <span class="lbl">Tanpa Auto Complete</span>
+                            </label>
+                        </div>-->
 
-
+            <!--<div class="checkbox">-->
+                <label>
+                    <input class="ace" id="autocomplete" onclick="cekAutoComplete()" type="checkbox" name="form-field-checkbox">
+                    <span class="lbl"> Auto Complete</span>
+                </label>
+            <!--</div>-->
         </div>
     </div>
     <div class="form-group">
@@ -117,16 +122,26 @@
 </form>
 <script type="text/javascript">
     $("#waiting").hide();
-    $('#check').click(function() {
-        if ($(this).is(':checked')) {
-            $('#kodeBarang').autocomplete("enable");
-        }
-    })
-    $('#noncheck').click(function() {
-        if ($(this).is(':checked')) {
+    
+    function cekAutoComplete()
+    {
+        if($("#autocomplete").prop("checked") == true){
+             $('#kodeBarang').autocomplete("enable");
+        }else{
             $('#kodeBarang').autocomplete("disable");
         }
-    })
+    }
+    
+    //    $('#check').click(function() {
+    //        if ($(this).is(':checked')) {
+    //            $('#kodeBarang').autocomplete("enable");
+    //        }
+    //    })
+    //    $('#noncheck').click(function() {
+    //        if ($(this).is(':checked')) {
+    //            $('#kodeBarang').autocomplete("disable");
+    //        }
+    //    })
 
 
 

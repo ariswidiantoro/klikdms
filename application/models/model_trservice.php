@@ -163,7 +163,7 @@ class Model_Trservice extends CI_Model {
      * @return type
      */
     public function getTotalWo($where) {
-        $wh = "WHERE wo_cbid = '" . ses_cabang . "' AND wo_inv_status = 0";
+        $wh = "WHERE wo_cbid = '" . ses_cabang . "' AND wo_inv_status = 0 AND wo_status = 0 ";
         if ($where != NULL)
             $wh = " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(woid) AS total FROM svc_wo LEFT JOIN "
@@ -181,16 +181,19 @@ class Model_Trservice extends CI_Model {
      * @return null
      */
     function getAllWo($start, $limit, $sidx, $sord, $where) {
-        $this->db->select('woid, wo_nomer, msc_nopol,pel_nama,clo_status');
+        $this->db->select('woid, wo_nomer, msc_nopol,pel_nama,clo_status,cloid, kr_nama');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->where('wo_cbid', ses_cabang);
         $this->db->where('wo_inv_status', 0);
+        $this->db->where('wo_status', 0);
         $this->db->from('svc_wo');
         $this->db->join('ms_pelanggan', 'pelid = wo_pelid', 'LEFT');
         $this->db->join('ms_car', 'mscid = wo_mscid', 'LEFT');
         $this->db->join('svc_clock', 'clo_woid = woid', 'LEFT');
+        $this->db->join('svc_clock_det', 'cloid = det_cloid AND det_end isnull', 'LEFT');
+        $this->db->join('ms_karyawan', 'krid = det_mekanikid', 'LEFT');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -213,7 +216,7 @@ class Model_Trservice extends CI_Model {
                 . " abs_cbid = '" . ses_cabang . "' AND kr_jabid = '"
                 . JAB_MEKANIK . "' AND abs_tgl = '" . date('Y-m-d') . "'"
                 . " AND abs_krid NOT IN(SELECT det_mekanikid FROM svc_clock_det "
-                . " LEFT JOIN svc_clock ON cloid = det_cloid WHERE clo_status = 1)"
+                . " LEFT JOIN svc_clock ON cloid = det_cloid WHERE clo_status = 1 AND  det_end isnull)"
                 . " ORDER BY kr_nama");
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -263,6 +266,7 @@ class Model_Trservice extends CI_Model {
         $clock = array(
             'cloid' => $id,
             'clo_woid' => $id,
+            'clo_cbid' => ses_cabang,
             'clo_tgl' => date('Y-m-d'),
         );
         $this->db->INSERT('svc_clock', $clock);
@@ -279,6 +283,42 @@ class Model_Trservice extends CI_Model {
             $result['msg'] = error("Gagal menyimpan work order");
         }
         return $result;
+    }
+
+    public function clockingMekanik($cloid, $status, $krid) {
+        $this->db->trans_begin();
+        if ($status == "1") {
+            $detail = array(
+                'det_cloid' => $cloid,
+                'det_mekanikid' => $krid,
+                'det_start' => date('Y-m-d H:i:s'),
+            );
+            $this->db->query("UPDATE svc_clock SET clo_status = 1 WHERE cloid = '$cloid' AND clo_cbid = '" . ses_cabang . "'");
+            $this->db->INSERT('svc_clock_det', $detail);
+        } else if ($status == "3") {
+            $this->db->query("UPDATE svc_clock SET clo_status = 3 WHERE cloid = '$cloid' AND clo_cbid = '" . ses_cabang . "'");
+            $this->db->query("UPDATE svc_clock_det SET det_end = '" . date('Y-m-d H:i:s') . "' WHERE det_cloid = '$cloid' AND det_end isnull");
+        }
+        if ($this->db->trans_status() === true) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+    }
+
+    public function pendingMekanik($cloid) {
+        $this->db->trans_begin();
+        $this->db->query("UPDATE svc_clock SET clo_status = 2 WHERE cloid = '$cloid' AND clo_cbid = '" . ses_cabang . "'");
+        $this->db->query("UPDATE svc_clock_det SET det_end = '" . date('Y-m-d H:i:s') . "' WHERE det_cloid = '$cloid' AND det_end isnull");
+        if ($this->db->trans_status() === true) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
     }
 
 }

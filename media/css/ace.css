@@ -9129,11 +9129,11 @@ input[type=radio].ace.input-lg + .lbl::before {
 }
 /* CSS3 on/off switches */
 input[type=checkbox].ace.ace-switch {
-    width: 55px;
+    width: 80px;
     height: 25px;
 }
 input[type=checkbox].ace.ace-switch + .lbl {
-    margin: 0 4px;
+    margin: 0 10px;
     min-height: 24px;
 }
 input[type=checkbox].ace.ace-switch + .lbl::before {
@@ -9186,14 +9186,14 @@ input[type=checkbox].ace.ace-switch + .lbl::after {
     transition: left .3s ease;
 }
 input[type=checkbox].ace.ace-switch:checked + .lbl::before {
-    text-indent: 8px;
+    text-indent: 16px;
     color: #FFF;
     text-shadow: 0 0 0 #FFF;
     background-color: #8ab2c9;
     border-color: #6a8ca8;
 }
 input[type=checkbox].ace.ace-switch:checked + .lbl::after {
-    left: 34px;
+    left: 58px;
     background-color: #FFF;
     color: #98A0A5;
 }

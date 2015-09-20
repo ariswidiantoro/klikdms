@@ -22,29 +22,14 @@ echo $this->session->flashdata('msg');
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });
-    function hapusRak(id) {
-        if (confirm("Yakin ingin menghapus baris ini ?")) {
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo site_url('master_service/hapusRak'); ?>',
-                dataType: "json",
-                data: {
-                    id: id
-                },
-                success: function(data) {
-                    $("#result").html(data).show().fadeIn("slow");
-                }
-            });
-        }
-    }
-
+    
     function loadGrid()
     {
         jQuery("#grid-table").jqGrid({
             url:'<?php echo site_url('transaksi_service/loadDataWo') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['Nomor WO', 'Nomor Polisi','Pelanggan','Status', 'Mekanik','Aksi'],       //Grid column headings
+            colNames:['Nomor WO', 'Nomor Polisi','Pelanggan','Status', 'Mekanik','Aksi','Pending'],       //Grid column headings
             colModel:[
                 {name:'wo_nomer',index:'wo_nomer', width:20, align:"left"},
                 {name:'msc_nopol',index:'msc_nopol', width:20, align:"left"},
@@ -52,12 +37,13 @@ echo $this->session->flashdata('msg');
                 {name:'status',index:'status', width:50, align:"left"},
                 {name:'mekanik',index:'mekanik', width:40, align:"left"},
                 {name:'aksi',index:'aksi', width:20, align:"center"},
+                {name:'pending',index:'pending', width:20, align:"center"},
             ],
             rowNum:10,
             height : 300,
             width: $(".page-content").width(),
             //height: 300,
-            rowList:[10,20,30],
+            rowList:[10,20,30,100],
             pager: '#pager',
             sortname: 'wo_nomer',
             viewrecords: true,
@@ -68,7 +54,6 @@ echo $this->session->flashdata('msg');
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
         })
-        
         var parent_column = $("#grid-table").closest('[class*="col-"]');
         $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
             if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
@@ -78,7 +63,64 @@ echo $this->session->flashdata('msg');
                 }, 0);
             }
         })
+        //        var scripts = [null, null]
+        //        $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //            //inline scripts related to this page
+        //        });
     }
+    function clocking(inc, clockid) {
+        var status = 0;
+        var krid = $("#krid"+inc).val();
+        
+        if($("#cek"+inc).prop("checked") == true){
+            status = 1;
+            if (krid == '') {
+                $("#cek"+inc).attr('checked', false); // Unchecks it
+                bootbox.dialog({
+                    message: "<span class='bigger-110'>Silahkan Pilih Mekanik</span>",
+                    buttons: 			
+                        {
+                        "danger" :
+                            {
+                            "label" : "Error !!",
+                            "className" : "btn-sm btn-danger"
+                        }
+                    }
+                });
+                return false;
+            }
+        }else{
+            status = 3;
+        }
+        $.ajax({ 
+            url: '<?php echo site_url('transaksi_service/clockingMekanik'); ?>',
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                clockid : clockid,
+                krid : krid,
+                status : status
+            },
+            success: function(data){
+                $("#result").html(data.msg).show().fadeIn("slow");
+            }
+        });
+    }
+    function pending(inc, clockid) {
+        var status = 0;
+        $.ajax({ 
+            url: '<?php echo site_url('transaksi_service/pendingMekanik'); ?>',
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                clockid : clockid
+            },
+            success: function(data){
+                $("#result").html(data.msg).show().fadeIn("slow");
+            }
+        });
+    }
+
 
     $(document).ready(function (){
         loadGrid();

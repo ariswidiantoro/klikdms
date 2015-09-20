@@ -184,6 +184,10 @@ class Transaksi_Service extends Application {
         $this->hakAkses(36);
         $this->load->view('clockOnMekanik', $this->data);
     }
+    public function lampiranFaktur() {
+        $this->hakAkses(37);
+        $this->load->view('lampiranFaktur', $this->data);
+    }
 
     public function serviceOrder() {
         $this->hakAkses(57);
@@ -203,6 +207,14 @@ class Transaksi_Service extends Application {
         $this->data['sp'] = $this->model_trservice->getSparepartWorkOrder($kode);
         $this->data['so'] = $this->model_trservice->getSoWorkOrder($kode);
         $this->load->view('printWo', $this->data);
+    }
+    /**
+     * Function ini digunakan untuk mencetak lampiran faktur service
+     * @param type $kode
+     */
+    function printLampiranFakturService($kode) {
+        $this->data['wo'] = $this->model_trservice->getWorkOrder($kode);
+        $this->load->view('printLampiranFakturService', $this->data);
     }
 
     function loadDataWo() {
@@ -238,23 +250,58 @@ class Transaksi_Service extends Application {
         if (count($query) > 0)
             foreach ($query as $row) {
                 $mknk = '';
+                $pending = '-';
+                $clock = "<label><input class='ace ace-switch btn-rotate' id='cek$i' onclick='clocking(\"" . $i . "\",\"" . $row['cloid'] . "\")' type='checkbox' name='cek[]'><span class='lbl'></span></label>";
+
                 if ($row['clo_status'] == '0') {
                     $status = 'BELUM CLOCK ON';
                     $mknk = "<select id='krid$i' name='krid' class='ace col-xs-10 col-sm-10' style='width: 100%'>" . $mek . "</select>";
                 } else if ($row['clo_status'] == '1') {
                     $status = 'PROSES PENGERJAAN';
+                    $clock = "<label><input checked class='ace ace-switch btn-rotate' id='cek$i' onclick='clocking(\"" . $i . "\",\"" . $row['cloid'] . "\")' type='checkbox' name='cek[]'><span class='lbl'></span></label>";
+                    $pending = "<a href='javascript:;' title='Pending' onclick='pending(\"" . $i . "\",\"" . $row['cloid'] . "\")'><i class='green ace-icon glyphicon glyphicon-off'></i></a>";
+                    $mknk = $row['kr_nama'];
                 } else if ($row['clo_status'] == '2') {
                     $status = 'PENDING';
+                     $mknk = "<select id='krid$i' name='krid' class='ace col-xs-10 col-sm-10' style='width: 100%'>" . $mek . "</select>";
                 } else {
                     $status = 'SELESAI';
+                    $clock = 'PROSES NOTA';
+                    $mknk = $row['kr_nama'];
                 }
-                $clock = '<label><input class="ace ace-switch btn-rotate" type="checkbox" name="switch-field-1"><span class="lbl"></span></label>';
                 $responce->rows[$i]['id'] = $row['woid'];
                 $responce->rows[$i]['cell'] = array(
-                    $row['wo_nomer'], $row['msc_nopol'], $row['pel_nama'], $status, $mknk, $clock);
+                    $row['wo_nomer'], $row['msc_nopol'], $row['pel_nama'], $status, $mknk, $clock, $pending);
                 $i++;
             }
         echo json_encode($responce);
+    }
+
+    function clockingMekanik() {
+        $cloid = $this->input->post('clockid');
+        $status = $this->input->post('status');
+        $krid = $this->input->post('krid');
+        $simpan = $this->model_trservice->clockingMekanik($cloid, $status, $krid);
+        if ($simpan) {
+            $hasil['msg'] = $this->sukses("Berhasil Clock On / Off Mekanik");
+            $hasil['response'] = true;
+        } else {
+            $hasil['msg'] = $this->error("Gagal Clock On / Off Mekanik");
+            $hasil['response'] = false;
+        }
+        echo json_encode($hasil);
+    }
+    function pendingMekanik() {
+        $cloid = $this->input->post('clockid');
+        $simpan = $this->model_trservice->pendingMekanik($cloid);
+        if ($simpan) {
+            $hasil['msg'] = $this->sukses("Berhasil Pending Mekanik");
+            $hasil['response'] = true;
+        } else {
+            $hasil['msg'] = $this->error("Gagal Pending Mekanik");
+            $hasil['response'] = false;
+        }
+        echo json_encode($hasil);
     }
 
 }
