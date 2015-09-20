@@ -221,7 +221,124 @@ class Model_Prospect extends CI_Model {
         return $query->row_array();
     }
     
+    /** AREA SALES
+     * @author Rossi Erl
+     * 2015-09-03
+     */
+    public function getTotalArea() {
+        $wh = "WHERE area_cbid = '".ses_cabang."'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_area ".$wh);
+        return $sql->row()->total;
+    }
+
+    public function getDataArea($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_area');
+        $this->db->where('area_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function addArea($data) {
+        if ($this->db->insert('ms_area', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['area_deskripsi'] . ' berhasil disimpan');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['area_deskripsi'] . ' gagal disimpan');
+        }
+    }
+
+    public function getArea($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_area WHERE areaid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function updateArea($data, $where) {
+        $this->db->where('areaid', $where);
+        if ($this->db->update('ms_area', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['area_deskripsi'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['area_deskripsi'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteArea($data) {
+        if ($this->db->query('DELETE FROM ms_area WHERE areaid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
     
+    /** SUMBER INFORMASI
+     * @author Rossi Erl
+     * 2015-09-03
+     */
+    public function getTotalSmbInfo() {
+        $wh = "WHERE smbinfo_cbid = '".ses_cabang."'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_karoseri ".$wh);
+        return $sql->row()->total;
+    }
+
+    public function getDataSmbInfo($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_sumber_info');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function addSmbInfo($data) {
+        if ($this->db->insert('ms_sumber_info', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['smbinfo_deskripsi'] . ' berhasil disimpan');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['smbinfo_deskripsi'] . ' gagal disimpan');
+        }
+    }
+
+    public function getSmbInfo($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_sumber_info WHERE smbinfoid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function updateSmbInfo($data, $where) {
+        $this->db->where('smbinfoid', $where);
+        if ($this->db->update('ms_sumber_info', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['smbinfo_deskripsi'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['smbinfo_deskripsi'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteSmbInfo($data) {
+        if ($this->db->query('DELETE FROM ms_sumber_info WHERE smbinfoid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 }
 
 ?>
