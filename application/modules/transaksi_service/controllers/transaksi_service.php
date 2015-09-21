@@ -214,7 +214,12 @@ class Transaksi_Service extends Application {
      * @param type $kode
      */
     function printLampiranFakturService($kode) {
-        $this->data['wo'] = $this->model_trservice->getWorkOrder($kode);
+        $this->data['cars'] = $this->model_svctrans->getDataCarsInWorkOrder($wo);
+        $this->data['wo'] = $wo;
+        $this->data['time'] = $this->_time_now();
+        $this->data['part'] = $this->model_svctrans->get_barang_from_supply($wo, '');
+        $this->data['sub'] = $this->model_svctrans->get_invoice_suborder($wo);
+        $this->data['lc'] = $this->model_svctrans->getLc($wo);
         $this->load->view('printLampiranFakturService', $this->data);
     }
 
