@@ -68,6 +68,7 @@ class CI_Model {
         }
         return $counter;
     }
+    
     function getCounterCabang($key) {
         $sql = "SELECT set_value FROM setting WHERE set_key = '" . $key . "' AND set_cbid = '".ses_cabang."' FOR UPDATE";
         $sql = $this->db->QUERY($sql);
@@ -83,6 +84,56 @@ class CI_Model {
             $counter = '1';
         }
         return $counter;
+    }
+    
+    public function newCode($data) {
+        $current_year = date("y");
+        //$data['cbid'] = (empty($data['cbid']))?ses_cabang:$data['cbid'];
+        if(empty($data['cbid'])){
+            $filter = " ";
+        }else{
+            $filter = " AND nmr_cbid = '".$data['cbid']."' ";
+        }
+        if (!empty($data['type'])) {
+            $nomer = $data['type'].$current_year;
+        }else{
+            $back['status'] = FALSE;
+            $back['code'] = 0;
+            return $back;
+        }
+        
+        $sql = "SELECT nmr_value FROM ms_numerator WHERE  nmr_key = '" . $nomer . "' 
+            ".$filter." FOR UPDATE ";
+        $sql = $this->db->query($sql);
+        if ($sql->num_rows() > 0) {
+            $row = $sql->row();
+            $counter = intval($row->nmr_value);
+            $counter = sprintf("%08s", $counter + 1);
+            $datas = array(
+                'nmr_value' => $counter
+            );
+            $query = "UPDATE ms_numerator SET nmr_value = '" . $counter . "' 
+                WHERE nmr_key = '" . $nomer . "' ".$filter;
+            $cek = $this->db->query($query);
+        } else {
+            $dataInsert = array(
+                            'nmr_key' => $nomer, 
+                            'nmr_value' => '00000001'
+                            );
+            if(!empty($data['cbid'])) $dataInsert['nmr_cbid'] = $data['cbid'];
+            $cek = $this->db->insert('ms_numerator', $dataInsert);
+            $counter = '00000001';
+        }
+
+        if ($cek > 0) {
+            $nomer = $nomer . $counter;
+            $back['status'] = TRUE;
+            $back['code'] = $nomer;
+        } else {
+            $back['status'] = FALSE;
+            $back['code'] = 0;
+        }
+        return $back;
     }
 
 }

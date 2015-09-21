@@ -117,7 +117,8 @@ class Admin extends Application {
 //    }
 
     public function getMenuSortUrut() {
-        echo json_encode($this->model_admin->getSubMenu());
+        $module = $this->uri->segment(3);
+        echo json_encode($this->model_admin->getSubMenu($module));
     }
 
     /**
@@ -366,6 +367,7 @@ class Admin extends Application {
                 'menu_deskripsi' => $this->input->post('menu_deskripsi'),
                 'menu_parent_id' => $this->input->post('menu_parent_id'),
                 'menu_icon' => $this->input->post('menu_icon'),
+                'menu_module' => $this->input->post('menu_module'),
                 'menu_status' => 0,
             );
             $hasil = $this->model_admin->simpanMenu($menu);
@@ -396,6 +398,7 @@ class Admin extends Application {
                 'menu_url' => $this->input->post('menu_url'),
                 'menu_deskripsi' => $this->input->post('menu_deskripsi'),
                 'menu_parent_id' => $this->input->post('menu_parent_id'),
+                'menu_module' => $this->input->post('menu_module'),
                 'menu_icon' => $this->input->post('menu_icon'),
             );
             $hasil = $this->model_admin->updateMenu($menu);

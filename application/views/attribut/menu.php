@@ -78,7 +78,7 @@
         }
         $.ajax({
             type: 'POST',
-            url: '<?php echo site_url('admin/getMenuSortUrut'); ?>',
+            url: '<?php echo site_url('admin/getMenuSortUrut/'.$menuid); ?>',
             dataType: "json",
             success: function(data) {
                 menu(data);

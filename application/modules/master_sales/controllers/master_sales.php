@@ -16,6 +16,30 @@ class Master_Sales extends Application {
     public function index() {
         echo " ";
     }
+    
+    /* UTILITY */
+    public function jsonModelKendaraan() {
+        $data = array(
+            'merkid' => $this->input->post('merkid', TRUE), 
+            'segid' => $this->input->post('segid', TRUE));
+        echo json_encode($this->model_sales->getModelByMerk($data));
+    }
+    
+    public function jsonTypeKendaraan() {
+        $modelid = $this->input->post('modelid');
+        echo json_encode($this->model_sales->getTypeByModel($modelid));
+    }
+    
+    public function jsonWarnaModel() {
+        $modelid = $this->input->post('modelid');
+        echo json_encode($this->model_sales->getWarnaByModel($modelid));
+    }
+    
+    public function jsonKota() {
+        $propid = $this->input->post('propid');
+        echo json_encode($this->model_sales->getKotaByPropinsi($propid));
+    }
+    /* --------------  */
 
     public function masterMerk() {
         $this->hakAkses(1070);
@@ -501,10 +525,7 @@ class Master_Sales extends Application {
         echo json_encode($hasil);
     }
     
-    function jsonModelKendaraan() {
-        $merkid = $this->input->post('merkid');
-        echo json_encode($this->model_sales->getModelByMerk($merkid));
-    }
+   
     
     /**
      * WARNA KENDARAAN
@@ -556,12 +577,12 @@ class Master_Sales extends Application {
     }
 
     public function addWarna() {
-        $this->hakAkses(1070);
+        $this->hakAkses(1075);
         $this->load->view('addWarna', $this->data);
     }
 
     public function editWarna() {
-        $this->hakAkses(1070);
+        $this->hakAkses(1075);
         $id = $this->input->get('id');
         $data = $this->model_sales->getWarna($id);
         $this->data['data'] = $data;
@@ -621,6 +642,406 @@ class Master_Sales extends Application {
             $responce = $result;
         echo json_encode($responce);
     }
+    
+    /**
+     * Master Warna Model
+     * @author Rossi
+     * * */
+    public function warnaModel() {
+        $this->hakAkses(1076);
+        $this->load->view('dataWarnaModel', $this->data);
+    }
+
+    public function getWarnaModel() {
+        $data = $this->input->get('mdlcolorid', TRUE);
+        $result = $this->model_sales->getWarnaModel($data);
+        $responce = array();
+        if (count($result) > 0)
+            $responce = $result;
+        echo json_encode($responce);
+    }
+
+    public function saveWarnaModel() {
+        $modelid = strtoupper($this->input->post('modelid', TRUE));
+        $warnaid = strtoupper($this->input->post('warnaid', TRUE));
+        if (empty($modelid) || empty($warnaid)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        } else {
+            $save = $this->model_sales->addWarnaModel(array(
+                'mdlcolor_modelid' => $modelid,
+                'mdlcolor_warnaid' => $warnaid
+                 ));
+            if ($save['status'] == TRUE) {
+                $hasil = $this->sukses($save['msg']);
+            } else {
+                $hasil = $this->error($save['msg']);
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function loadWarnaModel() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_sales->getTotalWarnaModel($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sales->getDataWarnaModel($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusData('" . $row->mdlcolorid . "', '" . $row->warna_deskripsi . "')";
+                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_sales/editWarnaModel?id=' . $row->mdlcolorid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->mdlcolorid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->merk_deskripsi,
+                    $row->model_deskripsi,
+                    $row->warna_deskripsi,
+                    $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    public function addWarnaModel() {
+        $this->hakAkses(1076);
+        $this->data['merk'] = $this->model_sales->cListMerk();
+        $this->data['warna'] = $this->model_sales->cListWarna();
+        $this->load->view('addWarnaModel', $this->data);
+    }
+
+    public function editWarnaModel() {
+        $this->hakAkses(1076);
+        $id = $this->input->get('id');
+        $data = $this->model_sales->getWarnaModel($id);
+        $this->data['merk'] = $this->model_sales->cListMerk();
+        $this->data['warna'] = $this->model_sales->cListWarna();
+        $this->data['data'] = $data;
+        $this->load->view('editWarnaModel', $this->data);
+    }
+
+    public function updateWarnaModel() {
+        $id = strtoupper($this->input->post('mdlcolorid', TRUE));
+        $modelid = strtoupper($this->input->post('modelid', TRUE));
+        $warnaid = strtoupper($this->input->post('warnaid', TRUE));
+        if (empty($modelid) || empty($warnaid)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        } else {
+            $save = $this->model_sales->updateWarnaModel(array(
+                'mdlcolor_modelid' => $modelid,
+                'mdlcolor_warnaid' => $warnaid), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = $this->sukses($save['msg']);
+            } else {
+                $hasil = $this->error($save['msg']);
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function deleteWarnaModel() {
+        $id = $this->input->post('id', TRUE);
+        if (empty($id)) {
+            $hasil = $this->error('Hapus data gagal');
+        } else {
+            if ($this->model_sales->deleteWarnaModel($id)) {
+                $hasil = $this->sukses('Hapus data berhasil');
+            } else {
+                $hasil = $this->error('Hapus data gagal');
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
+    /**
+     * Master Leasing
+     * @author Rossi
+     * * */
+    public function masterLeasing() {
+        $this->hakAkses(1077);
+        $this->load->view('dataLeasing', $this->data);
+    }
+
+    public function getLeasing() {
+        $data = $this->input->get('leasid', TRUE);
+        $result = $this->model_sales->getLeasing($data);
+        $responce = array();
+        if (count($result) > 0)
+            $responce = $result;
+        echo json_encode($responce);
+    }
+
+    public function saveLeasing() {
+        $nama = strtoupper($this->input->post('leas_nama', TRUE));
+        $alamat = strtoupper($this->input->post('leas_alamat', TRUE));
+        $kota = strtoupper($this->input->post('leas_kotaid', TRUE));
+        if (empty($nama) || empty($alamat)|| empty($kota)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        } else {
+            $save = $this->model_sales->addLeasing(array(
+                'leas_nama' => $nama,
+                'leas_alamat' => $alamat,
+                'leas_cbid' => ses_cabang,
+                'leas_telp' => $this->input->post('leas_telp', TRUE),
+                'leas_kontak' => strtoupper($this->input->post('leas_kontak',TRUE)),
+                'leas_kotaid' => $kota ));
+            if ($save['status'] == TRUE) {
+                $hasil = $this->sukses($save['msg']);
+            } else {
+                $hasil = $this->error($save['msg']);
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function loadLeasing() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_sales->getTotalLeasing($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sales->getDataLeasing($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusData('" . $row->leasid . "', '" . $row->leas_nama . "')";
+                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_sales/editLeasing?id=' . $row->leasid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->leasid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->leas_nama,
+                    $row->leas_alamat,
+                    $row->leas_telp,
+                    $row->leas_kontak,
+                    $row->kota_deskripsi,
+                    $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    public function addLeasing() {
+        $this->hakAkses(1077);
+        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->load->view('addLeasing', $this->data);
+    }
+
+    public function editLeasing() {
+        $this->hakAkses(1077);
+        $id = $this->input->get('id');
+        $data = $this->model_sales->getLeasing($id);
+        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->data['data'] = $data;
+        $this->load->view('editLeasing', $this->data);
+    }
+
+    public function updateLeasing() {
+        $id = strtoupper($this->input->post('leasid', TRUE));
+        $nama = strtoupper($this->input->post('leas_nama', TRUE));
+        $nama = strtoupper($this->input->post('leas_nama', TRUE));
+        $alamat = strtoupper($this->input->post('leas_alamat', TRUE));
+        $kota = strtoupper($this->input->post('leas_kotaid', TRUE));
+        if (empty($nama) || empty($alamat)|| empty($kota)|| empty($id)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        } else {
+            $save = $this->model_sales->updateLeasing(array(
+                'leas_nama' => $nama,
+                'leas_alamat' => $alamat,
+                'leas_cbid' => ses_cabang,
+                'leas_telp' => $this->input->post('leas_telp', TRUE),
+                'leas_kontak' => strtoupper($this->input->post('leas_kontak',TRUE)),
+                'leas_kotaid' => $kota ), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = $this->sukses($save['msg']);
+            } else {
+                $hasil = $this->error($save['msg']);
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function deleteLeasing() {
+        $id = $this->input->post('id', TRUE);
+        if (empty($id)) {
+            $hasil = $this->error('Hapus data gagal');
+        } else {
+            if ($this->model_sales->deleteLeasing($id)) {
+                $hasil = $this->sukses('Hapus data berhasil');
+            } else {
+                $hasil = $this->error('Hapus data gagal');
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
+    /**
+     * Master Karoseri
+     * @author Rossi
+     * * */
+    public function masterKaroseri() {
+        $this->hakAkses(1078);
+        $this->load->view('dataKaroseri', $this->data);
+    }
+
+    public function getKaroseri() {
+        $data = $this->input->get('leasid', TRUE);
+        $result = $this->model_sales->getKaroseri($data);
+        $responce = array();
+        if (count($result) > 0)
+            $responce = $result;
+        echo json_encode($responce);
+    }
+
+    public function saveKaroseri() {
+        $nama = strtoupper($this->input->post('karo_nama', TRUE));
+        $alamat = strtoupper($this->input->post('karo_alamat', TRUE));
+        $kota = strtoupper($this->input->post('karo_kotaid', TRUE));
+        if (empty($nama) || empty($alamat)|| empty($kota)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        } else {
+            $save = $this->model_sales->addKaroseri(array(
+                'karo_nama' => $nama,
+                'karo_alamat' => $alamat,
+                'karo_cbid' => ses_cabang,
+                'karo_telp' => $this->input->post('karo_telp', TRUE),
+                'karo_kontak' => strtoupper($this->input->post('karo_kontak',TRUE)),
+                'karo_kotaid' => $kota ));
+            if ($save['status'] == TRUE) {
+                $hasil = $this->sukses($save['msg']);
+            } else {
+                $hasil = $this->error($save['msg']);
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function loadKaroseri() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_sales->getTotalKaroseri($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sales->getDataKaroseri($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusData('" . $row->karoid . "', '" . $row->karo_nama . "')";
+                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_sales/editKaroseri?id=' . $row->karoid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->karoid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->karo_nama,
+                    $row->karo_alamat,
+                    $row->karo_telp,
+                    $row->karo_kontak,
+                    $row->kota_deskripsi,
+                    $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    public function addKaroseri() {
+        $this->hakAkses(1078);
+        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->load->view('addKaroseri', $this->data);
+    }
+
+    public function editKaroseri() {
+        $this->hakAkses(1078);
+        $id = $this->input->get('id');
+        $data = $this->model_sales->getKaroseri($id);
+        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->data['data'] = $data;
+        $this->load->view('editKaroseri', $this->data);
+    }
+
+    public function updateKaroseri() {
+        $id = strtoupper($this->input->post('karoid', TRUE));
+        $nama = strtoupper($this->input->post('karo_nama', TRUE));
+        $nama = strtoupper($this->input->post('karo_nama', TRUE));
+        $alamat = strtoupper($this->input->post('karo_alamat', TRUE));
+        $kota = strtoupper($this->input->post('karo_kotaid', TRUE));
+        if (empty($nama) || empty($alamat)|| empty($kota)|| empty($id)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        } else {
+            $save = $this->model_sales->updateKaroseri(array(
+                'karo_nama' => $nama,
+                'karo_alamat' => $alamat,
+                'karo_cbid' => ses_cabang,
+                'karo_telp' => $this->input->post('karo_telp', TRUE),
+                'karo_kontak' => strtoupper($this->input->post('karo_kontak',TRUE)),
+                'karo_kotaid' => $kota ), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = $this->sukses($save['msg']);
+            } else {
+                $hasil = $this->error($save['msg']);
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function deleteKaroseri() {
+        $id = $this->input->post('id', TRUE);
+        if (empty($id)) {
+            $hasil = $this->error('Hapus data gagal');
+        } else {
+            if ($this->model_sales->deleteKaroseri($id)) {
+                $hasil = $this->sukses('Hapus data berhasil');
+            } else {
+                $hasil = $this->error('Hapus data gagal');
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
+    
 
 }
 

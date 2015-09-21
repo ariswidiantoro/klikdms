@@ -28,13 +28,32 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Parent</label>
         <div class="col-sm-8">
-            <select name="menu_parent_id" id="menu_parentid" class="form-control col-xs-10 col-sm-5" style="width: 40%" >
-                <option value="-1">None</option>
+            <select name="menu_parent_id" id="menu_parentid" class="form-control col-xs-10 col-sm-5 upper" style="width: 40%" >
+                <option value="-1">NONE</option>
                 <?php
                 if (count($menu) > 0) {
                     foreach ($menu as $value) {
                         ?>
                         <option value="<?php echo $value['menuid']; ?>"><?php echo $value['menu_deskripsi'] ?></option> 
+                        <?php
+                    }
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Module</label>
+        <div class="col-sm-8">
+            <select name="menu_module" id="menu_module" class="form-control col-xs-10 col-sm-5 upper" style="width: 40%" >
+                <option value="-1">NONE</option>
+                <?php
+                if (count($menu) > 0) {
+                    foreach ($menu as $value) {
+                        if($value['menu_parent_id'] != '-1')
+                                                        continue;
+                        ?>
+                        <option value="<?php echo $value['menuid']; ?>" ><?php echo $value['menu_deskripsi'] ?></option> 
                         <?php
                     }
                 }

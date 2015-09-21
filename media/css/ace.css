@@ -9129,16 +9129,16 @@ input[type=radio].ace.input-lg + .lbl::before {
 }
 /* CSS3 on/off switches */
 input[type=checkbox].ace.ace-switch {
-    width: 80px;
+    width: 55px;
     height: 25px;
 }
 input[type=checkbox].ace.ace-switch + .lbl {
-    margin: 0 10px;
+    margin: 0 4px;
     min-height: 24px;
 }
 input[type=checkbox].ace.ace-switch + .lbl::before {
     font-family: 'Open Sans';
-    content: "STOP\a0\a0\a0\a0\a0\a0\a0\a0\a0MULAI";
+    content: "ON\a0\a0\a0\a0\a0\a0\a0\a0\a0OFF";
     color: #999;
     text-shadow: 0 0 0 #999;
     font-weight: normal;
@@ -9154,7 +9154,7 @@ input[type=checkbox].ace.ace-switch + .lbl::before {
     text-align: left;
     float: left;
     padding: 0;
-    width: 80px;
+    width: 52px;
     text-indent: -21px;
     margin-right: 0;
     -webkit-transition: text-indent .3s ease;
@@ -9186,14 +9186,14 @@ input[type=checkbox].ace.ace-switch + .lbl::after {
     transition: left .3s ease;
 }
 input[type=checkbox].ace.ace-switch:checked + .lbl::before {
-    text-indent: 16px;
+    text-indent: 8px;
     color: #FFF;
     text-shadow: 0 0 0 #FFF;
     background-color: #8ab2c9;
     border-color: #6a8ca8;
 }
 input[type=checkbox].ace.ace-switch:checked + .lbl::after {
-    left: 58px;
+    left: 34px;
     background-color: #FFF;
     color: #98A0A5;
 }
