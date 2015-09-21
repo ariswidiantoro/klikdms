@@ -74,8 +74,11 @@
                 .serialize(),
                 success: function(data) {
                     window.scrollTo(0, 0);
-                    document.formRole.reset();
-                    $("#result").html(data).show().fadeIn("slow");
+                    if (data.result) {
+                        document.formRole.reset();
+
+                    }
+                    $("#result").html(data.msg).show().fadeIn("slow");
                 }
             })
             return false;

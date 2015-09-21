@@ -70,6 +70,15 @@ function cekDefaultNol(data)
     return data;
 }
 
+function numberOnly()
+{
+    $(".number").keypress(function (e) {
+        if (e.which != 8 && e.which != 47 && e.which != 0 && (e.which < 46 || e.which > 57)){
+            return false;
+        }
+    });
+}
+
 function formatDefault(num) {
     if (num == "") {
         num = "0";   
@@ -78,6 +87,10 @@ function formatDefault(num) {
     num = num.toString().replace( /,/g, "" );
     var pecah = num.split(".");
     var angka =   pecah[0];
+    var koma = '';
+    if (!jQuery.isEmptyObject(pecah[1])) {
+        koma = '.'+pecah[1];
+    }
     var pjg   = angka.length;
     var uang  = 0;
     if( pjg == 4 ){
@@ -103,5 +116,5 @@ function formatDefault(num) {
     }else{
         uang = angka;
     }
-    return uang;
+    return uang+koma;
 }

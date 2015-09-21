@@ -280,26 +280,26 @@ if (!function_exists('dateToIndo')) {
  * update : 09/03/2012 05:22
  * -----------------------------------------------------------------------------
  */
-if (!function_exists('supply_type')) {
+if (!function_exists('internExtern')) {
 
-    function supply_type($type = '') {
+    function internExtern($type = '') {
         if ($type == '') {
             $data = array(
                 '' => '- pilih -',
-                'IN' => 'Intern ',
-                'EX' => 'Extern ',
-                'GR' => 'Group',
-                'CA' => 'Cabang'
+                '1' => 'INTERN ',
+                '2' => 'EXTERN ',
+                '3' => 'GROUP',
+                '4' => 'CABANG'
             );
         } else {
             switch ($type) {
-                case 'IN' : $data = 'Intern';
+                case '1' : $data = 'Intern';
                     break;
-                case 'EX' : $data = 'Extern';
+                case '2' : $data = 'Extern';
                     break;
-                case 'GR' : $data = 'Group';
+                case '3' : $data = 'Group';
                     break;
-                case 'CA' : $data = 'Cabang';
+                case '4' : $data = 'Cabang';
             }
         }
         return $data;

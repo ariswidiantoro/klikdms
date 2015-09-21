@@ -103,7 +103,6 @@
                 success: function(data) {
                     if (data.result) {
                         window.scrollTo(0, 0);
-//                        document.formRole.reset();
                         $("#result").html(data).show().fadeIn("slow");
                     }else{
                         window.scrollTo(0, 0);

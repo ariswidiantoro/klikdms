@@ -1359,7 +1359,7 @@ THE SOFTWARE.
     };
 
     $.fn.datetimepicker.defaults = {
-        format: false,
+        format: true,
         pickDate: true,
         pickTime: true,
         useMinutes: true,
