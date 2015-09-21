@@ -14,7 +14,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Polisi</label>
         <div class="col-sm-8">
-            <input type="text" name="wo" id="wo" class="col-xs-10 col-sm-3" />
+            <input type="text" readonly="readonly" name="wo" id="wo" class="col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
@@ -55,6 +55,15 @@
                 }
                 ?>
             </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>
+        <div class="col-sm-8">
+            <label>
+                <input class="ace" type="checkbox" name="form-field-checkbox">
+                <span class="lbl"> Tampilkan PPN di cetakan faktur service</span>
+            </label>
         </div>
     </div>
     <div class="clearfix form-actions">
