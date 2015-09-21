@@ -26,8 +26,10 @@
     function lihatLampiran()
     {
         var params  = 'width=1000';
+        var left = (screen.width/2)-(1000/2);
+        var top = (screen.height/2);
         params += ', height='+screen.height;
-        params += ', fullscreen=yes,scrollbars=yes';
+        params += ', fullscreen=yes,scrollbars=yes,left='+left+'top='+top;
         window.open("<?php echo site_url("transaksi_service/printLampiranFakturService"); ?>/"+$("#wo").val(),'_blank', params);
     }
     var scripts = [null, null]

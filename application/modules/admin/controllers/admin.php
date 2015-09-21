@@ -302,7 +302,7 @@ class Admin extends Application {
                 }
                 $responce->rows[$i]['id'] = $row->krid;
                 $responce->rows[$i]['cell'] = array(
-                    $row->kr_nik, $row->kr_nama, $row->kr_alamat, $row->kr_hp, $row->kr_nomor_ktp, $row->kr_username, $edit, $hapus);
+                    $row->kr_nik, $row->kr_nama, $row->kr_alamat, $row->kr_hp, $row->kr_nomor_ktp, $row->kr_username,$row->jab_deskripsi, $edit, $hapus);
                 $i++;
             }
         echo json_encode($responce);

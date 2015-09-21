@@ -1,3 +1,5 @@
+<link type="text/css" href="<?php echo path_css(); ?>report.css" rel="stylesheet" />
+<link type="text/css" href="<?php echo path_css(); ?>mystyle.css" rel="stylesheet" />
 <style>
     .head {
         background-color: #999;
@@ -17,47 +19,36 @@
     }
 </style>
 <script>
-    function prints()
-    {
-        if ("<?php echo ses_brand ?>" == '2') {
-            window.open("<?php echo site_url(); ?>/transaksi_service/printLampiranApplet/" + "<?php echo $wo; ?>", "_blank", "width=1000,\n\
-                        heigth=500,scrollbars=yes,directories=0,titlebar=0,toolbar=0,\n\
-                        location=0,status=0,top=5,  menubar=0,scrollbars=no,resizable=no,");
-        } else {
-            window.print();
-        }
-        self.close();
-    }
+    window.print();
 </script>
 <br>    
-<div>
-    <a href="javascript:void(0);"  class="print" id="print" onclick="prints()" >PRINT</a>
-</div>
 <h1 style="font-size: 15px; text-align: center;">LAMPIRAN FAKTUR SERVICE</h1>
 <form>
     <table border="0" width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td width="20%">No. Work Order</td>
             <td> : </td>
-            <td><?php echo $wo ?></td>
+            <td><?php echo $data['wo_nomer']; ?></td>
             <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
             <td width="10%">Tgl Cetak</td>
             <td> : </td>
-            <td><?php
-                $tgl = explode(" ", $time);
-                echo $this->system->datePicker($tgl[0]);
-                ?></td>
+            <td>
+                <?php
+                echo date('d-m-Y');
+                ?>
+            </td>
             <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
             <td width="10%">Waktu Cetak</td>
             <td> : </td>
-            <td><?php
-                $tgl = explode(" ", $time);
-                echo $tgl[1]
-                ?></td>
+            <td>
+                <?php
+                echo date('H:i')
+                ?>
+            </td>
             <td colspan="2">&nbsp;</td>
         </tr>
     </table>
@@ -67,144 +58,145 @@
         </tr>
         <tr>
             <td width="10%">No. Polisi</td>
-            <td>:<?php echo ' ' . $cars->msc_nopol ?></td>
+            <td>:<?php echo ' ' . $data['msc_nopol']; ?></td>
             <td colspan="4">&nbsp;</td>
         </tr>
         <tr>
             <td  width="10%">No. Chasis</td>
-            <td>:<?php echo ' ' . $cars->msc_norangka ?></td>
+            <td>:<?php echo ' ' . $data['msc_norangka'] ?></td>
             <td colspan="4">&nbsp;</td>
         </tr>
         <tr>
             <td width="10%">No. Mesin</td>
-            <td>:<?php echo ' ' . $cars->msc_nomesin ?></td>
+            <td>:<?php echo ' ' . $data['msc_nomesin'] ?></td>
             <td colspan="4">&nbsp;</td>
         </tr>
         <tr>
-            <td width="10%">Nama</td>
-            <td>: <?php echo ' ' . $cars->pel_name ?></td>
+            <td width="10%">Nama Pelanggan</td>
+            <td>: <?php echo ' ' . $data['pel_nama'] ?></td>
             <td colspan="4">&nbsp;</td>
         </tr>
     </table>
-    <table style="border: #666 1px solid;" class="detail" width="100%" cellpadding="0" cellspacing="0">
+    <table id="table-detail" width="100%" cellpadding="0" cellspacing="0">
         <tr style="height: 25px;">
             <td class="head" width="20%">No Part</td>
             <td class="head" width="35%">Nama Part</td>
             <td class="head" width="10%">Qty</td>
-            <td class="head" width="10%">Price list</td>
             <td class="head" width="10%">Harga</td>
+            <td class="head" width="10%">Diskon</td>
             <td class="head" width="15%">Jumlah</td>
         </tr>
         <?php
-        $partss = 0;
+        $totalPart = 0;
         $so = 0;
         $oli = 0;
         $sm = 0;
         $laber = 0;
         if (count($part) > 0) {
-
             foreach ($part as $row) {
-                if ($row->spp_jenis == '1') {
-                    $subtotal = $row->dsupp_subtotal;
-                    $pricelist = $row->dsupp_harga;
-                    $harga = $row->dsupp_harga * (( 100 - $row->dsupp_discp) / 100);
-                    if (ses_gudang == '1') {
-                        $pricelist = $row->dsupp_harga + $row->dsupp_diskon;
-                        $harga = $row->dsupp_harga;
-                    }
+                if ($row['spp_jenis'] == 'sp') {
                     ?>
                     <tr>
-                        <td><?php echo $row->dsupp_msbcode; ?></td>
-                        <td><span style="float: left;"><?php echo $row->msb_name; ?></span><span style="float: right;" ><?php if (floatval($row->dsupp_discp) > 0) echo "(" . $row->dsupp_discp . ")"; ?></span></td>
-                        <td style="text-align: right;"><?php echo $row->dsupp_qty; ?></td>
-                        <td style="text-align: right;"><?php echo number_format($pricelist); ?></td>
-                        <td style="text-align: right;"><?php echo number_format($harga); ?></td>
-                        <td style="text-align: right;"><?php echo number_format($subtotal); ?></td>
+                        <td><?php echo $row['inve_kode']; ?></td>
+                        <td><?php echo $row['inve_nama']; ?></td>
+                        <td style="text-align: right;"><?php echo $row['dsupp_qty']; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['dsupp_harga']); ?></td>
+                        <td style="text-align: right;"><?php echo $row['dsupp_diskon']; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['dsupp_subtotal']); ?></td>
                     </tr>
                     <?php
-                    $partss += $subtotal;
+                    $totalPart += $row['dsupp_subtotal'];
                 }
             }
 
-            if ($part > 0) {
+            if ($totalPart > 0) {
                 ?>
                 <tr style="background-color: #EEE;text-align: right; font-weight: bold; height: 25px;">
                     <td colspan="5">
-                        Total Pemakaian Oli
+                        Total Pemakaian Sparepart
                     </td>
                     <td style="text-align: right;">
-                        <?php echo number_format($partss); ?>
+                        <?php echo number_format($totalPart); ?>
                     </td>
                 </tr>
             <?php } ?>
             <?php
             foreach ($part as $row) {
-                if ($row->spp_jenis == '3') {
-                    $subtotal = $row->dsupp_subtotal;
-                    $pricelist = $row->dsupp_harga;
-                    $harga = $row->dsupp_harga * (( 100 - $row->dsupp_discp) / 100);
-                    if (ses_gudang == '1') {
-                        $pricelist = $row->dsupp_harga + $row->dsupp_diskon;
-                        $harga = $row->dsupp_harga;
-                    }
+                if ($row['spp_jenis'] == 'ol') {
                     ?>
                     <tr>
-                        <td><?php echo $row->dsupp_msbcode; ?></td>
-                        <td><span style="float: left;"><?php echo $row->msb_name; ?></span><span style="float: right;" ><?php if (floatval($row->dsupp_discp) > 0) echo "(" . $row->dsupp_discp . ")"; ?></span></td>
-                        <td style="text-align: right;"><?php echo $row->dsupp_qty; ?></td>
-                        <td style="text-align: right;"><?php echo number_format($pricelist); ?></td>
-                        <td style="text-align: right;"><?php echo number_format($harga); ?></td>
-                        <td style="text-align: right;"><?php echo number_format($subtotal); ?></td>
+                        <td><?php echo $row['inve_kode']; ?></td>
+                        <td><?php echo $row['inve_nama']; ?></td>
+                        <td style="text-align: right;"><?php echo $row['dsupp_qty']; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['dsupp_harga']); ?></td>
+                        <td style="text-align: right;"><?php echo $row['dsupp_diskon']; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['dsupp_subtotal']); ?></td>
                     </tr>
                     <?php
-                    $oli += $subtotal;
+                    $oli += $row['dsupp_subtotal'];
                 }
             }
             if ($oli > 0) {
                 ?>
                 <tr style="background-color: #EEE;text-align: right; font-weight: bold; height: 25px; ">
                     <td colspan="5">
-                        Total Pemakaian Spare part 
+                        Total Pemakaian Oli 
                     </td>
                     <td style="text-align: right;"><?php echo number_format($oli); ?>
                     </td>
                 </tr>
                 <?php
             }
-            if (substr($wo, 0, 2) != 'IB') {
-                foreach ($part as $row) {
-                    if ($row->spp_jenis == '4') {
-                        $subtotal = $row->dsupp_subtotal;
-                        $pricelist = $row->dsupp_harga;
-                        $harga = $row->dsupp_harga * (( 100 - $row->dsupp_discp) / 100);
-                        if (ses_gudang == '1') {
-                            $pricelist = $row->dsupp_harga + $row->dsupp_diskon;
-                            $harga = $row->dsupp_harga;
-                        }
-                        ?>
-                        <tr>
-                            <td><?php echo $row->dsupp_msbcode; ?></td>
-                            <td><span style="float: left;"><?php echo $row->msb_name; ?></span><span style="float: right;" ><?php if (floatval($row->dsupp_discp) > 0) echo "(" . $row->dsupp_discp . ")"; ?></span></td>
-                            <td style="text-align: right;"><?php echo $row->dsupp_qty; ?></td>
-                            <td style="text-align: right;"><?php echo number_format($pricelist); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($harga); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($subtotal); ?></td>
-                        </tr>
-                        <?php
-                        $sm += $subtotal;
-                    }
-                }
-                if ($sm > 0) {
+            foreach ($part as $row) {
+                if ($row['spp_jenis'] == 'sm') {
                     ?>
-                    <tr style="background-color: #EEE;text-align: right; font-weight: bold; height: 25px; ">
-                        <td colspan="5">
-                            Total Pemakaian Sub Material
-                        </td>
-                        <td style="text-align: right;"><?php echo number_format($sm); ?>
-                        </td>
+                    <tr>
+                        <td><?php echo $row['inve_kode']; ?></td>
+                        <td><?php echo $row['inve_nama']; ?></td>
+                        <td style="text-align: right;"><?php echo $row['dsupp_qty']; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['dsupp_harga']); ?></td>
+                        <td style="text-align: right;"><?php echo $row['dsupp_diskon']; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['dsupp_subtotal']); ?></td>
                     </tr>
                     <?php
+                    $sm += $row['dsupp_subtotal'];
                 }
+            }
+            if ($sm > 0) {
+                ?>
+                <tr style="background-color: #EEE;text-align: right; font-weight: bold; height: 25px; ">
+                    <td colspan="5">
+                        Total Pemakaian Sub Material 
+                    </td>
+                    <td style="text-align: right;"><?php echo number_format($sm); ?>
+                    </td>
+                </tr>
+                <?php
+            }
+            foreach ($part as $row) {
+                if ($row['spp_jenis'] == 'so') {
+                    ?>
+                    <tr>
+                        <td colspan="2"><?php echo $row['inve_nama']; ?></td>
+                        <td style="text-align: right;"><?php echo $row['dsupp_qty']; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['dsupp_harga']); ?></td>
+                        <td style="text-align: right;"><?php echo $row['dsupp_diskon']; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['dsupp_subtotal']); ?></td>
+                    </tr>
+                    <?php
+                    $so += $row['dsupp_subtotal'];
+                }
+            }
+            if ($so > 0) {
+                ?>
+                <tr style="background-color: #EEE;text-align: right; font-weight: bold; height: 25px; ">
+                    <td colspan="5">
+                        Total Pemakaian Sub Order 
+                    </td>
+                    <td style="text-align: right;"><?php echo number_format($so); ?>
+                    </td>
+                </tr>
+                <?php
             }
         } else {
             ?>
@@ -213,35 +205,11 @@
             </tr>
             <?php
         }
-        if (count($sub) > 0) {
-            foreach ($sub as $row) {
-                ?>
-                <tr>
-                    <td colspan="2"><?php echo $row->ord_nama; ?></td>
-                    <td style="text-align: right;"><?php echo "1"; ?></td>
-                    <td style="text-align: right;"><?php echo "0"; ?></td>
-                    <td style="text-align: right;"><?php echo number_format($row->ord_hargajual); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($row->ord_hargajual); ?></td>
-                </tr>
-
-                <?php
-                $so += $row->ord_hargajual;
-            }
-            ?>
-            <tr style="background-color: #EEE;text-align: right; font-weight: bold; height: 25px; ">
-                <td colspan="5">
-                    Total Pemakaian Sub Order
-                </td>
-                <td style="text-align: right;"><?php echo number_format($so); ?>
-                </td>
-            </tr>
-            <?php
-        }
         ?>
     </table>
 
     <h1 style="font-size: 15px; font-weight: bold;">GRAND TOTAL PEMAKAIAN SPARE PART, SM, OIL & SO  = <?php
-        $totals = intval($partss) + intval($so) + intval($oli) + intval($sm) + intval($laber);
+        $totals = intval($totalPart) + intval($so) + intval($oli) + intval($sm) + intval($laber);
         echo number_format($totals);
         ?>
     </h1>

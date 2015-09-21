@@ -39,6 +39,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 define('JAB_MEKANIK', 'JAB002');
 define('JAB_SA_FRONTMAN', 'JAB003');
+define('JAB_FINAL_CHECKER', 'JAB004');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

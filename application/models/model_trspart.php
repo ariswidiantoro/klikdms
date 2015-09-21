@@ -146,13 +146,13 @@ class Model_Trspart extends CI_Model {
 
     /**
      * 
-     * @param type $id
+     * @param String $sppid
      * @return null
      */
-    function dataSupplySlip($id) {
+    function dataSupplySlip($sppid) {
         $sql = $this->db->query("SELECT sppid,spp_noslip,spp_print,spp_status,spp_tgl,spp_cetak_harga,spp_tgl_batal, spp_total,pel_nama, wo_nomer "
                 . "FROM spa_supply LEFT JOIN svc_wo ON woid = spp_woid LEFT JOIN "
-                . "ms_pelanggan ON pelid = spp_pelid WHERE sppid = '$id'");
+                . "ms_pelanggan ON pelid = spp_pelid WHERE sppid = '$sppid'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
@@ -161,14 +161,32 @@ class Model_Trspart extends CI_Model {
 
     /**
      * 
-     * @param type $id
+     * @param String $sppid
      * @return null
      */
-    function dataSupplySlipDetail($id) {
+    function dataSupplySlipDetail($sppid) {
         $sql = $this->db->query("SELECT dsupp_qty,inve_kode,inve_nama, dsupp_harga,"
                 . " dsupp_diskon,dsupp_hpp,dsupp_subtotal,rak_deskripsi "
                 . " FROM spa_supply_det LEFT JOIN spa_inventory ON inveid = dsupp_inveid"
-                . " LEFT JOIN spa_rak ON rakid = inve_rakid WHERE dsupp_sppid = '$id'");
+                . " LEFT JOIN spa_rak ON rakid = inve_rakid WHERE dsupp_sppid = '$sppid'");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param String $woNomer
+     * @return null
+     */
+    function getSupplySlipDetailByWo($woNomer) {
+        $sql = $this->db->query("SELECT dsupp_qty,inve_kode,inve_nama, dsupp_harga,"
+                . " dsupp_diskon,dsupp_hpp,dsupp_subtotal,spp_jenis "
+                . " FROM spa_supply_det LEFT JOIN spa_inventory ON inveid = dsupp_inveid"
+                . " LEFT JOIN spa_rak ON rakid = inve_rakid LEFT JOIN spa_supply"
+                . " ON sppid = dsupp_sppid LEFT JOIN svc_wo ON woid = spp_woid "
+                ."WHERE wo_nomer = '$woNomer' AND wo_cbid = '".ses_cabang."' AND spp_status = 0 ORDER BY spp_jenis,inve_kode ");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }

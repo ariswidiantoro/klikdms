@@ -3,7 +3,16 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 echo $this->session->flashdata('msg');
 ?> 
-
+<style type="text/css">
+    input[type=checkbox].ace.ace-switch + .lbl::before {
+        content: "STOP\a0\a0\a0\a0\a0\a0\a0\a0\a0MULAI";
+        width: 80px;
+        text-indent: -21px;
+    }
+    input[type=checkbox].ace.ace-switch:checked + .lbl::after {
+        left: 58px;
+    }
+</style>
 <div id="result"></div>
 <div class="row">
     <div class="col-xs-12">
@@ -117,7 +126,7 @@ echo $this->session->flashdata('msg');
                 clockid : clockid
             },
             success: function(data){
-                 $("#grid-table").trigger('reloadGrid');
+                $("#grid-table").trigger('reloadGrid');
                 $("#result").html(data.msg).show().fadeIn("slow");
             }
         });

@@ -52,14 +52,15 @@ echo $this->session->flashdata('msg');
                 url:'<?php echo site_url('admin/loadKaryawan') ?>',      //another controller function for generating data
                 mtype : "post",             //Ajax request type. It also could be GET
                 datatype: "json",            //supported formats XML, JSON or Arrray
-                colNames:['NIK','Nama','Alamat','Hp','Nomor KTP','Username', 'Edit', 'Hapus'],       //Grid column headings
+                colNames:['NIK','Nama','Alamat','Hp','Nomor KTP','Username','Jabatan', 'Edit', 'Hapus'],       //Grid column headings
                 colModel:[
                     {name:'kr_nik',index:'kr_nik', width:50, align:"left"},
                     {name:'kr_nama',index:'kr_nama', width:90, align:"left"},
                     {name:'kr_alamat',index:'kr_alamat', width:100, align:"left"},
-                    {name:'kr_hp',index:'kr_hp', width:100, align:"left"},
+                    {name:'kr_hp',index:'kr_hp', width:70, align:"left"},
                     {name:'kr_nomor_ktp',index:'kr_nomor_ktp', width:70, align:"left"},
                     {name:'kr_username',index:'kr_username', width:70, align:"left"},
+                    {name:'jab_deskripsi',index:'jab_deskripsi', width:80, align:"left"},
                     {name:'edit',index:'edit', width:30, align:"center"},
                     {name:'hapus',index:'hapus', width:30, align:"center"},
                 ],

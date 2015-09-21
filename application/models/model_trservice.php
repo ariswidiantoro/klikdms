@@ -17,8 +17,9 @@ class Model_Trservice extends CI_Model {
      * @return array of work order
      */
     public function getWo($woNomer) {
-        $sql = $this->db->query("SELECT wo_nomer,woid, pel_nama,pelid, msc_nopol FROM svc_wo"
+        $sql = $this->db->query("SELECT wo_nomer,woid, pel_nama,pelid, msc_nopol,msc_norangka,msc_nomesin FROM svc_wo"
                 ." LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_car ON mscid = wo_mscid WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "'");
+        log_message('error', 'SQL = '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
@@ -141,7 +142,7 @@ class Model_Trservice extends CI_Model {
 
     /**
      * 
-     * @param type $woid
+     * @param String $woid
      * @return null
      */
     public function getWorkOrder($woid) {

@@ -174,9 +174,17 @@ class Transaksi_Service extends Application {
     }
 
     public function workOrder() {
-        $this->hakAkses(57);
+        $this->hakAkses(35);
         $this->data['jenis'] = $this->model_trservice->getWoJenis();
         $this->load->view('workOrder', $this->data);
+    }
+    /**
+     * 
+     */
+    public function fakturService() {
+        $this->hakAkses(38);
+        $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_FINAL_CHECKER);
+        $this->load->view('fakturService', $this->data);
     }
 
     public function clockOnMekanik() {
@@ -213,13 +221,10 @@ class Transaksi_Service extends Application {
      * Function ini digunakan untuk mencetak lampiran faktur service
      * @param type $kode
      */
-    function printLampiranFakturService($kode) {
-        $this->data['cars'] = $this->model_svctrans->getDataCarsInWorkOrder($wo);
-        $this->data['wo'] = $wo;
-        $this->data['time'] = $this->_time_now();
-        $this->data['part'] = $this->model_svctrans->get_barang_from_supply($wo, '');
-        $this->data['sub'] = $this->model_svctrans->get_invoice_suborder($wo);
-        $this->data['lc'] = $this->model_svctrans->getLc($wo);
+    function printLampiranFakturService($woNomer) {
+        $this->load->model('model_trspart');
+        $this->data['data'] = $this->model_trservice->getWo(strtoupper($woNomer));
+        $this->data['part'] = $this->model_trspart->getSupplySlipDetailByWo(strtoupper($woNomer));
         $this->load->view('printLampiranFakturService', $this->data);
     }
 

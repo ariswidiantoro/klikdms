@@ -14,8 +14,8 @@ body {
 .upper{
     text-transform:uppercase;
 } 
-.required{
-    background-color: red;
+.req{
+    background: #FFE4B5;
 } 
 .main-container:before {
     display: block;
@@ -8715,7 +8715,6 @@ input[type="tel"],
 input[type="color"] {
     border-radius: 0 !important;
     color: #858585;
-    background-color: #ffffff;
     border: 1px solid #00aced;
     padding: 5px 4px 6px;
     font-size: 14px;
@@ -9851,7 +9850,6 @@ input.ace + .lbl.padding-0::before {
 .form-group input[type="search"],
 .form-group input[type="tel"],
 .form-group input[type="color"] {
-    background: #FFF;
 }
 .form-group.has-success input,
 .form-group.has-success select,

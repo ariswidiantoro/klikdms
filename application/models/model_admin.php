@@ -248,9 +248,10 @@ class Model_Admin extends CI_Model {
      * @return int
      */
     public function getTotalKaryawan($where) {
+        $wh = " WHERE kr_cbid = '".ses_cabang."'";
         if ($where != NULL)
-            $where = " WHERE " . $where;
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_karyawan $where");
+            $wh .= $where;
+        $sql = $this->db->query("SELECT COUNT(krid) AS total FROM ms_karyawan LEFT JOIN ms_jabatan ON jabid = kr_jabid $wh");
         return $sql->row()->total;
     }
 
@@ -270,7 +271,7 @@ class Model_Admin extends CI_Model {
      * @return int
      */
     public function getKaryawanByJabatan($id) {
-        $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_jabid = '$id'");
+        $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_jabid = '$id' AND kr_cbid = '".ses_cabang."'");
         return $sql->result_array();
     }
 
@@ -354,13 +355,13 @@ class Model_Admin extends CI_Model {
      * @return type
      */
     function getAllKaryawan($start, $limit, $sidx, $sord, $where) {
-        $this->db->select('*');
+        $this->db->select('kr_nik, kr_nama,kr_status, krid,kr_alamat,kr_hp,kr_nomor_ktp,kr_username,jab_deskripsi');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
 //        $this->db->where('kr_cbid', ses_cabang);
         $this->db->from('ms_karyawan');
-//        $this->db->join('ms_departemen', 'jab_deptid = deptid', 'LEFT');
+        $this->db->join('ms_jabatan', 'kr_jabid = jabid', 'LEFT');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
