@@ -17,7 +17,8 @@ class Model_Trservice extends CI_Model {
      * @return array of work order
      */
     public function getWo($woNomer) {
-        $sql = $this->db->query("SELECT * FROM svc_wo WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "'");
+        $sql = $this->db->query("SELECT wo_nomer,woid, pel_nama,pelid, msc_nopol FROM svc_wo"
+                ." LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_car ON mscid = wo_mscid WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }

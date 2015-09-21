@@ -20,15 +20,14 @@ class Transaksi_Service extends Application {
     }
 
     function jsonWo() {
-        $woNomer = $this->input->post('param');
-        $retur = array();
+        $woNomer = strtoupper($this->input->post('param'));
         $data = $this->model_trservice->getWo($woNomer);
-        $retur['response'] = false;
         if (count($data) > 0) {
-            $retur['response'] = true;
-            $retur['data'] = $data;
+            $data['response'] = true;
+        } else {
+            $data['response'] = false;
         }
-        echo json_encode($retur);
+        echo json_encode($data);
     }
 
     function jsonDataKendaraan() {
@@ -184,6 +183,7 @@ class Transaksi_Service extends Application {
         $this->hakAkses(36);
         $this->load->view('clockOnMekanik', $this->data);
     }
+
     public function lampiranFaktur() {
         $this->hakAkses(37);
         $this->load->view('lampiranFaktur', $this->data);
@@ -208,6 +208,7 @@ class Transaksi_Service extends Application {
         $this->data['so'] = $this->model_trservice->getSoWorkOrder($kode);
         $this->load->view('printWo', $this->data);
     }
+
     /**
      * Function ini digunakan untuk mencetak lampiran faktur service
      * @param type $kode
@@ -263,7 +264,7 @@ class Transaksi_Service extends Application {
                     $mknk = $row['kr_nama'];
                 } else if ($row['clo_status'] == '2') {
                     $status = 'PENDING';
-                     $mknk = "<select id='krid$i' name='krid' class='ace col-xs-10 col-sm-10' style='width: 100%'>" . $mek . "</select>";
+                    $mknk = "<select id='krid$i' name='krid' class='ace col-xs-10 col-sm-10' style='width: 100%'>" . $mek . "</select>";
                 } else {
                     $status = 'SELESAI';
                     $clock = 'PROSES NOTA';
@@ -291,6 +292,7 @@ class Transaksi_Service extends Application {
         }
         echo json_encode($hasil);
     }
+
     function pendingMekanik() {
         $cloid = $this->input->post('clockid');
         $simpan = $this->model_trservice->pendingMekanik($cloid);

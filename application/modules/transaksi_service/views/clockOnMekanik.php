@@ -102,6 +102,7 @@ echo $this->session->flashdata('msg');
                 status : status
             },
             success: function(data){
+                $("#grid-table").trigger('reloadGrid');
                 $("#result").html(data.msg).show().fadeIn("slow");
             }
         });
@@ -116,6 +117,7 @@ echo $this->session->flashdata('msg');
                 clockid : clockid
             },
             success: function(data){
+                 $("#grid-table").trigger('reloadGrid');
                 $("#result").html(data.msg).show().fadeIn("slow");
             }
         });
