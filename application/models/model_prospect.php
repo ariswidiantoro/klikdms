@@ -1,0 +1,227 @@
+<?php
+
+/**
+ * The MODEL PROSPECT
+ * @author Rossi Erl
+ * 2015-08-29
+ */
+class Model_Prospect extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+    } 
+
+    /** TRANSAKSI PROSPECT
+     * @author Rossi Erl <rosoningati@gmail.com>
+     * Created on 2015-09-04
+     */
+    public function getTotalProspect($where) {
+        $wh = "WHERE pros_cbid = '" . ses_cabang . "' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM pros_data " . $wh);
+        return $sql->row()->total;
+    }
+
+    public function getDataProspect($start, $limit, $sidx, $sord, $where) {
+
+        /* FILTER BY SUPERVISOR */
+        if (ses_jabatan == 'supervisor') {
+            $filter = $this->getSalesBySpv(array('krid' => ses_krid, 'cbid' => ses_cabang));
+        } else if (ses_jabatan == 'sales') {
+            $filter = array(ses_krid);
+        }
+
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('pros_data');
+        $this->db->where('pros_cbid', ses_cabang);
+        if (isset($filter)) {
+            $this->db->where_in('pros_sales', $filter);
+        }
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function addProspect($data = array()) {
+        $this->db->trans_begin();
+        try {
+            /* PROSID PRIMARY KEY */
+            $code = $this->newCode(array('type' => 'PC'));
+            if ($code['status'] == FALSE) {
+                $warn = "FAILED GENERATE CODE : PROSPECT";
+                throw new Exception($warn);
+            }
+            /* PROS KODE CABANG */
+            $codeb = $this->newCode(array(
+                'type' => 'PC', 
+                'cbid' => ses_cabang));
+            if ($codeb['status'] == FALSE) {
+                $warn = "FAILED GENERATE CODE : PROSPECT";
+                throw new Exception($warn);
+            }
+
+            $data['prosid'] = $code['code'];
+            $data['pros_kode'] = $codeb['code'];
+            if ($this->db->insert('pros_data', $data) == FALSE) {
+                $warn = "FAILED INSERTING DATA : PROSPECT";
+                throw new Exception($warn);
+            }
+
+            if ($this->db->trans_status() == TRUE) {
+                $this->db->trans_commit();
+                return array('status' => TRUE, 'msg' => 'PROSPECT BERHASIL DITAMBAHKAN ');
+            } else {
+                $this->db->trans_rollback();
+                return array('status' => FALSE, 'msg' => 'PROSPECT GAGAL DITAMBAHKAN ');
+            }
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => $e->getMessage());
+        }
+    }
+
+    public function updateProspect($data, $where) {
+        $this->db->where('prosid', $where);
+        if ($this->db->update('pros_data', $data)) {
+            return array('status' => TRUE, 'msg' => 'PROSPECT ' . $data['prosid'] . ' BERHASIL DIUPDATE');
+        } else {
+            return array('status' => FALSE, 'msg' => 'PROSPECT ' . $data['prosid'] . ' GAGAL DIUPDATE');
+        }
+    }
+
+    public function deleteProspect($data) {
+        if ($this->db->query('DELETE FROM pros_data WHERE prosid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function getProspect($data) {
+        $query = $this->db->query("
+            SELECT * FROM pros_data 
+            LEFT JOIN ms_karyawan ON krid = pros_salesman
+            WHERE prosid = '" . $data . "'  ");
+        return $query->row_array();
+    }
+
+    /**
+     * This function is used for selecting krid by atasan value
+     * @author Rossi Erl <rosoningati@gmail.com>
+     * Created on 2015-09-15
+     */
+    public function getSalesBySpv($data) {
+        $query = "SELECT krid FROM ms_karyawan 
+            WHERE kr_atasan = '" . $data['krid'] . "' 
+                AND kr_cbid = '" . $data['cbid'] . "'";
+        $sql = $this->db->query($query);
+        return $sql->result_array();
+    }
+
+    /**
+     * FPT ( Form Persetujuan Transaksi )
+     * @author Rossi Erl <rosoningati@gmail.com>
+     * Created on 2015-09-15
+     */
+    public function addFPT($data = array()) {
+        $this->db->trans_begin();
+        try {
+            $code = $this->newCode(array('type' => 'FP'));
+            if ($code['status'] == FALSE) {
+                $warn = "FAILED GENERATE CODE : FPT";
+                throw new Exception($warn);
+            }
+
+            $data['fptid'] = $code['code'];
+            if ($this->db->insert('pros_data', $data) == FALSE) {
+                $warn = "FAILED INSERTING DATA : FPT";
+                throw new Exception($warn);
+            }
+
+            if ($this->db->trans_status() == TRUE) {
+                $this->db->trans_commit();
+                return array('status' => TRUE, 'msg' => 'FPT BERHASIL DITAMBAHKAN ');
+            } else {
+                $this->db->trans_rollback();
+                return array('status' => FALSE, 'msg' => 'FPT GAGAL DITAMBAHKAN ');
+            }
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => $e->getMessage());
+        }
+    }
+
+    public function updateFPT($data, $where) {
+        $this->db->where('fptid', $where);
+        if ($this->db->update('pen_fpt', $data)) {
+            return array('status' => TRUE, 'msg' => 'FPT ' . $where . ' BERHASIL DIUPDATE');
+        } else {
+            return array('status' => FALSE, 'msg' => 'FPT ' . $where . ' GAGAL DIUPDATE');
+        }
+    }
+
+    public function deleteFPT($data) {
+        if ($this->db->query('DELETE FROM pen_fpt WHERE fptid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function getFPT($data) {
+        $query = $this->db->query("
+            SELECT * FROM pen_fpt 
+            LEFT JOIN pros_data ON prosid = fpt_prosid
+            WHERE prosid = '" . $data . "'");
+        return $query->row_array();
+    }
+
+    /**
+     * AGENDA PROSPECT
+     * @author Rossi Erl <rosoningati@gmail.com>
+     * Created on 2015-09-15
+     */
+    public function addAgenda($data = array()) {
+        if ($this->db->insert('pros_agenda', $data) == TRUE) {
+            return array('status' => TRUE, 'msg' => 'AGENDA BERHASIL DITAMBAHKAN ');
+        } else {
+            return array('status' => FALSE, 'msg' => 'AGENDA GAGAL DITAMBAHKAN ');
+        }
+    }
+
+    public function updateAgenda($data, $where) {
+        $this->db->where('agenid', $where);
+        if ($this->db->update('pros_agenda', $data)) {
+            return array('status' => TRUE, 'msg' => 'AGENDA BERHASIL DIUPDATE');
+        } else {
+            return array('status' => FALSE, 'msg' => 'AGENDA GAGAL DIUPDATE');
+        }
+    }
+
+    public function deleteAgenda($data) {
+        if ($this->db->query('DELETE FROM pros_agenda WHERE agenid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function getAgenda($data) {
+        $query = $this->db->query("
+            SELECT * FROM pros_agenda WHERE agenid = " . $data );
+        return $query->row_array();
+    }
+    
+    
+}
+
+?>
