@@ -16,7 +16,6 @@
     input:focus {
         background-color: yellow;
     } 
-    #wo,#pel_nama,#spp_pelid {background-color: #ffcccc;}
 </style>
 <form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/saveSupplySlip'); ?>" method="post" name="form">
     <div class="form-group">
@@ -36,7 +35,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Work Order</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" name="wo" id="wo" class="upper col-xs-10 col-sm-3" />
+                <input type="text" autocomplete="off" name="wo" id="wo" class="req upper col-xs-10 col-sm-3" />
                 <input type="hidden" name="spp_woid" id="spp_woid"/>
                 <i id="sukses" class="ace-icon fa fa-check-circle bigger-200 green"></i>
                 <i id="error" class="ace-icon fa fa-times-circle bigger-200 red"></i>
@@ -47,7 +46,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Pelanggan</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" required="required" name="pel_nama" id="pel_nama" class="upper col-xs-10 col-sm-5" />
+                <input type="text" autocomplete="off" required="required" name="pel_nama" id="pel_nama" class="req upper col-xs-10 col-sm-5" />
             </div>
         </div>
     </div>
@@ -55,7 +54,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Pelanggan</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" required="required" name="spp_pelid" id="spp_pelid" class="upper col-xs-10 col-sm-3" />
+                <input type="text" autocomplete="off" required="required" name="spp_pelid" id="spp_pelid" class="req upper col-xs-10 col-sm-3" />
             </div>
         </div>
     </div>
