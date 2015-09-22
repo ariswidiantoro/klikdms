@@ -1,8 +1,3 @@
-<style type="text/css">
-    .req{
-        background: #FAEBD7;
-    } 
-</style>
 <div id="result"></div>
 <form class="form-horizontal" id="formRole" method="post" action="<?php echo site_url('transaksi_service/saveFakturService'); ?>" name="formRole">
     <div class="form-group">
@@ -46,8 +41,8 @@
             <select name="inv_fchecker" id="inv_fchecker" required="required" class="ace col-xs-10 col-sm-3 upper req">
                 <option value="">Pilih</option>
                 <?php
-                if (count($checker) > 0) {
-                    foreach ($checker as $value) {
+                if (count($kasir) > 0) {
+                    foreach ($kasir as $value) {
                         ?>
                         <option value="<?php echo $value['krid']; ?>"><?php echo $value['kr_nama'] ?></option> 
                         <?php

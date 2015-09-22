@@ -183,7 +183,8 @@ class Transaksi_Service extends Application {
      */
     public function fakturService() {
         $this->hakAkses(38);
-        $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_FINAL_CHECKER);
+        $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_FINAL_CHECKER);
+        $this->data['kasir'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_KASIR_SERVICE);
         $this->load->view('fakturService', $this->data);
     }
 
