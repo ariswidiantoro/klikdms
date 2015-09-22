@@ -1,15 +1,15 @@
 <div id="result"></div>
 <div class="page-header">
     <h1>
-        Tambah Merk Kendaraan
+        Tambah Sumber Informasi
     </h1>
 </div>
-<form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('master_sales/saveMerk'); ?>" name="formAdd">
+<form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('master_prospect/saveSmbInfo'); ?>" name="formAdd">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsi</label>
         <div class="col-sm-8">
             <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="merk_deskripsi" id="merk_deskripsi"  class="ace col-xs-10 col-sm-10 req" />
+                   name="smbinfo_deskripsi" id="smbinfo_deskripsi"  class="ace col-xs-10 col-sm-10" />
         </div>
     </div>
     <div class="clearfix form-actions">
@@ -26,7 +26,7 @@
             &nbsp; &nbsp; &nbsp;
             <button class="btn btn-info" type="button" onclick="javascript:redirect('data');">
                 <i class="ace-icon fa 	fa-book bigger-50"></i>
-                Daftar Merk
+                Daftar Sumber Informasi
             </button>
         </div>
     </div>
@@ -36,7 +36,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
-                window.location.href = "#master_sales/masterMerk";
+                window.location.href = "#master_prospect/masterSmbInfo";
             }});
     }
     
@@ -54,7 +54,7 @@
         $('#formAdd').submit(function() {
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url('master_sales/saveMerk') ?>",
+                url: "<?php echo site_url('master_prospect/saveSmbInfo') ?>",
                 dataType: "json",
                 async: false,
                 data: $(this).serialize(),

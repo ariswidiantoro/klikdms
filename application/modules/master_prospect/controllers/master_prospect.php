@@ -9,7 +9,7 @@ class Master_Prospect extends Application {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('model_admin', 'model_sales', 'model_prospect'));
+        $this->load->model(array('model_admin', 'model_prospect', 'model_sales'));
         $this->isLogin();
     }
 
@@ -17,7 +17,7 @@ class Master_Prospect extends Application {
         echo " ";
     }
     
-    public function masterArea() {
+    public function area() {
         $this->hakAkses(1070);
         $this->load->view('dataArea', $this->data);
     }
@@ -30,7 +30,7 @@ class Master_Prospect extends Application {
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;
         $where = whereLoad();
-        $count = $this->model_sales->getTotalArea($where);
+        $count = $this->model_prospect->getTotalArea($where);
         if ($count > 0) {
             $total_pages = ceil($count / $limit);
         } else {
@@ -39,7 +39,7 @@ class Master_Prospect extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_sales->getDataArea($start, $limit, $sidx, $sord, $where);
+        $query = $this->model_prospect->getDataArea($start, $limit, $sidx, $sord, $where);
         $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
@@ -47,13 +47,15 @@ class Master_Prospect extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $del = "hapusData('" . $row->areaid . "', '" . $row->merk_deskripsi . "')";
+                $del = "hapusData('" . $row->areaid . "', '" . $row->area_deskripsi . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 $edit = '<a href="#master_sales/editArea?id=' . $row->areaid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->areaid;
                 $responce->rows[$i]['cell'] = array(
                     $row->areaid,
-                    $row->merk_deskripsi,
+                    $row->prop_deskripsi,
+                    $row->kota_deskripsi,
+                    $row->area_deskripsi,
                     $edit, $hapus);
                 $i++;
             }
@@ -62,15 +64,16 @@ class Master_Prospect extends Application {
 
     public function addArea() {
         $this->hakAkses(1070);
+        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
         $this->load->view('addArea', $this->data);
     }
 
     public function editArea() {
         $this->hakAkses(1070);
         $id = $this->input->get('id');
-        $data = $this->model_sales->getArea($id);
+        $data = $this->model_prospect->getArea($id);
         $this->data['data'] = $data;
-        $this->load->view('editModel', $this->data);
+        $this->load->view('editArea', $this->data);
     }
 
     public function saveArea() {
@@ -78,7 +81,7 @@ class Master_Prospect extends Application {
         if (empty($desc)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_sales->addArea(array('merk_deskripsi' => $desc));
+            $save = $this->model_prospect->addArea(array('merk_deskripsi' => $desc));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -90,11 +93,16 @@ class Master_Prospect extends Application {
 
     public function updateArea() {
         $areaid = $this->input->post('areaid', TRUE);
-        $desc = strtoupper($this->input->post('merk_deskripsi', TRUE));
-        if (empty($desc)) {
+        $desc = strtoupper($this->input->post('area_deskripsi', TRUE));
+        $kota = strtoupper($this->input->post('area_kotaid', TRUE));
+        if (empty($desc)||empty($kota)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_sales->updateArea(array('merk_deskripsi' => strtoupper($desc)), $areaid);
+            $save = $this->model_prospect->updateArea(array(
+                'area_cbid' => ses_cabang,
+                'area_deskripsi' => strtoupper($desc),
+                'area_kotaid' => strtoupper($kota)
+                ), $areaid);
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -109,7 +117,7 @@ class Master_Prospect extends Application {
         if (empty($id)) {
             $hasil = $this->error('Hapus data gagal');
         } else {
-            if ($this->model_sales->deleteArea($id)) {
+            if ($this->model_prospect->deleteArea($id)) {
                 $hasil = $this->sukses('Hapus data berhasil');
             } else {
                 $hasil = $this->error('Hapus data gagal');
@@ -120,7 +128,7 @@ class Master_Prospect extends Application {
 
     public function getArea() {
         $data = $this->input->get('areaid', TRUE);
-        $result = $this->model_sales->getArea($data);
+        $result = $this->model_prospect->getArea($data);
         $responce = array();
         if (count($result) > 0)
             $responce = $result;
@@ -133,7 +141,7 @@ class Master_Prospect extends Application {
      * @since 1.0 2015-09-19
      */
     
-    public function masterSmbInfo() {
+    public function sumber_informasi() {
         $this->hakAkses(1070);
         $this->load->view('dataSmbInfo', $this->data);
     }
@@ -146,7 +154,7 @@ class Master_Prospect extends Application {
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;
         $where = whereLoad();
-        $count = $this->model_sales->getTotalSmbInfo($where);
+        $count = $this->model_prospect->getTotalSmbInfo($where);
         if ($count > 0) {
             $total_pages = ceil($count / $limit);
         } else {
@@ -155,7 +163,7 @@ class Master_Prospect extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_sales->getDataSmbInfo($start, $limit, $sidx, $sord, $where);
+        $query = $this->model_prospect->getDataSmbInfo($start, $limit, $sidx, $sord, $where);
         $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
@@ -163,13 +171,13 @@ class Master_Prospect extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $del = "hapusData('" . $row->areaid . "', '" . $row->sinfo_deskripsi . "')";
+                $del = "hapusData('" . $row->smbinfoid . "', '" . $row->smbinfo_deskripsi . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                $edit = '<a href="#master_sales/editSmbInfo?id=' . $row->areaid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
-                $responce->rows[$i]['id'] = $row->areaid;
+                $edit = '<a href="#master_prospect/editSmbInfo?id=' . $row->smbinfoid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->smbinfoid;
                 $responce->rows[$i]['cell'] = array(
-                    $row->areaid,
-                    $row->sinfo_deskripsi,
+                    $row->smbinfoid,
+                    $row->smbinfo_deskripsi,
                     $edit, $hapus);
                 $i++;
             }
@@ -184,17 +192,17 @@ class Master_Prospect extends Application {
     public function editSmbInfo() {
         $this->hakAkses(1070);
         $id = $this->input->get('id');
-        $data = $this->model_sales->getSmbInfo($id);
+        $data = $this->model_prospect->getSmbInfo($id);
         $this->data['data'] = $data;
-        $this->load->view('editModel', $this->data);
+        $this->load->view('editSmbInfo', $this->data);
     }
 
     public function saveSmbInfo() {
-        $desc = strtoupper($this->input->post('sinfo_deskripsi', TRUE));
+        $desc = strtoupper($this->input->post('smbinfo_deskripsi', TRUE));
         if (empty($desc)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_sales->addSmbInfo(array('sinfo_deskripsi' => $desc));
+            $save = $this->model_prospect->addSmbInfo(array('smbinfo_deskripsi' => $desc));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -205,12 +213,12 @@ class Master_Prospect extends Application {
     }
 
     public function updateSmbInfo() {
-        $areaid = $this->input->post('areaid', TRUE);
-        $desc = strtoupper($this->input->post('sinfo_deskripsi', TRUE));
+        $smbinfoid = $this->input->post('smbinfoid', TRUE);
+        $desc = strtoupper($this->input->post('smbinfo_deskripsi', TRUE));
         if (empty($desc)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_sales->updateSmbInfo(array('sinfo_deskripsi' => strtoupper($desc)), $areaid);
+            $save = $this->model_prospect->updateSmbInfo(array('smbinfo_deskripsi' => strtoupper($desc)), $smbinfoid);
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -225,7 +233,7 @@ class Master_Prospect extends Application {
         if (empty($id)) {
             $hasil = $this->error('Hapus data gagal');
         } else {
-            if ($this->model_sales->deleteSmbInfo($id)) {
+            if ($this->model_prospect->deleteSmbInfo($id)) {
                 $hasil = $this->sukses('Hapus data berhasil');
             } else {
                 $hasil = $this->error('Hapus data gagal');
@@ -235,8 +243,8 @@ class Master_Prospect extends Application {
     }
 
     public function getSmbInfo() {
-        $data = $this->input->get('areaid', TRUE);
-        $result = $this->model_sales->getSmbInfo($data);
+        $data = $this->input->get('smbinfoid', TRUE);
+        $result = $this->model_prospect->getSmbInfo($data);
         $responce = array();
         if (count($result) > 0)
             $responce = $result;

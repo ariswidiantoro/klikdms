@@ -239,6 +239,8 @@ class Model_Prospect extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_area');
+        $this->db->join('ms_kota','kotaid = area_kotaid', 'left');
+        $this->db->join('ms_propinsi','prop_kotaid = kotaid', 'left');
         $this->db->where('area_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
@@ -259,7 +261,10 @@ class Model_Prospect extends CI_Model {
 
     public function getArea($data) {
         $query = $this->db->query("
-            SELECT * FROM ms_area WHERE areaid = " . $data . "
+            SELECT * FROM ms_area 
+            LEFT JOIN ms_kota on kotaid = area_kotaid
+            LEFT JOIN ms_propinsi on prop_kotaid
+            WHERE areaid = " . $data . "
             ");
         return $query->row_array();
     }
@@ -281,6 +286,7 @@ class Model_Prospect extends CI_Model {
         }
     }
     
+        
     /** SUMBER INFORMASI
      * @author Rossi Erl
      * 2015-09-03
@@ -289,7 +295,7 @@ class Model_Prospect extends CI_Model {
         $wh = "WHERE smbinfo_cbid = '".ses_cabang."'";
         if ($where != NULL)
             $wh = " AND " . $where;
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_karoseri ".$wh);
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_sumber_info ".$wh);
         return $sql->row()->total;
     }
 

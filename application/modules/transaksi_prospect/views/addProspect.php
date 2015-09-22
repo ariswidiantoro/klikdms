@@ -306,7 +306,6 @@
 </div>
 <script src="<?php echo path_js(); ?>ace/elements.wizard.js"></script>
 <script src="<?php echo path_js(); ?>fuelux/fuelux.wizard.js"></script>
-<script src="<?php echo path_js(); ?>jquery.validate.js"></script>
 <script type="text/javascript">
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
