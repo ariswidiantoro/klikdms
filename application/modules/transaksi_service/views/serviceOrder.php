@@ -95,6 +95,9 @@
                         }
 </script>
 <form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_service/saveWo'); ?>" method="post" name="form">
+    <?php
+    $this->session->unset_userdata('href_wo');
+    ?>
     <table style="width: 100%">
         <tr>
             <td style="width: 48%">
@@ -120,7 +123,7 @@
                             <input type="hidden"  id="wo_mscid" name="wo_mscid" />
                             <input type="hidden"  id="type" name="wo_type" value="<?php echo $type; ?>"/>
                             <input type="hidden"  id="wo_inextern" name="wo_inextern"/>
-                            <a href="#master_service/addKendaraan" class="btn btn-sm btn-primary">
+                            <a href="#master_service/addKendaraanWo?href=transaksi_service/serviceOrder&jenis=<?php echo $jenis; ?>&type=<?php echo $type ?>&" class="btn btn-sm btn-primary">
                                 <i class="ace-icon fa fa-plus"></i>
                                 Tambah Kendaraan</a>
                         </div>
@@ -449,7 +452,7 @@
 
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
-            <button class="btn btn-info" type="button" onclick="simpan()">
+            <button class="btn btn-info" type="button" id="button">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Submit
             </button>
@@ -469,6 +472,18 @@
     });
     
     jQuery(function($) {
+        $('#button').on('click', function(e){
+            if(!$('#form').valid())
+            {
+                e.preventDefault();
+            }else
+                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                    if(result) {
+                        $("#form").submit();
+                    }
+            });
+            return false;
+        });
         $('#form').validate({
             errorElement: 'div',
             errorClass: 'help-block',
@@ -624,23 +639,7 @@
             counti--;
         }
     }
-    function simpan()
-    {
-        if(!$('#form').valid())
-        {
-            e.preventDefault();
-        }else
-            bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
-                if(result) {
-                    $("#form").submit();
-                }
-        });
-        return false;
-    }
-    $(this).ready(function() {
-        
-    });
-    
+
     var inc = 0;
     function Delete() {
         var par = $(this).parent().parent(); //tr

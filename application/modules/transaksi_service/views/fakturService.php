@@ -56,13 +56,16 @@
                              }
 </script>
 <div id="result"></div>
-<form class="form-horizontal" id="formRole" method="post" action="<?php echo site_url('transaksi_service/saveFakturService'); ?>" name="formRole">
+<form class="form-horizontal" id="form" method="post" action="<?php echo site_url('transaksi_service/saveFakturService'); ?>" name="form">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor WO</label>
         <div class="col-sm-8">
-            <input type="text" required="required" onchange="//getDataWo($(this).val())" name="wo" id="wo" class="upper ace col-xs-10 col-sm-3 req" />
-            <input type="hidden" name="inv_woid" id="inv_woid"/>
-            <input type="hidden"  id="wo_type" name="wo_type"/>
+            <div class='input-group col-xs-10 col-sm-10'>
+                <input type="text" required="required" onchange="//getDataWo($(this).val())" name="wo" id="wo" class="upper ace col-xs-10 col-sm-3 req" />
+                <input type="hidden" name="inv_woid" id="inv_woid"/>
+                <input type="hidden" name="inv_inextern" id="inv_inextern"/>
+                <input type="hidden"  id="wo_type" name="wo_type"/>
+            </div>
         </div>
     </div>
     <div class="form-group">
@@ -86,52 +89,58 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Final Checker</label>
         <div class="col-sm-8">
-            <select name="inv_fchecker" id="inv_fchecker" required="required" class="ace col-xs-10 col-sm-3 upper req">
-                <option value="">Pilih</option>
-                <?php
-                if (count($checker) > 0) {
-                    foreach ($checker as $value) {
-                        ?>
-                        <option value="<?php echo $value['krid']; ?>"><?php echo $value['kr_nama'] ?></option> 
-                        <?php
+            <div class='input-group col-xs-10 col-sm-10'>
+                <select name="inv_fchecker" id="inv_fchecker" required="required" class="ace col-xs-10 col-sm-3 upper req">
+                    <option value="">Pilih</option>
+                    <?php
+                    if (count($checker) > 0) {
+                        foreach ($checker as $value) {
+                            ?>
+                            <option value="<?php echo $value['krid']; ?>"><?php echo $value['kr_nama'] ?></option> 
+                            <?php
+                        }
                     }
-                }
-                ?>
-            </select>
+                    ?>
+                </select>
+            </div>
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kasir</label>
         <div class="col-sm-8">
-            <select name="inv_fchecker" id="inv_fchecker" required="required" class="ace col-xs-10 col-sm-3 upper req">
-                <option value="">Pilih</option>
-                <?php
-                if (count($kasir) > 0) {
-                    foreach ($kasir as $value) {
-                        ?>
-                        <option value="<?php echo $value['krid']; ?>"><?php echo $value['kr_nama'] ?></option> 
-                        <?php
+            <div class='input-group col-xs-10 col-sm-10'>
+                <select name="inv_kasir" id="inv_kasir" required="required" class="ace col-xs-10 col-sm-3 upper req">
+                    <option value="">Pilih</option>
+                    <?php
+                    if (count($kasir) > 0) {
+                        foreach ($kasir as $value) {
+                            ?>
+                            <option value="<?php echo $value['krid']; ?>"><?php echo $value['kr_nama'] ?></option> 
+                            <?php
+                        }
                     }
-                }
-                ?>
-            </select>
+                    ?>
+                </select>
+            </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Catatan</label>
         <div class="col-sm-8">
-            <input type="text" name="catatan" id="catatan" class="col-xs-10 col-sm-10" />
+            <input type="text" name="inv_catatan" id="inv_catatan" class="col-xs-10 col-sm-10" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tampilkan PPN di cetakan</label>
         <div class="col-sm-8">
-            <select name="inv_tampil_ppn" id="inv_tampil_ppn" required="required" class="ace col-xs-10 col-sm-3 upper req">
-                <option value="">Pilih</option>
-                <option value="1">Ya</option>
-                <option value="0">Tidak</option>
-            </select>
+            <div class='input-group col-xs-10 col-sm-10'>
+                <select name="inv_tampil_ppn" id="inv_tampil_ppn" required="required" class="ace col-xs-10 col-sm-3 upper req">
+                    <option value="">Pilih</option>
+                    <option value="1">Ya</option>
+                    <option value="0">Tidak</option>
+                </select>
+            </div>
         </div>
     </div>
     <div class="hr hr-16 hr-dotted"></div>
@@ -140,7 +149,7 @@
             Daftar JASA
         </div>
         <div>
-            <table id="simple-table-so" class="table table-striped table-bordered table-hover">
+            <table id="simple-table-jasa" class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
                         <th style="width: 2%">No</th>
@@ -262,6 +271,8 @@
     </div>
 </form>
 <script type="text/javascript">
+    var scripts = [null, null]
+
     $("#button").prop('disabled', true);
     //called when key is pressed in textbox
     $(".number").keypress(function (e) {
@@ -270,7 +281,92 @@
         }
     });
     
+    function clearForm()
+    {
+        var otable = document.getElementById('simple-table-jasa');
+        var counti = otable.rows.length - 2;
+        while (counti > 1) {
+            otable.deleteRow(counti);
+            counti--;
+        }
+    }
+    
+    jQuery(function($) {
+        $('#button').on('click', function(e){
+            if(!$('#form').valid())
+            {
+                e.preventDefault();
+            }else
+                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                    if(result) {
+                        $("#form").submit();
+                    }
+            });
+            return false;
+        });
+        $('#form').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            rules: {
+            },
+			
+            messages: {
+            },
+			
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+			
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+			
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+			
+            submitHandler: function (form) {
+            },
+            invalidHandler: function (form) {
+            }
+        });
+    });
+    
+    
     $(document).ready(function(){
+        $('#form').submit(function() {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                dataType: "json",
+                async: false,
+                data: $(this).serialize(),
+                success: function(data) {
+                    window.scrollTo(0, 0);
+                    if (data.result) {
+                        var params  = 'width=1000';
+                        params += ', height='+screen.height;
+                        params += ', fullscreen=yes,scrollbars=yes';
+                        document.form.reset();
+                        clearForm();
+                        //                        window.open("<?php echo site_url("transaksi_service/printWo"); ?>/"+data.kode,'_blank', params);
+                    }
+                    $("#result").html(data.msg).show().fadeIn("slow");
+                }
+            })
+        });
+        
         $("#wo").autocomplete({
             minLength: 1,
             source: function(req, add) {
@@ -330,9 +426,12 @@
     }
     
     function getDataWo(wo, type){
+        $('.page-content-area').ace_ajax('startLoading');
+        clearForm();
         getJsonWo(wo);  
         getJasa(wo,type);
         getTotalSupply(wo,type);
+        $('.page-content-area').ace_ajax('stopLoading', true);
     };
     
     function getJasa(wo, type)
@@ -438,6 +537,7 @@
                     $("#pel_nama").val(data['pel_nama']);
                     $("#wo_type").val(data['wo_type']);
                     $("#wo_km").val(data['wo_km']);
+                    $("#inv_inextern").val(data['wo_inextern']);
                     $("#button").prop('disabled', false);
                 } else {
                     $("#button").prop('disabled', true);
@@ -454,7 +554,9 @@
                     });
                     $("#msc_nopol").val("");
                     $("#wo_km").val(0);
+                    $("#wo_inextern").val(0);
                     $("#pel_nama").val("");
+                    $("#wo_type").val("");
                     $("#inv_woid").val("");
                     return false;
                 }
@@ -492,7 +594,7 @@
     }
     
     $(this).ready(function() {
-        $('#formRole').submit(function() {
+        $('#form').submit(function() {
             //  if (confirm("Yakin data sudah benar ?")) {
             $.ajax({
                 type: 'POST',
@@ -600,7 +702,6 @@
         });
     }
     
-    var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });

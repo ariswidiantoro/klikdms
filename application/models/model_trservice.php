@@ -17,11 +17,10 @@ class Model_Trservice extends CI_Model {
      * @return array of work order
      */
     public function getWo($woNomer) {
-        $sql = $this->db->query("SELECT wo_nomer,woid,wo_type, pel_nama,pelid, msc_nopol,"
+        $sql = $this->db->query("SELECT wo_nomer,woid,wo_type,wo_inextern, pel_nama,pelid, msc_nopol,"
                 . " msc_norangka,wo_km,msc_nomesin, clo_status FROM svc_wo"
                 . " LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_car ON mscid = wo_mscid "
                 . " LEFT JOIN svc_clock ON clo_woid = woid WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "' AND wo_inv_status = 0 AND wo_status = 0");
-//        log_message('error', 'SQL = ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
@@ -47,7 +46,7 @@ class Model_Trservice extends CI_Model {
         $result = array();
         $sql = $this->db->query("SELECT SUM(spp_total) AS total,SUM(spp_total_hpp) AS hpp, spp_jenis  FROM spa_supply"
                 . " LEFT JOIN svc_wo ON woid = spp_woid WHERE wo_nomer = '$wo' "
-                . " AND spp_status = 0 AND spp_cbid = '" . ses_cabang . "' GROUP BY spp_jenis");
+                . " AND spp_status = 0 AND spp_cbid = '" . ses_cabang . "' AND spp_faktur = 0 GROUP BY spp_jenis");
         if ($sql->num_rows() > 0) {
             foreach ($sql->result_array() as $value) {
                 $result[$value['spp_jenis']] = $value['total'];
@@ -129,7 +128,7 @@ class Model_Trservice extends CI_Model {
                 . " FROM ms_car LEFT JOIN ms_car_type ON ctyid = msc_ctyid LEFT JOIN ms_car_model ON modelid = cty_modelid "
                 . "LEFT JOIN ms_car_merk ON merkid = model_merkid LEFT JOIN ms_pelanggan ON pelid = msc_pelid WHERE msc_nopol = '$nopol' AND msc_cbid = '"
                 . ses_cabang . "'");
-        log_message('error', 'SQL '.$this->db->last_query());
+        log_message('error', 'SQL ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
@@ -349,6 +348,42 @@ class Model_Trservice extends CI_Model {
             $result['result'] = false;
             $result['kode'] = $id;
             $result['msg'] = error("Gagal menyimpan work order");
+        }
+        return $result;
+    }
+
+    function saveFakturService($data, $wo, $jasa) {
+        $this->db->trans_begin();
+        $tahun = substr(date('Y'), 2, 2);
+        $id = NUM_INVOICE . $tahun . sprintf("%08s", $this->getCounter(NUM_INVOICE . $tahun));
+        $data['invid'] = $id;
+        $this->db->INSERT('svc_invoice', $data);
+
+        // UPDATE WO
+        $this->db->where('woid', $wo['woid']);
+        $this->db->update('svc_wo', $wo);
+        
+        // UPDATE SUPPLY
+        $this->db->query("UPDATE spa_supply SET spp_faktur = 1 WHERE spp_woid = '".$wo['woid']."'");
+        
+        // SIMPAN WO JASA
+        if (count($jasa) > 0) {
+            foreach ($jasa as $d) {
+                $d['dinv_invid'] = $id;
+                $this->db->INSERT('svc_invoice_det', $d);
+            }
+        }
+
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['kode'] = $id;
+            $result['msg'] = sukses("Berhasil menyimpan faktur service");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['kode'] = $id;
+            $result['msg'] = error("Gagal menyimpan faktur service");
         }
         return $result;
     }

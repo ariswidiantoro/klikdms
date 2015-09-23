@@ -187,6 +187,7 @@ class Master_Service extends Application {
      */
     public function addPelanggan() {
 //        $this->hakAkses(28);
+        $this->data['href'] = $this->input->GET('href');
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addPelanggan', $this->data);
     }
@@ -219,6 +220,19 @@ class Master_Service extends Application {
      */
     public function addKendaraan() {
         $this->hakAkses(33);
+        $this->data['merk'] = $this->model_admin->getMerk();
+        $this->data['warna'] = $this->model_admin->getWarna();
+        $this->load->view('addKendaraan', $this->data);
+    }
+
+    public function addKendaraanWo() {
+        $this->hakAkses(33);
+        $hrefWo = array(
+            'href' => $this->input->GET('href'),
+            'jenis' => $this->input->GET('jenis'),
+            'type' => $this->input->GET('type'),
+        );
+        $this->session->set_userdata('href_wo', $hrefWo);
         $this->data['merk'] = $this->model_admin->getMerk();
         $this->data['warna'] = $this->model_admin->getWarna();
         $this->load->view('addKendaraan', $this->data);
@@ -430,7 +444,11 @@ class Master_Service extends Application {
         if ($this->form_validation->run() == TRUE) {
             $stnkExp = $this->input->post("msc_stnkexp");
             if (empty($stnkExp)) {
-                $stnkExp = defaultTgl();
+                $stnkExp = DEFAULT_TGL;
+            }
+            $tahun = $this->input->post('msc_tahun');
+            if (empty($tahun)) {
+                $tahun = 0;
             }
             $data = array(
                 'msc_pelid' => strtoupper($this->input->post('msc_pelid')),
@@ -439,7 +457,7 @@ class Master_Service extends Application {
                 'msc_nomesin' => strtoupper($this->input->post('msc_nomesin')),
                 'msc_warnaid' => $this->input->post('msc_warnaid'),
                 'msc_ctyid' => $this->input->post('msc_ctyid'),
-                'msc_tahun' => $this->input->post('msc_tahun'),
+                'msc_tahun' => $tahun,
                 'msc_inextern' => $this->input->post('msc_inextern'),
                 'msc_createon' => date('Y-m-d H:i:s'),
                 'msc_createby' => ses_username,
