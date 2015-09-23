@@ -729,11 +729,12 @@ class Master_Service extends Application {
                 'flat_so' => $this->system->numeric($this->input->post('flat_so')),
                 'flat_total' => $this->system->numeric($this->input->post('flat_total'))
             );
-            $hasil = $this->model_service->saveFlateRate($data);
-            if ($hasil) {
-                $hasil = $this->sukses("Berhasil menyimpan Free Service");
+            if ($this->model_service->saveFlateRate($data)) {
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Free Service");
+                $hasil['result'] = true;
             } else {
-                $hasil = $this->error("Gagal menyimpan free Service");
+                $hasil['msg'] = $this->error("Gagal menyimpan free Service");
+                $hasil['result'] = true;
             }
         }
         echo json_encode($hasil);

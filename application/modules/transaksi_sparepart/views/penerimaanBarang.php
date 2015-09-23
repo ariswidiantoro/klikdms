@@ -254,7 +254,9 @@
                     url: '<?php echo site_url('master_sparepart/jsonDataBarang'); ?>',
                     dataType: 'json',
                     type: 'POST',
-                    data: {param : $("#kodeBarang").val()},
+                    data: {
+                        param : $("#kodeBarang").val()
+                    },
                     success: function(data){
                         if (data['response']) {
                             inc++;

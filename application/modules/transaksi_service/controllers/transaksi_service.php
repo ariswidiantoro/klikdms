@@ -19,6 +19,20 @@ class Transaksi_Service extends Application {
 //        $this->addProspect();
     }
 
+    function jsonWoBelumInvoiceAuto() {
+        $wo = $this->input->post('param');
+        $query = $this->model_trservice->getWoBelumInvoiceAutoComplete(strtoupper($wo));
+        if (!empty($query)) {
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array('value' => $row['wo_nomer'], 'desc' => $row['msc_nopol'], 'type' => $row['wo_type']);
+            }
+        } else {
+            $data['message'][] = array('value' => 'Wo Tidak Ditemukan', 'desc' => "");
+        }
+        echo json_encode($data);
+    }
+
     function jsonWo() {
         $woNomer = strtoupper($this->input->post('param'));
         $data = $this->model_trservice->getWo($woNomer);
@@ -28,6 +42,19 @@ class Transaksi_Service extends Application {
             $data['response'] = false;
         }
         echo json_encode($data);
+    }
+    function getJasaWoByWoNomer() {
+        $woNomer = strtoupper($this->input->post('wo'));
+        $data = $this->model_trservice->getJasaWoByWoNomer($woNomer);
+        echo json_encode($data);
+    }
+
+    /**
+     * 
+     */
+    function getTotalSupply() {
+        $woNomer = strtoupper($this->input->post('wo'));
+        echo json_encode($this->model_trservice->getTotalSupply($woNomer));
     }
 
     function jsonDataKendaraan() {
@@ -109,6 +136,7 @@ class Transaksi_Service extends Application {
                 'wo_pelid' => $this->input->post('wo_pelid'),
                 'wo_selesai' => $this->input->post('wo_selesai'),
                 'wo_km' => $this->input->post('wo_km'),
+                'wo_type' => $this->input->post('wo_type'),
                 'wo_pembawa' => $this->input->post('wo_pembawa'),
                 'wo_inextern' => $this->input->post('wo_inextern'),
                 'wo_stallid' => $this->input->post('wo_stallid'),
@@ -178,6 +206,7 @@ class Transaksi_Service extends Application {
         $this->data['jenis'] = $this->model_trservice->getWoJenis();
         $this->load->view('workOrder', $this->data);
     }
+
     /**
      * 
      */

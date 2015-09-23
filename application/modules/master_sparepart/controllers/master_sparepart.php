@@ -410,6 +410,7 @@ class Master_Sparepart extends Application {
         }
         echo json_encode($data);
     }
+    
 
     /**
      * 
@@ -418,6 +419,21 @@ class Master_Sparepart extends Application {
         $nama = $this->input->post('param');
         $jenis = isset($_POST['jenis']) ? $_POST['jenis'] : 'ps';
         $query = $this->model_sparepart->getInventoryByKodeBarang(strtoupper($nama), $jenis);
+        if (count($query) > 0) {
+            $query['response'] = true;
+        } else {
+            $query['response'] = false;
+        }
+        echo json_encode($query);
+    }
+    /**
+     * 
+     */
+    function jsonDataBarangSupply() {
+        $nama = $this->input->post('param');
+        $pelid = $this->input->post('pelid');
+        $jenis = isset($_POST['jenis']) ? $_POST['jenis'] : 'ps';
+        $query = $this->model_sparepart->getInventoryByKodeBarangSupply(strtoupper($nama), $jenis, $pelid);
         if (count($query) > 0) {
             $query['response'] = true;
         } else {

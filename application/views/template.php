@@ -382,6 +382,7 @@ window.jQuery || document.write("<script src='../../assets/js/jquery1x.js'>"+"<"
         <script src="<?php echo path_js(); ?>jquery-ui.js"></script>
         <script src="<?php echo path_js(); ?>validasi.js"></script>
         <script src="<?php echo path_js(); ?>bootbox.js"></script>
+        <script src="<?php echo path_js(); ?>jquery.validate.js"></script>
 
 
         <script src="<?php echo path_js(); ?>dataTables/jquery.dataTables.js"></script>
