@@ -107,17 +107,28 @@ class Transaksi_Sparepart extends Application {
             if (empty($term)) {
                 $term = 0;
             }
+            $jenis = $this->input->post('spp_jenis');
+            $cetakHarga = 0;
+            if ($this->input->post('spp_cetak_harga') == '1') {
+                $cetakHarga = 1;
+            }
             $data = array(
                 'spp_tgl' => date('Y-m-d'),
                 'spp_createon' => date('Y-m-d H:i:s'),
                 'spp_createby' => ses_username,
                 'spp_pelid' => $this->input->post('spp_pelid'),
+                'spp_woid' => $this->input->post('spp_pelid'),
+                'spp_cetak_harga' => $cetakHarga,
                 'spp_pay_method' => $this->input->post('spp_pay_method'),
                 'spp_kredit_term' => $term,
-                'spp_jenis' => $this->input->post('spp_jenis'),
+                'spp_jenis' => $jenis,
+                'spp_print' => 1,
                 'spp_total' => numeric($this->input->post('spp_total')),
                 'spp_cbid' => ses_cabang,
             );
+            if ($jenis != 'ps') {
+                $data['spp_woid'] = $this->input->post('spp_woid');
+            }
             $dsupp_inveid = $this->input->post('dsupp_inveid');
             $dsupp_qty = $this->input->post('dsupp_qty');
             $dsupp_harga = $this->input->post('dsupp_harga');
@@ -137,7 +148,7 @@ class Transaksi_Sparepart extends Application {
                     'dsupp_harga' => numeric($dsupp_harga[$i]),
                     'dsupp_diskon' => $dsupp_diskon[$i],
                     'dsupp_subtotal' => numeric($dsupp_subtotal[$i]),
-//                    'dsupp_subtotal_hpp' => $subTotalHpp,
+                    'dsupp_subtotal_hpp' => $subTotalHpp,
                 );
             }
             $data['spp_total_hpp'] = $totalHpp;
@@ -184,16 +195,34 @@ class Transaksi_Sparepart extends Application {
         echo json_encode($return);
     }
 
+    /**
+     * 
+     * @param type $kode
+     */
     function printTerimaBarang($kode) {
         $this->data['faktur'] = $this->model_trspart->dataFakturTerima($kode);
         $this->data['barang'] = $this->model_trspart->dataFakturTerimaDetail($kode);
         $this->load->view('printTerimaBarang', $this->data);
     }
 
+    /**
+     * 
+     * @param type $kode
+     */
     function printReturBeli($kode) {
         $this->data['faktur'] = $this->model_trspart->dataReturBeli($kode);
         $this->data['barang'] = $this->model_trspart->dataReturBeliDetail($kode);
         $this->load->view('printReturBeli', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $kode
+     */
+    function printSupplySlip($kode) {
+        $this->data['data'] = $this->model_trspart->dataSupplySlip($kode);
+        $this->data['barang'] = $this->model_trspart->dataSupplySlipDetail($kode);
+        $this->load->view('printSupplySlip', $this->data);
     }
 
 }

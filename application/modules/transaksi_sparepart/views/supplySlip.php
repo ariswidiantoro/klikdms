@@ -16,7 +16,6 @@
     input:focus {
         background-color: yellow;
     } 
-    #wo,#pel_nama,#spp_pelid {background-color: #ffcccc;}
 </style>
 <form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/saveSupplySlip'); ?>" method="post" name="form">
     <div class="form-group">
@@ -36,7 +35,8 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Work Order</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" name="wo" id="wo" class="upper col-xs-10 col-sm-3" />
+                <input type="text" autocomplete="off" name="wo" id="wo" class="req upper col-xs-10 col-sm-3" />
+                <input type="hidden" name="spp_woid" id="spp_woid"/>
                 <i id="sukses" class="ace-icon fa fa-check-circle bigger-200 green"></i>
                 <i id="error" class="ace-icon fa fa-times-circle bigger-200 red"></i>
             </div>
@@ -46,7 +46,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Pelanggan</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" required="required" name="pel_nama" id="pel_nama" class="upper col-xs-10 col-sm-3" />
+                <input type="text" autocomplete="off" required="required" name="pel_nama" id="pel_nama" class="req upper col-xs-10 col-sm-5" />
             </div>
         </div>
     </div>
@@ -54,7 +54,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Pelanggan</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" required="required" name="spp_pelid" id="spp_pelid" class="upper col-xs-10 col-sm-3" />
+                <input type="text" autocomplete="off" required="required" name="spp_pelid" id="spp_pelid" class="req upper col-xs-10 col-sm-3" />
             </div>
         </div>
     </div>
@@ -75,32 +75,31 @@
                    id="spp_kredit_term" class="number col-xs-10 col-sm-2" />
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>
+            <div class="col-sm-8">
+                <label>
+                    <input class="ace" id="spp_cetak_harga" value="1" type="checkbox" name="spp_cetak_harga">
+                    <span class="lbl"> Tampilkan harga di cetakan</span>
+                </label>
+            </div>
+        </div>
     <div class="hr hr-16 hr-dotted"></div>
     <div id="sparepart">
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bantuan</label>
             <div class="col-sm-8">
-                <div class="radio" style="margin-left: 0">
-                    <label>
-                        <input name="auto" id="check" type="radio" value="auto" class="ace" />
-                        <span class="lbl">Auto Complete</span>
-                    </label>
-                </div>
-                <div class="radio" style="margin-left: 0">
-                    <label>
-                        <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
-                        <span class="lbl">Tanpa Auto Complete</span>
-                    </label>
-                </div>
-
-
+                <label>
+                    <input class="ace" id="autocomplete" onclick="cekAutoComplete()" type="checkbox" name="form-field-checkbox">
+                    <span class="lbl"> Auto Complete</span>
+                </label>
             </div>
         </div>
 
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Barang</label>
             <div class="col-sm-8">
-                <input type="text" placeholder="KODE BARANG" autocomplete="off" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
+                <input type="text" placeholder="KODE BARANG" readonly="readonly" autocomplete="off" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
                 <i class="ace-icon fa fa-spinner fa-spin orange bigger-200" id="waiting"></i>
                 <div id="msg" style="font-size: 16px;font-weight: bold" class="msg help-block col-xs-12 col-sm-reset inline">
                 </div>
@@ -221,6 +220,11 @@
     document.getElementById("error").style.display = 'none';
     $("#spp_jenis").change(function(e) {
         var jenis = $('#spp_jenis').val();
+        if (jenis == '') {
+            document.getElementById("kodeBarang").readOnly = true;
+        }else{
+            document.getElementById("kodeBarang").readOnly = false;
+        }
         if (jenis == 'ps') {
             document.getElementById("service").style.display = 'none';
             document.getElementById("sparepart").style.display = '';
@@ -259,8 +263,12 @@
                     if (data.response) {
                         document.getElementById("sukses").style.display = '';
                         document.getElementById("error").style.display = 'none';
+                        $("#spp_pelid").val(data['pelid']);
+                        $("#spp_woid").val(data['woid']);
+                        $("#pel_nama").val(data['pel_nama']);
                     } else {
-                        //                        $('#button').attr("disabled", true);
+                        $("#spp_pelid").val("");
+                        $("#pel_nama").val("");
                         document.getElementById("sukses").style.display = 'none';
                         document.getElementById("error").style.display = '';
                     }
@@ -270,16 +278,14 @@
         
     })
     
-    $('#check').click(function() {
-        if ($(this).is(':checked')) {
+    function cekAutoComplete()
+    {
+        if($("#autocomplete").prop("checked") == true){
             $('#kodeBarang').autocomplete("enable");
-        }
-    })
-    $('#noncheck').click(function() {
-        if ($(this).is(':checked')) {
+        }else{
             $('#kodeBarang').autocomplete("disable");
         }
-    })
+    }
 
 
 
@@ -329,7 +335,7 @@
                             params += ', fullscreen=yes,scrollbars=yes';
                             document.form.reset();
                             clearForm();
-                            window.open("<?php echo site_url("transaksi_sparepart/printReturBeli"); ?>/"+data.kode,'_blank', params);
+                            window.open("<?php echo site_url("transaksi_sparepart/printSupplySlip"); ?>/"+data.kode,'_blank', params);
                         }
                         $("#result").html(data.msg).show().fadeIn("slow");
                     }
@@ -352,11 +358,7 @@
                     type: 'POST',
                     data: {param : $("#pel_nama").val()},
                     success: function(data) {
-                        if (data.response == "true") {
-                            add(data.message);
-                        } else {
-                            add(data.value);
-                        }
+                        add(data.message);
                     }
                 });
             },
@@ -500,11 +502,7 @@
                         jenis : $("#spp_jenis").val()
                     },
                     success: function(data) {
-                        if (data.response == "true") {
-                            add(data.message);
-                        } else {
-                            add(data.value);
-                        }
+                        add(data.message);
                     }
                 });
             },

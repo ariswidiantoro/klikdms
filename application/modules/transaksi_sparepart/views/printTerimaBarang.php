@@ -8,7 +8,6 @@
     #tanda {text-align: center;}
     #tanda tr td {height: 50px; }
 </style> 
-<div style="margin:10px">
     <div style="width: 100%">
         <span style="float: left;width: 45%">
             <?php echo ses_dealer . "<br />" . ses_alamat; ?>
@@ -40,7 +39,7 @@
             <td width="33%"><?php echo $faktur['trbr_supid']; ?></td>
             <th width="15%">Credit Term</th>
             <td width="2%">:</td>
-            <td width="33%"><?php echo $faktur['trbr_credit_term']; ?> Hari</td>
+            <td width="33%"><?php echo $faktur['trbr_kredit_term']; ?> Hari</td>
         </tr>
         <tr>
             <th width="15%">Nama Supplier</th>

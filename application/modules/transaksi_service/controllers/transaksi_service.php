@@ -20,15 +20,14 @@ class Transaksi_Service extends Application {
     }
 
     function jsonWo() {
-        $woNomer = $this->input->post('param');
-        $retur = array();
+        $woNomer = strtoupper($this->input->post('param'));
         $data = $this->model_trservice->getWo($woNomer);
-        $retur['response'] = false;
         if (count($data) > 0) {
-            $retur['response'] = true;
-            $retur['data'] = $data;
+            $data['response'] = true;
+        } else {
+            $data['response'] = false;
         }
-        echo json_encode($retur);
+        echo json_encode($data);
     }
 
     function jsonDataKendaraan() {
@@ -96,10 +95,107 @@ class Transaksi_Service extends Application {
         echo json_encode($data);
     }
 
+    function saveWo() {
+        $return = false;
+        $this->form_validation->set_rules('nopol', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'wo_tgl' => date('Y-m-d'),
+                'wo_createon' => date('Y-m-d H:i:s'),
+                'wo_createby' => ses_username,
+                'wo_jenis' => $this->input->post('wo_jenis'),
+                'wo_mscid' => strtoupper($this->input->post('wo_mscid')),
+                'wo_numerator' => $this->input->post('wo_numerator'),
+                'wo_pelid' => $this->input->post('wo_pelid'),
+                'wo_selesai' => $this->input->post('wo_selesai'),
+                'wo_km' => $this->input->post('wo_km'),
+                'wo_pembawa' => $this->input->post('wo_pembawa'),
+                'wo_inextern' => $this->input->post('wo_inextern'),
+                'wo_stallid' => $this->input->post('wo_stallid'),
+                'wo_tunggu' => $this->input->post('wo_tunggu'),
+                'wo_sa' => ses_krid,
+                'wo_cbid' => ses_cabang,
+            );
+            $jasa = array();
+            $sp = array();
+            $so = array();
+            $woj_keluhan = $this->input->post('woj_keluhan');
+            $woj_flatid = $this->input->post('woj_flatid');
+            $woj_namajasa = $this->input->post('woj_namajasa');
+            $woj_rate = $this->input->post('woj_rate');
+            $woj_subtotal = $this->input->post('woj_subtotal');
+            // get array spare part from table 
+            if (count($woj_namajasa) > 0) {
+                for ($i = 0; $i < count($woj_namajasa); $i++) {
+                    if (!empty($woj_keluhan[$i]) || !empty($woj_namajasa[$i])) {
+                        $jasa[] = array(
+                            'woj_keluhan' => strtoupper($woj_keluhan[$i]),
+                            'woj_flatid' => $woj_flatid[$i],
+                            'woj_namajasa' => strtoupper($woj_namajasa[$i]),
+                            'woj_rate' => numeric($woj_rate[$i]),
+                            'woj_subtotal' => numeric($woj_subtotal[$i]),
+                        );
+                    }
+                }
+            }
+            $wop_inveid = $this->input->post('wop_inveid');
+            $wop_qty = $this->input->post('wop_qty');
+            $wop_harga = $this->input->post('wop_harga');
+            $wop_subtotal = $this->input->post('wop_subtotal');
+            // get array spare part from table 
+            if (count($wop_inveid) > 0) {
+                for ($i = 0; $i < count($wop_inveid); $i++) {
+                    if (!empty($wop_inveid[$i])) {
+                        $sp[] = array(
+                            'wop_inveid' => $wop_inveid[$i],
+                            'wop_qty' => $wop_qty[$i],
+                            'wop_harga' => numeric($wop_harga[$i]),
+                            'wop_subtotal' => numeric($wop_subtotal[$i]),
+                        );
+                    }
+                }
+            }
+            $wos_nama = $this->input->post('wos_nama');
+            $wos_harga = $this->input->post('wos_harga');
+            // get array spare part from table 
+            if (count($wos_nama) > 0) {
+                for ($i = 0; $i < count($wos_nama); $i++) {
+                    if (!empty($wos_nama[$i])) {
+                        $so[] = array(
+                            'wos_nama' => strtoupper($wos_nama[$i]),
+                            'wos_harga' => numeric($wos_harga[$i]),
+                        );
+                    }
+                }
+            }
+            $return = $this->model_trservice->saveWo($data, $jasa, $sp, $so);
+        }
+        echo json_encode($return);
+    }
+
     public function workOrder() {
-        $this->hakAkses(57);
+        $this->hakAkses(35);
         $this->data['jenis'] = $this->model_trservice->getWoJenis();
         $this->load->view('workOrder', $this->data);
+    }
+    /**
+     * 
+     */
+    public function fakturService() {
+        $this->hakAkses(38);
+        $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_FINAL_CHECKER);
+        $this->data['kasir'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_KASIR_SERVICE);
+        $this->load->view('fakturService', $this->data);
+    }
+
+    public function clockOnMekanik() {
+        $this->hakAkses(36);
+        $this->load->view('clockOnMekanik', $this->data);
+    }
+
+    public function lampiranFaktur() {
+        $this->hakAkses(37);
+        $this->load->view('lampiranFaktur', $this->data);
     }
 
     public function serviceOrder() {
@@ -108,6 +204,117 @@ class Transaksi_Service extends Application {
         $this->data['jenis'] = $this->input->GET('jenis');
         $this->data['type'] = $this->input->GET('type');
         $this->load->view('serviceOrder', $this->data);
+    }
+
+    /**
+     * Function ini digunakan untuk mencetak wo
+     * @param type $kode
+     */
+    function printWo($kode) {
+        $this->data['wo'] = $this->model_trservice->getWorkOrder($kode);
+        $this->data['jasa'] = $this->model_trservice->getJasaWorkOrder($kode);
+        $this->data['sp'] = $this->model_trservice->getSparepartWorkOrder($kode);
+        $this->data['so'] = $this->model_trservice->getSoWorkOrder($kode);
+        $this->load->view('printWo', $this->data);
+    }
+
+    /**
+     * Function ini digunakan untuk mencetak lampiran faktur service
+     * @param type $kode
+     */
+    function printLampiranFakturService($woNomer) {
+        $this->load->model('model_trspart');
+        $this->data['data'] = $this->model_trservice->getWo(strtoupper($woNomer));
+        $this->data['part'] = $this->model_trspart->getSupplySlipDetailByWo(strtoupper($woNomer));
+        $this->load->view('printLampiranFakturService', $this->data);
+    }
+
+    function loadDataWo() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'wo_nomer';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_trservice->getTotalWo($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_trservice->getAllWo($start, $limit, $sidx, $sord, $where);
+        $mekanik = $this->model_trservice->getDataMekanik();
+        $mek = "<option value=''>Pilih Mekanik</option>";
+        if (count($mekanik) > 0) {
+            foreach ($mekanik as $list) {
+                $mek .= "<option value='" . $list['krid'] . "' >" . $list['kr_nama'] . "</option>";
+            }
+        }
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $mknk = '';
+                $pending = '-';
+                $clock = "<label><input class='ace ace-switch btn-rotate' id='cek$i' onclick='clocking(\"" . $i . "\",\"" . $row['cloid'] . "\")' type='checkbox' name='cek[]'><span class='lbl'></span></label>";
+
+                if ($row['clo_status'] == '0') {
+                    $status = 'BELUM CLOCK ON';
+                    $mknk = "<select id='krid$i' name='krid' class='ace col-xs-10 col-sm-10' style='width: 100%'>" . $mek . "</select>";
+                } else if ($row['clo_status'] == '1') {
+                    $status = 'PROSES PENGERJAAN';
+                    $clock = "<label><input checked class='ace ace-switch btn-rotate' id='cek$i' onclick='clocking(\"" . $i . "\",\"" . $row['cloid'] . "\")' type='checkbox' name='cek[]'><span class='lbl'></span></label>";
+                    $pending = "<a href='javascript:;' title='Pending' onclick='pending(\"" . $i . "\",\"" . $row['cloid'] . "\")'><i class='green ace-icon glyphicon glyphicon-off'></i></a>";
+                    $mknk = $row['kr_nama'];
+                } else if ($row['clo_status'] == '2') {
+                    $status = 'PENDING';
+                    $mknk = "<select id='krid$i' name='krid' class='ace col-xs-10 col-sm-10' style='width: 100%'>" . $mek . "</select>";
+                } else {
+                    $status = 'SELESAI';
+                    $clock = 'PROSES NOTA';
+                    $mknk = $row['kr_nama'];
+                }
+                $responce->rows[$i]['id'] = $row['woid'];
+                $responce->rows[$i]['cell'] = array(
+                    $row['wo_nomer'], $row['msc_nopol'], $row['pel_nama'], $status, $mknk, $clock, $pending);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    function clockingMekanik() {
+        $cloid = $this->input->post('clockid');
+        $status = $this->input->post('status');
+        $krid = $this->input->post('krid');
+        $simpan = $this->model_trservice->clockingMekanik($cloid, $status, $krid);
+        if ($simpan) {
+            $hasil['msg'] = $this->sukses("Berhasil Clock On / Off Mekanik");
+            $hasil['response'] = true;
+        } else {
+            $hasil['msg'] = $this->error("Gagal Clock On / Off Mekanik");
+            $hasil['response'] = false;
+        }
+        echo json_encode($hasil);
+    }
+
+    function pendingMekanik() {
+        $cloid = $this->input->post('clockid');
+        $simpan = $this->model_trservice->pendingMekanik($cloid);
+        if ($simpan) {
+            $hasil['msg'] = $this->sukses("Berhasil Pending Mekanik");
+            $hasil['response'] = true;
+        } else {
+            $hasil['msg'] = $this->error("Gagal Pending Mekanik");
+            $hasil['response'] = false;
+        }
+        echo json_encode($hasil);
     }
 
 }

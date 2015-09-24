@@ -7,11 +7,11 @@ echo $this->session->flashdata('msg');
 <div id="result"></div>
 <div class="row">
     <div class="col-xs-12">
-        <p>
+<!--        <p>
             <a href="#admin/addKaryawan" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Karyawan</a>
-        </p>
+        </p>-->
         <table id="grid-table"></table>
         <div id="pager"></div>
     </div>
@@ -67,7 +67,7 @@ echo $this->session->flashdata('msg');
                 viewrecords: true,
                 rownumbers: true,
                 gridview: true,
-                caption:"Daftar Karyawan"
+                caption:"Daftar User Role"
             }).navGrid('#pager',{edit:false,add:false,del:false});
         }
     

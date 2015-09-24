@@ -263,6 +263,7 @@ class Model_Service extends CI_Model {
         try {
             $str = $this->db->INSERT('svc_frate', $data);
             if (!$str) {
+                log_message('error', 'SUDAH ADAAA');
                 $errMessage = $this->db->_error_message();
                 if (strpos($errMessage, "duplicate key value") == TRUE) {
                     $this->db->trans_rollback();

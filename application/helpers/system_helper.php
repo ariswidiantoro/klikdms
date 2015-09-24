@@ -22,46 +22,6 @@ if (!function_exists('name_system')) {
 
 }
 
-//if (!function_exists('form_dropdown')) {
-//
-//    function form_dropdown($name = '', $options = array(), $selected = array(), $extra = '') {
-//        if (!is_array($selected)) {
-//            $selected = array($selected);
-//        }
-//
-//        // If no selected state was submitted we will attempt to set it automatically
-//        if (count($selected) === 0) {
-//            // If the form name appears in the $_POST array we have a winner!
-//            if (isset($_POST[$name])) {
-//                $selected = array($_POST[$name]);
-//            }
-//        }
-//        if ($extra != '')
-//            $extra = ' ' . $extra;
-//        $multiple = (count($selected) > 1 && strpos($extra, 'multiple') === FALSE) ? ' multiple="multiple"' : '';
-//        $form = '<select class="form-control" name="' . $name . '"' . $extra . $multiple . ">\n";
-//        foreach ($options as $key => $val) {
-//            $key = (string) $key;
-//            if (is_array($val) && !empty($val)) {
-//                $form .= '<optgroup label="' . $key . '">' . "\n";
-//
-//                foreach ($val as $optgroup_key => $optgroup_val) {
-//                    $sel = (in_array($optgroup_key, $selected)) ? ' selected="selected"' : '';
-//                    $form .= '<option value="' . $optgroup_key . '"' . $sel . '>' . (string) $optgroup_val . "</option>\n";
-//                }
-//                $form .= '</optgroup>' . "\n";
-//            } else {
-//                $sel = (in_array($key, $selected)) ? ' selected="selected"' : '';
-//                $form .= '<option value="' . $key . '"' . $sel . '>' . (string) $val . "</option>\n";
-//            }
-//        }
-//
-//        $form .= '</select>';
-//        log_message('error', 'FFFFFFF ' . $form);
-//        return $form;
-//    }
-//
-//}
 
 /*
   |--------------------------------------------------------------------------
@@ -76,6 +36,7 @@ if (!function_exists('company')) {
     }
 
 }
+
 if (!function_exists('menu')) {
 
     function menu($id, $name, $url, $iconclasss, $spanclass, $ext) {
@@ -293,13 +254,13 @@ if (!function_exists('internExtern')) {
             );
         } else {
             switch ($type) {
-                case '1' : $data = 'Intern';
+                case '1' : $data = 'INTERN';
                     break;
-                case '2' : $data = 'Extern';
+                case '2' : $data = 'EXTERN';
                     break;
-                case '3' : $data = 'Group';
+                case '3' : $data = 'GROUP';
                     break;
-                case '4' : $data = 'Cabang';
+                case '4' : $data = 'CABANG';
             }
         }
         return $data;
@@ -378,6 +339,7 @@ if (!function_exists("format_idr")) {
 
 }
 if (!function_exists("defaultTgl")) {
+
     function defaultTgl() {
         return '01-01-9999';
     }
@@ -823,6 +785,22 @@ if (!defined('ses_dealer')) {
         $dealer = data_cookie("dealer");
     }
     define("ses_dealer", $dealer);
+}
+//phone
+if (!defined('ses_phone')) {
+    $phone = $CI->session->userdata('phone');
+    if ($phone == "") {
+        $phone = data_cookie("phone");
+    }
+    define("ses_phone", $phone);
+}
+//dealer
+if (!defined('ses_npwp')) {
+    $npwp = $CI->session->userdata('npwp');
+    if ($npwp == "") {
+        $npwp = data_cookie("npwp");
+    }
+    define("ses_npwp", $phone);
 }
 
 //alamat

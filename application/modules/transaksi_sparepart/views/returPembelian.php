@@ -19,26 +19,26 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Faktur Terima</label>
         <div class="col-sm-8">
-            <input type="text" required="required" autocomplete="off" name="trbr_faktur" maxlength="30" id="trbr_faktur" class="upper ace col-xs-10 col-sm-3" />
+            <input type="text" required="required" autocomplete="off" name="trbr_faktur" maxlength="30" id="trbr_faktur" class="upper ace col-xs-10 col-sm-3 req" />
             <input type="hidden"  autocomplete="off" name="trbrid" id="trbrid"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Supplier</label>
         <div class="col-sm-8">
-            <input type="text" autocomplete="off" required="required" name="supplier" id="supplier" class="upper col-xs-10 col-sm-3" />
+            <input type="text" autocomplete="off" required="required" name="supplier" id="supplier" class="upper col-xs-10 col-sm-3 req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Supplier</label>
         <div class="col-sm-8">
-            <input type="text" required="required"  id="trbr_supid" name="trbr_supid" class="upper col-xs-10 col-sm-3" />* Otomatis terisi saat nama supplier dipilih
+            <input type="text" required="required"  id="trbr_supid" name="trbr_supid" class="upper col-xs-10 col-sm-3 req" />* Otomatis terisi saat nama supplier dipilih
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alasan Retur</label>
         <div class="col-sm-8">
-            <textarea name="rb_alasan" required="required" class="ace col-xs-10 col-sm-5" rows="4"></textarea>
+            <textarea name="rb_alasan" required="required" class="ace col-xs-10 col-sm-5  req" rows="4"></textarea>
         </div>
     </div>
     <div class="hr hr-16 hr-dotted"></div>
@@ -46,20 +46,25 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bantuan</label>
         <div class="col-sm-8">
-            <div class="radio" style="margin-left: 0">
-                <label>
-                    <input name="auto" id="check" type="radio" value="auto" class="ace" />
-                    <span class="lbl">Auto Complete</span>
-                </label>
-            </div>
-            <div class="radio" style="margin-left: 0">
-                <label>
-                    <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
-                    <span class="lbl">Tanpa Auto Complete</span>
-                </label>
-            </div>
+            <!--            <div class="radio" style="margin-left: 0">
+                            <label>
+                                <input name="auto" id="check" type="radio" value="auto" class="ace" />
+                                <span class="lbl">Auto Complete</span>
+                            </label>
+                        </div>
+                        <div class="radio" style="margin-left: 0">
+                            <label>
+                                <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
+                                <span class="lbl">Tanpa Auto Complete</span>
+                            </label>
+                        </div>-->
 
-
+            <!--<div class="checkbox">-->
+                <label>
+                    <input class="ace" id="autocomplete" onclick="cekAutoComplete()" type="checkbox" name="form-field-checkbox">
+                    <span class="lbl"> Auto Complete</span>
+                </label>
+            <!--</div>-->
         </div>
     </div>
     <div class="form-group">
@@ -117,16 +122,26 @@
 </form>
 <script type="text/javascript">
     $("#waiting").hide();
-    $('#check').click(function() {
-        if ($(this).is(':checked')) {
-            $('#kodeBarang').autocomplete("enable");
-        }
-    })
-    $('#noncheck').click(function() {
-        if ($(this).is(':checked')) {
+    
+    function cekAutoComplete()
+    {
+        if($("#autocomplete").prop("checked") == true){
+             $('#kodeBarang').autocomplete("enable");
+        }else{
             $('#kodeBarang').autocomplete("disable");
         }
-    })
+    }
+    
+    //    $('#check').click(function() {
+    //        if ($(this).is(':checked')) {
+    //            $('#kodeBarang').autocomplete("enable");
+    //        }
+    //    })
+    //    $('#noncheck').click(function() {
+    //        if ($(this).is(':checked')) {
+    //            $('#kodeBarang').autocomplete("disable");
+    //        }
+    //    })
 
 
 

@@ -302,7 +302,7 @@ class Admin extends Application {
                 }
                 $responce->rows[$i]['id'] = $row->krid;
                 $responce->rows[$i]['cell'] = array(
-                    $row->kr_nik, $row->kr_nama, $row->kr_alamat, $row->kr_hp, $row->kr_nomor_ktp, $row->kr_username, $edit, $hapus);
+                    $row->kr_nik, $row->kr_nama, $row->kr_alamat, $row->kr_hp, $row->kr_nomor_ktp, $row->kr_username,$row->jab_deskripsi, $edit, $hapus);
                 $i++;
             }
         echo json_encode($responce);
@@ -437,7 +437,7 @@ class Admin extends Application {
         $this->form_validation->set_rules('jab_deskripsi', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
             $data = array(
-                'jab_deskripsi' => $this->input->post('jab_deskripsi'),
+                'jab_deskripsi' => strtoupper($this->input->post('jab_deskripsi')),
                 'jab_deptid' => $this->input->post('jab_deptid')
             );
             $hasil = $this->model_admin->saveJabatan($data);
@@ -975,7 +975,7 @@ class Admin extends Application {
             $data = array(
                 'jabid' => $this->input->post('jabid'),
                 'jab_deptid' => $this->input->post('jab_deptid'),
-                'jab_deskripsi' => $this->input->post('jab_deskripsi'),
+                'jab_deskripsi' => strtoupper($this->input->post('jab_deskripsi')),
             );
             $hasil = $this->model_admin->updateJabatan($data);
             if ($hasil) {

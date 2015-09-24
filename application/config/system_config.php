@@ -44,28 +44,6 @@ define("dept_body_repair", 11);
 | configuration position of employees
 |--------------------------------------------------------------------------
 */
-//direktur
-define("jab_direktur",1);
-//direksi
-define("jab_direksi",2);
-//head
-define("jab_head",3);
-//GMO
-define("jab_gmo",4);
-//BOD
-define("jab_bod",5);
-//asisten manager
-define("jab_asisten_manager",6);
-//supervisor
-define("jab_supervisor",7);
-//development
-define("jab_development",8);
-//deputi
-define("jab_deputi",9);
-//staff
-define("jab_staff",10);
-//manager
-define("jab_manager",11);
 
 /**
 |--------------------------------------------------------------------------

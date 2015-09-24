@@ -19,7 +19,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Jabatan</label>
         <div class="col-sm-8">
-            <input type="text" name="jab_deskripsi" id="jab_deskripsi" placeholder="Nama Jabatan" class="col-xs-10 col-sm-5" />
+            <input type="text" name="jab_deskripsi" id="jab_deskripsi" placeholder="Nama Jabatan" class="upper col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="clearfix form-actions">

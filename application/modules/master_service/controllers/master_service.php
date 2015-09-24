@@ -175,7 +175,7 @@ class Master_Service extends Application {
                 $data['message'][] = array('value' => $row['pel_nama'], 'pelid' => $row['pelid'], 'desc' => $row['pel_alamat']);
             }
         } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ditemukan", 'desc' => '');
         }
         echo json_encode($data);
     }
