@@ -12,6 +12,7 @@
     }
 </style>
 <form class="form-horizontal" id="form" method="post" action="<?php echo site_url('master_service/saveKendaraan'); ?>" name="form">
+    <?php $hrefWo = $this->session->userdata('href_wo'); ?>
     <div class="page-header">
         <h1>
             <small>
@@ -22,23 +23,26 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_nama" id="pel_nama" autocomplete="off" spellcheck="false" required="required" placeholder="Nama" class="upper ace col-xs-10 col-sm-5" />
-            <a href="#master_service/addPelanggan" class="btn btn-sm btn-primary">
+            <input type="text" name="pel_nama" id="pel_nama" autocomplete="off" spellcheck="false" required="required" placeholder="Nama" class="req upper ace col-xs-10 col-sm-5" />
+            <a href="#master_service/addPelanggan?href=master_service/addKendaraan" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Pelanggan</a>
+            <input type="hidden" id="href" name="href" value="<?php if (!empty($hrefWo['href'])) echo $hrefWo['href']; ?>">
+            <input type="hidden" id="jenis" name="jenis" value="<?php if (!empty($hrefWo['jenis'])) echo $hrefWo['jenis']; ?>">
+            <input type="hidden" id="type" name="type" value="<?php if (!empty($hrefWo['type'])) echo $hrefWo['type']; ?>">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Pelanggan</label>
         <div class="col-sm-8">
 
-            <input type="text" name="msc_pelid" required="required" id="pelid" placeholder="Kode Pelanggan" class="upper ace col-xs-10 col-sm-5" />
+            <input type="text" name="msc_pelid" required="required" id="pelid" placeholder="Kode Pelanggan" class="req upper ace col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea name="pel_alamat" id="pel_alamat" class="upper ace col-xs-10 col-sm-7" required="required" rows="4"></textarea>
+            <textarea name="pel_alamat" id="pel_alamat" class="req upper ace col-xs-10 col-sm-7" required="required" rows="4"></textarea>
         </div>
     </div>
     <div class="page-header">
@@ -51,25 +55,25 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Polisi</label>
         <div class="col-sm-8">
-            <input type="text" name="msc_nopol" autocomplete="off" required="required" id="pelid" placeholder="Nomor Polisi" class="upper ace col-xs-10 col-sm-5" />* TANPA SPASI
+            <input type="text" name="msc_nopol" autocomplete="off" required="required" id="pelid" placeholder="Nomor Polisi" class="req upper ace col-xs-10 col-sm-5" />* TANPA SPASI
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Rangka</label>
         <div class="col-sm-8">
-            <input type="text" name="msc_norangka"  autocomplete="off" required="required" id="msc_norangka" placeholder="Nomor Rangka" class="upper ace col-xs-10 col-sm-5" />
+            <input type="text" name="msc_norangka"  autocomplete="off" required="required" id="msc_norangka" placeholder="Nomor Rangka" class="req upper ace col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Mesin</label>
         <div class="col-sm-8">
-            <input type="text" name="msc_nomesin"  autocomplete="off" required="required" id="msc_nomesin" placeholder="Nomor Mesin" class="upper ace col-xs-10 col-sm-5" />
+            <input type="text" name="msc_nomesin"  autocomplete="off" required="required" id="msc_nomesin" placeholder="Nomor Mesin" class="req upper ace col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Warna Kendaraan</label>
         <div class="col-sm-8">
-            <select name="msc_warnaid" id="msc_warnaid" class="ace col-xs-10 col-sm-3">
+            <select name="msc_warnaid" id="msc_warnaid" class="req ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
                 <?php
                 if (count($warna) > 0) {
@@ -86,7 +90,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Merk</label>
         <div class="col-sm-8">
-            <select name="merkid" id="merkid" onchange="getModel()" class="ace col-xs-10 col-sm-3">
+            <select name="merkid" id="merkid" onchange="getModel()" class="req ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
                 <?php
                 if (count($merk) > 0) {
@@ -103,7 +107,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Model</label>
         <div class="col-sm-8">
-            <select name="modelid" id="modelid" onchange="getType()" class="ace col-xs-10 col-sm-3">
+            <select name="modelid" id="modelid" onchange="getType()" class="req ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
             </select>
         </div>
@@ -111,7 +115,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Type</label>
         <div class="col-sm-8">
-            <select name="msc_ctyid" id="msc_ctyid" class="ace col-xs-10 col-sm-3">
+            <select name="msc_ctyid" required="required" id="msc_ctyid" class="req ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
             </select>
         </div>
@@ -136,7 +140,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Type Pelanggan</label>
         <div class="col-sm-8">
-            <select name="msc_inextern" required="required" id="msc_inextern" class="ace col-xs-10 col-sm-3">
+            <select name="msc_inextern" required="required" id="msc_inextern" class="req ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
                 <option value="1">INTERN</option>
                 <option value="2">EXTERN</option>
@@ -288,6 +292,9 @@
                 success: function(data) {
                     window.scrollTo(0, 0);
                     if (data.result) {
+                        if ($("#href").val() != '') {
+                            window.location = "#"+$("#href").val()+"?jenis="+$("#jenis").val()+"&type="+$("#type").val();
+                        }
                         document.form.reset();
                         $("#pel_alamat").html("");
                     }

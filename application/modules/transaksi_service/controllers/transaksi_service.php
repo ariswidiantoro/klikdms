@@ -19,6 +19,20 @@ class Transaksi_Service extends Application {
 //        $this->addProspect();
     }
 
+    function jsonWoBelumInvoiceAuto() {
+        $wo = $this->input->post('param');
+        $query = $this->model_trservice->getWoBelumInvoiceAutoComplete(strtoupper($wo));
+        if (!empty($query)) {
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array('value' => $row['wo_nomer'], 'desc' => $row['msc_nopol'], 'type' => $row['wo_type']);
+            }
+        } else {
+            $data['message'][] = array('value' => 'Wo Tidak Ditemukan', 'desc' => "");
+        }
+        echo json_encode($data);
+    }
+
     function jsonWo() {
         $woNomer = strtoupper($this->input->post('param'));
         $data = $this->model_trservice->getWo($woNomer);
@@ -28,6 +42,20 @@ class Transaksi_Service extends Application {
             $data['response'] = false;
         }
         echo json_encode($data);
+    }
+
+    function getJasaWoByWoNomer() {
+        $woNomer = strtoupper($this->input->post('wo'));
+        $data = $this->model_trservice->getJasaWoByWoNomer($woNomer);
+        echo json_encode($data);
+    }
+
+    /**
+     * 
+     */
+    function getTotalSupply() {
+        $woNomer = strtoupper($this->input->post('wo'));
+        echo json_encode($this->model_trservice->getTotalSupply($woNomer));
     }
 
     function jsonDataKendaraan() {
@@ -109,6 +137,7 @@ class Transaksi_Service extends Application {
                 'wo_pelid' => $this->input->post('wo_pelid'),
                 'wo_selesai' => $this->input->post('wo_selesai'),
                 'wo_km' => $this->input->post('wo_km'),
+                'wo_type' => $this->input->post('wo_type'),
                 'wo_pembawa' => $this->input->post('wo_pembawa'),
                 'wo_inextern' => $this->input->post('wo_inextern'),
                 'wo_stallid' => $this->input->post('wo_stallid'),
@@ -173,11 +202,70 @@ class Transaksi_Service extends Application {
         echo json_encode($return);
     }
 
+    function saveFakturService() {
+        $return = false;
+        $this->form_validation->set_rules('msc_nopol', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $woid = $this->input->post('inv_woid');
+            $data = array(
+                'inv_tgl' => date('Y-m-d'),
+                'inv_createon' => date('Y-m-d H:i:s'),
+                'inv_createby' => ses_username,
+                'inv_woid' => $woid,
+                'inv_catatan' => $this->input->post('inv_catatan'),
+                'inv_fchecker' => $this->input->post('inv_fchecker'),
+                'inv_kasir' => $this->input->post('inv_kasir'),
+                'inv_inextern' => $this->input->post('inv_inextern'),
+                'inv_tampil_ppn' => $this->input->post('inv_tampil_ppn'),
+                'inv_spart' => numeric($this->input->post('total_sp')),
+                'inv_oli' => numeric($this->input->post('total_ol')),
+                'inv_sm' => numeric($this->input->post('total_sm')),
+                'inv_so' => numeric($this->input->post('total_so')),
+                'inv_lc' => numeric($this->input->post('total_lc')),
+                'inv_total' => numeric($this->input->post('grand_total')),
+                'inv_spart_hpp' => numeric($this->input->post('total_sp_hpp')),
+                'inv_oli_hpp' => numeric($this->input->post('total_ol_hpp')),
+                'inv_sm_hpp' => numeric($this->input->post('total_sm_hpp')),
+                'inv_so_hpp' => numeric($this->input->post('total_so_hpp')),
+                'inv_cbid' => ses_cabang,
+            );
+
+            $wo = array(
+                'woid' => $woid,
+                'wo_inv_status' => 1,
+                'wo_km' => $this->input->post('wo_km')
+            );
+
+            $jasa = array();
+            $dinv_flatid = $this->input->post('dinv_flatid');
+            $dinv_kode = $this->input->post('dinv_kode');
+            $dinv_harga = $this->input->post('flat_lc');
+            $dinv_diskon = $this->input->post('dinv_diskon');
+            $dinv_subtotal = $this->input->post('dinv_subtotal');
+            // get array spare part from table 
+            if (count($dinv_flatid) > 0) {
+                for ($i = 0; $i < count($dinv_flatid); $i++) {
+                    if (numeric($dinv_harga[$i]) > 0) {
+                        $jasa[] = array(
+                            'dinv_flatid' => strtoupper($dinv_flatid[$i]),
+                            'dinv_harga' => numeric($dinv_harga[$i]),
+                            'dinv_diskon' => numeric($dinv_diskon[$i]),
+                            'dinv_subtotal' => numeric($dinv_subtotal[$i]),
+                        );
+                    }
+                }
+            }
+            $return = $this->model_trservice->saveFakturService($data, $wo, $jasa);
+        }
+        echo json_encode($return);
+    }
+
     public function workOrder() {
         $this->hakAkses(35);
         $this->data['jenis'] = $this->model_trservice->getWoJenis();
         $this->load->view('workOrder', $this->data);
     }
+
     /**
      * 
      */
