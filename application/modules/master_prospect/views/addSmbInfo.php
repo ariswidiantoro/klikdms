@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="clearfix form-actions">
-        <div class="col-md-offset-1 col-md-5">
+        <div class="col-md-offset-1 col-md-8">
             <button class="btn btn-success" type="button" onclick="javascript:saveData()">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Simpan
@@ -36,7 +36,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
-                window.location.href = "#master_prospect/masterSmbInfo";
+                window.location.href = "#master_prospect/sumber_informasi";
             }});
     }
     

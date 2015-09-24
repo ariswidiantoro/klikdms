@@ -1,16 +1,16 @@
 <div id="result"></div>
 <div class="page-header">
     <h1>
-        Update Merk <?php echo $data['merk_deskripsi'] ?>
+        Update <?php echo $data['smbinfo_deskripsi'] ?>
     </h1>
 </div>
-<form class="form-horizontal" id="formEdit" method="post" action="<?php echo site_url('master_sales/updateMerk'); ?>" name="formEdit">
+<form class="form-horizontal" id="formEdit" method="post" action="<?php echo site_url('master_prospect/updateSmbInfo'); ?>" name="formEdit">
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Merk</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsi</label>
         <div class="col-sm-8">
-            <input type="text" required="required" value="<?php echo $data['merk_deskripsi'] ?>" maxlength="50" style='text-transform:uppercase' 
-                   name="merk_deskripsi" id="merk_deskripsi"  class="ace col-xs-10 col-sm-10" />
-            <input type="hidden" required="required"  value="<?php echo $data['merkid'] ?>" name="merkid" id="merkid"/>
+            <input type="text" required="required" value="<?php echo $data['smbinfo_deskripsi'] ?>" maxlength="50" style='text-transform:uppercase' 
+                   name="smbinfo_deskripsi" id="smbinfo_deskripsi"  class="ace col-xs-10 col-sm-10" />
+            <input type="hidden" required="required"  value="<?php echo $data['smbinfoid'] ?>" name="smbinfoid" id="smbinfoid"/>
         </div>
     </div>
     <div class="clearfix form-actions">
@@ -32,7 +32,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin ?", function(result) {
             if(result) {
-                window.location.href = "#master_sales/masterMerk";
+                window.location.href = "#master_prospect/sumber_informasi";
             }});
     }
     
@@ -50,14 +50,14 @@
         $('#formEdit').submit(function() {
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url('master_sales/updateMerk') ?>",
+                url: "<?php echo site_url('master_prospect/updateSmbInfo') ?>",
                 dataType: "json",
                 async: false,
                 data: $(this).serialize(),
                 success: function(data) {
                     window.scrollTo(0, 0);
                     document.formEdit.reset();
-                    $("#result").html(data).show().fadeIn("slow");
+                    $("#result").html(data).show().fadeIn("fast");
                 }
             })
             return false;
