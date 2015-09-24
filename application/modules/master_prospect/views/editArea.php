@@ -1,14 +1,14 @@
 <div id="result"></div>
 <div class="page-header">
     <h1>
-        Update Tipe <?php echo $data['leas_nama'] ?>
+        Update <?php echo $data['area_deskripsi'] ?>
     </h1>
 </div>
 <form class="form-horizontal" id="formEdit" method="post" action="<?php echo site_url('master_prospect/updateArea'); ?>" name="formEdit">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
         <div class="col-sm-8">
-            <select name="propid" id="propid" onchange="getKota()" class="form-control input-xlarge">
+            <select name="area_propid" id="area_propid" onchange="getKota()" class="form-control input-xlarge">
                 <option value="">PILIH</option>
                 <?php
                 if (count($propinsi) > 0) {
@@ -27,18 +27,18 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kota</label>
         <div class="col-sm-8">
-            <select name="area_kotaid" id="leas_kotaid" class="form-control input-xlarge" >
+            <select name="area_kotaid" id="area_kotaid" class="form-control input-xlarge" >
                 <option value="">PILIH</option>
             </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsi</label>
         <div class="col-sm-8">
             <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="leas_nama" id="leas_nama" value="<?php echo $data['leas_nama'] ?>" class="ace col-xs-10 col-sm-8" />
+                   name="area_deskripsi" id="area_deskripsi" value="<?php echo $data['area_deskripsi'] ?>" class="ace col-xs-10 col-sm-8" />
         </div>
-        <input type="hidden" required="required"  value="<?php echo $data['leasid'] ?>" name="leasid" id="leasid"/>
+        <input type="hidden" required="required"  value="<?php echo $data['areaid'] ?>" name="areaid" id="areaid"/>
     </div>    
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
@@ -59,7 +59,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin ?", function(result) {
             if(result) {
-                window.location.href = "#master_prospect/masterArea";
+                window.location.href = "#master_prospect/area";
             }});
     }
     
@@ -82,7 +82,7 @@
             dataType: "json",
             async: false,
             data: {
-                propid : $("#propid").val()
+                propid : $("#area_propid").val()
             },
             success: function(data) {
                 $('#area_kotaid').html('');
@@ -93,7 +93,7 @@
                     }else{
                         selected = '';
                     }
-                    $('#leas_kotaid').append('<option value="' + message['kotaid'] + '" '+selected+'>' + message['kota_deskripsi'] + '</option>');
+                    $('#area_kotaid').append('<option value="' + message['kotaid'] + '" '+selected+'>' + message['kota_deskripsi'] + '</option>');
                 });
             }
         })

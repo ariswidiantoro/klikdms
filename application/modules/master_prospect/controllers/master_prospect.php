@@ -49,7 +49,7 @@ class Master_Prospect extends Application {
             foreach ($query as $row) {
                 $del = "hapusData('" . $row->areaid . "', '" . $row->area_deskripsi . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                $edit = '<a href="#master_sales/editArea?id=' . $row->areaid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $edit = '<a href="#master_prospect/editArea?id=' . $row->areaid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->areaid;
                 $responce->rows[$i]['cell'] = array(
                     $row->prop_deskripsi,
@@ -71,16 +71,22 @@ class Master_Prospect extends Application {
         $this->hakAkses(1070);
         $id = $this->input->get('id');
         $data = $this->model_prospect->getArea($id);
+        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
         $this->data['data'] = $data;
         $this->load->view('editArea', $this->data);
     }
 
     public function saveArea() {
-        $desc = strtoupper($this->input->post('merk_deskripsi', TRUE));
-        if (empty($desc)) {
+        $kota = strtoupper($this->input->post('area_kotaid', TRUE));
+        $desc = strtoupper($this->input->post('area_deskripsi', TRUE));
+        if (empty($kota)||empty($desc)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_prospect->addArea(array('merk_deskripsi' => $desc));
+            $save = $this->model_prospect->addArea(array(
+                'area_kotaid' => strtoupper($kota),
+                'area_deskripsi' => strtoupper($desc),
+                'area_cbid' => ses_cabang
+                ));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -380,7 +386,7 @@ class Master_Prospect extends Application {
      * @since 1.0 2015-09-19
      */
     
-    public function bisnis_awal() {
+    public function bisnis() {
         $this->hakAkses(1070);
         $this->load->view('dataBisnis', $this->data);
     }
@@ -410,11 +416,12 @@ class Master_Prospect extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $del = "hapusData('" . $row->bisnisid . "', '" . $row->bisnis_deskripsi . "')";
+                $del = "hapusData('" . $row->bisnisid . "', '" . $row->bisnis_nama . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 $edit = '<a href="#master_prospect/editBisnis?id=' . $row->bisnisid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->bisnisid;
                 $responce->rows[$i]['cell'] = array(
+                    $row->bisnis_nama,
                     $row->bisnis_deskripsi,
                     $edit, $hapus);
                 $i++;
@@ -436,14 +443,14 @@ class Master_Prospect extends Application {
     }
 
     public function saveBisnis() {
-        $desc = strtoupper($this->input->post('bisnis_nama', TRUE));
+        $nama = strtoupper($this->input->post('bisnis_nama', TRUE));
         $desc = strtoupper($this->input->post('bisnis_deskripsi', TRUE));
         if (empty($desc)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_prospect->addBisnis(array(
-                'nama_deskripsi' => $nama, 
-                'bisnis_deskripsi' => $desc, 
+                'bisnis_nama' => strtoupper($nama), 
+                'bisnis_deskripsi' => strtoupper($desc), 
                 'bisnis_cbid' => ses_cabang
                 ));
             if ($save['status'] == TRUE) {

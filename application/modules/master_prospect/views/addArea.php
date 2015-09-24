@@ -62,7 +62,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
-                window.location.href = "#master_prospect/masterArea";
+                window.location.href = "#master_prospect/area";
             }});
     }
     
@@ -83,7 +83,7 @@
             dataType: "json",
             async: false,
             data: {
-                propid : $("#propid").val()
+                propid : $("#area_propid").val()
             },
             success: function(data) {
                 $('#area_kotaid').html('');
