@@ -38,6 +38,8 @@ class Model_Prospect extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('pros_data');
+        $this->db->join('pros_data_car','car_prosid=prosid', 'left');
+        $this->db->join('ms_car_type','ctyid=car_ctyid', 'left');
         $this->db->where('pros_cbid', ses_cabang);
         if (isset($filter)) {
             $this->db->where_in('pros_sales', $filter);
@@ -445,13 +447,13 @@ class Model_Prospect extends CI_Model {
 
     public function getBisnis($data) {
         $query = $this->db->query("
-            SELECT * FROM ms_bisnis WHERE kontakid = " . $data . "
+            SELECT * FROM ms_bisnis WHERE bisnisid = " . $data . "
             ");
         return $query->row_array();
     }
 
     public function updateBisnis($data, $where) {
-        $this->db->where('kontakid', $where);
+        $this->db->where('bisnisid', $where);
         if ($this->db->update('ms_bisnis', $data)) {
             return array('status' => TRUE, 'msg' => 'Data ' . $data['bisnis_nama'] . ' berhasil diupdate');
         } else {
@@ -460,7 +462,7 @@ class Model_Prospect extends CI_Model {
     }
 
     public function deleteBisnis($data) {
-        if ($this->db->query('DELETE FROM ms_bisnis WHERE kontakid = ' . $data)) {
+        if ($this->db->query('DELETE FROM ms_bisnis WHERE bisnisid = ' . $data)) {
             return TRUE;
         } else {
             return FALSE;

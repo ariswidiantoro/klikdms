@@ -57,21 +57,21 @@ class Transaksi_Prospect extends Application {
             foreach ($query as $row) {
                 $del = "hapusData('" . $row->prosid . "','" . $row->pros_nama . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                $edit = '<a href="#admin/editProspect?id=' . $row->prosid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $edit = '<a href="#transaksi_prospect/editProspect?id=' . $row->prosid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $fpt = '<a href="#transaksi_prospect/addFpt?id=' . $row->prosid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-book bigger-100"></i>';
-                $detail = '<a href="#admin/detailProspect?id=' . $row->prosid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $detail = '<a href="#transaksi_prospect/detailProspect?id=' . $row->prosid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
 
                 $responce->rows[$i]['id'] = $row->prosid;
                 $responce->rows[$i]['cell'] = array(
+                    $fpt.'  '.$edit.'  '.$hapus,
                     $row->prosid, 
                     $row->pros_createon, 
                     $row->pros_nama,
                     $row->pros_alamat, 
                     $row->pros_hp, 
                     $row->pros_telpon, 
-                    'TYPE', 
-                    'JML',
-                    $fpt, $edit, $hapus,);
+                    $row->cty_deskripsi, 
+                    $row->car_qty);
                 $i++;
             }
         echo json_encode($responce);
