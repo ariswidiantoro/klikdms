@@ -186,7 +186,7 @@ class Model_Trspart extends CI_Model {
                 . " FROM spa_supply_det LEFT JOIN spa_inventory ON inveid = dsupp_inveid"
                 . " LEFT JOIN spa_rak ON rakid = inve_rakid LEFT JOIN spa_supply"
                 . " ON sppid = dsupp_sppid LEFT JOIN svc_wo ON woid = spp_woid "
-                ."WHERE wo_nomer = '$woNomer' AND wo_cbid = '".ses_cabang."' AND spp_status = 0 ORDER BY spp_jenis,inve_kode ");
+                . "WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "' AND spp_status = 0 ORDER BY spp_jenis,inve_kode ");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -234,6 +234,32 @@ class Model_Trspart extends CI_Model {
                 . "WHERE trbr_cbid = '" . ses_cabang . "' AND trbr_faktur LIKE '%$kode%' ORDER BY trbr_faktur LIMIT 10");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param type $kode
+     * @return null
+     */
+    public function getSupplyAutoComplete($kode) {
+        $sql = $this->db->query("SELECT spp_noslip,pel_nama "
+                . "FROM spa_supply  LEFT JOIN ms_pelanggan ON pelid = spp_pelid WHERE spp_cbid = '" . ses_cabang . "' AND spp_status = 0"
+                . " AND spp_faktur = 0 AND spp_noslip LIKE '$kode%' AND spp_jenis = 'ps' "
+                . "  ORDER BY spp_noslip LIMIT 20");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    public function getDataSupplyPartShop($kode) {
+        $sql = $this->db->query("SELECT spp_noslip,sppid,pel_nama,spp_inextern,spp_total,spp_kredit_term "
+                . "FROM spa_supply LEFT JOIN ms_pelanggan ON pelid = spp_pelid"
+                . " WHERE spp_cbid = '" . ses_cabang . "' AND spp_noslip = '$kode'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
         }
         return null;
     }

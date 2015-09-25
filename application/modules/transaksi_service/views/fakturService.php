@@ -601,7 +601,6 @@
     
     $(this).ready(function() {
         $('#form').submit(function() {
-            //  if (confirm("Yakin data sudah benar ?")) {
             $.ajax({
                 type: 'POST',
                 url: $(this).attr('action'),

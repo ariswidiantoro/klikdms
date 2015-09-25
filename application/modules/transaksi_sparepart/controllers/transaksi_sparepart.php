@@ -48,6 +48,29 @@ class Transaksi_Sparepart extends Application {
         }
         echo json_encode($data);
     }
+    function jsonSupplyPartShop() {
+        $supply = strtoupper($this->input->post('param'));
+        $data['response'] = 'false';
+        $query = $this->model_trspart->getSupplyAutoComplete($supply);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array(
+                    'value' => $row['spp_noslip'],
+                    'label' => $row['pel_nama'],
+                  );
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+        }
+        echo json_encode($data);
+    }
+    function getDataSupplyPartShop() {
+        $supply = strtoupper($this->input->post('param'));
+        $data = $this->model_trspart->getDataSupplyPartShop($supply);
+        echo json_encode($data);
+    }
 
     public function returPembelian() {
         $this->hakAkses(58);
