@@ -77,13 +77,13 @@
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>
-            <div class="col-sm-8">
-                <label>
-                    <input class="ace" id="spp_cetak_harga" value="1" type="checkbox" name="spp_cetak_harga">
-                    <span class="lbl"> Tampilkan harga di cetakan</span>
-                </label>
-            </div>
+        <div class="col-sm-8">
+            <label>
+                <input class="ace" id="spp_cetak_harga" value="1" type="checkbox" name="spp_cetak_harga">
+                <span class="lbl"> Tampilkan harga di cetakan</span>
+            </label>
         </div>
+    </div>
     <div class="hr hr-16 hr-dotted"></div>
     <div id="sparepart">
         <div class="form-group">
@@ -99,7 +99,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Barang</label>
             <div class="col-sm-8">
-                <input type="text" placeholder="KODE BARANG" readonly="readonly" autocomplete="off" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
+                <input type="text" placeholder="KODE BARANG" readonly="readonly" autocomplete="off" name="kodeBarang" id="kodeBarang" class="upper ace col-xs-10 col-sm-6">
                 <i class="ace-icon fa fa-spinner fa-spin orange bigger-200" id="waiting"></i>
                 <div id="msg" style="font-size: 16px;font-weight: bold" class="msg help-block col-xs-12 col-sm-reset inline">
                 </div>
@@ -200,7 +200,7 @@
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
-            <button class="btn btn-info" id="button" type="submit">
+            <button class="btn btn-info" id="button" type="button">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Submit
             </button>
@@ -216,6 +216,78 @@
 <script type="text/javascript">
     $("#waiting").hide();
     $('#button').attr("disabled", true);
+    jQuery(function($) {
+        var $validation = true;
+        // validation
+        
+
+        $('#button').on('click', function(e){
+            //             window.location = "#transaksi_sparepart/returPembelian";
+            if(!$('#form').valid())
+            {
+                e.preventDefault();
+            }else
+                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                    if(result) {
+                        $("#form").submit();
+                    }
+            });
+            return false;
+        });
+
+
+        $('#form').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            rules: {
+                pel_nama: {
+                    required: true
+                },
+                spp_pelid: {
+                    required: true
+                }
+            },
+			
+            messages: {
+                pel_nama: {
+                    required: "Pastikan nama pelanggan tidak kosong"
+                },
+                spp_pelid: {
+                    required: "Pastikan kode pelanggan tidak kosong"
+                }
+            },
+			
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+			
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+			
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+			
+            submitHandler: function (form) {
+            },
+            invalidHandler: function (form) {
+            }
+        });
+    });
+    
+    
     document.getElementById("sukses").style.display = 'none';
     document.getElementById("error").style.display = 'none';
     $("#spp_jenis").change(function(e) {
@@ -275,7 +347,6 @@
                 }
             });
         }
-        
     })
     
     function cekAutoComplete()
@@ -316,35 +387,56 @@
         }
     }
    
-        
-    $(this).ready(function() {
+    $(document).ready(function(){
         $('#form').submit(function() {
-            if (confirm("Yakin Data Sudah Benar ?")) {
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    dataType: "json",
-                    async: false,
-                    data: $(this)
-                    .serialize(),
-                    success: function(data) {
-                        window.scrollTo(0, 0);
-                        if (data.result) {
-                            var params  = 'width=1000';
-                            params += ', height='+screen.height;
-                            params += ', fullscreen=yes,scrollbars=yes';
-                            document.form.reset();
-                            clearForm();
-                            window.open("<?php echo site_url("transaksi_sparepart/printSupplySlip"); ?>/"+data.kode,'_blank', params);
-                        }
-                        $("#result").html(data.msg).show().fadeIn("slow");
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                dataType: "json",
+                async: false,
+                data: $(this)
+                .serialize(),
+                success: function(data) {
+                    window.scrollTo(0, 0);
+                    if (data.result) {
+                        var params  = 'width=1000';
+                        params += ', height='+screen.height;
+                        params += ', fullscreen=yes,scrollbars=yes';
+                        document.form.reset();
+                        clearForm();
+                        window.open("<?php echo site_url("transaksi_sparepart/printSupplySlip"); ?>/"+data.kode,'_blank', params);
                     }
-                }) 
+                    $("#result").html(data.msg).show().fadeIn("slow");
+                }
+            }) 
+        });
+        $("#wo").autocomplete({
+            minLength: 1,
+            source: function(req, add) {
+                $.ajax({
+                    url: '<?php echo site_url('transaksi_service/jsonWoBelumInvoiceAuto'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {
+                        param : $("#wo").val()
+                    },
+                    success: function(data) {
+                        add(data.message);
+                    }
+                });
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                    .append("<a><strong>" + item.value + "</strong><br> Nopol : " + item.desc + "</a>")
+                    .appendTo(ul);
+                };
+            },select: function(event, ui) {
+                //                getDataWo(ui.item.value, ui.item.type);
             }
-            return false;
         });
     });
-        
+   
     //    function simpan()
     //    {
     $(this).ready(function() {
@@ -435,17 +527,18 @@
     }
     
     
-    function getData(id){
+    $("#kodeBarang").change(function(e) {
+        var id = this.id;
         var cek = 0;
         $("#waiting").show();
         $("#msg").show();
         if($("#"+id).val() !=""){
             $("#wait").attr("style","position: fixed;top: 0;left: 0;right: 0;height: 100%;opacity: 0.4;filter: alpha(opacity=40); background-color: #000;");
-            $("input[name^=dsupp_inveid]").each(function(){
+            $("input[name^=dsupp_inve_kode]").each(function(){
                 if($(this).val() == $("#"+id).val()){
                     cek = 1;
                     var str = ($(this).attr("id"));
-                    var baris = str.replace('dsupp_inveid','');
+                    var baris = str.replace('dsupp_inve_kode','');
                     /* set QTY if exists */
                     var setqty = parseInt($("#dsupp_qty"+baris).val(),10) + 1;
                     $("#dsupp_qty"+baris).val(setqty);
@@ -457,17 +550,20 @@
             });
             if(cek == 0){
                 $.ajax({ 
-                    url: '<?php echo site_url('master_sparepart/jsonDataBarang'); ?>',
+                    url: '<?php echo site_url('master_sparepart/jsonDataBarangSupply'); ?>',
                     dataType: 'json',
                     type: 'POST',
                     data: {
                         param : $("#kodeBarang").val(),
-                        jenis : $("#spp_jenis").val()},
+                        jenis : $("#spp_jenis").val(),
+                        pelid : $("#spp_pelid").val()
+                    },
                     success: function(data){
                         if (data['response']) {
                             inc++;
                             addRow(inc);
                             $("#kodeBrg"+inc).html(data['inve_kode']);
+                            $("#dsupp_inve_kode"+inc).val(data['inve_kode']);
                             $("#dsupp_inveid"+inc).val(data['inveid']);
                             $("#inve_nama"+inc).html(data['inve_nama']);
                             $("#dsupp_hpp"+inc).val(data['inve_hpp']);
@@ -477,6 +573,9 @@
                             $("#dsupp_subtotal"+inc).val(formatDefault(data['inve_harga']));
                             total();
                             $("#msg").html("").show();
+                            if (data['spesial'] == '2') {
+                                $("#dsupp_harga"+inc).prop('readonly', true);
+                            }
                         }else{
                             $("#msg").html("Kode Barang Ini Tidak Terdaftar").show().fadeIn("fast");
                         }
@@ -486,8 +585,8 @@
                 });
             }
         }
-        $("#waiting").hide();
-    }
+        $("#waiting").hide(); 
+    });
     
     $(document).ready(function(){
         $("#kodeBarang").autocomplete({
@@ -523,7 +622,7 @@
         var min = $("#dsupp_qty_min"+inc).val();
         if (parseFloat(qty) > parseFloat(min)) {
             bootbox.dialog({
-                message: "<span class='bigger-110'>Retur Maksimal "+min+"</span>",
+                message: "<span class='bigger-110'>Maksimal "+min+"</span>",
                 buttons: 			
                     {
                     "button" :
@@ -545,6 +644,7 @@
                     <td class="nomororder">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
                          <td>\n\
                              <span id="kodeBrg' + inc + '"></span>\n\
+                            <input type="hidden" style="width:90%" id="dsupp_inve_kode' + inc + '" name="dsupp_inve_kode[]" />\n\
                             <input type="hidden" style="width:90%" id="dsupp_inveid' + inc + '" name="dsupp_inveid[]" />\n\
                             <input type="hidden" style="width:90%" id="dsupp_hpp' + inc + '" name="dsupp_hpp[]" />\n\
                          </td>\n\

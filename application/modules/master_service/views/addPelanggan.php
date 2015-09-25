@@ -3,7 +3,8 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Type Pelanggan</label>
         <div class="col-sm-8">
-            <select name="pel_type" required="required" class="ace col-xs-10 col-sm-3">
+            <input type="hidden" id="href" name="href" value="<?php echo $href; ?>">
+            <select name="pel_type" required="required" class="req ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
                 <option value="retail">Retail</option>
                 <option value="broker">Broker</option>
@@ -15,19 +16,19 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_nama" required="required" placeholder="Nama" class="upper ace col-xs-10 col-sm-10" />
+            <input type="text" name="pel_nama" required="required" placeholder="Nama" class="req upper ace col-xs-10 col-sm-10" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea name="pel_alamat" class="upper ace col-xs-10 col-sm-7" required="required" rows="4"></textarea>
+            <textarea name="pel_alamat" class="req upper ace col-xs-10 col-sm-7" required="required" rows="4"></textarea>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
         <div class="col-sm-8">
-            <select name="propinsi" id="propinsi" onchange="getKota()" class="ace col-xs-10 col-sm-3">
+            <select name="propinsi" id="propinsi" required="required" onchange="getKota()" class="req ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
                 <?php
                 if (count($propinsi) > 0) {
@@ -44,7 +45,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kab / Kota</label>
         <div class="col-sm-8">
-            <select name="pel_kotaid" id="kr_kotaid" class="ace col-xs-10 col-sm-3">
+            <select name="pel_kotaid" required="required" id="kr_kotaid" class="req ace col-xs-10 col-sm-3">
             </select>
         </div>
     </div>
@@ -57,13 +58,13 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor HP</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_hp"  placeholder="Nomor HP" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_hp" required="required"  placeholder="Nomor HP" class="req ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor KTP</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_nomor_id" placeholder="Nomor HP" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_nomor_id" required="required" placeholder="Nomor HP" class="req ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
@@ -233,6 +234,9 @@
                 success: function(data) {
                     window.scrollTo(0, 0);
                     if (data.result) {
+                        if ($("#href").val() != '') {
+                            window.location = "#"+$("#href").val();
+                        }
                         document.form.reset();
                     }
                     $("#result").html(data.msg).show().fadeIn("slow");

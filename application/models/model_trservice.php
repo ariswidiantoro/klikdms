@@ -17,13 +17,63 @@ class Model_Trservice extends CI_Model {
      * @return array of work order
      */
     public function getWo($woNomer) {
-        $sql = $this->db->query("SELECT wo_nomer,woid, pel_nama,pelid, msc_nopol,msc_norangka,msc_nomesin FROM svc_wo"
-                ." LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_car ON mscid = wo_mscid WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "'");
-        log_message('error', 'SQL = '.$this->db->last_query());
+        $sql = $this->db->query("SELECT wo_nomer,woid,wo_type,wo_inextern, pel_nama,pelid, msc_nopol,"
+                . " msc_norangka,wo_km,msc_nomesin, clo_status FROM svc_wo"
+                . " LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_car ON mscid = wo_mscid "
+                . " LEFT JOIN svc_clock ON clo_woid = woid WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "' AND wo_inv_status = 0 AND wo_status = 0");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
         return null;
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @return null
+     */
+    public function getWoBelumInvoiceAutoComplete($wo) {
+        $sql = $this->db->query("SELECT wo_nomer,msc_nopol,wo_type FROM svc_wo LEFT JOIN"
+                . " ms_car ON mscid = wo_mscid WHERE wo_nomer LIKE '$wo%' AND wo_cbid = '"
+                . ses_cabang . "' AND wo_inv_status = 0 AND wo_status = 0 ORDER BY wo_nomer LIMIT 10");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    public function getTotalSupply($wo) {
+        $result = array();
+        $sql = $this->db->query("SELECT SUM(spp_total) AS total,SUM(spp_total_hpp) AS hpp, spp_jenis  FROM spa_supply"
+                . " LEFT JOIN svc_wo ON woid = spp_woid WHERE wo_nomer = '$wo' "
+                . " AND spp_status = 0 AND spp_cbid = '" . ses_cabang . "' AND spp_faktur = 0 GROUP BY spp_jenis");
+        if ($sql->num_rows() > 0) {
+            foreach ($sql->result_array() as $value) {
+                $result[$value['spp_jenis']] = $value['total'];
+                $result['hpp' . $value['spp_jenis']] = $value['hpp'];
+            }
+        }
+        if (empty($result['sp'])) {
+            $result['sp'] = 0;
+            $result['hppsp'] = 0;
+        }
+        if (empty($result['so'])) {
+            $result['so'] = 0;
+            $result['hppso'] = 0;
+        }
+        if (empty($result['sm'])) {
+            $result['sm'] = 0;
+            $result['hppsm'] = 0;
+        }
+        if (empty($result['ol'])) {
+            $result['ol'] = 0;
+            $result['hppol'] = 0;
+        }
+        return $result;
+    }
+
+    function cekClockOnOff($wo) {
+        
     }
 
     /**
@@ -51,7 +101,6 @@ class Model_Trservice extends CI_Model {
             $sql = $this->db->query("SELECT flat_kode, flat_deskripsi,flatid  "
                     . " FROM svc_frate WHERE (flat_kode LIKE '%$data%' OR flat_deskripsi LIKE '%$data%' ) AND flat_cbid = '"
                     . ses_cabang . "' AND flat_type = $type ORDER BY flat_kode LIMIT 20");
-//            log_message('error', 'AAAAA '.$this->db->last_query());
             if ($sql->num_rows() > 0) {
                 return $sql->result_array();
             }
@@ -79,6 +128,7 @@ class Model_Trservice extends CI_Model {
                 . " FROM ms_car LEFT JOIN ms_car_type ON ctyid = msc_ctyid LEFT JOIN ms_car_model ON modelid = cty_modelid "
                 . "LEFT JOIN ms_car_merk ON merkid = model_merkid LEFT JOIN ms_pelanggan ON pelid = msc_pelid WHERE msc_nopol = '$nopol' AND msc_cbid = '"
                 . ses_cabang . "'");
+        log_message('error', 'SQL ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
@@ -108,6 +158,20 @@ class Model_Trservice extends CI_Model {
      */
     public function getJasaWorkOrder($woid) {
         $sql = $this->db->query("SELECT woj_keluhan,woj_namajasa FROM svc_wo_jasa WHERE woj_woid = '$woid' ORDER BY wojid");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param String $woNomer
+     * @return null
+     */
+    public function getJasaWoByWoNomer($woNomer) {
+        $sql = $this->db->query("SELECT svc_frate.* FROM svc_wo_jasa LEFT JOIN svc_frate ON flatid = woj_flatid"
+                . " LEFT JOIN svc_wo ON woid = woj_woid  WHERE wo_nomer = '$woNomer' AND wo_cbid= '" . ses_cabang . "'");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -196,6 +260,7 @@ class Model_Trservice extends CI_Model {
         $this->db->join('svc_clock', 'clo_woid = woid', 'LEFT');
         $this->db->join('svc_clock_det', 'cloid = det_cloid AND det_end isnull', 'LEFT');
         $this->db->join('ms_karyawan', 'krid = det_mekanikid', 'LEFT');
+        $this->db->order_by('clo_status', 'ASC');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -216,7 +281,7 @@ class Model_Trservice extends CI_Model {
         $query = $this->db->QUERY("SELECT DISTINCT krid, kr_nama FROM svc_absensi"
                 . " LEFT JOIN ms_karyawan on abs_krid = krid WHERE"
                 . " abs_cbid = '" . ses_cabang . "' AND kr_jabid = '"
-                . JAB_MEKANIK . "' AND abs_tgl = '" . date('Y-m-d') . "'"
+                . JAB_SVC_MEKANIK . "' AND abs_tgl = '" . date('Y-m-d') . "'"
                 . " AND abs_krid NOT IN(SELECT det_mekanikid FROM svc_clock_det "
                 . " LEFT JOIN svc_clock ON cloid = det_cloid WHERE clo_status = 1 AND  det_end isnull)"
                 . " ORDER BY kr_nama");
@@ -283,6 +348,42 @@ class Model_Trservice extends CI_Model {
             $result['result'] = false;
             $result['kode'] = $id;
             $result['msg'] = error("Gagal menyimpan work order");
+        }
+        return $result;
+    }
+
+    function saveFakturService($data, $wo, $jasa) {
+        $this->db->trans_begin();
+        $tahun = substr(date('Y'), 2, 2);
+        $id = NUM_INVOICE . $tahun . sprintf("%08s", $this->getCounter(NUM_INVOICE . $tahun));
+        $data['invid'] = $id;
+        $this->db->INSERT('svc_invoice', $data);
+
+        // UPDATE WO
+        $this->db->where('woid', $wo['woid']);
+        $this->db->update('svc_wo', $wo);
+        
+        // UPDATE SUPPLY
+        $this->db->query("UPDATE spa_supply SET spp_faktur = 1 WHERE spp_woid = '".$wo['woid']."'");
+        
+        // SIMPAN WO JASA
+        if (count($jasa) > 0) {
+            foreach ($jasa as $d) {
+                $d['dinv_invid'] = $id;
+                $this->db->INSERT('svc_invoice_det', $d);
+            }
+        }
+
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['kode'] = $id;
+            $result['msg'] = sukses("Berhasil menyimpan faktur service");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['kode'] = $id;
+            $result['msg'] = error("Gagal menyimpan faktur service");
         }
         return $result;
     }

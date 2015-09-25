@@ -225,7 +225,7 @@ class Model_Prospect extends CI_Model {
      * @author Rossi Erl
      * 2015-09-03
      */
-    public function getTotalArea() {
+    public function getTotalArea($where) {
         $wh = "WHERE area_cbid = '".ses_cabang."'";
         if ($where != NULL)
             $wh = " AND " . $where;
@@ -240,7 +240,7 @@ class Model_Prospect extends CI_Model {
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_area');
         $this->db->join('ms_kota','kotaid = area_kotaid', 'left');
-        $this->db->join('ms_propinsi','prop_kotaid = kotaid', 'left');
+        $this->db->join('ms_propinsi','propid = kota_propid', 'left');
         $this->db->where('area_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
@@ -263,7 +263,7 @@ class Model_Prospect extends CI_Model {
         $query = $this->db->query("
             SELECT * FROM ms_area 
             LEFT JOIN ms_kota on kotaid = area_kotaid
-            LEFT JOIN ms_propinsi on prop_kotaid
+            LEFT JOIN ms_propinsi on propid = kota_propid
             WHERE areaid = " . $data . "
             ");
         return $query->row_array();
@@ -352,7 +352,7 @@ class Model_Prospect extends CI_Model {
      * 2015-09-03
      */
     public function getTotalKontakAwal($where) {
-        $wh = "WHERE smbinfo_cbid = '".ses_cabang."'";
+        $wh = "WHERE kontak_cbid = '".ses_cabang."'";
         if ($where != NULL)
             $wh = " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_kontak_awal ".$wh);
@@ -365,7 +365,7 @@ class Model_Prospect extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_kontak_awal');
-        $this->db->where('smbinfo_cbid', ses_cabang);
+        $this->db->where('kontak_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();

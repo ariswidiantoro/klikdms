@@ -23,6 +23,10 @@ class Transaksi_Sparepart extends Application {
         $this->hakAkses(57);
         $this->load->view('penerimaanBarang', $this->data);
     }
+    public function fakturSparepart() {
+        $this->hakAkses(60);
+        $this->load->view('fakturSparepart', $this->data);
+    }
 
     function jsonFakturTerima() {
         $faktur = $this->input->post('param');

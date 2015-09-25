@@ -6,17 +6,11 @@
     }
 
 </style>
-<form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/savePenerimaanBarang'); ?>" method="post" name="form">
+<form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/saveFakturSparepart'); ?>" method="post" name="form">
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Faktur</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Supply</label>
         <div class="col-sm-8">
             <input type="text" required="required" autocomplete="off" name="trbr_faktur" maxlength="30" id="trbr_faktur" class="upper ace col-xs-10 col-sm-3" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Supplier</label>
-        <div class="col-sm-8">
-            <input type="text" autocomplete="off" required="required" name="supplier" id="supplier" class="upper col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
@@ -51,54 +45,6 @@
                 <option value="2">Tidak</option>
             </select>
         </div>
-    </div>
-    <div class="hr hr-16 hr-dotted"></div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bantuan</label>
-        <div class="col-sm-8">
-            <label>
-                <input class="ace" id="autocomplete" onclick="cekAutoComplete()" type="checkbox" name="form-field-checkbox">
-                <span class="lbl"> Auto Complete</span>
-            </label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Barang</label>
-        <div class="col-sm-8">
-            <input type="text" placeholder="KODE BARANG" autocomplete="off" name="kodeBarang" id="kodeBarang" onchange="getData(this.id)" class="upper ace col-xs-10 col-sm-6">
-            <i class="ace-icon fa fa-spinner fa-spin orange bigger-200" id="waiting"></i>
-        </div>
-    </div>
-    <div class="table-header">
-        Daftar Barang
-    </div>
-    <div>
-        <table id="simple-table" class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th style="width: 5%">No</th>
-                    <th style="width: 20%">Kode Barang</th>
-                    <th  style="width: 30%">Nama Barang</th>
-                    <th style="width: 7%">Qty</th>
-                    <th  style="width: 10%">Harga</th>
-                    <th  style="width: 8%">Diskon</th>
-                    <th  style="width: 15%">Sub Total</th>
-                    <th  style="width: 15%">Hapus</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr  class="item-row" style="display: none">
-
-                </tr>
-            </tbody>
-            <tfoot>
-            <th colspan="6" style="text-align: right">TOTAL</th>
-            <th  class="ace col-xs-10 col-sm-10">
-                <input type="text" readonly="readonly" style="width: 100%;text-align: right;" value="0" name="trbr_total" id="trbr_total" class="trbr_total col-xs-10 col-sm-10" />  
-            </th>
-            </tfoot>
-        </table>
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
@@ -230,56 +176,6 @@
         $("#trbr_total").val(formatDefault(total));
     }
     
-    
-    function getData(id){
-        var cek = 0;
-        if($("#"+id).val() !=""){
-            $("#wait").attr("style","position: fixed;top: 0;left: 0;right: 0;height: 100%;opacity: 0.4;filter: alpha(opacity=40); background-color: #000;");
-            $("input[name^=dtr_inve_kode]").each(function(){
-                if($(this).val() == $("#"+id).val()){
-                    cek = 1;
-                    var str = ($(this).attr("id"));
-                    var baris = str.replace('dtr_inve_kode','');
-                    /* set QTY if exists */
-                    var setqty = parseInt($("#dtr_qty"+baris).val(),10) + 1;
-                    $("#dtr_qty"+baris).val(setqty);
-                    subTotal(baris);
-                    /* set empty */
-                    $('#'+id).focus();
-                    $("#"+id).val(""); 
-                }
-            });
-            if(cek == 0){
-                $.ajax({ 
-                    url: '<?php echo site_url('master_sparepart/jsonDataBarang'); ?>',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {
-                        param : $("#kodeBarang").val()
-                    },
-                    success: function(data){
-                        if (data['response']) {
-                            inc++;
-                            addRow(inc);
-                            $("#kodeBrg"+inc).html(data['inve_kode']);
-                            $("#dtr_inveid"+inc).val(data['inveid']);
-                            $("#dtr_inve_kode"+inc).val(data['inve_kode']);
-                            $("#inve_nama"+inc).html(data['inve_nama']);
-                            $("#dtr_qty"+inc).val(1);
-                            $("#dtr_diskon"+inc).val(0);
-                            $("#dtr_harga"+inc).val(formatDefault(data['inve_harga_beli']));
-                            $("#dtr_subtotal"+inc).val(formatDefault(data['inve_harga_beli']));
-                            $("#"+id).val(""); 
-                            total();
-                        }else{
-                            alert("Kode Barang ini tidak terdaftar");
-                        }
-                        $('#'+id).focus();
-                    }
-                });
-            }
-        }
-    }
     $(document).ready(function(){
         $("#supplier").autocomplete({
             minLength: 1,
@@ -337,38 +233,6 @@
         $('#kodeBarang').autocomplete("disable");
     });
     
-    
-    function addRow(inc) {
-        $(".item-row:last").after(
-        '<tr class="item-row">\n\
-                    <td class="nomororder">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
-                         <td>\n\
-                             <span id="kodeBrg' + inc + '"></span>\n\
-                            <input type="hidden" style="width:90%" id="dtr_inve_kode' + inc + '" name="dtr_inve_kode[]" />\n\
-                            <input type="hidden" style="width:90%" id="dtr_inveid' + inc + '" name="dtr_inveid[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                                <span id="inve_nama' + inc + '"></span>\n\
-                        </td>\n\
-                        <td>\n\
-                            <input type="text" autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dtr_qty' + inc + '" name="dtr_qty[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                             <input type="text" autocomplete="off" onchange="$(\'#\'+this.id).val(formatDefault(this.value));" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dtr_harga' + inc + '" name="dtr_harga[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                             <input type="text" autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dtr_diskon' + inc + '" name="dtr_diskon[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                             <input type="text" class="subtotal ace col-xs-10 col-sm-10" readonly="readonly" style="width:100%;text-align: right" id="dtr_subtotal' + inc + '" name="dtr_subtotal[]" />\n\
-                         </td>\n\
-                         <td style="text-align: center">\n\
-                             <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
-                         </td>\n\
-                       </tr>\n\
-                    </tr>');
-                                 $(".btnDelete").bind("click", Delete);
-                             }
     
     
 </script> 

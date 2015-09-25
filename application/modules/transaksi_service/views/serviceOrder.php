@@ -95,6 +95,9 @@
                         }
 </script>
 <form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_service/saveWo'); ?>" method="post" name="form">
+    <?php
+    $this->session->unset_userdata('href_wo');
+    ?>
     <table style="width: 100%">
         <tr>
             <td style="width: 48%">
@@ -115,13 +118,15 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">No Polisi</label>
                     <div class="col-sm-7">
-                        <input type="text" autocomplete="off" required="required" onchange="getDataKendaraan(this.id)" name="nopol" id="nopol" class="upper col-xs-10 col-sm-5" />
-                        <input type="hidden"  id="wo_mscid" name="wo_mscid" />
-                        <input type="hidden"  id="type" name="type" value="<?php echo $type; ?>"/>
-                        <input type="hidden"  id="wo_inextern" name="wo_inextern"/>
-                        <a href="#master_service/addKendaraan" class="btn btn-sm btn-primary">
-                            <i class="ace-icon fa fa-plus"></i>
-                            Tambah Kendaraan</a>
+                        <div class='input-group'>
+                            <input type="text" autocomplete="off" required="required" name="nopol" id="nopol" class="req upper col-xs-10 col-sm-5" />
+                            <input type="hidden"  id="wo_mscid" name="wo_mscid" />
+                            <input type="hidden"  id="type" name="wo_type" value="<?php echo $type; ?>"/>
+                            <input type="hidden"  id="wo_inextern" name="wo_inextern"/>
+                            <a href="#master_service/addKendaraanWo?href=transaksi_service/serviceOrder&jenis=<?php echo $jenis; ?>&type=<?php echo $type ?>&" class="btn btn-sm btn-primary">
+                                <i class="ace-icon fa fa-plus"></i>
+                                Tambah Kendaraan</a>
+                        </div>
                     </div>
                 </div>
             </td>
@@ -170,7 +175,9 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Kode Pelanggan</label>
                     <div class="col-sm-7">
-                        <input type="text" required="required"  id="pelid" name="wo_pelid" class="upper col-xs-10 col-sm-10" />
+                        <div class='input-group'>
+                            <input type="text" required="required"  id="pelid" name="wo_pelid" class="req upper col-xs-10 col-sm-10" />
+                        </div>
                     </div>
                 </div>
             </td>
@@ -180,7 +187,9 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Pembawa</label>
                     <div class="col-sm-7">
-                        <input type="text" required="required" autocomplete="off"  id="wo_pembawa" name="wo_pembawa" class="upper col-xs-10 col-sm-10" />
+                        <div class='input-group'>
+                            <input type="text" required="required" autocomplete="off"  id="wo_pembawa" name="wo_pembawa" class="req upper col-xs-10 col-sm-10" />
+                        </div>
                     </div>
                 </div>
             </td>
@@ -188,11 +197,13 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Status</label>
                     <div class="col-sm-7">
-                        <select name="wo_tunggu" required="required" class="ace col-xs-10 col-sm-8">
-                            <option value="">Pilih</option>
-                            <option value="tunggu">Tunggu</option>
-                            <option value="tinggal">Tinggal</option>
-                        </select>
+                        <div class='input-group ace col-xs-10 col-sm-10'>
+                            <select name="wo_tunggu" required="required" class="ace col-xs-10 col-sm-8">
+                                <option value="">Pilih</option>
+                                <option value="tunggu">Tunggu</option>
+                                <option value="tinggal">Tinggal</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </td>
@@ -202,7 +213,9 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Nomerator Kertas</label>
                     <div class="col-sm-7">
-                        <input type="text" required="required" autocomplete="off"  id="wo_numerator" name="wo_numerator" class="upper col-xs-10 col-sm-10" />
+                        <div class='input-group ace col-xs-10 col-sm-10'>
+                            <input type="text" required="required" autocomplete="off"  id="wo_numerator" name="wo_numerator" class="req upper col-xs-10 col-sm-10" />
+                        </div>
                     </div>
                 </div>
             </td>
@@ -210,7 +223,9 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Km</label>
                     <div class="col-sm-7">
-                        <input type="text" required="required" autocomplete="off"  id="wo_km" name="wo_km" class="number col-xs-10 col-sm-7" />
+                        <div class='input-group ace col-xs-10 col-sm-10'>
+                            <input type="text" required="required" autocomplete="off"  id="wo_km" name="wo_km" class="req number col-xs-10 col-sm-4" />
+                        </div>
                     </div>
                 </div>
             </td>
@@ -220,18 +235,20 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Stall</label>
                     <div class="col-sm-7">
-                        <select name="wo_stallid" required="required" class="ace col-xs-10 col-sm-5">
-                            <option value="">Pilih</option>
-                            <?php
-                            if (count($stall) > 0) {
-                                foreach ($stall as $value) {
-                                    ?>
-                                    <option value="<?php echo $value['stallid'] ?>"><?php echo $value['stall_nomer']; ?></option>
-                                    <?php
+                        <div class='input-group ace col-xs-10 col-sm-10'>
+                            <select name="wo_stallid" required="required" class="req ace col-xs-10 col-sm-10">
+                                <option value="">Pilih</option>
+                                <?php
+                                if (count($stall) > 0) {
+                                    foreach ($stall as $value) {
+                                        ?>
+                                        <option value="<?php echo $value['stallid'] ?>"><?php echo $value['stall_nomer']; ?></option>
+                                        <?php
+                                    }
                                 }
-                            }
-                            ?>
-                        </select>
+                                ?>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </td>
@@ -267,7 +284,9 @@
                             1
                         </td>
                         <td>
-                            <input type="text" maxlength="60"  required="required" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="woj_keluhan[]" />
+                            <div class='input-group ace col-xs-10 col-sm-10' style="width:100%;">
+                                <input type="text" maxlength="60"  required="required" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="woj_keluhan[]" />
+                            </div>
                         </td>
                         <td>
                             <input type="text"  autocomplete="off" onkeyup="autoCompleteJasa(1)" class="upper kodejasa ace col-xs-10 col-sm-10" style="width:100%;" id="wod_kode1" name="wod_kode[]" />
@@ -433,7 +452,7 @@
 
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
-            <button class="btn btn-info" type="submit">
+            <button class="btn btn-info" type="button" id="button">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Submit
             </button>
@@ -452,15 +471,107 @@
         $('#datetimepicker1').datetimepicker({format: 'DD-MM-YYYY HH:mm'});
     });
     
+    jQuery(function($) {
+        $('#button').on('click', function(e){
+            if(!$('#form').valid())
+            {
+                e.preventDefault();
+            }else
+                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                    if(result) {
+                        $("#form").submit();
+                    }
+            });
+            return false;
+        });
+        $('#form').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            rules: {
+                nopol: {
+                    required: true
+                },
+                wo_pelid: {
+                    required: true
+                },
+                wo_stallid: {
+                    required: true
+                },
+                wo_pembawa: {
+                    required: true
+                },
+                wo_numerator: {
+                    required: true
+                },
+                wo_tunggu: {
+                    required: true
+                },
+                wo_km: {
+                    required: true
+                }
+            },
+			
+            messages: {
+                nopol: {
+                    required: "Pastikan nopol tidak kosong"
+                },
+                wo_pelid: {
+                    required: "Pastikan kode pelanggan tidak kosong"
+                },
+                wo_tunggu: {
+                    required: "Pastikan pilih status"
+                },
+                wo_pembawa: {
+                    required: "Pastikan nama pembawa diisi"
+                },
+                wo_stallid: {
+                    required: "Pastikan stall dipilih"
+                },
+                wo_numerator: {
+                    required: "Pastikan numrator diisi"
+                },
+                wo_km: {
+                    required: "Pastikan km tidak kosong"
+                }
+            },
+			
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+			
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+			
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+			
+            submitHandler: function (form) {
+            },
+            invalidHandler: function (form) {
+            }
+        });
+    });
     
-    
-    function getDataKendaraan(id)
+    function getDataKendaraan(nopol)
     {
         $.ajax({
             url: '<?php echo site_url('transaksi_service/jsonDataKendaraan'); ?>',
             dataType: 'json',
             type: 'POST',
-            data: {param : $("#"+id).val()},
+            data: {param : nopol},
             success: function(data) {
                 if (data.response) {
                     $("#pel_nama").val(data.data['pel_nama']);
@@ -528,37 +639,7 @@
             counti--;
         }
     }
-   
-    $(this).ready(function() {
-        $('#form').submit(function() {
-            //            bootbox.confirm("Simpan Data ?", function(result) {
-            if (confirm("Yakin Data Sudah Benar ?")) {
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    dataType: "json",
-                    async: false,
-                    data: $(this)
-                    .serialize(),
-                    success: function(data) {
-                        window.scrollTo(0, 0);
-                        if (data.result) {
-                            var params  = 'width=1000';
-                            params += ', height='+screen.height;
-                            params += ', fullscreen=yes,scrollbars=yes';
-                            document.form.reset();
-                            clearForm();
-                            window.open("<?php echo site_url("transaksi_service/printWo"); ?>/"+data.kode,'_blank', params);
-                        }
-                        $("#result").html(data.msg).show().fadeIn("slow");
-                    }
-                })
-            }
-            return false;
-            //            });    
-        });
-    });
-    
+
     var inc = 0;
     function Delete() {
         var par = $(this).parent().parent(); //tr
@@ -732,7 +813,7 @@
                 if (data['response']) {
                     $("#woj_namajasa"+inc).val(data.data['flat_deskripsi']);
                     $("#woj_flatid"+inc).val(data.data['flatid']);
-                    $("#woj_rate"+inc).val(formatDefault(data.data['flat_total']));
+                    $("#woj_rate"+inc).val(formatDefault(data.data['flat_lc']));
                     $("#woj_subtotal"+inc).val(formatDefault(data.data['flat_total']));
                     totalJasa();
                 }else{
@@ -775,6 +856,27 @@
     
     
     $(document).ready(function(){
+        $('#form').submit(function() {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                dataType: "json",
+                async: false,
+                data: $(this).serialize(),
+                success: function(data) {
+                    window.scrollTo(0, 0);
+                    if (data.result) {
+                        var params  = 'width=1000';
+                        params += ', height='+screen.height;
+                        params += ', fullscreen=yes,scrollbars=yes';
+                        document.form.reset();
+                        clearForm();
+                        window.open("<?php echo site_url("transaksi_service/printWo"); ?>/"+data.kode,'_blank', params);
+                    }
+                    $("#result").html(data.msg).show().fadeIn("slow");
+                }
+            })
+        });
         $("#nopol").autocomplete({
             minLength: 1,
             source: function(req, add) {
@@ -794,6 +896,9 @@
                     .append("<a><strong>" + item.value + "</strong><br>" + item.desc + "</a>")
                     .appendTo(ul);
                 };
+            },select: function(event, ui) {
+                getDataKendaraan(ui.item.value);
+                //                getDataWo(ui.item.value, ui.item.type);
             }
         })
     });

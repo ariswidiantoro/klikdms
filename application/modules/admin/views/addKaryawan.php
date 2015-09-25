@@ -27,7 +27,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Departemen</label>
         <div class="col-sm-8">
-            <select name="jab_deptid" id="jab_deptid" onchange="getJabatan()" class="form-control" style="width: 30%" >
+            <select name="jab_deptid" id="jab_deptid" onchange="getJabatan()" class="req form-control" style="width: 30%" >
                 <option value="">Pilih</option>
                 <?php
                 if (count($departemen) > 0) {
@@ -44,7 +44,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Jabatan</label>
         <div class="col-sm-8">
-            <select name="kr_jabid" id="kr_jabid" required="required" class="form-control" style="width: 30%">
+            <select name="kr_jabid" id="kr_jabid" required="required" class="req form-control" style="width: 30%">
             </select>
         </div>
     </div>
@@ -52,31 +52,31 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">NIK</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_nik" required="required"  placeholder="Nomor Induk Karyawan" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="kr_nik" required="required"  class="req ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Karyawan</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_nama" required="required"  placeholder="Nama" class="upper ace col-xs-10 col-sm-5" />
+            <input type="text" name="kr_nama" required="required"  class="req upper ace col-xs-10 col-sm-5" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Username</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_username"  required="required"  placeholder="Username" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="kr_username"  required="required"  class="req ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea class="upper ace col-xs-10 col-sm-5" name="kr_alamat" rows="4"></textarea>
+            <textarea class="req upper ace col-xs-10 col-sm-5" name="kr_alamat" rows="4"></textarea>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
         <div class="col-sm-8">
-            <select name="propinsi" id="propinsi" onchange="getKota()" class="form-control" style="width: 30%" >
+            <select name="propinsi" id="propinsi" onchange="getKota()" class="req form-control" style="width: 30%" >
                 <option value="">Pilih</option>
                 <?php
                 if (count($propinsi) > 0) {
@@ -93,14 +93,14 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kab / Kota</label>
         <div class="col-sm-8">
-            <select name="kr_kotaid" id="kr_kotaid" class="form-control" style="width: 30%" >
+            <select name="kr_kotaid" id="kr_kotaid" class="req form-control" style="width: 30%" >
             </select>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Hp</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_hp"  placeholder="Hp" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="kr_hp"  placeholder="Hp" class="req ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
@@ -129,7 +129,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor KTP</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_nomor_ktp"  placeholder="Nomor KTP" class="ace col-xs-10 col-sm-5" />
+            <input type="text" name="kr_nomor_ktp"  placeholder="Nomor KTP" class="req ace col-xs-10 col-sm-5" />
         </div>
     </div>
 
