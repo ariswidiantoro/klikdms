@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('master_sales/deleteMerk'); ?>',
+                    url: '<?php echo site_url('master_prospect/deleteArea'); ?>',
                     dataType: "json",
                     data: {
                         id: id
@@ -28,13 +28,14 @@ if (!defined('BASEPATH'))
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_sales/loadMerk') ?>',     
+            url:'<?php echo site_url('master_prospect/loadArea') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['ID','Nama Merk', 'Edit', 'Del'],     
+            colNames:['Propinsi', 'Kota/Kab', 'Area', 'Edit', 'Del'],     
             colModel:[
-                {name:'merkid',index:'merkid', width:80, align:"left"},
-                {name:'merk_deskripsi',index:'merk_deskripsi', width:100, align:"left"},
+                {name:'prop_deskripsi',index:'prop_deskripsi', width:80, align:"left"},
+                {name:'kota_deskripsi',index:'kota_deskripsi', width:80, align:"left"},
+                {name:'area_deskripsi',index:'area_deskripsi', width:120, align:"left"},
                 {name:'edit',index:'edit', width:12, align:"center"},
                 {name:'hapus',index:'hapus', width:12, align:"center"},
             ],
@@ -43,11 +44,11 @@ if (!defined('BASEPATH'))
             width: $(".page-content").width(),
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'merkid',
+            sortname: 'areaid',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Merk Kendaraan"
+            caption:"Daftar Area Sales"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
@@ -68,9 +69,9 @@ if (!defined('BASEPATH'))
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_sales/addMerk" class="btn btn-sm btn-primary">
+            <a href="#master_prospect/addArea" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Merk</a>
+                Tambah Area</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>

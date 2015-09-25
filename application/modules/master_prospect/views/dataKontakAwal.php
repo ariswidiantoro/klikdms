@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('master_sales/deleteKaroseri'); ?>',
+                    url: '<?php echo site_url('master_prospect/deleteKontakAwal'); ?>',
                     dataType: "json",
                     data: {
                         id: id
@@ -28,29 +28,25 @@ if (!defined('BASEPATH'))
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_sales/loadKaroseri') ?>',     
+            url:'<?php echo site_url('master_prospect/loadKontakAwal') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Nama', 'Alamat', 'Telp', 'Kontak', 'Kota', 'Edit', 'Del'],     
+            colNames:['Kontak Awal', 'Edit', 'Del'],     
             colModel:[
-                {name:'karo_nama',index:'karo_nama', width:80, align:"left"},
-                {name:'karo_alamat',index:'karo_alamat', width:100, align:"left"},
-                {name:'karo_telp',index:'karo_telp', width:40, align:"left"},
-                {name:'karo_kontak',index:'karo_kontak', width:50, align:"left"},
-                {name:'kota_deskripsi',index:'kota_deskripsi', width:70, align:"left"},
-                {name:'edit',index:'edit', width:15, align:"center"},
-                {name:'hapus',index:'hapus', width:15, align:"center"},
+                {name:'kontak_deskripsi',index:'kontak_deskripsi', width:100, align:"left"},
+                {name:'edit',index:'edit', width:12, align:"center"},
+                {name:'hapus',index:'hapus', width:12, align:"center"},
             ],
             rowNum:10,
             height : 300,
             width: $(".page-content").width(),
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'karoid',
+            sortname: 'kontakid',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Karoseri"
+            caption:"Daftar Kontak Awal"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
@@ -71,9 +67,9 @@ if (!defined('BASEPATH'))
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_sales/addKaroseri" class="btn btn-sm btn-primary">
+            <a href="#master_prospect/addKontakAwal" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Karoseri</a>
+                Tambah Kontak Awal</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>

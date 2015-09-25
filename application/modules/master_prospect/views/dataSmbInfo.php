@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('master_sales/deleteWarna'); ?>',
+                    url: '<?php echo site_url('master_prospect/deleteSmbInfo'); ?>',
                     dataType: "json",
                     data: {
                         id: id
@@ -28,13 +28,12 @@ if (!defined('BASEPATH'))
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_sales/loadWarna') ?>',     
+            url:'<?php echo site_url('master_prospect/loadSmbInfo') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['ID','Nama Warna', 'Edit', 'Del'],     
+            colNames:['Sumber Informasi', 'Edit', 'Del'],     
             colModel:[
-                {name:'warnaid',index:'warnaid', width:30, align:"left"},
-                {name:'warna_deskripsi',index:'warna_deskripsi', width:100, align:"left"},
+                {name:'smbinfo_deskripsi',index:'smbinfo_deskripsi', width:100, align:"left"},
                 {name:'edit',index:'edit', width:12, align:"center"},
                 {name:'hapus',index:'hapus', width:12, align:"center"},
             ],
@@ -43,11 +42,11 @@ if (!defined('BASEPATH'))
             width: $(".page-content").width(),
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'warnaid',
+            sortname: 'smbinfoid',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Warna Kendaraan"
+            caption:"Daftar Sumber Informasi"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
@@ -68,9 +67,9 @@ if (!defined('BASEPATH'))
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_sales/addWarna" class="btn btn-sm btn-primary">
+            <a href="#master_prospect/addSmbInfo" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Warna</a>
+                Tambah Sumber Informasi</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>

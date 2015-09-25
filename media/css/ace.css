@@ -9851,6 +9851,10 @@ input.ace + .lbl.padding-0::before {
 .form-group input[type="tel"],
 .form-group input[type="color"] {
 }
+.form-group .req {
+    background: #FAEBD7;
+}
+
 .form-group.has-success input,
 .form-group.has-success select,
 .form-group.has-success textarea {

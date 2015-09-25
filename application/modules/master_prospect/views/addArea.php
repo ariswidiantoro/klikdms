@@ -1,29 +1,15 @@
 <div id="result"></div>
 <div class="page-header">
     <h1>
-        Tambah Leasing
+        Tambah Area Sales
     </h1>
 </div>
 
-<form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('master_sales/saveLeasing'); ?>" name="formAdd">
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
-        <div class="col-sm-8">
-            <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="leas_nama" id="leas_nama"  class="ace col-xs-10 col-sm-8" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
-        <div class="col-sm-5">
-            <textarea id="form-field-8" name="leas_alamat" class="form-control" style='text-transform:uppercase'  placeholder="Alamat"></textarea>
-        </div>
-    </div>
-
+<form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('master_prospect/saveArea'); ?>" name="formAdd">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
         <div class="col-sm-8">
-            <select name="propid" id="propid" onchange="getKota()" class="form-control" style="width: 30%;">
+            <select name="area_propid" id="area_propid" onchange="getKota()" class="form-control input-xlarge">
                 <option value="">PILIH</option>
                 <?php
                 if (count($propinsi) > 0) {
@@ -40,23 +26,16 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kota</label>
         <div class="col-sm-8">
-            <select name="leas_kotaid" id="leas_kotaid" class="form-control" style="width: 30%;">
+            <select name="area_kotaid" id="area_kotaid" class="form-control input-xlarge" >
                 <option value="">PILIH</option>
             </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Telephone</label>
-        <div class="col-sm-8">
-            <input type="text" required="required" maxlength="20" style='text-transform:uppercase' 
-                   name="leas_telp" id="leas_telp"  class="ace col-xs-10 col-sm-8 number" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kontak</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Area</label>
         <div class="col-sm-8">
             <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="leas_kontak" id="leas_kontak"  class="ace col-xs-10 col-sm-8" />
+                   name="area_deskripsi" id="area_deskripsi"  class="ace col-xs-10 col-sm-8" />
         </div>
     </div>
     <div class="clearfix form-actions">
@@ -73,7 +52,7 @@
             &nbsp; &nbsp; &nbsp;
             <button class="btn btn-info" type="button" onclick="javascript:redirect('data');">
                 <i class="ace-icon fa 	fa-book bigger-50"></i>
-                Daftar Leasing
+                Daftar Area
             </button>
         </div>
     </div>
@@ -83,7 +62,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
-                window.location.href = "#master_sales/masterLeasing";
+                window.location.href = "#master_prospect/area";
             }});
     }
     
@@ -104,31 +83,23 @@
             dataType: "json",
             async: false,
             data: {
-                propid : $("#propid").val()
+                propid : $("#area_propid").val()
             },
             success: function(data) {
-                $('#leas_kotaid').html('');
-                $('#leas_kotaid').append('<option value="">PILIH</option>');
+                $('#area_kotaid').html('');
+                $('#area_kotaid').append('<option value="">PILIH</option>');
                 $.each(data, function(messageIndex, message) {
-                    $('#leas_kotaid').append('<option value="' + message['kotaid'] + '">' + message['kota_deskripsi'] + '</option>');
+                    $('#area_kotaid').append('<option value="' + message['kotaid'] + '">' + message['kota_deskripsi'] + '</option>');
                 });
             }
         })
     }
     
     $(this).ready(function() {
-        //called when key is pressed in textbox
-        $(".number").keypress(function (e) {
-            //if the letter is not digit then display error and don't type anything
-            if (e.which != 8 && e.which != 47 && e.which != 0 && (e.which < 46 || e.which > 57)){
-                return false;
-            }
-        });
-    
         $('#formAdd').submit(function() {
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url('master_sales/saveLeasing') ?>",
+                url: "<?php echo site_url('master_prospect/saveArea') ?>",
                 dataType: "json",
                 async: false,
                 data: $(this).serialize(),

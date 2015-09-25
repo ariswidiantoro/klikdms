@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('master_sales/deleteModel'); ?>',
+                    url: '<?php echo site_url('master_prospect/deleteBisnis'); ?>',
                     dataType: "json",
                     data: {
                         id: id
@@ -28,15 +28,13 @@ if (!defined('BASEPATH'))
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_sales/loadModel') ?>',     
+            url:'<?php echo site_url('master_prospect/loadBisnis') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Kode', 'Merk', 'Model', 'Segment', 'Edit', 'Del'],     
+            colNames:['Bisnis', 'Deskripsi', 'Edit', 'Del'],     
             colModel:[
-                {name:'modelid',index:'merkid', width:50, align:"left"},
-                {name:'merk_deskripsi',index:'merk_deskripsi', width:100, align:"left"},
-                {name:'model_deskripsi',index:'model_deskripsi', width:120, align:"left"},
-                {name:'seg_nama',index:'seg_nama', width:100, align:"left"},
+                {name:'bisnis_nama',index:'bisnis_nama', width:100, align:"left"},
+                {name:'bisnis_deskripsi',index:'bisnis_deskripsi', width:100, align:"left"},
                 {name:'edit',index:'edit', width:12, align:"center"},
                 {name:'hapus',index:'hapus', width:12, align:"center"},
             ],
@@ -45,11 +43,11 @@ if (!defined('BASEPATH'))
             width: $(".page-content").width(),
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'modelid',
+            sortname: 'bisnisid',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Model Kendaraan"
+            caption:"Daftar Bisnis"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
@@ -70,9 +68,9 @@ if (!defined('BASEPATH'))
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_sales/addModel" class="btn btn-sm btn-primary">
+            <a href="#master_prospect/addBisnis" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Model</a>
+                Tambah Bisnis</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>

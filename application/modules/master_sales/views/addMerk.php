@@ -9,7 +9,7 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsi</label>
         <div class="col-sm-8">
             <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="merk_deskripsi" id="merk_deskripsi"  class="ace col-xs-10 col-sm-10" />
+                   name="merk_deskripsi" id="merk_deskripsi"  class="ace col-xs-10 col-sm-10 req" />
         </div>
     </div>
     <div class="clearfix form-actions">

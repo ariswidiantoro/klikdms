@@ -1,20 +1,19 @@
 <div id="result"></div>
 <div class="page-header">
     <h1>
-        Tambah Warna Kendaraan
+        Tambah Kontak Awal
     </h1>
 </div>
-
-<form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('master_sales/saveWarna'); ?>" name="formAdd">
+<form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('master_prospect/saveKontakAwal'); ?>" name="formAdd">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsi</label>
         <div class="col-sm-8">
             <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="warna_deskripsi" id="warna_deskripsi"  class="ace col-xs-10 col-sm-10" />
+                   name="kontak_deskripsi" id="kontak_deskripsi"  class="ace col-xs-10 col-sm-10" />
         </div>
     </div>
     <div class="clearfix form-actions">
-        <div class="col-md-offset-1 col-md-5">
+        <div class="col-md-offset-1 col-md-8">
             <button class="btn btn-success" type="button" onclick="javascript:saveData()">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Simpan
@@ -27,7 +26,7 @@
             &nbsp; &nbsp; &nbsp;
             <button class="btn btn-info" type="button" onclick="javascript:redirect('data');">
                 <i class="ace-icon fa 	fa-book bigger-50"></i>
-                Daftar Warna
+                Daftar Sumber Informasi
             </button>
         </div>
     </div>
@@ -37,7 +36,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
-                window.location.href = "#master_sales/masterWarna";
+                window.location.href = "#master_prospect/kontak_awal";
             }});
     }
     
@@ -55,7 +54,7 @@
         $('#formAdd').submit(function() {
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url('master_sales/saveWarna') ?>",
+                url: "<?php echo site_url('master_prospect/saveKontakAwal') ?>",
                 dataType: "json",
                 async: false,
                 data: $(this).serialize(),
