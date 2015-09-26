@@ -10,6 +10,22 @@ class Model_Finance extends CI_Model {
     public function __construct() {
         parent::__construct();
     }
+    
+     /** 
+     * Utility - Finance
+     * @author Rossi on 2015-09-25
+     **/
+    public function cListCostCenter($data){
+        $this->db->where('cc_cbid', $data['cbid']);
+        $sql = $this->db->get('ms_cost_center');
+        return $sql->result_array();
+    }
+    
+    public function cListKota($data){
+        $this->db->where('cc_cbid', $data['cbid']);
+        $sql = $this->db->get('ms_cost_center');
+        return $sql->result_array();
+    }
 
     /** Chart Of Account (COA) 
      * @author Rossi Erl
@@ -211,24 +227,63 @@ class Model_Finance extends CI_Model {
         return $query->row_array();
     }
     
-    /* Utility */
-    
-    /** 
-     * This function is used for feetching 
-     * Costcenter's data on Combo List
-     * @author Rossi on 2015-09-08
-     **/
-    public function cListCostCenter($data){
-        $this->db->where('cc_cbid', $data['cbid']);
-        $sql = $this->db->get('ms_cost_center');
-        return $sql->result_array();
+   /** Master Tipe Jurnal 
+     * @author Rossi Erl
+     * 2015-09-03
+     */
+    public function getTotalTypeJurnal() {
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_type_jurnal ");
+        return $sql->row()->total;
+    }
+
+    public function getDataTypeJurnal($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_type_jurnal');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function addTypeJurnal($data) {
+        if ($this->db->insert('ms_type_jurnal', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['type_deskripsi'] . ' berhasil disimpan');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['type_deskripsi'] . ' gagal disimpan');
+        }
+    }
+
+    public function getTypeJurnal($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_type_jurnal WHERE typeid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function updateTypeJurnal($data, $where) {
+        $this->db->where('typeid', $where);
+        if ($this->db->update('ms_type_jurnal', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['type_deskripsi'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['type_deskripsi'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteTypeJurnal($data) {
+        if ($this->db->query('DELETE FROM ms_type_jurnal WHERE typeid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
     
-    public function cListKota($data){
-        $this->db->where('cc_cbid', $data['cbid']);
-        $sql = $this->db->get('ms_cost_center');
-        return $sql->result_array();
-    }
+   
 }
 
 ?>
