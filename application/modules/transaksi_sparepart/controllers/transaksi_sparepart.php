@@ -23,13 +23,27 @@ class Transaksi_Sparepart extends Application {
         $this->hakAkses(57);
         $this->load->view('penerimaanBarang', $this->data);
     }
+
+    public function returPenjualan() {
+        $this->hakAkses(61);
+        $this->load->view('returPenjualan', $this->data);
+    }
+    public function claimBarang() {
+        $this->hakAkses(63);
+        $this->load->view('claimBarang', $this->data);
+    }
+
     public function fakturSparepart() {
         $this->hakAkses(60);
         $this->load->view('fakturSparepart', $this->data);
     }
+    public function adjustmentStock() {
+        $this->hakAkses(62);
+        $this->load->view('adjustmentStock', $this->data);
+    }
 
     function jsonFakturTerima() {
-        $faktur = $this->input->post('param');
+        $faktur = strtoupper($this->input->post('param'));
         $cbid = ses_cabang;
         $data['response'] = 'false';
         $query = $this->model_trspart->getFakturTerimaAutoComplete($faktur);
@@ -48,6 +62,28 @@ class Transaksi_Sparepart extends Application {
         }
         echo json_encode($data);
     }
+
+    function jsonFakturJual() {
+        $faktur = strtoupper($this->input->post('param'));
+        $data['response'] = 'false';
+        $query = $this->model_trspart->getFakturJualAutoComplete($faktur);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array(
+                    'value' => $row['not_nomer'],
+                    'pelid' => $row['pelid'],
+                    'desc' => $row['pel_nama'],
+                    'sppid' => $row['not_sppid'],
+                    'id' => $row['notid']);
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ditemukan", 'desc' => '');
+        }
+        echo json_encode($data);
+    }
+
     function jsonSupplyPartShop() {
         $supply = strtoupper($this->input->post('param'));
         $data['response'] = 'false';
@@ -59,13 +95,14 @@ class Transaksi_Sparepart extends Application {
                 $data['message'][] = array(
                     'value' => $row['spp_noslip'],
                     'label' => $row['pel_nama'],
-                  );
+                );
             }
         } else {
             $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
         }
         echo json_encode($data);
     }
+
     function getDataSupplyPartShop() {
         $supply = strtoupper($this->input->post('param'));
         $data = $this->model_trspart->getDataSupplyPartShop($supply);
@@ -218,6 +255,109 @@ class Transaksi_Sparepart extends Application {
                 );
             }
             $return = $this->model_trspart->saveReturPembelian($data, $detail);
+        } else {
+            $return['result'] = false;
+            $return['msg'] = $this->error("Nomer Faktur Tidak Valid");
+        }
+        echo json_encode($return);
+    }
+
+    function saveReturPenjualan() {
+        $return = false;
+        $this->form_validation->set_rules('not_nomer', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        $this->form_validation->set_rules('pelid', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        $this->form_validation->set_rules('notid', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'rj_tgl' => date('Y-m-d'),
+                'rj_createon' => date('Y-m-d H:i:s'),
+                'rj_createby' => ses_username,
+                'rj_notid' => $this->input->post('notid'),
+                'rj_total' => numeric($this->input->post('grand_total')),
+                'rj_alasan' => $this->input->post('rj_alasan'),
+                'rj_cbid' => ses_cabang,
+            );
+            $det_inveid = $this->input->post('dsupp_inveid');
+            $det_qty = $this->input->post('dsupp_qty');
+            $det_harga = $this->input->post('dsupp_harga');
+            $det_hpp = $this->input->post('dsupp_hpp');
+            $det_diskon = $this->input->post('dsupp_diskon');
+            $det_subtotal = $this->input->post('dsupp_subtotal');
+            // get array spare part from table 
+            $detail = array();
+            for ($i = 0; $i < count($det_inveid); $i++) {
+                $detail[] = array(
+                    'det_inveid' => $det_inveid[$i],
+                    'det_qty' => $det_qty[$i],
+                    'det_harga' => numeric($det_harga[$i]),
+                    'det_diskon' => $det_diskon[$i],
+                    'det_hpp' => $det_hpp[$i],
+                    'det_subtotal' => numeric($det_subtotal[$i]),
+                    'det_subtotal_hpp' => numeric($det_hpp[$i]*$det_qty[$i]),
+                );
+            }
+            $return = $this->model_trspart->saveReturPenjualan($data, $detail, $this->input->post('sppid'));
+        } else {
+            $return['result'] = false;
+            $return['msg'] = $this->error("Nomer Faktur Tidak Valid");
+        }
+        echo json_encode($return);
+    }
+    function saveAdjustmentStock() {
+        $return = false;
+        $this->form_validation->set_rules('adj_nomer', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'adj_tgl' => date('Y-m-d'),
+                'adj_createon' => date('Y-m-d H:i:s'),
+                'adj_createby' => ses_username,
+                'adj_nomer' => strtoupper($this->input->post('adj_nomer')),
+                'adj_cbid' => ses_cabang,
+            );
+            $dadj_inveid = $this->input->post('dadj_inveid');
+            $dadj_hpp = $this->input->post('dadj_hpp');
+            $dadj_subtotal_hpp = $this->input->post('dadj_subtotal_hpp');
+            $dadj_plus = $this->input->post('dadj_plus');
+            $dadj_minus = $this->input->post('dadj_minus');
+            // get array spare part from table 
+            $detail = array();
+            for ($i = 0; $i < count($dadj_inveid); $i++) {
+                $detail[] = array(
+                    'dadj_inveid' => $dadj_inveid[$i],
+                    'dadj_plus' => empty($dadj_plus[$i]) ? 0 : $dadj_plus[$i],
+                    'dadj_minus' => empty($dadj_minus[$i]) ? 0 : $dadj_minus[$i],
+                    'dadj_hpp' => numeric($dadj_hpp[$i]),
+                    'dadj_subtotal_hpp' => numeric($dadj_subtotal_hpp[$i]),
+                );
+            }
+            $return = $this->model_trspart->saveAdjustmentStock($data, $detail);
+        } else {
+            $return['result'] = false;
+            $return['msg'] = $this->error("Nomer Faktur Tidak Valid");
+        }
+        echo json_encode($return);
+    }
+
+    function saveFakturSparepart() {
+        $return = array();
+        $this->form_validation->set_rules('not_sppid', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        $this->form_validation->set_rules('supply', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        $this->form_validation->set_rules('pel_nama', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'not_tgl' => date('Y-m-d'),
+                'not_createon' => date('Y-m-d H:i:s'),
+                'not_createby' => ses_username,
+                'not_cbid' => ses_cabang,
+                'not_numerator' => $this->input->post('not_numerator'),
+                'not_sppid' => $this->input->post('not_sppid'),
+                'not_kredit_term' => numeric($this->input->post('not_kredit_term')),
+                'not_nokwitansi_um' => $this->input->post('not_nokwitansi_um'),
+                'not_tampil_ppn' => $this->input->post('not_tampil_ppn'),
+                'not_pay_method' => $this->input->post('not_pay_method'),
+                'not_total' => $this->input->post('total'),
+            );
+            $return = $this->model_trspart->saveFakturSparepart($data);
         }
         echo json_encode($return);
     }
@@ -227,8 +367,8 @@ class Transaksi_Sparepart extends Application {
      * @param type $kode
      */
     function printTerimaBarang($kode) {
-        $this->data['faktur'] = $this->model_trspart->dataFakturTerima($kode);
-        $this->data['barang'] = $this->model_trspart->dataFakturTerimaDetail($kode);
+        $this->data['faktur'] = $this->model_trspart->getFakturTerima($kode);
+        $this->data['barang'] = $this->model_trspart->getFakturTerimaDetail($kode);
         $this->load->view('printTerimaBarang', $this->data);
     }
 
@@ -237,9 +377,38 @@ class Transaksi_Sparepart extends Application {
      * @param type $kode
      */
     function printReturBeli($kode) {
-        $this->data['faktur'] = $this->model_trspart->dataReturBeli($kode);
-        $this->data['barang'] = $this->model_trspart->dataReturBeliDetail($kode);
+        $this->data['faktur'] = $this->model_trspart->getReturBeli($kode);
+        $this->data['barang'] = $this->model_trspart->getReturBeliDetail($kode);
         $this->load->view('printReturBeli', $this->data);
+    }
+    
+    /**
+     * 
+     * @param type $kode
+     */
+    function printAdjustmentStock($kode) {
+        $this->data['faktur'] = $this->model_trspart->getAdjustmentStock($kode);
+        $this->data['barang'] = $this->model_trspart->getAdjustmentStockDetail($kode);
+        $this->load->view('printAdjustmentStock', $this->data);
+    }
+    /**
+     * 
+     * @param type $kode
+     */
+    function printReturJual($kode) {
+        $this->data['faktur'] = $this->model_trspart->getReturJual($kode);
+        $this->data['barang'] = $this->model_trspart->getReturJualDetail($kode);
+        $this->load->view('printReturJual', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $kode
+     */
+    function printFakturSparepart($kode) {
+        $this->data['data'] = $this->model_trspart->getFakturSparepart($kode);
+        $this->data['barang'] = $this->model_trspart->getFakturSparepartDetail($kode);
+        $this->load->view('printFakturSparepart', $this->data);
     }
 
     /**
@@ -247,8 +416,8 @@ class Transaksi_Sparepart extends Application {
      * @param type $kode
      */
     function printSupplySlip($kode) {
-        $this->data['data'] = $this->model_trspart->dataSupplySlip($kode);
-        $this->data['barang'] = $this->model_trspart->dataSupplySlipDetail($kode);
+        $this->data['data'] = $this->model_trspart->getSupplySlip($kode);
+        $this->data['barang'] = $this->model_trspart->getSupplySlipDetail($kode);
         $this->load->view('printSupplySlip', $this->data);
     }
 

@@ -410,6 +410,22 @@ class Master_Sparepart extends Application {
         }
         echo json_encode($data);
     }
+    function jsonBarangPenjualan() {
+        $nama = $this->input->post('param');
+        $sppid = $this->input->post('sppid');
+        $data['response'] = 'false';
+        $query = $this->model_sparepart->getBarangPenjualanAutoComplete(strtoupper($nama),$sppid);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array('value' => $row['inve_kode'], 'desc' => $row['inve_nama']);
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+        }
+        echo json_encode($data);
+    }
     
 
     /**
@@ -446,6 +462,17 @@ class Master_Sparepart extends Application {
         $nama = $this->input->post('param');
         $faktur = $this->input->post('faktur');
         $query = $this->model_sparepart->getInventoryBarangTerima(strtoupper($nama), strtoupper($faktur));
+        if (count($query) > 0) {
+            $query['response'] = true;
+        } else {
+            $query['response'] = false;
+        }
+        echo json_encode($query);
+    }
+    function jsonDataBarangPenjualan() {
+        $kodebarang = $this->input->post('kodebarang');
+        $sppid = $this->input->post('sppid');
+        $query = $this->model_sparepart->getInventoryBarangPenjualan(strtoupper($kodebarang), $sppid);
         if (count($query) > 0) {
             $query['response'] = true;
         } else {

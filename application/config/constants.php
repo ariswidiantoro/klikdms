@@ -46,6 +46,16 @@ define('JAB_SVC_KASIR_SERVICE', 'JAB005');
 
 // NUMERATOR KODE
 define('NUM_INVOICE', 'IV');
+define('NUM_TERIMA_BARANG', 'TB');
+define('NUM_RETUR_JUAL_SPAREPART', 'RJ');
+define('NUM_RETUR_BELI_SPAREPART', 'RB');
+define('NUM_NOTA_SPAREPART', 'NS');
+define('NUM_NUMERATOR_SPAREPART', 'NC');
+define('NUM_SUPPLY_PK', 'SS');
+define('NUM_SUPPLY_NOMER', 'SP');
+define('NUM_ADJUSTMENT_STOCK', 'AD');
+
+
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

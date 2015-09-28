@@ -13,7 +13,7 @@
             <div class='input-group col-xs-10 col-sm-10'>
                 <input type="text" required="required" autocomplete="off" name="supply" maxlength="30" id="supply" class="req upper ace col-xs-10 col-sm-3" />
                 <input type="hidden" name="not_sppid" id="not_sppid"/>
-                <input type="hidden" name="not_sppid" id="not_sppid"/>
+                <input type="hidden" name="total" id="total"/>
             </div>
         </div>
     </div>
@@ -36,6 +36,14 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">No. Kwitansi Uang Muka</label>
+        <div class="col-sm-8">
+            <div class='input-group col-xs-10 col-sm-10'>
+                <input type="text" id="not_nokwitansi_um" name="not_nokwitansi_um" class="upper col-xs-10 col-sm-4" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Total</label>
         <div class="col-sm-8">
             <input type="text" value="0" readonly="readonly" name="not_total" 
@@ -50,13 +58,25 @@
             </div>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Pay Method</label>
+        <div class="col-sm-8">
+            <div class='input-group col-xs-10 col-sm-10'>
+                <select name="not_pay_method" id="not_pay_method" required="required" class="ace col-xs-10 col-sm-3 upper req">
+                    <option value="">Pilih</option>
+                    <option value="tunai">Tunai</option>
+                    <option value="kredit">Kredit</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
 
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tampilkan PPN di cetakan</label>
         <div class="col-sm-8">
             <div class='input-group col-xs-10 col-sm-10'>
-                <select name="inv_tampil_ppn" id="inv_tampil_ppn" required="required" class="ace col-xs-10 col-sm-3 upper req">
+                <select name="not_tampil_ppn" id="not_tampil_ppn" required="required" class="ace col-xs-10 col-sm-3 upper req">
                     <option value="">Pilih</option>
                     <option value="1">Ya</option>
                     <option value="0">Tidak</option>
@@ -160,8 +180,8 @@
                         params += ', height='+screen.height;
                         params += ', fullscreen=yes,scrollbars=yes';
                         document.form.reset();
-                        clearForm();
-                        window.open("<?php echo site_url("transaksi_sparepart/printTerimaBarang"); ?>/"+data.kode,'_blank', params);
+                        //                        clearForm();
+                        window.open("<?php echo site_url("transaksi_sparepart/printFakturSparepart"); ?>/"+data.kode,'_blank', params);
                     }
                     $("#result").html(data.msg).show().fadeIn("slow");
                 }
@@ -182,9 +202,10 @@
             success: function(data) {
                 $("#not_sppid").val(data['sppid']);
                 $("#not_kredit_term").val(data['spp_kredit_term']);
-                $("#pel_nama").val(data['pel_nama']);
+                $("#not_pay_method").val(data['spp_pay_method']);
                 $("#pel_nama").val(data['pel_nama']);
                 $("#not_total").val(formatDefault(data['spp_total']));
+                $("#total").val(data['spp_total']);
                 $('.page-content-area').ace_ajax('stopLoading', true);
             }
         });
