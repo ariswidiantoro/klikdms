@@ -1,7 +1,4 @@
 
-<title>Blank Page - Ace Admin</title>
-
-<!-- ajax layout which only needs content area -->
 <div class="row">
     <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
