@@ -185,6 +185,20 @@ class Transaksi_Prospect extends Application {
         }
         echo json_encode($hasil);
     }
+    
+    public function batalProspect() {
+        $id = $this->input->post('id', TRUE);
+        if (empty($id)) {
+            $hasil = $this->error('Hapus data gagal');
+        } else {
+            if ($this->model_prospect->updateProspect($id)) {
+                $hasil = $this->sukses('Hapus data berhasil');
+            } else {
+                $hasil = $this->error('Hapus data gagal');
+            }
+        }
+        echo json_encode($hasil);
+    }
 
     public function getProspect() {
         $data = $this->input->get('merkid', TRUE);
