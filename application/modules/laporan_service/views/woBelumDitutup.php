@@ -3,12 +3,7 @@
         <div class="row">
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <span>Mulai Tgl</span>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <span>Sampai Dengan</span>
+                    <span>Tgl Cut Off</span>
                 </div>
             </div>
         </div>
@@ -16,17 +11,7 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group">
-                        <input type="text" name="start" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
-                        <span class="input-group-addon">
-                            <i class="ace-icon fa fa-calendar"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <div class="input-group" style="position: static">
-                        <input type="text" value="<?php echo date('d/m/Y') ?>" name="end" class="datepicker form-control" />
+                        <input type="text" name="start" value="<?php echo date('d/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
                         <span class="input-group-addon">
                             <i class="ace-icon fa fa-calendar"></i>
                         </span>
@@ -40,7 +25,7 @@
             </div>
         </div>
     </div>
-    <div id="result" style="overflow-x: auto;margin:-2px 0 0 0;" >
+    <div id="result" style="overflow-x: auto; margin:-2px 0 0 0; " >
     </div>
 </form>
 <!-- page specific plugin scripts -->

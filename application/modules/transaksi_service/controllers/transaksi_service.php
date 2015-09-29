@@ -142,7 +142,7 @@ class Transaksi_Service extends Application {
                 'wo_inextern' => $this->input->post('wo_inextern'),
                 'wo_stallid' => $this->input->post('wo_stallid'),
                 'wo_tunggu' => $this->input->post('wo_tunggu'),
-                'wo_sa' => ses_krid,
+                'wo_sa' => $this->input->post('wo_sa'),
                 'wo_cbid' => ses_cabang,
             );
             $jasa = array();
@@ -289,6 +289,7 @@ class Transaksi_Service extends Application {
     public function serviceOrder() {
         $this->hakAkses(57);
         $this->data['stall'] = $this->model_trservice->getStall();
+        $this->data['sa'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_SA_FRONTMAN);
         $this->data['jenis'] = $this->input->GET('jenis');
         $this->data['type'] = $this->input->GET('type');
         $this->load->view('serviceOrder', $this->data);

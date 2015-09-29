@@ -233,6 +233,28 @@
         <tr>
             <td>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Final Checker</label>
+                    <div class="col-sm-7">
+                        <div class='input-group col-xs-10 col-sm-10'>
+                            <select name="wo_sa" id="wo_sa" required="required" class="ace col-xs-10 col-sm-10 upper req">
+                                <option value="">Pilih</option>
+                                <?php
+                                if (count($sa) > 0) {
+                                    foreach ($sa as $value) {
+                                        $select = ($value['krid'] == ses_krid) ? 'selected' : '';
+                                        ?>
+                                        <option value="<?php echo $value['krid']; ?>" <?php echo $select; ?>><?php echo $value['kr_nama'] ?></option> 
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Stall</label>
                     <div class="col-sm-7">
                         <div class='input-group ace col-xs-10 col-sm-10'>
@@ -251,9 +273,6 @@
                         </div>
                     </div>
                 </div>
-            </td>
-            <td>
-                &nbsp;
             </td>
         </tr>
     </table>
@@ -598,7 +617,9 @@
                     $("#merk").val('');
                     $("#model").val('');
                 }
+                $('.page-content-area').ace_ajax('stopLoading', true);
             }
+            
         });
     }
                              
@@ -897,8 +918,8 @@
                     .appendTo(ul);
                 };
             },select: function(event, ui) {
+                $('.page-content-area').ace_ajax('startLoading');
                 getDataKendaraan(ui.item.value);
-                //                getDataWo(ui.item.value, ui.item.type);
             }
         })
     });
