@@ -128,7 +128,7 @@ class Model_Trservice extends CI_Model {
                 . " FROM ms_car LEFT JOIN ms_car_type ON ctyid = msc_ctyid LEFT JOIN ms_car_model ON modelid = cty_modelid "
                 . "LEFT JOIN ms_car_merk ON merkid = model_merkid LEFT JOIN ms_pelanggan ON pelid = msc_pelid WHERE msc_nopol = '$nopol' AND msc_cbid = '"
                 . ses_cabang . "'");
-        log_message('error', 'SQL ' . $this->db->last_query());
+//        log_message('error', 'SQL ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }

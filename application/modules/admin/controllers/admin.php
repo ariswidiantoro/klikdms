@@ -211,6 +211,7 @@ class Admin extends Application {
      */
     public function addCabang() {
         $this->hakAkses(9);
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->data['pt'] = $this->model_admin->getPerusahaan();
         $this->load->view('addcabang', $this->data);
     }
@@ -302,7 +303,7 @@ class Admin extends Application {
                 }
                 $responce->rows[$i]['id'] = $row->krid;
                 $responce->rows[$i]['cell'] = array(
-                    $row->kr_nik, $row->kr_nama, $row->kr_alamat, $row->kr_hp, $row->kr_nomor_ktp, $row->kr_username,$row->jab_deskripsi, $edit, $hapus);
+                    $row->kr_nik, $row->kr_nama, $row->kr_alamat, $row->kr_hp, $row->kr_nomor_ktp, $row->kr_username, $row->jab_deskripsi, $edit, $hapus);
                 $i++;
             }
         echo json_encode($responce);
@@ -464,6 +465,7 @@ class Admin extends Application {
                 'cb_fax' => $this->input->post('cb_fax'),
                 'cb_npwp' => $this->input->post('cb_npwp'),
                 'cb_email' => $this->input->post('cb_email'),
+                'cb_kotaid' => $this->input->post('cb_kotaid'),
                 'cb_alamat' => $this->input->post('cb_alamat')
             );
             $hasil = $this->model_admin->saveCabang($data);
@@ -824,7 +826,10 @@ class Admin extends Application {
         $this->hakAkses(9);
         $id = $this->input->GET('id');
         $this->data['pt'] = $this->model_admin->getPerusahaan();
-        $this->data['cabang'] = $this->model_admin->getCabangById($id);
+        $cabang = $this->model_admin->getCabangById($id);
+        $this->data['cabang'] = $cabang;
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->data['kota'] = $this->model_admin->getKotaByPropinsi($cabang['kota_propid']);
         $this->load->view("editcabang", $this->data);
     }
 
@@ -954,6 +959,7 @@ class Admin extends Application {
                 'cb_fax' => $this->input->post('cb_fax'),
                 'cb_npwp' => $this->input->post('cb_npwp'),
                 'cb_email' => $this->input->post('cb_email'),
+                'cb_kotaid' => $this->input->post('cb_kotaid'),
                 'cb_alamat' => $this->input->post('cb_alamat')
             );
             $hasil = $this->model_admin->updateCabang($data);

@@ -194,9 +194,10 @@ class Model_Admin extends CI_Model {
      */
     public function getSubMenu($data) {
 
-        $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON"
+        $sql = $this->db->query("SELECT menu_nama,menu_parent_id,menuid,menu_icon,menu_deskripsi,menu_url FROM ms_user_role LEFT JOIN ms_role_det ON"
                 . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
                 . " WHERE menu_parent_id != -1 AND menu_module = ".$data." AND userro_krid = '" . ses_krid . "' ORDER BY menu_urut, menuid ASC");
+        log_message('error', 'AAAAAAAA '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -599,7 +600,7 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     public function getUser($username) {
-        $sql = $this->db->query("SELECT * FROM ms_karyawan LEFT JOIN ms_cabang ON cbid = kr_cbid WHERE kr_username = '$username'");
+        $sql = $this->db->query("SELECT * FROM ms_karyawan LEFT JOIN ms_cabang ON cbid = kr_cbid LEFT JOIN ms_kota ON kotaid = cb_kotaid WHERE kr_username = '$username'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
@@ -639,7 +640,7 @@ class Model_Admin extends CI_Model {
      * @return boolean
      */
     public function getCabangById($id) {
-        $sql = $this->db->query("SELECT * FROM ms_cabang WHERE cbid = '$id'");
+        $sql = $this->db->query("SELECT * FROM ms_cabang LEFT JOIN ms_kota ON kotaid = cb_kotaid WHERE cbid = '$id'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }

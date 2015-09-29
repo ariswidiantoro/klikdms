@@ -496,6 +496,8 @@
                         $("#wo_km").val(0);
                         $("#pel_nama").val("");
                         $("#inv_woid").val("");
+                        document.form.reset();
+                        clearForm();
                         return false;
                     }else if (data['clo_status'] == 1) {
                         bootbox.dialog({
@@ -513,6 +515,8 @@
                         $("#wo_km").val(0);
                         $("#pel_nama").val("");
                         $("#inv_woid").val("");
+                        document.form.reset();
+                        clearForm();
                         return false;
                     }else if (data['clo_status'] == 2) {
                         bootbox.dialog({
@@ -530,6 +534,8 @@
                         $("#wo_km").val(0);
                         $("#pel_nama").val("");
                         $("#inv_woid").val("");
+                        document.form.reset();
+                        clearForm();
                         return false;
                     }
                     $("#inv_woid").val(data['woid']);
@@ -595,7 +601,6 @@
     
     $(this).ready(function() {
         $('#form').submit(function() {
-            //  if (confirm("Yakin data sudah benar ?")) {
             $.ajax({
                 type: 'POST',
                 url: $(this).attr('action'),

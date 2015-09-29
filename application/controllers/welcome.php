@@ -92,6 +92,7 @@ class Welcome extends Application {
                 $this->session->set_userdata('cb_nama', $cbg['cb_nama']);
                 $this->session->set_userdata('phone', $cbg['cb_telpon']);
                 $this->session->set_userdata('npwp', $cbg['cb_npwp']);
+                $this->session->set_userdata('kota', $cbg['kota_deskripsi']);
                 $this->session->set_userdata('krid', $data_user['krid']);
                 $this->session->set_userdata('isLogin', 'true');
                 redirect('welcome/home');

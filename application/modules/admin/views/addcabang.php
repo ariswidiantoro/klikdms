@@ -35,6 +35,30 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
+        <div class="col-sm-8">
+            <select name="propinsi" id="propinsi" onchange="getKota()" class="req form-control" style="width: 30%" >
+                <option value="">Pilih</option>
+                <?php
+                if (count($propinsi) > 0) {
+                    foreach ($propinsi as $value) {
+                        ?>
+                        <option value="<?php echo $value['propid']; ?>"><?php echo $value['prop_deskripsi'] ?></option> 
+                        <?php
+                    }
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kab / Kota</label>
+        <div class="col-sm-8">
+            <select name="cb_kotaid" id="cb_kotaid" class="req form-control" style="width: 30%" >
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Npwp</label>
         <div class="col-sm-8">
             <input type="text" name="cb_nama" id="cb_npwp" placeholder="Npwp" class="col-xs-10 col-sm-5" />
@@ -74,6 +98,25 @@
     </div>
 </form>
 <script type="text/javascript">
+    
+    function getKota()
+    {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo site_url('admin/jsonKota') ?>',
+            dataType: "json",
+            async: false,
+            data: {
+                propid : $("#propinsi").val()
+            },
+            success: function(data) {
+                $('#cb_kotaid').html('');
+                $.each(data, function(messageIndex, message) {
+                    $('#cb_kotaid').append('<option value="' + message.kotaid + '">' + message.kota_deskripsi + '</option>');
+                });
+            }
+        })
+    }
     $(this).ready(function() {
         $('#formRole').submit(function() {
             $.ajax({
