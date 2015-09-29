@@ -233,6 +233,7 @@ class Transaksi_Service extends Application {
             $wo = array(
                 'woid' => $woid,
                 'wo_inv_status' => 1,
+                'wo_inv_tgl' => date('Y-m-d'),
                 'wo_km' => $this->input->post('wo_km')
             );
 
