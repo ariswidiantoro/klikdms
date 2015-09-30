@@ -74,6 +74,19 @@ class Laporan_Service extends Application {
         $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_FINAL_CHECKER);
         $this->load->view('ssdr', $this->data);
     }
+    /**
+     * 
+     */
+    public function ssdrPlusHpp() {
+        $this->load->model('model_admin');
+        $this->hakAkses(45);
+        $this->data['link'] = 'ssdr';
+        $this->data['link'] = 'showssdrPlusHpp';
+        $this->data['sa'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_SA_FRONTMAN);
+        $this->data['mekanik'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_MEKANIK);
+        $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_FINAL_CHECKER);
+        $this->load->view('ssdr', $this->data);
+    }
 
     /**
      * 
