@@ -56,6 +56,10 @@ define('NUM_SUPPLY_NOMER', 'SP');
 define('NUM_ADJUSTMENT_STOCK', 'AD');
 
 
+/* Rossi */
+define('NUM_TIPE_JURNAL', 'TJ');
+
+
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
