@@ -43,7 +43,6 @@ define('JAB_SVC_SA_FRONTMAN', 'JAB003');
 define('JAB_SVC_FINAL_CHECKER', 'JAB004');
 define('JAB_SVC_KASIR_SERVICE', 'JAB005');
 
-
 // NUMERATOR KODE
 define('NUM_INVOICE', 'IV');
 define('NUM_TERIMA_BARANG', 'TB');
