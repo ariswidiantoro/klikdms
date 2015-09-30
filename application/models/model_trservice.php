@@ -300,7 +300,7 @@ class Model_Trservice extends CI_Model {
     function saveWo($data, $jasa, $sp, $so) {
         $this->db->trans_begin();
         $tahun = substr(date('Y'), 2, 2);
-        $id = "WO" . $tahun . sprintf("%08s", $this->getCounter("WO" . $tahun));
+        $id = NUM_WO . $tahun . sprintf("%08s", $this->getCounter(NUM_WO . $tahun));
         $woNomer = $data['wo_jenis'] . $tahun . sprintf("%06s", $this->getCounterCabang($data['wo_jenis'] . $tahun));
         $data['woid'] = $id;
         $data['wo_nomer'] = $woNomer;

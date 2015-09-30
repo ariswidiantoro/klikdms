@@ -303,6 +303,11 @@ window.jQuery || document.write("<script src='<?php echo path_js(); ?>jquery1x.j
                 });
 			 
             });
+            var scripts = [null, null]
+            $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+                //inline scripts related to this page
+            });
+            
         </script>
     </body>
 </html>

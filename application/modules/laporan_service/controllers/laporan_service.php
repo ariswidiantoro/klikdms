@@ -33,21 +33,46 @@ class Laporan_Service extends Application {
         $this->load->view('agendaWo', $this->data);
     }
 
+    /**
+     * 
+     */
     public function statusWo() {
         $this->hakAkses(42);
         $this->data['link'] = 'showStatusWo';
         $this->load->view('agendaWo', $this->data);
     }
+
+    /*
+     * 
+     */
+
     public function woBelumDitutup() {
         $this->hakAkses(43);
         $this->data['link'] = 'showWoBelumDitutup';
         $this->load->view('woBelumDitutup', $this->data);
     }
 
+    /**
+     * 
+     */
     public function agendaWo() {
         $this->hakAkses(40);
         $this->data['link'] = 'showAgendaWo';
         $this->load->view('agendaWo', $this->data);
+    }
+
+    /**
+     * 
+     */
+    public function ssdr() {
+        $this->load->model('model_admin');
+        $this->hakAkses(44);
+        $this->data['link'] = 'ssdr';
+        $this->data['link'] = 'showSsdr';
+        $this->data['sa'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_SA_FRONTMAN);
+        $this->data['mekanik'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_MEKANIK);
+        $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_FINAL_CHECKER);
+        $this->load->view('ssdr', $this->data);
     }
 
     /**
@@ -62,6 +87,28 @@ class Laporan_Service extends Application {
         $this->data['output'] = $output;
         $this->load->view('showAgendaWo', $this->data);
     }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showSsdr($output) {
+        $type = $this->input->post('type');
+        $param = array(
+            'start' => dateToIndo($this->input->post('start_' . $type)),
+            'end' => dateToIndo($this->input->post('end_' . $type)),
+            'sa' => $this->input->post('sa'),
+            'mekanik' => $this->input->post('mekanik'),
+            'checker' => $this->input->post('checker'),
+            'inextern' => $this->input->post('inextern'),
+            'type' => $type,
+            'cbid' => ses_cabang,
+        );
+        $this->data['data'] = $this->model_lap_service->getSsdr($param);
+        $this->data['output'] = $output;
+        $this->load->view('showSsdr', $this->data);
+    }
+
     public function showWoBelumDitutup($output) {
         $tgl = dateToIndo($this->input->post('start'));
         $cabang = ses_cabang;
@@ -69,6 +116,7 @@ class Laporan_Service extends Application {
         $this->data['output'] = $output;
         $this->load->view('showWoBelumDitutup', $this->data);
     }
+
     /**
      * 
      * @param type $output

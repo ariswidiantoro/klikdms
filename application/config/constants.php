@@ -54,6 +54,7 @@ define('NUM_NUMERATOR_SPAREPART', 'NC');
 define('NUM_SUPPLY_PK', 'SS');
 define('NUM_SUPPLY_NOMER', 'SP');
 define('NUM_ADJUSTMENT_STOCK', 'AD');
+define('NUM_WO', 'WO');
 
 
 
