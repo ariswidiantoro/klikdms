@@ -85,7 +85,7 @@ class Model_Trspart extends CI_Model {
             $id = sprintf("%08s", $this->getCounter(NUM_SUPPLY_PK . $tahun));
             $data['sppid'] = NUM_SUPPLY_PK . $tahun . $id;
             // ambil no slip
-            $noslip = sprintf("%06s", $this->getCounter(NUM_SUPPLY_NOMER . $tahun));
+            $noslip = sprintf("%06s", $this->getCounterCabang(NUM_SUPPLY_NOMER . $tahun));
             $data['spp_noslip'] = NUM_SUPPLY_NOMER . $tahun . $noslip;
             // simpan data supply
             $this->db->INSERT('spa_supply', $data);

@@ -17,6 +17,8 @@
         <!-- bootstrap & fontawesome -->
         <link rel="stylesheet" href="<?php echo path_css(); ?>bootstrap.css" />
         <link rel="stylesheet" href="<?php echo path_css(); ?>font-awesome.css" />
+        <link rel="stylesheet"  href="<?php echo path_css(); ?>report.css"/>
+
 
 
         <link rel="stylesheet" href="<?php echo path_css(); ?>jquery-ui.css" />
@@ -317,6 +319,7 @@
 
                         <!-- /section:settings.box -->
                         <div class="page-content-area" data-ajax-content="true">
+
                             <?php
                             if (!empty($content)) {
                                 $this->load->view($content);
