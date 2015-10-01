@@ -60,5 +60,7 @@ define('NUM_TIPE_JURNAL', 'TJ');
 
 
 
+
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

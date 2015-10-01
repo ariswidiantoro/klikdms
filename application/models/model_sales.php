@@ -736,6 +736,68 @@ class Model_Sales extends CI_Model {
             return FALSE;
         }
     }
+    
+    /** MASTER LEASING 
+     * @author Rossi Erl
+     * 2015-09-18
+     */
+    public function getTotalCar($where) {
+        $wh = "WHERE leas_cbid = '".ses_cabang."'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_leasing ");
+        return $sql->row()->total;
+    }
+
+    public function getDataCar($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_leasing');
+        $this->db->join('ms_kota', 'kotaid = leas_kotaid', 'left');
+        $this->db->where('leas_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function addCar($data) {
+        if ($this->db->insert('ms_car', $data)) {
+                return array('status' => TRUE, 'msg' => 'DATA KENDARAAN BERHASIL DITAMBAHKAN');
+            } else {
+                return array('status' => FALSE, 'msg' => 'DATA KENDARAAN GAGAL DITAMBAHKAN');
+            }
+    }
+
+    public function updateCar($data, $where) {
+        $this->db->where('mscid', $where);
+        if ($this->db->update('ms_car', $data)) {
+            return array('status' => TRUE, 'msg' => 'DATA KENDARAAN BERHASIL DIUPDATE');
+        } else {
+            return array('status' => FALSE, 'msg' => 'DATA KENDARAAN GAGAL DIUPDATE');
+        }
+    }
+    
+    public function getCar($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_car
+            WHERE mscid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function deleteCar($data) {
+        if ($this->db->query("DELETE FROM ms_car WHERE mscid = ' ". $data."'")) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
 }
 
