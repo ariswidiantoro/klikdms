@@ -29,15 +29,15 @@ class Transaksi_Finance extends Application {
         $this->load->view('addTrans', $this->data);
     }
 
-    public function loadCoa() {
+    public function loadKasin() {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
-        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'kasid';
         $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;
         $where = whereLoad();
-        $count = $this->model_finance->getTotalCoa($where);
+        $count = $this->model_finance->getTotalKasin($where);
         if ($count > 0) {
             $total_pages = ceil($count / $limit);
         } else {
@@ -46,7 +46,7 @@ class Transaksi_Finance extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_finance->getDataCoa($start, $limit, $sidx, $sord, $where);
+        $query = $this->model_finance->getDataKasin($start, $limit, $sidx, $sord, $where);
         $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
@@ -54,7 +54,7 @@ class Transaksi_Finance extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $del = "hapusData('" . $row->coaid . "', '" . $row->coa_kode . "')";
+                $del = "hapusData('" . $row->kasid . "', '" . $row->kas_nomer . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 $edit = '<a href="#master_finance/editCoa?id=' . $row->coaid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->coaid;
