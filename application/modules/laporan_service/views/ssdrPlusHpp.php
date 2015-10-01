@@ -56,13 +56,35 @@
                             <div class="col-xs-6 col-sm-2">
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" name="start_service" value="<?php echo date('d/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
+                                        <input type="text" name="start_service" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
                                         <span class="input-group-addon">
                                             <i class="ace-icon fa fa-calendar"></i>
                                         </span>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-6 col-sm-2">
+                                <div>
+                                    <div class="input-group" style="position: static">
+                                        <input type="text" value="<?php echo date('d/m/Y') ?>" name="end_service" class="datepicker form-control" />
+                                        <span class="input-group-addon">
+                                            <i class="ace-icon fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--                            <div class="col-xs-6 col-sm-2">
+                                                            <div class="form-group">
+                                                                <label class="col-xs-6 col-sm-3 control-label no-padding-right">Sort</label>
+                                                                <div class="col-xs-6 col-sm-7">
+                                                                    <select name="sort_service" class="form-control" style="width: 100%">
+                                                                        <option value="inv_tgl_tagihan">Tgl</option>
+                                                                        <option value="wo_nomer">Wo</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                            
+                                                        </div>-->
                             <div id="default-buttons" class="col-xs-6 col-sm-6">
                                 <button onclick="$('#type').val('service');return lihat();" class="btn btn-white btn-info btn-bol" type="button"><i class="ace-icon fa fa-eye bigger-110 blue"></i>Lihat</button>
                                 <button onclick="$('#type').val('service');return excel();" class="btn btn-white btn-info btn-bol" type="button"><i class="ace-icon fa fa-file-excel-o  bigger-110 blue"/></i>Export</button>
@@ -74,6 +96,16 @@
 
                     <div id="batal" class="tab-pane fade">
                         <div class="row">
+                            <div class="col-xs-6 col-sm-2">
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" name="start_batal" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
+                                        <span class="input-group-addon">
+                                            <i class="ace-icon fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-xs-6 col-sm-2">
                                 <div>
                                     <div class="input-group" style="position: static">
@@ -114,6 +146,16 @@
                         <div class="row">
                             <div class="col-xs-6 col-sm-2">
                                 <div>
+                                    <div class="input-group">
+                                        <input type="text" name="start_sa" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
+                                        <span class="input-group-addon">
+                                            <i class="ace-icon fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-2">
+                                <div>
                                     <div class="input-group" style="position: static">
                                         <input type="text" value="<?php echo date('d/m/Y') ?>" name="end_sa" class="datepicker form-control" />
                                         <span class="input-group-addon">
@@ -148,8 +190,66 @@
                             </div>
                         </div>
                     </div>
+                    <!--                    <div id="mekanik" class="tab-pane fade">
+                                            <div class="row">
+                                                <div class="col-xs-6 col-sm-2">
+                                                    <div>
+                                                        <div class="input-group">
+                                                            <input type="text" name="start_mekanik" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
+                                                            <span class="input-group-addon">
+                                                                <i class="ace-icon fa fa-calendar"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6 col-sm-2">
+                                                    <div>
+                                                        <div class="input-group" style="position: static">
+                                                            <input type="text" value="<?php echo date('d/m/Y') ?>" name="end_mekanik" class="datepicker form-control" />
+                                                            <span class="input-group-addon">
+                                                                <i class="ace-icon fa fa-calendar"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6 col-sm-2">
+                                                    <div>
+                                                        <div class="input-group" style="position: static">
+                                                            <select name="mekanik" id="mekanik" required="required" class="form-control col-xs-10 col-sm-10 upper">
+                                                                <option value="all">Semua</option>
+                    <?php
+                    if (count($mekanik) > 0) {
+                        foreach ($mekanik as $value) {
+                            $select = ($value['krid'] == ses_krid) ? 'selected' : '';
+                            ?>
+                                                                                                        <option value="<?php echo $value['krid']; ?>" <?php echo $select; ?>><?php echo $value['kr_nama'] ?></option> 
+                            <?php
+                        }
+                    }
+                    ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="default-buttons" class="col-xs-6 col-sm-4">
+                                                    <button onclick="$('#type').val('mekanik');return lihat();" class="btn btn-white btn-info btn-bol" type="button"><i class="ace-icon fa fa-eye bigger-110 blue"></i>Lihat</button>
+                                                    <button onclick="$('#type').val('mekanik');return excel();" class="btn btn-white btn-info btn-bol" type="button"><i class="ace-icon fa fa-file-excel-o  bigger-110 blue"/></i>Export</button>
+                                                    <button onclick="$('#type').val('mekanik');return print();" class="btn btn-white btn-info btn-bol" type="button"><i class="ace-icon glyphicon glyphicon-print bigger-110 blue"></i>Print</button>
+                                                </div>
+                                            </div>
+                                        </div>-->
                     <div id="checker" class="tab-pane fade">
                         <div class="row">
+                            <div class="col-xs-6 col-sm-2">
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" name="start_checker" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
+                                        <span class="input-group-addon">
+                                            <i class="ace-icon fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-xs-6 col-sm-2">
                                 <div>
                                     <div class="input-group" style="position: static">
@@ -188,6 +288,16 @@
                     </div>
                     <div id="inextern" class="tab-pane fade">
                         <div class="row">
+                            <div class="col-xs-6 col-sm-2">
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" name="start_inextern" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
+                                        <span class="input-group-addon">
+                                            <i class="ace-icon fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-xs-6 col-sm-2">
                                 <div>
                                     <div class="input-group" style="position: static">

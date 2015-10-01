@@ -41,6 +41,20 @@ class Laporan_Service extends Application {
         $this->data['link'] = 'showStatusWo';
         $this->load->view('agendaWo', $this->data);
     }
+    public function riwayatKendaraan() {
+        $this->hakAkses(88);
+        $this->data['link'] = 'showRiwayatKendaraan';
+        $this->load->view('riwayatKendaraan', $this->data);
+    }
+
+    /**
+     * 
+     */
+    public function fakturBelumDicetak() {
+        $this->hakAkses(47);
+        $this->data['link'] = 'showFakturBelumDicetak';
+        $this->load->view('fakturBelumDicetak', $this->data);
+    }
 
     /*
      * 
@@ -74,6 +88,7 @@ class Laporan_Service extends Application {
         $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_FINAL_CHECKER);
         $this->load->view('ssdr', $this->data);
     }
+
     /**
      * 
      */
@@ -85,7 +100,7 @@ class Laporan_Service extends Application {
         $this->data['sa'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_SA_FRONTMAN);
         $this->data['mekanik'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_MEKANIK);
         $this->data['checker'] = $this->model_admin->getKaryawanByJabatan(JAB_SVC_FINAL_CHECKER);
-        $this->load->view('ssdr', $this->data);
+        $this->load->view('ssdrPlusHpp', $this->data);
     }
 
     /**
@@ -109,7 +124,7 @@ class Laporan_Service extends Application {
         $type = $this->input->post('type');
         $param = array(
             'start' => dateToIndo($this->input->post('start_' . $type)),
-            'end' => dateToIndo($this->input->post('end_' . $type)),
+            'end' => dateToIndo($this->input->post('start_' . $type)),
             'sa' => $this->input->post('sa'),
             'mekanik' => $this->input->post('mekanik'),
             'checker' => $this->input->post('checker'),
@@ -122,12 +137,41 @@ class Laporan_Service extends Application {
         $this->load->view('showSsdr', $this->data);
     }
 
+    /**
+     * 
+     * @param type $output
+     */
+    public function showSsdrPlusHpp($output) {
+        $type = $this->input->post('type');
+        $param = array(
+            'start' => dateToIndo($this->input->post('start_' . $type)),
+            'end' => dateToIndo($this->input->post('end_' . $type)),
+            'sa' => $this->input->post('sa'),
+            'mekanik' => $this->input->post('mekanik'),
+            'checker' => $this->input->post('checker'),
+            'inextern' => $this->input->post('inextern'),
+            'type' => $type,
+            'cbid' => ses_cabang,
+        );
+        $this->data['data'] = $this->model_lap_service->getSsdr($param);
+        $this->data['output'] = $output;
+        $this->load->view('showSsdrPlusHpp', $this->data);
+    }
+
     public function showWoBelumDitutup($output) {
         $tgl = dateToIndo($this->input->post('start'));
         $cabang = ses_cabang;
         $this->data['data'] = $this->model_lap_service->getWoBelumDitutup($tgl, $cabang);
         $this->data['output'] = $output;
         $this->load->view('showWoBelumDitutup', $this->data);
+    }
+
+    public function showFakturBelumDicetak($output) {
+        $tgl = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_service->getFakturBelumDicetak($tgl, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showFakturBelumDicetak', $this->data);
     }
 
     /**
