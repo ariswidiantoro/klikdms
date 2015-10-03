@@ -10,18 +10,18 @@ class Model_Finance extends CI_Model {
     public function __construct() {
         parent::__construct();
     }
-    
-     /** 
+
+    /**
      * Utility - Finance
      * @author Rossi on 2015-09-25
-     **/
-    public function cListCostCenter($data){
+     * */
+    public function cListCostCenter($data) {
         $this->db->where('cc_cbid', $data['cbid']);
         $sql = $this->db->get('ms_cost_center');
         return $sql->result_array();
     }
-    
-    public function cListKota($data){
+
+    public function cListKota($data) {
         $this->db->where('cc_cbid', $data['cbid']);
         $sql = $this->db->get('ms_cost_center');
         return $sql->result_array();
@@ -226,8 +226,8 @@ class Model_Finance extends CI_Model {
             ");
         return $query->row_array();
     }
-    
-   /** Master Tipe Jurnal 
+
+    /** Master Tipe Jurnal 
      * @author Rossi Erl
      * 2015-09-03
      */
@@ -256,17 +256,21 @@ class Model_Finance extends CI_Model {
     }
 
     public function addTipeJurnal($data) {
-        if ($this->db->insert('ms_tipe_jurnal', $data)) {
+        $this->db->trans_begin();
+        $data['tipeid'] = NUM_TIPE_JURNAL . sprintf("%03s", $this->getCounter(NUM_TIPE_JURNAL));
+        $this->db->insert('ms_tipe_jurnal', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
             return array('status' => TRUE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' berhasil disimpan');
         } else {
+            $this->db->trans_rollback();
             return array('status' => FALSE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' gagal disimpan');
         }
     }
 
     public function getTipeJurnal($data) {
         $query = $this->db->query("
-            SELECT * FROM ms_tipe_jurnal WHERE tipeid = " . $data . "
-            ");
+            SELECT * FROM ms_tipe_jurnal WHERE tipeid = '" . $data . "'");
         return $query->row_array();
     }
 
@@ -286,12 +290,11 @@ class Model_Finance extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /** Master Tipe Jurnal 
      * @author Rossi Erl
      * 2015-09-03
      */
-    
     public function getTotalMasterJurnal($where) {
         $wh = "WHERE tipeid != '0' ";
         if ($where != NULL)
@@ -347,7 +350,7 @@ class Model_Finance extends CI_Model {
             return FALSE;
         }
     }
-   
+
 }
 
 ?>

@@ -377,6 +377,11 @@ class Master_Finance extends Application {
         echo json_encode($hasil);
     }
     
+    /* Function Master Tipe Jurnal
+     * @author Rossi 
+     * 2015-09-07
+     */
+    
     public function tipe_jurnal() {
         $this->hakAkses(1091);
         $this->load->view('dataTipeJurnal', $this->data);
@@ -386,7 +391,7 @@ class Master_Finance extends Application {
         $this->hakAkses(1091);
         $this->load->view('addTipeJurnal', $this->data);
     }
-
+    
     public function loadTipeJurnal() {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
@@ -413,12 +418,17 @@ class Master_Finance extends Application {
         if (count($query) > 0)
             foreach ($query as $row) {
                 $del = "hapusData('" . $row->tipeid . "', '" . $row->tipe_deskripsi . "')";
+                $vie = "viewData('" . $row->tipeid . "', '" . $row->tipe_deskripsi . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $viewjurnal = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 $edit = '<a href="#master_finance/editTipeJurnal?id=' . $row->tipeid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $setjurnal = '<a href="#master_finance/setTipeJurnal?id=' . $row->tipeid . '" title="Setting"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->tipeid;
                 $responce->rows[$i]['cell'] = array(
+                            $row->tipeid,
+                            $row->tipe_postcode,
                             $row->tipe_deskripsi,
-                    $edit, $hapus);
+                   $viewjurnal, $setjurnal, $edit);
                 $i++;
             }
         echo json_encode($responce);
@@ -442,11 +452,15 @@ class Master_Finance extends Application {
     }
 
     public function saveTipeJurnal() {
+        $post = $this->input->post('tipe_postcode', TRUE);
         $desc = $this->input->post('tipe_deskripsi', TRUE);
-        if (empty($name)|| empty($desc)) {
-            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        if ( empty($desc)|| empty($post)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI '.$post.' '.$desc);
         } else {
-            $save = $this->model_finance->addTipeJurnal(array('tipe_deskripsi' => strtoupper($desc)));
+            $save = $this->model_finance->addTipeJurnal(array(
+                'tipe_postcode' => strtoupper($post),
+                'tipe_deskripsi' => strtoupper($desc),
+                ));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -458,11 +472,15 @@ class Master_Finance extends Application {
 
     public function updateTipeJurnal() {
         $id = $this->input->post('tipeid', TRUE);
+        $post = $this->input->post('tipe_postcode', TRUE);
         $desc = $this->input->post('tipe_deskripsi', TRUE);
-        if (empty($id) || empty($desc)) {
+        if (empty($id) || empty($desc) || empty($post)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_finance->updateTipeJurnal(array('tipe_deskripsi' => strtoupper($desc)), $id);
+            $save = $this->model_finance->updateTipeJurnal(array(
+                'tipe_deskripsi' => strtoupper($desc),
+                'tipe_postcode' => strtoupper($post)
+                ), $id);
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -485,6 +503,8 @@ class Master_Finance extends Application {
         }
         echo json_encode($hasil);
     }
+    
+    
 }
 
 ?>

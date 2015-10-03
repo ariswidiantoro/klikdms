@@ -56,8 +56,8 @@ define('NUM_ADJUSTMENT_STOCK', 'AD');
 
 
 /* Rossi */
-$this->db->query();
 define('NUM_TIPE_JURNAL', 'TJ');
+define('NUM_SETTING_JURNAL', 'ST');
 
 
 
