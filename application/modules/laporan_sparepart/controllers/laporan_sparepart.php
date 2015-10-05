@@ -44,6 +44,11 @@ class Laporan_Sparepart extends Application {
         $this->data['link'] = 'showKartuStock';
         $this->load->view('kartuStock', $this->data);
     }
+    public function posisiStock() {
+        $this->hakAkses(69);
+        $this->data['link'] = 'showPosisiStock';
+        $this->load->view('posisiStock', $this->data);
+    }
 
     public function showPenerimaanBarang($output) {
         $end = dateToIndo($this->input->post('end'));
@@ -61,6 +66,25 @@ class Laporan_Sparepart extends Application {
         $this->data['data'] = $this->model_lap_sparepart->getReturPembelian($start, $end, $cabang);
         $this->data['output'] = $output;
         $this->load->view('showReturPembelian', $this->data);
+    }
+    public function showKartuStock($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $kodeBarang = $this->input->post('kodeBarang');
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sparepart->getKartuStock($start, $end, $cabang, $kodeBarang);
+        $this->data['output'] = $output;
+        $this->load->view('showKartuStock', $this->data);
+    }
+    
+    public function showPosisiStock($output) {
+        $start = dateToIndo($this->input->post('start'));
+        $kodeBarang = $this->input->post('kodeBarang');
+        $type = $this->input->post('type');
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sparepart->getPosisiStock($start, $cabang, $kodeBarang,$type);
+        $this->data['output'] = $output;
+        $this->load->view('showPosisiStock', $this->data);
     }
 
 }

@@ -17,17 +17,17 @@
         <div class="row">
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <span>Mulai Tgl</span>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <span>Sampai Dengan</span>
+                    <span>Tgl Cut Off</span>
                 </div>
             </div>
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <span>Kode Barang</span>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-2">
+                <div>
+                    <span>Type</span>
                 </div>
             </div>
         </div>
@@ -45,17 +45,19 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group" style="position: static">
-                        <input type="text" value="<?php echo date('d/m/Y') ?>" name="end" class="datepicker form-control" />
-                        <span class="input-group-addon">
-                            <i class="ace-icon fa fa-calendar"></i>
-                        </span>
+                        <input type="text" name="kodeBarang" id="kodeBarang" class="form-control upper" />
                     </div>
                 </div>
             </div>
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group" style="position: static">
-                        <input type="text" name="kodeBarang" id="kodeBarang" class="form-control upper" />
+                        <select name="type" id="type" class="form-control upper">
+                            <option value="">Semua</option>
+                            <option value="sp">Sparepart</option>
+                            <option value="sm">Sub Material</option>
+                            <option value="ol">Oli</option>
+                        </select>
                     </div>
                 </div>
             </div>

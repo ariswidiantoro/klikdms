@@ -11,17 +11,12 @@
     <table id="table-detail">
         <tr>
             <th width="2%">No</th>
-            <th width="2%">Tgl</th>
-            <th width="15%">No.&nbsp;Transaksi</th>
-            <th width="15%">Type</th>
-            <th width="10%">Supplier&nbsp;/&nbsp;Pelanggan</th>
-            <th WIDTH="20%">Hpp</th>
-            <th WIDTH="20%">Masuk</th>
-            <th width="10%">Keluar</th>
-            <th width="10%">Saldo&nbsp;Qty</th>
-            <th WIDTH="10%">Debit</th>
-            <th width="10%">Kredit</th>
-            <th width="10%">Saldo&nbsp;(Rp)</th>
+            <th width="20%">Kode&nbsp;Barang</th>
+            <th width="30%">Nama&nbsp;Barang</th>
+            <th width="10%">Jumlah</th>
+            <th WIDTH="10%">Hpp</th>
+            <th WIDTH="10%">Harga Jual</th>
+            <th width="10%">Sub&nbsp;Total</th>
         </tr>
         <?php
         if (count($data) > 0) {
@@ -31,16 +26,11 @@
             foreach ($data as $value) {
                 ?><tr>
                     <td><?php echo $no ?></td>
-                    <td><?php echo $value['ks_type'] != 'SA' ? date('d-m-Y',strtotime($value['ks_tgl'])) : ''; ?></td>
-                    <td><?php echo $value['transaksi']; ?></td>
-                    <td><?php echo $value['ks_type']; ?></td>
-                    <td><?php echo $value['nama']; ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_hpp'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_in'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_out'], 2); ?></td>
+                    <td><?php echo $value['inve_kode']; ?></td>
+                    <td><?php echo $value['inve_nama']; ?></td>
                     <td style="text-align: right;"><?php echo number_format($value['ks_total'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_debit'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_kredit'], 2); ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['ks_hpp'], 2); ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['inve_harga'], 2); ?></td>
                     <td style="text-align: right;"><?php echo number_format($value['ks_saldo'], 2); ?></td>
                 </tr>
                 <?php
@@ -50,7 +40,7 @@
             }
             ?>
             <tr style="font-weight: bold;">
-                <td colspan="8" style="text-align: right">TOTAL</td>
+                <td colspan="3" style="text-align: right">TOTAL</td>
                 <td style="text-align: right;"><?php echo number_format($total,2); ?></td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
@@ -73,7 +63,7 @@ if ($output == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=kartu_stock.xls");
+    header("Content-Disposition: attachment; filename=posisi_stock.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";
