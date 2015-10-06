@@ -10,7 +10,15 @@ class Model_Prospect extends CI_Model {
     public function __construct() {
         parent::__construct();
     } 
-
+    
+    /* UTILITY FUNCTION */
+    public function cListSinfo() {
+        $this->db->where('info_cbid', ses_cabang);
+        $query = $this->db->get('ms_sumber_info');
+        return $query->result_array();
+    }
+    
+    
     /** TRANSAKSI PROSPECT
      * @author Rossi Erl <rosoningati@gmail.com>
      * Created on 2015-09-04
@@ -26,20 +34,25 @@ class Model_Prospect extends CI_Model {
 
     public function getDataProspect($start, $limit, $sidx, $sord, $where) {
 
-        /* FILTER BY SUPERVISOR */
+        /* FILTER BY SUPERVISOR 
         if (ses_jabatan == 'supervisor') {
             $filter = $this->getSalesBySpv(array('krid' => ses_krid, 'cbid' => ses_cabang));
         } else if (ses_jabatan == 'sales') {
             $filter = array(ses_krid);
         }
+         */
+         
 
-        $this->db->select('*');
+        $this->db->select('prosid, pros_kode, pros_cbid, 
+            pros_salesman, pros_nama, pros_alamat, pros_hp, pros_telpon, car_qty,
+            cty_deskripsi, kr_nama');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('pros_data');
         $this->db->join('pros_data_car','car_prosid=prosid', 'left');
         $this->db->join('ms_car_type','ctyid=car_ctyid', 'left');
+        $this->db->join('ms_karyawan','krid=pros_salesman', 'left');
         $this->db->where('pros_cbid', ses_cabang);
         if (isset($filter)) {
             $this->db->where_in('pros_sales', $filter);
@@ -56,23 +69,10 @@ class Model_Prospect extends CI_Model {
     public function addProspect($data = array()) {
         $this->db->trans_begin();
         try {
-            /* PROSID PRIMARY KEY */
-            $code = $this->newCode(array('type' => 'PC'));
-            if ($code['status'] == FALSE) {
-                $warn = "FAILED GENERATE CODE : PROSPECT";
-                throw new Exception($warn);
-            }
-            /* PROS KODE CABANG */
-            $codeb = $this->newCode(array(
-                'type' => 'PC', 
-                'cbid' => ses_cabang));
-            if ($codeb['status'] == FALSE) {
-                $warn = "FAILED GENERATE CODE : PROSPECT";
-                throw new Exception($warn);
-            }
+            $tahun = date('y');
+            $data['prosid'] = NUM_PROSPECT . $tahun . sprintf("%08s", $this->getCounter(NUM_PROSPECT . $tahun));
+            $data['pros_kode'] = NUM_PROSPECT . $tahun . sprintf("%06s", $this->getCounterCabang(NUM_PROSPECT . $tahun));
 
-            $data['prosid'] = $code['code'];
-            $data['pros_kode'] = $codeb['code'];
             if ($this->db->insert('pros_data', $data) == FALSE) {
                 $warn = "FAILED INSERTING DATA : PROSPECT";
                 throw new Exception($warn);

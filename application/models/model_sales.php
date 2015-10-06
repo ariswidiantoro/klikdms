@@ -100,6 +100,14 @@ class Model_Sales extends CI_Model {
         }
         return null;
     }
+    
+    public function getAreaByKota($data){
+        $sql = $this->db->query("SELECT * FROM ms_area WHERE area_kotaid = '$data' ORDER BY area_deskripsi");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
 
     /** MERK KENDARAAN 
      * @author Rossi Erl

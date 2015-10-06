@@ -31,9 +31,8 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('master_finance/loadBank') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Kode','Nama Bank', 'Deskripsi', 'Edit', 'Del'],     
+            colNames:['Nama Bank', 'Deskripsi', 'Edit', 'Del'],     
             colModel:[
-                {name:'bankid',index:'bankid', width:20, align:"left"},
                 {name:'bank_name',index:'bank_name', width:100, align:"left"},
                 {name:'bank_desc',index:'bank_desc', width:150, align:"left"},
                 {name:'edit',index:'edit', width:12, align:"center"},

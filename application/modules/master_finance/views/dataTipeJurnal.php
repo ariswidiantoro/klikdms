@@ -31,7 +31,7 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('master_finance/loadTipeJurnal') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Kode', 'Postcode', 'Tipe Jurnal', 'Set Jurnal', 'Edit'],     
+            colNames:['Kode', 'Postcode', 'Tipe Jurnal', 'View Jurnal', 'Set Jurnal', 'Edit'],     
             colModel:[
                 {name:'tipeid',index:'tipeid', width:30, align:"left"},
                 {name:'tipe_postcode',index:'tipe_postcode', width:30, align:"left"},

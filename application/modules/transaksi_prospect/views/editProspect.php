@@ -1,6 +1,6 @@
 <div class="page-header">
     <h1>
-        Tambah Prospect
+        Edit Prospect
     </h1>
 </div>      
 <div id="result"></div>
@@ -19,7 +19,7 @@
 
             <li data-step="3">
                 <span class="step">3</span>
-                <span class="title">Informasi Lain-Lain</span>
+                <span class="title">Sumber Prospect</span>
             </li>
         </ul>
     </div>
@@ -62,7 +62,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
                     <div class="col-sm-8">
-                        <select name="propinsi" id="propid" onchange="getKota()" class="form-control input-medium" >
+                        <select name="propinsi" id="propid" onchange="getKota()" class="form-control" style="width: 30%;">
                             <option value="">PILIH</option>
                             <?php
                             if (count($propinsi) > 0) {
@@ -79,15 +79,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kab / Kota</label>
                     <div class="col-sm-8">
-                        <select name="pros_kotaid" id="kotaid" onchange="getArea()" class="form-control input-medium" >
-                        </select>
-                    </div>
-                </div>
-                 <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Area</label>
-                    <div class="col-sm-8">
-                        <select name="pros_area" id="areaid" class="form-control input-medium" >
-                            <option value="">PILIH</option>
+                        <select name="pros_kotaid" id="kotaid" class="form-control" style="width: 30%;">
                         </select>
                     </div>
                 </div>
@@ -281,32 +273,22 @@
                     <div class="col-sm-8">
                         <select name="pros_sumber_informasi" class="form-control" style="width: 30%;">
                             <option value="">PILIH</option>
-                            <?php
-                                            if (count($sinfo) > 0) {
-                                                foreach ($sinfo as $fsinfo) {
-                                                    ?>
-                                                    <option value="<?php echo $fsinfo['infoid']; ?>"><?php echo $fsinfo['info_deskripsi'] ?></option> 
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
+                            <option value="retail">RETAIL</option>
+                            <option value="broker">BROKER</option>
+                            <option value="fleet">FLEET</option>
+                            <option value="gso">GSO / PEMERINTAHAN</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kontak Awal</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Sumber Informasi</label>
                     <div class="col-sm-8">
-                        <select name="pros_kontak_awal" class="form-control" style="width: 30%;">
+                        <select name="pros_sumber_informasi" class="form-control" style="width: 30%;">
                             <option value="">PILIH</option>
-                            <?php
-                                            if (count($kontak) > 0) {
-                                                foreach ($kontak as $fkontak) {
-                                                    ?>
-                                                    <option value="<?php echo $fkontak['kontakid']; ?>"><?php echo $fkontak['kontak_deskripsi'] ?></option> 
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
+                            <option value="retail">RETAIL</option>
+                            <option value="broker">BROKER</option>
+                            <option value="fleet">FLEET</option>
+                            <option value="gso">GSO / PEMERINTAHAN</option>
                         </select>
                     </div>
                 </div>
@@ -376,25 +358,6 @@
                 $('#kotaid').append('<option value="">PILIH</option>');
                 $.each(data, function(messageIndex, message) {
                     $('#kotaid').append('<option value="' + message['kotaid'] + '">' + message['kota_deskripsi'] + '</option>');
-                });
-            }
-        })
-    }
-    
-    function getArea(){
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo site_url('master_sales/jsonArea') ?>',
-            dataType: "json",
-            async: false,
-            data: {
-                kotaid : $("#kotaid").val()
-            },
-            success: function(data) {
-                $('#areaid').html('');
-                $('#areaid').append('<option value="">PILIH</option>');
-                $.each(data, function(messageIndex, message) {
-                    $('#areaid').append('<option value="' + message['areaid'] + '">' + message['area_deskripsi'] + '</option>');
                 });
             }
         })
