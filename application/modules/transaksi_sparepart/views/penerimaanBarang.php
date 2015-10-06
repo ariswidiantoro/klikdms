@@ -10,46 +10,58 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Faktur</label>
         <div class="col-sm-8">
-            <input type="text" required="required" autocomplete="off" name="trbr_faktur" maxlength="30" id="trbr_faktur" class="upper ace col-xs-10 col-sm-3" />
+            <div class='input-group col-xs-10 col-sm-10'>
+                <input type="text" required="required" autocomplete="off" name="trbr_faktur" onchange="cekFakturTrbr()" maxlength="30" id="trbr_faktur" class="upper ace col-xs-10 col-sm-4 req" />
+                <div id="msg" style="font-size: 16px;font-weight: bold" class="msg help-block col-xs-12 col-sm-reset inline">
+                </div>
+            </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Supplier</label>
         <div class="col-sm-8">
-            <input type="text" autocomplete="off" required="required" name="supplier" id="supplier" class="upper col-xs-10 col-sm-3" />
+            <div class='input-group col-xs-10 col-sm-10'>
+                <input type="text" autocomplete="off" required="required" name="supplier" id="supplier" class="upper col-xs-10 col-sm-6 req" />
+            </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Supplier</label>
         <div class="col-sm-8">
-            <input type="text" required="required"  id="trbr_supid" name="trbr_supid" class="upper col-xs-10 col-sm-3" />* Otomatis terisi saat nama supplier dipilih
+            <div class='input-group col-xs-10 col-sm-10'>
+                <input type="text" required="required"  id="trbr_supid" name="trbr_supid" class="upper col-xs-10 col-sm-4 req" />* Otomatis terisi saat nama supplier dipilih
+            </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Pay Method</label>
         <div class="col-sm-8">
-            <select name="trbr_pay_method" required="required" class="ace col-xs-10 col-sm-3">
-                <option value="">Pilih</option>
-                <option value="tunai">Tunai</option>
-                <option value="kredit">Kredit</option>
-            </select>
+            <div class='input-group col-xs-10 col-sm-10'>
+                <select name="trbr_pay_method" required="required" class="ace col-xs-10 col-sm-4 req">
+                    <option value="">Pilih</option>
+                    <option value="tunai">Tunai</option>
+                    <option value="kredit">Kredit</option>
+                </select>
+            </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kredit Term</label>
         <div class="col-sm-8">
             <input type="text" value="0" autocomplete="off" name="trbr_credit_term" 
-                   id="trbr_credit_term" class="number col-xs-10 col-sm-3" />
+                   id="trbr_credit_term" class="number col-xs-10 col-sm-4" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Include Pajak</label>
         <div class="col-sm-8">
-            <select name="trbr_inc_pajak" required="required" class="ace col-xs-10 col-sm-3">
+            <div class='input-group col-xs-10 col-sm-10'>
+            <select name="trbr_inc_pajak" required="required" class="ace col-xs-10 col-sm-4 req">
                 <option value="">Pilih</option>
                 <option value="1">Ya</option>
                 <option value="2">Tidak</option>
             </select>
+        </div>
         </div>
     </div>
     <div class="hr hr-16 hr-dotted"></div>
@@ -102,7 +114,7 @@
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
-            <button class="btn btn-info" type="submit" onclick="simpan()">
+            <button class="btn btn-info" type="button" id="button">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Submit
             </button>
@@ -125,16 +137,56 @@
             $('#kodeBarang').autocomplete("disable");
         }
     }
-    //    $('#check').click(function() {
-    //        if ($(this).is(':checked')) {
-    //            $('#kodeBarang').autocomplete("enable");
-    //        }
-    //    })
-    //    $('#noncheck').click(function() {
-    //        if ($(this).is(':checked')) {
-    //            $('#kodeBarang').autocomplete("disable");
-    //        }
-    //    })
+    
+    jQuery(function($) {
+        var $validation = true;
+        $('#button').on('click', function(e){
+            //             window.location = "#transaksi_sparepart/returPembelian";
+            if(!$('#form').valid())
+            {
+                e.preventDefault();
+            }else
+                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                    if(result) {
+                        $("#form").submit();
+                    }
+            });
+            return false;
+        });
+
+
+        $('#form').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+			
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+			
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+			
+            submitHandler: function (form) {
+            },
+            invalidHandler: function (form) {
+            }
+        });
+    });
                              
     //called when key is pressed in textbox
     $(".number").keypress(function (e) {
@@ -163,45 +215,58 @@
             counti--;
         }
     }
-   
-        
-    function simpan()
+    
+    function cekFakturTrbr()
     {
-        $(this).ready(function() {
-            //            bootbox.confirm("Simpan Data ?", function(result) {
-            //                if(result) {
-            $('#form').submit(function() {
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    dataType: "json",
-                    async: false,
-                    data: $(this)
-                    .serialize(),
-                    success: function(data) {
-                        window.scrollTo(0, 0);
-                        if (data.result) {
-                            var params  = 'width=1000';
-                            params += ', height='+screen.height;
-                            params += ', fullscreen=yes,scrollbars=yes';
-                            document.form.reset();
-                            clearForm();
-                            window.open("<?php echo site_url("transaksi_sparepart/printTerimaBarang"); ?>/"+data.kode,'_blank', params);
-                        }
-                        $("#result").html(data.msg).show().fadeIn("slow");
-                    }
-                })
-                return false;
-            });
-            //                }
-            //            });  
+        $("#msg").show();
+        $.ajax({ 
+            url: '<?php echo site_url('transaksi_sparepart/cekFakturTrbr'); ?>',
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                param : $("#trbr_faktur").val()
+            },
+            success: function(data){
+                if (data) {
+                    $('#trbr_faktur').focus();
+                    $("#trbr_faktur").val();
+                    $("#msg").html("Nomer Faktur Ini sudah terdaftar").show().fadeIn("slow");
+                }else{
+                    $("#msg").html("").show();
+                }
+            }
         });
     }
-        
-       
-        
-       
-
+    
+    $(this).ready(function() {
+        //            bootbox.confirm("Simpan Data ?", function(result) {
+        //                if(result) {
+        $('#form').submit(function() {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                dataType: "json",
+                async: false,
+                data: $(this)
+                .serialize(),
+                success: function(data) {
+                    window.scrollTo(0, 0);
+                    if (data.result) {
+                        var params  = 'width=1000';
+                        params += ', height='+screen.height;
+                        params += ', fullscreen=yes,scrollbars=yes';
+                        document.form.reset();
+                        clearForm();
+                        window.open("<?php echo site_url("transaksi_sparepart/printTerimaBarang"); ?>/"+data.kode,'_blank', params);
+                    }
+                    $("#result").html(data.msg).show().fadeIn("slow");
+                }
+            })
+            return false;
+        });
+        //                }
+        //            });  
+    });
    
     
     var inc = 0;

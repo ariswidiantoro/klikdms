@@ -547,10 +547,11 @@ class Model_Service extends CI_Model {
      * @param type $data
      * @return boolean
      */
-    function updateStall($data) {
+    function updatePrintFaktur($notid) {
         $this->db->trans_begin();
-        $this->db->where('stallid', $data['stallid']);
-        $this->db->update('svc_stall', $data);
+        $sql = 
+        $this->db->where('notid', $notid);
+        $this->db->update('spa_nota', array('not_'));
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             return false;

@@ -245,11 +245,20 @@ class Model_Trspart extends CI_Model {
      * @return null
      */
     function getReturBeli($rbid) {
-        $sql = $this->db->query("SELECT rb_alasan,rb_total,trbr_faktur,rb_tgl,trbr_pay_method,trbr_supid,trbr_credit_term,sup_nama FROM spa_retbeli LEFT JOIN spa_trbr ON rb_trbrid = trbrid LEFT JOIN ms_supplier ON supid = trbr_supid WHERE rbid = '$rbid'");
+        $sql = $this->db->query("SELECT rb_alasan,rb_total,trbr_faktur,rb_tgl,trbr_pay_method,trbr_supid,trbr_kredit_term,sup_nama FROM spa_retbeli LEFT JOIN spa_trbr ON rb_trbrid = trbrid LEFT JOIN ms_supplier ON supid = trbr_supid WHERE rbid = '$rbid'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
         return null;
+    }
+
+    function cekFakturTrbr($faktur) {
+        $sql = $this->db->query("SELECT * FROM spa_trbr WHERE trbr_faktur = '$faktur' AND trbr_cbid = '" . ses_cabang . "'");
+       log_message('error', 'AAAAAAAAAAAAAA '.$this->db->last_query());
+        if ($sql->num_rows() > 0) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -273,7 +282,7 @@ class Model_Trspart extends CI_Model {
      * @return null
      */
     function getSupplySlip($sppid) {
-        $sql = $this->db->query("SELECT sppid,spp_noslip,spp_print,spp_status,spp_tgl,spp_cetak_harga,spp_tgl_batal, spp_total,pel_nama, wo_nomer "
+        $sql = $this->db->query("SELECT spp_alasan_batal,sppid,spp_noslip,spp_print,spp_status,spp_tgl,spp_cetak_harga,spp_tgl_batal, spp_total,pel_nama, wo_nomer "
                 . "FROM spa_supply LEFT JOIN svc_wo ON woid = spp_woid LEFT JOIN "
                 . "ms_pelanggan ON pelid = spp_pelid WHERE sppid = '$sppid'");
         if ($sql->num_rows() > 0) {

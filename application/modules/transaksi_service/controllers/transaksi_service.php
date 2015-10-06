@@ -223,10 +223,10 @@ class Transaksi_Service extends Application {
                 'inv_so' => numeric($this->input->post('total_so')),
                 'inv_lc' => numeric($this->input->post('total_lc')),
                 'inv_total' => numeric($this->input->post('grand_total')),
-                'inv_spart_hpp' => numeric($this->input->post('total_sp_hpp')),
-                'inv_oli_hpp' => numeric($this->input->post('total_ol_hpp')),
-                'inv_sm_hpp' => numeric($this->input->post('total_sm_hpp')),
-                'inv_so_hpp' => numeric($this->input->post('total_so_hpp')),
+                'inv_hpp_spart' => numeric($this->input->post('total_sp_hpp')),
+                'inv_hpp_oli' => numeric($this->input->post('total_ol_hpp')),
+                'inv_hpp_sm' => numeric($this->input->post('total_sm_hpp')),
+                'inv_hpp_so' => numeric($this->input->post('total_so_hpp')),
                 'inv_cbid' => ses_cabang,
             );
 
