@@ -46,11 +46,11 @@
                 <?php
                 $no++;
                 $total = $value['ks_total'];
-                $saldo += $value['ks_saldo'];
+                $saldo = $value['ks_saldo'];
             }
             ?>
             <tr style="font-weight: bold;">
-                <td colspan="8" style="text-align: right">TOTAL</td>
+                <td colspan="8" style="text-align: right">SALDO TERAKHIR</td>
                 <td style="text-align: right;"><?php echo number_format($total,2); ?></td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>

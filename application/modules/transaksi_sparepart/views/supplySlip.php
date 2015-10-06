@@ -21,14 +21,16 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" required="required" for="form-field-1">Kategori</label>
         <div class="col-sm-8">
-            <select name="spp_jenis" id="spp_jenis" class="ace col-xs-10 col-sm-3">
-                <option value="">Pilih</option>
-                <option value="ps">Part Shop</option>
-                <option value="sp">Service -> Sparepart</option>
-                <option value="sm">Service -> Sub Material</option>
-                <option value="ol">Service -> Oli</option>
-                <option value="so">Service -> Sub Order</option>
-            </select>
+            <div class='input-group col-xs-10 col-sm-10'>
+                <select name="spp_jenis" id="spp_jenis" class="ace col-xs-10 col-sm-3">
+                    <option value="">Pilih</option>
+                    <option value="ps">Part Shop</option>
+                    <option value="sp">Service -> Sparepart</option>
+                    <option value="sm">Service -> Sub Material</option>
+                    <option value="ol">Service -> Oli</option>
+                    <option value="so">Service -> Sub Order</option>
+                </select>
+            </div>
         </div>
     </div>
     <div class="service" id="service" style="display: none">
@@ -46,7 +48,9 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Pelanggan</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" required="required" name="pel_nama" id="pel_nama" class="req upper col-xs-10 col-sm-5" />
+                <div class='input-group col-xs-10 col-sm-10'>
+                    <input type="text" autocomplete="off" required="required" name="pel_nama" id="pel_nama" class="req upper col-xs-10 col-sm-5" />
+                </div>
             </div>
         </div>
     </div>
@@ -54,18 +58,22 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Pelanggan</label>
             <div class="col-sm-8">
-                <input type="text" autocomplete="off" required="required" name="spp_pelid" id="spp_pelid" class="req upper col-xs-10 col-sm-3" />
+                <div class='input-group col-xs-10 col-sm-10'>
+                    <input type="text" autocomplete="off" required="required" name="spp_pelid" id="spp_pelid" class="req upper col-xs-10 col-sm-3" />
+                </div>
             </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Pay Method</label>
         <div class="col-sm-8">
-            <select name="spp_pay_method" required="required" class="ace col-xs-10 col-sm-3">
-                <option value="">Pilih</option>
-                <option value="tunai">Tunai</option>
-                <option value="kredit">Kredit</option>
-            </select>
+            <div class='input-group col-xs-10 col-sm-10'>
+                <select name="spp_pay_method" required="required" class="ace col-xs-10 col-sm-3">
+                    <option value="">Pilih</option>
+                    <option value="tunai">Tunai</option>
+                    <option value="kredit">Kredit</option>
+                </select>
+            </div>
         </div>
     </div>
     <div class="form-group">

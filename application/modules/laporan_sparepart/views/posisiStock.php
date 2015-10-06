@@ -35,7 +35,7 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group">
-                        <input type="text" name="start" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
+                        <input type="text" name="start" value="<?php echo date('d/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
                         <span class="input-group-addon">
                             <i class="ace-icon fa fa-calendar"></i>
                         </span>

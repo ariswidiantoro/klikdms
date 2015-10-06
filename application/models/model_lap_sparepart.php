@@ -84,10 +84,11 @@ class Model_Lap_Sparepart extends CI_Model {
         }
         $query = $this->db->query("SELECT * FROM spa_kartu_stock RIGHT JOIN(select MAX(ksid)"
                 . " AS ksid, ks_inveid FROM spa_kartu_stock LEFT JOIN spa_inventory"
-                . " ON inveid = ks_inveid WHERE DATE(ks_tgl) < '$date'"
+                . " ON inveid = ks_inveid WHERE DATE(ks_tgl) <= '$date'"
                 . " AND ks_cbid = '$cabang' $wh GROUP BY ks_inveid) AS "
                 . " s2 ON s2.ksid = spa_kartu_stock.ksid AND s2.ks_inveid = spa_kartu_stock.ks_inveid"
                 . " LEFT JOIN spa_inventory ON inveid = spa_kartu_stock.ks_inveid ORDER BY inve_kode");
+        log_message('error', 'AAAAAA '.$this->db->last_query());
         if ($query->num_rows() > 0) {
             return $query->result_array();
         }

@@ -28,6 +28,7 @@ class Transaksi_Sparepart extends Application {
         $this->hakAkses(61);
         $this->load->view('returPenjualan', $this->data);
     }
+
     public function claimBarang() {
         $this->hakAkses(63);
         $this->load->view('claimBarang', $this->data);
@@ -37,6 +38,7 @@ class Transaksi_Sparepart extends Application {
         $this->hakAkses(60);
         $this->load->view('fakturSparepart', $this->data);
     }
+
     public function adjustmentStock() {
         $this->hakAkses(62);
         $this->load->view('adjustmentStock', $this->data);
@@ -61,6 +63,11 @@ class Transaksi_Sparepart extends Application {
             $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
         }
         echo json_encode($data);
+    }
+
+    function cekFakturTrbr() {
+        $param = strtoupper($this->input->post('param'));
+        echo json_encode($this->model_trspart->cekFakturTrbr($param));
     }
 
     function jsonFakturJual() {
@@ -181,7 +188,7 @@ class Transaksi_Sparepart extends Application {
                 'spp_createon' => date('Y-m-d H:i:s'),
                 'spp_createby' => ses_username,
                 'spp_pelid' => $this->input->post('spp_pelid'),
-                'spp_woid' => $this->input->post('spp_pelid'),
+                'spp_woid' => $this->input->post('spp_woid'),
                 'spp_cetak_harga' => $cetakHarga,
                 'spp_pay_method' => $this->input->post('spp_pay_method'),
                 'spp_kredit_term' => $term,
@@ -293,7 +300,7 @@ class Transaksi_Sparepart extends Application {
                     'det_diskon' => $det_diskon[$i],
                     'det_hpp' => $det_hpp[$i],
                     'det_subtotal' => numeric($det_subtotal[$i]),
-                    'det_subtotal_hpp' => numeric($det_hpp[$i]*$det_qty[$i]),
+                    'det_subtotal_hpp' => numeric($det_hpp[$i] * $det_qty[$i]),
                 );
             }
             $return = $this->model_trspart->saveReturPenjualan($data, $detail, $this->input->post('sppid'));
@@ -303,6 +310,7 @@ class Transaksi_Sparepart extends Application {
         }
         echo json_encode($return);
     }
+
     function saveAdjustmentStock() {
         $return = false;
         $this->form_validation->set_rules('adj_nomer', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
@@ -381,7 +389,7 @@ class Transaksi_Sparepart extends Application {
         $this->data['barang'] = $this->model_trspart->getReturBeliDetail($kode);
         $this->load->view('printReturBeli', $this->data);
     }
-    
+
     /**
      * 
      * @param type $kode
@@ -391,6 +399,7 @@ class Transaksi_Sparepart extends Application {
         $this->data['barang'] = $this->model_trspart->getAdjustmentStockDetail($kode);
         $this->load->view('printAdjustmentStock', $this->data);
     }
+
     /**
      * 
      * @param type $kode
