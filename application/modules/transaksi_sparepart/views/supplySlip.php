@@ -22,7 +22,7 @@
         <label class="col-sm-2 control-label no-padding-right" required="required" for="form-field-1">Kategori</label>
         <div class="col-sm-8">
             <div class='input-group col-xs-10 col-sm-10'>
-                <select name="spp_jenis" id="spp_jenis" class="ace col-xs-10 col-sm-3">
+                <select name="spp_jenis" id="spp_jenis" class="ace col-xs-10 col-sm-4">
                     <option value="">Pilih</option>
                     <option value="ps">Part Shop</option>
                     <option value="sp">Service -> Sparepart</option>
@@ -168,13 +168,13 @@
                             1
                         </td>
                         <td>
-                            <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dsupp_nama[]" />
+                            <input type="text"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="so_deskripsi[]" />
                         </td>
                         <td>
-                            <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));totalHppSo()"  autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dsupp_hppso1" name="dsupp_hppso[]" />
+                            <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));totalHppSo()"  autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="so_hpp1" name="so_hpp[]" />
                         </td>
                         <td>
-                            <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));totalSo()"  autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dsupp_hargaso1" name="dsupp_hargaso[]" />
+                            <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));totalSo()"  autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="so_harga1" name="so_harga[]" />
                         </td>
                         <td class="center">
                             <a class="green btnAdd"  onclick="addRowOrder()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
@@ -397,6 +397,7 @@
    
     $(document).ready(function(){
         $('#form').submit(function() {
+            var jenis = $('#spp_jenis').val();
             $.ajax({
                 type: 'POST',
                 url: $(this).attr('action'),
@@ -412,7 +413,7 @@
                         params += ', fullscreen=yes,scrollbars=yes';
                         document.form.reset();
                         clearForm();
-                        window.open("<?php echo site_url("transaksi_sparepart/printSupplySlip"); ?>/"+data.kode,'_blank', params);
+                        window.open("<?php echo site_url("transaksi_sparepart/printSupplySlip"); ?>/"+data.kode+"/"+jenis,'_blank', params);
                     }
                     $("#result").html(data.msg).show().fadeIn("slow");
                 }
@@ -517,7 +518,7 @@
     {
         var total = 0;
         var price;
-        $("input[name^=dsupp_hargaso]").each(function() {
+        $("input[name^=so_harga]").each(function() {
             price = $(this).val().replace(/,/g, "");
             total += Number(price);
         });
@@ -527,7 +528,7 @@
     {
         var total = 0;
         var price;
-        $("input[name^=dsupp_hppso]").each(function() {
+        $("input[name^=so_hpp]").each(function() {
             price = $(this).val().replace(/,/g, "");
             total += Number(price);
         });
@@ -686,13 +687,13 @@
                                  '<tr class="item-row-so">\n\
                <td class="nomorso"  style="text-align: center;">' + inc +'</td>\n\
                     <td>\n\
-                        <input type="text" id="dsupp_nama' + inc + '"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dsupp_nama[]" />\n\
+                        <input type="text" id="so_deskripsi' + inc + '"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="so_deskripsi[]" />\n\
                     </td>\n\
                     <td>\n\
-                           <input type="text" id="dsupp_hppso' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalHppSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dsupp_hppso[]" />\n\
+                           <input type="text" id="so_hpp' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalHppSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="so_hpp[]" />\n\
                    </td>\n\
                     <td>\n\
-                           <input type="text" id="dsupp_hargaso' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dsupp_hargaso[]" />\n\
+                           <input type="text" id="so_harga' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="so_harga[]" />\n\
                    </td>\n\
                    <td class="center">\n\
                        <a class="green btnAdd"  onclick="addRowOrder()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\

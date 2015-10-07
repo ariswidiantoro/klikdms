@@ -12,9 +12,9 @@
         <tr>
             <th width="2%">No</th>
             <th width="2%">Kode Retur</th>
-            <th width="15%">No. Faktur Beli</th>
-            <th width="10%">Tgl Retur Beli</th>
-            <th WIDTH="20%">Supplier</th>
+            <th width="15%">No. Faktur Jual</th>
+            <th width="10%">Tgl Retur Jual</th>
+            <th WIDTH="20%">Pelanggan</th>
             <th WIDTH="20%">Alasan Retur</th>
             <th width="10%">Total Retur</th>
         </tr>
@@ -25,16 +25,16 @@
             foreach ($data as $value) {
                 ?><tr>
                     <td><?php echo $no ?></td>
-                    <td><?php echo $value['rbid']; ?></td>
-                    <td><?php echo $value['trbr_faktur']; ?></td>
-                    <td style="text-align: center"><?php echo date('d-m-Y', strtotime($value['rb_tgl'])); ?></td>
-                    <td><?php echo $value['sup_nama']; ?></td>
-                    <td><?php echo $value['rb_alasan']; ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['rb_total']); ?></td>
+                    <td><?php echo $value['rjid']; ?></td>
+                    <td><?php echo $value['not_nomer']; ?></td>
+                    <td style="text-align: center"><?php echo date('d-m-Y', strtotime($value['rj_tgl'])); ?></td>
+                    <td><?php echo $value['pel_nama']; ?></td>
+                    <td><?php echo $value['rj_alasan']; ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['rj_total']); ?></td>
                 </tr>
                 <?php
                 $no++;
-                $total += $value['rb_total'];
+                $total += $value['rj_total'];
             }
             ?>
             <tr style="font-weight: bold;">
@@ -58,7 +58,7 @@ if ($output == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=retur_pembelian.xls");
+    header("Content-Disposition: attachment; filename=retur_penjualan.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

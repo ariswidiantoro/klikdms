@@ -314,8 +314,9 @@ class Transaksi_Service extends Application {
      */
     function printLampiranFakturService($woNomer) {
         $this->load->model('model_trspart');
-        $this->data['data'] = $this->model_trservice->getWo(strtoupper($woNomer));
+        $this->data['data'] = $this->model_trservice->getWoAll(strtoupper($woNomer));
         $this->data['part'] = $this->model_trspart->getSupplySlipDetailByWo(strtoupper($woNomer));
+        $this->data['dataso'] = $this->model_trspart->getSupplySlipSoByWo(strtoupper($woNomer));
         $this->load->view('printLampiranFakturService', $this->data);
     }
 

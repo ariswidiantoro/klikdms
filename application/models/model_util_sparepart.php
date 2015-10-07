@@ -19,16 +19,24 @@ class Model_Util_Sparepart extends CI_Model {
     public function getTotalSupply($where) {
         $wh = "WHERE spp_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
-            $wh = " AND " . $where;
+            $wh .= " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(sppid) AS total FROM spa_supply LEFT JOIN"
                 . " ms_pelanggan ON pelid = spp_pelid LEFT JOIN svc_wo ON woid = spp_woid $wh");
+        return $sql->row()->total;
+    }
+    
+    public function getTotalAdjustment($where) {
+        $wh = "WHERE adj_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(adjid) AS total FROM spa_adjustment $wh");
         return $sql->row()->total;
     }
 
     public function getTotalFaktur($where) {
         $wh = "WHERE not_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
-            $wh = " AND " . $where;
+            $wh .= " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(sppid) AS total FROM spa_nota LEFT"
                 . " JOIN spa_supply ON sppid = not_sppid LEFT JOIN"
                 . " ms_pelanggan ON pelid = spp_pelid $wh");
@@ -43,7 +51,7 @@ class Model_Util_Sparepart extends CI_Model {
     public function getTotalTrbr($where) {
         $wh = "WHERE trbr_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
-            $wh = " AND " . $where;
+            $wh .= " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(trbrid) AS total FROM spa_trbr LEFT JOIN"
                 . " ms_supplier ON supid = trbr_supid $wh");
         return $sql->row()->total;
@@ -129,7 +137,38 @@ class Model_Util_Sparepart extends CI_Model {
         }
         return null;
     }
+    /**
+     * 
+     * @param type $start
+     * @param type $limit
+     * @param type $sidx
+     * @param type $sord
+     * @param type $where
+     * @return null
+     */
+    function getAllAdjustment($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('adj_nomer,adj_tgl,adjid');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
 
+        $this->db->where('adj_cbid', ses_cabang);
+        $this->db->from('spa_adjustment');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param type $sppid
+     * @param type $alasan
+     * @return type
+     */
     function batalSupply($sppid, $alasan) {
         $result = array();
         $this->db->trans_begin();

@@ -367,7 +367,7 @@
                             <input type="text" onchange="subTotal('+inc+');setPlusDisabled('+inc+')" autocomplete="off" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dadj_minus' + inc + '" value="0" name="dadj_minus[]" />\n\
                          </td>\n\
                          <td>\n\
-                             <input type="text" autocomplete="off" onchange="$(\'#\'+this.id).val(formatDefault(this.value));" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dadj_hpp' + inc + '" name="dadj_hpp[]" />\n\
+                             <input type="text" autocomplete="off" readonly="readonly" onchange="$(\'#\'+this.id).val(formatDefault(this.value));" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dadj_hpp' + inc + '" name="dadj_hpp[]" />\n\
                          </td>\n\
                          <td>\n\
                              <input type="text" class="subtotal ace col-xs-10 col-sm-10" readonly="readonly" style="width:100%;text-align: right" id="dadj_subtotal_hpp' + inc + '" name="dadj_subtotal_hpp[]" />\n\

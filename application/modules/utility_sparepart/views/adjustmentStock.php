@@ -12,6 +12,10 @@ echo $this->session->flashdata('msg');
     </div>
 </div>
 
+
+</div>
+
+
 <script type="text/javascript">
     
     var scripts = [null, null]
@@ -60,39 +64,23 @@ echo $this->session->flashdata('msg');
         }
     }
     
-    function print(notid)
+    function print(adjid)
     {
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo site_url('utility_sparepart/updatePrintFaktur'); ?>',
-            dataType: "json",
-            data: {
-                id: notid
-            },
-            success: function(data) {
-                if (data) {
-                    var params  = 'width=1000';
-                    params += ', height='+screen.height;
-                    params += ', fullscreen=yes,scrollbars=yes';
-                    window.open("<?php echo site_url("transaksi_sparepart/printFakturSparepart"); ?>/"+notid,'_blank', params);
-                }
-            }
-        });
-       
+        var params  = 'width=1000';
+        params += ', height='+screen.height;
+        params += ', fullscreen=yes,scrollbars=yes';
+        window.open("<?php echo site_url("transaksi_sparepart/printAdjustmentStock"); ?>/"+adjid,'_blank', params);
     }
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('utility_sparepart/loadFakturSparepart') ?>',      //another controller function for generating data
+            url:'<?php echo site_url('utility_sparepart/loadAdjustment') ?>',      //another controller function for generating data
             mtype : "post",             //Ajax request type. It also could be GET
             datatype: "json",            //supported formats XML, JSON or Arrray
-            colNames:['No Faktur','No Supply','Tanggal','Pelanggan', 'Total', 'Print'],       //Grid column headings
+            colNames:['Nomer Adjusment','Tanggal','Print'],       //Grid column headings
             colModel:[
-                {name:'not_nomer',index:'not_nomer', width:40, align:"left"},
-                {name:'spp_noslip',index:'spp_noslip', width:40, align:"left"},
-                {name:'not_tgl',index:'not_tgl', width:30, align:"left"},
-                {name:'pel_nama',index:'pel_nama', width:60, align:"left"},
-                {name:'not_total',index:'not_total', width:60, align:"left"},
+                {name:'adj_nomer',index:'adj_nomer', width:40, align:"left"},
+                {name:'adj_tgl',index:'adj_tgl', width:30, align:"left"},
                 {name:'print',index:'print', width:15, align:"center"},
             ],
             rowNum:10,
@@ -101,11 +89,11 @@ echo $this->session->flashdata('msg');
             //height: 300,
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'not_nomer',
+            sortname: 'adj_nomer',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Faktur Sparepart"
+            caption:"Daftar Adjustment"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );

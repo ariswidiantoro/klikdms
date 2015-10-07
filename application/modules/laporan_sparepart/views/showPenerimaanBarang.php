@@ -54,7 +54,7 @@ if ($output == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=agenda_wo.xls");
+    header("Content-Disposition: attachment; filename=penerimaan_barang.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";
