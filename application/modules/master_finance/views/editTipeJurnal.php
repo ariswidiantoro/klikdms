@@ -1,16 +1,23 @@
 <div id="result"></div>
 <div class="page-header">
     <h1>
-        Update Cost Center <?php echo $data['tipe_deskripsi'] ?>
+        Update Tipe Jurnal <?php echo $data['tipe_deskripsi'] ?>
     </h1>
 </div>
 <form class="form-horizontal" id="formEdit" method="post" action="<?php echo site_url('master_finance/updateTipeJurnal'); ?>" name="formEdit">
     <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Postcode</label>
+        <div class="col-sm-6">
+            <input type="text" required="required" value="<?php echo $data['tipe_postcode'] ?>" maxlength="15" style='text-transform:uppercase' 
+                   name="tipe_postcode" id="tipe_postcode"  class="ace col-xs-10 col-sm-6" />
+            <input type="hidden" required="required"  value="<?php echo $data['tipeid'] ?>" name="tipeid" id="tipeid"/>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsis</label>
         <div class="col-sm-8">
             <input type="text" required="required" value="<?php echo $data['tipe_deskripsi'] ?>" maxlength="50" style='text-transform:uppercase' 
-                   name="tipe_deskripsi" id="tipe_deskripsi"  class="ace col-xs-10 col-sm-10" />
-            <input type="hidden" required="required"  value="<?php echo $data['tipeid'] ?>" name="tipeid" id="tipeid"/>
+                   name="tipe_deskripsi" id="tipe_deskripsi"  class="ace col-xs-10 col-sm-8" />
         </div>
     </div>
     <div class="clearfix form-actions">

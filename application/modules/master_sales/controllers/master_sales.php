@@ -39,6 +39,11 @@ class Master_Sales extends Application {
         $propid = $this->input->post('propid');
         echo json_encode($this->model_sales->getKotaByPropinsi($propid));
     }
+    
+    public function jsonArea() {
+        $kotaid = $this->input->post('kotaid');
+        echo json_encode($this->model_sales->getAreaByKota($kotaid));
+    }
     /* --------------  */
 
     public function masterMerk() {

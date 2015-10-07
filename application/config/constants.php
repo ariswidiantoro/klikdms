@@ -42,6 +42,9 @@ define('JAB_SVC_MEKANIK', 'JAB002');
 define('JAB_SVC_SA_FRONTMAN', 'JAB003');
 define('JAB_SVC_FINAL_CHECKER', 'JAB004');
 define('JAB_SVC_KASIR_SERVICE', 'JAB005');
+define('JAB_MKT_SALES', 'JAB006');
+define('JAB_MKT_SPVSALES', 'JAB007');
+define('JAB_MKT_GMOSALES', 'JAB007');
 
 // NUMERATOR KODE
 define('NUM_INVOICE', 'IV');
@@ -57,6 +60,11 @@ define('NUM_ADJUSTMENT_STOCK', 'AD');
 
 /* Rossi */
 define('NUM_TIPE_JURNAL', 'TJ');
+define('NUM_SETTING_JURNAL', 'SJ');
+define('NUM_PROSPECT', 'PC');
+define('NUM_STOCK_UNIT', 'ST');
+define('NUM_SPK', 'SK');
+define('NUM_FPT', 'FP');
 
 
 

@@ -10,18 +10,18 @@ class Model_Finance extends CI_Model {
     public function __construct() {
         parent::__construct();
     }
-    
-     /** 
+
+    /**
      * Utility - Finance
      * @author Rossi on 2015-09-25
-     **/
-    public function cListCostCenter($data){
+     * */
+    public function cListCostCenter($data) {
         $this->db->where('cc_cbid', $data['cbid']);
         $sql = $this->db->get('ms_cost_center');
         return $sql->result_array();
     }
-    
-    public function cListKota($data){
+
+    public function cListKota($data) {
         $this->db->where('cc_cbid', $data['cbid']);
         $sql = $this->db->get('ms_cost_center');
         return $sql->result_array();
@@ -226,8 +226,8 @@ class Model_Finance extends CI_Model {
             ");
         return $query->row_array();
     }
-    
-   /** Master Tipe Jurnal 
+
+    /** Master Tipe Jurnal 
      * @author Rossi Erl
      * 2015-09-03
      */
@@ -256,17 +256,51 @@ class Model_Finance extends CI_Model {
     }
 
     public function addTipeJurnal($data) {
-        if ($this->db->insert('ms_tipe_jurnal', $data)) {
+        $this->db->trans_begin();
+        $data['tipeid'] = NUM_TIPE_JURNAL . sprintf("%03s", $this->getCounter(NUM_TIPE_JURNAL));
+        $this->db->insert('ms_tipe_jurnal', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
             return array('status' => TRUE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' berhasil disimpan');
         } else {
+            $this->db->trans_rollback();
             return array('status' => FALSE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' gagal disimpan');
+        }
+    }
+
+    public function setTipeJurnal($data) {
+        $this->db->trans_begin();
+        try {
+            if($this->db->query("DELETE FROM ms_dtipe_jurnal WHERE 
+                dtipe_cbid = '".$data['cbid']."' AND dtipe_tipeid = '".$data['tipeid']."'") == FALSE){
+                 throw new excetion('GAGAL HAPUS DATA : ' . $data['tipeid']);
+            }
+            for ($i = 0; $i <= count($data['const']) - 1; $i++) {
+                if ($this->db->insert('ms_dtipe_jurnal', array(
+                            'dtipe_tipeid' => $data['tipeid'],
+                            'dtipe_cbid' => $data['cbid'],
+                            'dtipe_constant' => $data['const'][$i],
+                            'dtipe_coa' => $data['coa'][$i],
+                            'dtipe_flag' => '0'
+                        )) == FALSE) {
+                    throw new Exception('GAGAL MENYIMPAN DATA : ' . $data['coa'][$i]);
+                }
+            }
+            if ($this->db->trans_status() === TRUE) {
+                $this->db->trans_commit();
+                return array('status' => TRUE, 'msg' => 'Data ' . $data['tipeid'] . ' berhasil disimpan');
+            } else {
+                throw new excetion('GAGAL MENYIMPAN DATA : ' . $data['coa'][$i]);
+            }
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => $e->getMessage());
         }
     }
 
     public function getTipeJurnal($data) {
         $query = $this->db->query("
-            SELECT * FROM ms_tipe_jurnal WHERE tipeid = " . $data . "
-            ");
+            SELECT * FROM ms_tipe_jurnal WHERE tipeid = '" . $data . "'");
         return $query->row_array();
     }
 
@@ -286,12 +320,26 @@ class Model_Finance extends CI_Model {
             return FALSE;
         }
     }
-    
+
+    public function getDetailTipeJurnal($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_tipe_jurnal 
+            LEFT JOIN ms_dtipe_jurnal ON dtipe_tipeid = tipeid AND dtipe_cbid = '" . $data['cbid'] . "'
+            WHERE tipeid = '" . $data['id'] . "'");
+        return $query->result_array();
+    }
+
+    public function getTotalDtipe($data) {
+        $query = $this->db->query("
+            SELECT count(dtipe_coa) as total FROM ms_dtipe_jurnal WHERE 
+            dtipe_tipeid = '" . $data['id'] . "' AND dtipe_cbid = '" . $data['cbid'] . "'");
+        return $query->row()->total;
+    }
+
     /** Master Tipe Jurnal 
      * @author Rossi Erl
      * 2015-09-03
      */
-    
     public function getTotalMasterJurnal($where) {
         $wh = "WHERE tipeid != '0' ";
         if ($where != NULL)
@@ -347,7 +395,7 @@ class Model_Finance extends CI_Model {
             return FALSE;
         }
     }
-   
+
 }
 
 ?>
