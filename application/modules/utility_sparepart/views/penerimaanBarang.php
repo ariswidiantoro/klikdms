@@ -12,10 +12,6 @@ echo $this->session->flashdata('msg');
     </div>
 </div>
 
-
-</div>
-
-
 <script type="text/javascript">
     
     var scripts = [null, null]

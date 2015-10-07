@@ -32,6 +32,14 @@ class Utility_Sparepart extends Application {
         $this->load->view('supplySlip', $this->data);
     }
 
+    public function adjustmentStock() {
+        $this->hakAkses(84);
+        $this->load->view('adjustmentStock', $this->data);
+    }
+
+    /**
+     * 
+     */
     public function fakturSparepart() {
         $this->hakAkses(83);
         $this->load->view('fakturSparepart', $this->data);
@@ -133,6 +141,46 @@ class Utility_Sparepart extends Application {
             }
         echo json_encode($responce);
     }
+    
+    /**
+     * 
+     */
+    function loadAdjustment() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'adj_nomer';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_util_sparepart->getTotalAdjustment($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_util_sparepart->getAllAdjustment($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $print = '<a href="javascript:;" onclick="print(\'' . $row->adjid . '\',' . $i . ')" title="Print"><i class="ace-icon glyphicon glyphicon-print bigger-120"></i>';
+                $responce->rows[$i]['id'] = $row->adjid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->adjid,
+                    date('d-m-Y', strtotime($row->adj_tgl)),
+                    $print
+                );
+                $i++;
+            }
+        echo json_encode($responce);
+    }
 
     /**
      * 
@@ -182,6 +230,7 @@ class Utility_Sparepart extends Application {
         $alasan = strtoupper($this->input->post('alasan'));
         echo json_encode($this->model_util_sparepart->batalSupply($sppid, $alasan));
     }
+
     function updatePrintFaktur() {
         $notid = strtoupper($this->input->post('id'));
         echo json_encode($this->model_util_sparepart->updatePrintFaktur($notid));

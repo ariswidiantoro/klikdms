@@ -11,41 +11,44 @@
     <table id="table-detail">
         <tr>
             <th width="2%">No</th>
-            <th width="2%">Kode Retur</th>
-            <th width="15%">No. Faktur Beli</th>
-            <th width="10%">Tgl Retur Beli</th>
-            <th WIDTH="20%">Supplier</th>
-            <th WIDTH="20%">Alasan Retur</th>
-            <th width="10%">Total Retur</th>
+            <th width="5%">Tgl&nbsp;Supply</th>
+            <th width="10%">No.&nbsp;Supply</th>
+            <th width="10%">Pay Method</th>
+            <th width="20%">Pelanggan</th>
+            <th WIDTH="10%">Total</th>
+            <th WIDTH="10%">Hpp</th>
         </tr>
         <?php
         if (count($data) > 0) {
             $no = 1;
             $total = 0;
+            $totalHpp = 0;
             foreach ($data as $value) {
                 ?><tr>
                     <td><?php echo $no ?></td>
-                    <td><?php echo $value['rbid']; ?></td>
-                    <td><?php echo $value['trbr_faktur']; ?></td>
-                    <td style="text-align: center"><?php echo date('d-m-Y', strtotime($value['rb_tgl'])); ?></td>
-                    <td><?php echo $value['sup_nama']; ?></td>
-                    <td><?php echo $value['rb_alasan']; ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['rb_total']); ?></td>
+                    <td><?php echo date('d-m-Y',strtotime($value['spp_tgl'])); ?></td>
+                    <td><?php echo $value['spp_noslip']; ?></td>
+                    <td><?php echo $value['spp_pay_method']; ?></td>
+                    <td><?php echo $value['pel_nama']; ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['spp_total'], 2); ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['spp_total_hpp'], 2); ?></td>
                 </tr>
                 <?php
                 $no++;
-                $total += $value['rb_total'];
+                $total += $value['spp_total'];
+                $totalHpp += $value['spp_total_hpp'];
             }
             ?>
             <tr style="font-weight: bold;">
-                <td colspan="6" style="text-align: right">TOTAL</td>
-                <td style="text-align: right;"><?php echo number_format($total); ?></td>
+                <td colspan="5" style="text-align: right">TOTAL</td>
+                <td style="text-align: right;"><?php echo number_format($total,2); ?></td>
+                <td style="text-align: right;"><?php echo number_format($totalHpp,2); ?></td>
             </tr>
             <?php
         } else {
             ?>
             <tr>
-                <td colspan="7">Data Tidak Ditemukan</td>
+                <td colspan="12">Data Tidak Ditemukan</td>
             </tr>
         <?php } ?>
     </table>
@@ -58,7 +61,7 @@ if ($output == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=retur_pembelian.xls");
+    header("Content-Disposition: attachment; filename=supply_slip_rekap.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

@@ -11,41 +11,42 @@
     <table id="table-detail">
         <tr>
             <th width="2%">No</th>
-            <th width="2%">Kode Retur</th>
-            <th width="15%">No. Faktur Beli</th>
-            <th width="10%">Tgl Retur Beli</th>
-            <th WIDTH="20%">Supplier</th>
-            <th WIDTH="20%">Alasan Retur</th>
-            <th width="10%">Total Retur</th>
+            <th WIDTH="20%">Kode&nbsp;Barang</th>
+            <th WIDTH="30%">Nama&nbsp;Barang</th>
+            <th WIDTH="10%">Tgl&nbsp;Terakhir</th>
+            <th width="10%">Total&nbsp;Qty</th>
+            <th width="10%">Total&nbsp;Rp</th>
         </tr>
         <?php
         if (count($data) > 0) {
             $no = 1;
             $total = 0;
+            $totalQty = 0;
             foreach ($data as $value) {
                 ?><tr>
                     <td><?php echo $no ?></td>
-                    <td><?php echo $value['rbid']; ?></td>
-                    <td><?php echo $value['trbr_faktur']; ?></td>
-                    <td style="text-align: center"><?php echo date('d-m-Y', strtotime($value['rb_tgl'])); ?></td>
-                    <td><?php echo $value['sup_nama']; ?></td>
-                    <td><?php echo $value['rb_alasan']; ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['rb_total']); ?></td>
+                    <td><?php echo "'".$value['inve_kode']; ?></td>
+                    <td><?php echo $value['inve_nama']; ?></td>
+                    <td style="text-align: center"><?php echo date('d-m-Y', strtotime($value['trbr_tgl'])); ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['dtr_qty'],2); ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['dtr_subtotal'],2); ?></td>
                 </tr>
                 <?php
                 $no++;
-                $total += $value['rb_total'];
+                $totalQty += $value['dtr_qty'];
+                $total += $value['dtr_subtotal'];
             }
             ?>
             <tr style="font-weight: bold;">
-                <td colspan="6" style="text-align: right">TOTAL</td>
-                <td style="text-align: right;"><?php echo number_format($total); ?></td>
+                <td colspan="4" style="text-align: right">TOTAL</td>
+                <td style="text-align: right;"><?php echo number_format($totalQty,2); ?></td>
+                <td style="text-align: right;"><?php echo number_format($total,2); ?></td>
             </tr>
             <?php
         } else {
             ?>
             <tr>
-                <td colspan="7">Data Tidak Ditemukan</td>
+                <td colspan="5">Data Tidak Ditemukan</td>
             </tr>
         <?php } ?>
     </table>
@@ -58,7 +59,7 @@ if ($output == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=retur_pembelian.xls");
+    header("Content-Disposition: attachment; filename=pembelian_by_sparepart.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

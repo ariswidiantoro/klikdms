@@ -200,30 +200,52 @@ class Transaksi_Sparepart extends Application {
             if ($jenis != 'ps') {
                 $data['spp_woid'] = $this->input->post('spp_woid');
             }
-            $dsupp_inveid = $this->input->post('dsupp_inveid');
-            $dsupp_qty = $this->input->post('dsupp_qty');
-            $dsupp_harga = $this->input->post('dsupp_harga');
-            $dsupp_hpp = $this->input->post('dsupp_hpp');
-            $dsupp_diskon = $this->input->post('dsupp_diskon');
-            $dsupp_subtotal = $this->input->post('dsupp_subtotal');
-            // get array spare part from table 
-            $detail = array();
-            $totalHpp = 0;
-            for ($i = 0; $i < count($dsupp_inveid); $i++) {
-                $subTotalHpp = numeric($dsupp_hpp[$i] * $dsupp_qty[$i]);
-                $totalHpp += $subTotalHpp;
-                $detail[] = array(
-                    'dsupp_inveid' => $dsupp_inveid[$i],
-                    'dsupp_qty' => $dsupp_qty[$i],
-                    'dsupp_hpp' => $dsupp_hpp[$i],
-                    'dsupp_harga' => numeric($dsupp_harga[$i]),
-                    'dsupp_diskon' => $dsupp_diskon[$i],
-                    'dsupp_subtotal' => numeric($dsupp_subtotal[$i]),
-                    'dsupp_subtotal_hpp' => $subTotalHpp,
-                );
+            if ($jenis != 'so') {
+                $dsupp_inveid = $this->input->post('dsupp_inveid');
+                $dsupp_qty = $this->input->post('dsupp_qty');
+                $dsupp_harga = $this->input->post('dsupp_harga');
+                $dsupp_hpp = $this->input->post('dsupp_hpp');
+                $dsupp_diskon = $this->input->post('dsupp_diskon');
+                $dsupp_subtotal = $this->input->post('dsupp_subtotal');
+                // get array spare part from table 
+                $detail = array();
+                $totalHpp = 0;
+                for ($i = 0; $i < count($dsupp_inveid); $i++) {
+                    $subTotalHpp = numeric($dsupp_hpp[$i] * $dsupp_qty[$i]);
+                    $totalHpp += $subTotalHpp;
+                    $detail[] = array(
+                        'dsupp_inveid' => $dsupp_inveid[$i],
+                        'dsupp_qty' => $dsupp_qty[$i],
+                        'dsupp_hpp' => $dsupp_hpp[$i],
+                        'dsupp_harga' => numeric($dsupp_harga[$i]),
+                        'dsupp_diskon' => $dsupp_diskon[$i],
+                        'dsupp_subtotal' => numeric($dsupp_subtotal[$i]),
+                        'dsupp_subtotal_hpp' => $subTotalHpp,
+                    );
+                }
+                $data['spp_total_hpp'] = $totalHpp;
+                $return = $this->model_trspart->saveSupplySlip($data, $detail);
+            } else {
+                $deskripsi = $this->input->post('so_deskripsi');
+                $harga = $this->input->post('so_harga');
+                $hpp = $this->input->post('so_hpp');
+                $totalHpp = 0;
+                $total = 0;
+                for ($i = 0; $i < count($deskripsi); $i++) {
+                    if (!empty($deskripsi[$i])) {
+                        $detail[] = array(
+                            'so_deskripsi' => strtoupper($deskripsi[$i]),
+                            'so_harga' => numeric($harga[$i]),
+                            'so_hpp' => numeric($hpp[$i]),
+                        );
+                    }
+                    $totalHpp += numeric($hpp[$i]);
+                    $total += numeric($harga[$i]);
+                }
+                $data['spp_total_hpp'] = $totalHpp;
+                $data['spp_total'] = $total;
+                $return = $this->model_trspart->saveSupplySlip($data, $detail);
             }
-            $data['spp_total_hpp'] = $totalHpp;
-            $return = $this->model_trspart->saveSupplySlip($data, $detail);
         }
         echo json_encode($return);
     }
@@ -424,10 +446,15 @@ class Transaksi_Sparepart extends Application {
      * 
      * @param type $kode
      */
-    function printSupplySlip($kode) {
+    function printSupplySlip($kode, $jenis) {
         $this->data['data'] = $this->model_trspart->getSupplySlip($kode);
-        $this->data['barang'] = $this->model_trspart->getSupplySlipDetail($kode);
-        $this->load->view('printSupplySlip', $this->data);
+        if ($jenis == 'so') {
+            $this->data['so'] = $this->model_trspart->getSupplySlipSo($kode);
+            $this->load->view('printSupplySlipSo', $this->data);
+        } else {
+            $this->data['barang'] = $this->model_trspart->getSupplySlipDetail($kode);
+            $this->load->view('printSupplySlip', $this->data);
+        }
     }
 
 }
