@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class Master
+ * Class Transaksi Sales
  * @author Rossi Erl
- * 2013-11-11
+ * 2015-09-30
  */
 class Transaksi_Sales extends Application {
 
@@ -17,40 +17,12 @@ class Transaksi_Sales extends Application {
         echo " ";
     }
     
-    /* UTILITY */
-    public function jsonModelKendaraan() {
-        $data = array(
-            'merkid' => $this->input->post('merkid', TRUE), 
-            'segid' => $this->input->post('segid', TRUE));
-        echo json_encode($this->model_sales->getModelByMerk($data));
-    }
-    
-    public function jsonTypeKendaraan() {
-        $modelid = $this->input->post('modelid');
-        echo json_encode($this->model_sales->getTypeByModel($modelid));
-    }
-    
-    public function jsonWarnaModel() {
-        $modelid = $this->input->post('modelid');
-        echo json_encode($this->model_sales->getWarnaByModel($modelid));
-    }
-    
-    public function jsonKota() {
-        $propid = $this->input->post('propid');
-        echo json_encode($this->model_sales->getKotaByPropinsi($propid));
-    }
-    
-    public function jsonArea() {
-        $kotaid = $this->input->post('kotaid');
-        echo json_encode($this->model_sales->getAreaByKota($kotaid));
+    public function terima_kendaraan() {
+        $this->hakAkses(1094);
+        $this->load->view('dataBMK', $this->data);
     }
 
-    public function masterMerk() {
-        $this->hakAkses(1070);
-        $this->load->view('dataMerk', $this->data);
-    }
-
-    public function loadMerk() {
+    public function loadBMK() {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
         $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
@@ -58,7 +30,7 @@ class Transaksi_Sales extends Application {
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;
         $where = whereLoad();
-        $count = $this->model_sales->getTotalMerk($where);
+        $count = $this->model_trsales->getTotalBMK($where);
         if ($count > 0) {
             $total_pages = ceil($count / $limit);
         } else {
@@ -67,7 +39,7 @@ class Transaksi_Sales extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_sales->getDataMerk($start, $limit, $sidx, $sord, $where);
+        $query = $this->model_sales->getDataBMK($start, $limit, $sidx, $sord, $where);
         $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
