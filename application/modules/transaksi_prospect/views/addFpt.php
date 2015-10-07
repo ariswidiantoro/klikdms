@@ -1,6 +1,21 @@
+
+<style type="text/css">
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 20px;
+    }
+    * html .ui-autocomplete {
+        height: 200px;
+    }
+    input:focus {
+        background-color: yellow;
+    } 
+</style>
 <div class="page-header">
     <h1>
-        <?php echo $title;?>
+        <?php echo $title; ?>
     </h1>
 </div>      
 <div id="result"></div>
@@ -35,7 +50,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Prospect</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-8">
-                            <input type="text" name="fpt_prosid" id="fpt_prosid" readonly="readonly" required value="<?php echo $data['prosid']?>" class="form-control upper" />
+                            <input type="text" name="fpt_prosid" id="fpt_prosid" readonly="readonly" required value="<?php echo $data['prosid'] ?>" class="form-control upper" />
                         </div>
                     </div>
                 </div>
@@ -43,7 +58,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tgl FPT</label>
                     <div class="col-sm-2">
                         <div class="input-group">
-                            <input type="text" name="pros_tgl_lahir" id="datepicker" readonly="readonly" value="<?php echo date('d-m-Y'); ?>" class="form-control" />
+                            <input type="text" name="fpt_tgl" id="fpt_tgl" readonly="readonly" value="<?php echo date('d/m/Y'); ?>" class="form-control datepicker" />
                             <span class="input-group-addon">
                                 <i class="ace-icon fa fa-calendar" style="width: 12px;"></i>
                             </span>
@@ -54,7 +69,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Pelanggan</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-8">
-                            <input type="text" name="fpt_prosnama" id="fpt_prosnama" readonly="readonly" required value="<?php echo $data['pros_nama']?>" class="form-control upper" />
+                            <input type="text" name="fpt_prosnama" id="fpt_prosnama" readonly="readonly" required value="<?php echo $data['pros_nama'] ?>" class="form-control upper" />
                         </div>
                     </div>
                 </div>
@@ -62,7 +77,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-8">
-                            <textarea name="fpt_alamat" class="form-control upper" readonly="readonly" required rows="4"><?php echo $data['pros_alamat']?></textarea>
+                            <textarea name="fpt_alamat" class="form-control upper" readonly="readonly" required rows="4"><?php echo $data['pros_alamat'] ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -70,7 +85,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor HP</label>
                     <div class="col-sm-3">
                         <div class="input-group">
-                            <input type="text" name="fpt_nohp" id="fpt_nohp" readonly="readonly" value="<?php echo $data['pros_hp']?>" class="form-control number upper" />
+                            <input type="text" name="fpt_nohp" id="fpt_nohp" readonly="readonly" value="<?php echo $data['pros_hp'] ?>" class="form-control number upper" />
                             <span class="input-group-addon">
                                 <i class="ace-icon fa fa-mobile-phone" style="width: 12px;"></i>
                             </span>
@@ -81,7 +96,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Sales</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-8">
-                            <input type="text" name="fpt_sales" id="fpt_sales" readonly="readonly" required value="<?php echo $data['kr_nama']?>" class="form-control upper" />
+                            <input type="text" name="fpt_sales" id="fpt_sales" readonly="readonly" required value="<?php echo $data['kr_nama'] ?>" class="form-control upper" />
                         </div>
                     </div>
                 </div>
@@ -137,7 +152,7 @@
                             if (count($segment) > 0) {
                                 foreach ($segment as $value) {
                                     ?>
-                                    <option value="<?php echo $value['segid']; ?>"><?php echo $value['seg_nama'].' - '.$value['segid'] ?></option> 
+                                    <option value="<?php echo $value['segid']; ?>"><?php echo $value['seg_nama'] . ' - ' . $value['segid'] ?></option> 
                                     <?php
                                 }
                             }
@@ -174,12 +189,12 @@
                     <div class="col-sm-8">
                         <select name="fpt_tahun" id="fpt_tahun" class="form-control input-medium">
                             <?php
-                                for ($tahun = date('Y'); $tahun >= date('Y')-30; $tahun--) {
-                                   $select = ($tahun == date('Y'))?'selected':'';
-                                    ?>
-                                    <option value="<?php echo $tahun; ?>" <?php echo $select ?>><?php echo $tahun ?></option> 
-                                    <?php
-                                }
+                            for ($tahun = date('Y'); $tahun >= date('Y') - 30; $tahun--) {
+                                $select = ($tahun == date('Y')) ? 'selected' : '';
+                                ?>
+                                <option value="<?php echo $tahun; ?>" <?php echo $select ?>><?php echo $tahun ?></option> 
+                                <?php
+                            }
                             ?>
                         </select> 
                     </div>
@@ -204,13 +219,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="step-pane" data-step="3">
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Karoseri</label>
                     <div class="col-sm-8">
-                        <select name="fpt_karoid" id="fpt_karoid" class="form-control"  style="width: 20%;">
+                        <select name="fpt_karoid" id="fpt_karoid" class="form-control input-large" >
                             <option value="">PILIH</option>
                             <?php
                             if (count($karoseri) > 0) {
@@ -224,25 +236,48 @@
                         </select> 
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Aksesories</label>
-                    <div class="col-sm-8">
-                        <select name="fpt_aksid" id="fpt_aksid" class="form-control"  style="width: 20%;">
-                            <option value="">PILIH</option>
-                            <?php
-                            if (count($aksesoris) > 0) {
-                                foreach ($aksesoris as $value) {
-                                    ?>
-                                    <option value="<?php echo $value['aksid']; ?>"><?php echo $value['aks_nama'] ?></option> 
-                                    <?php
-                                }
-                            }
-                            ?>
-                        </select> 
+            </div>
+            <div class="step-pane" data-step="3">
+                <div id="detailtrans">
+                    <div class="table-header">
+                        DETAIL AKSESORIES TAMBAHAN
+                    </div>
+                    <div>
+                        <table id="simple-table-aksesories" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 2%">NO</th>
+                                    <th style="width: 15%">AKSESORIES</th>
+                                    <th style="width: 10%">HARGA</th>
+                                    <th style="width: 5%">ADD</th>
+                                    <th style="width: 5%">HAPUS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr  class="item-row">
+                                    <td class="dtlaksesories" style="text-align: center; vertical-align: middle;">
+                                        1
+                                    </td>
+                                    <td>
+                                        <input type="text"  autocomplete="off" onkeyup="acomplete('1')"  placeholder="NAMA AKSESORIES"
+                                               class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dtrans_aksname1"  name="dtrans_aksname[]" />
+                                        <input type="hidden"  id="dtrans_aksid1"  name="dtrans_aksid[]" />
+                                    </td>
+                                    <td>
+                                            <input type="text" id="dtrans_harga1" name="dtrans_harga[]"  placeholder="HARGA" class="form-control number upper" />
+                                    </td>
+                                    <td class="center" style="vertical-align: middle;">
+                                        <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>
+                                    </td>
+                                    <td  class="center" style="vertical-align: middle;">
+                                        <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-            
             <div class="step-pane" data-step="4">
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Metode Pembayaran</label>
@@ -265,7 +300,7 @@
                 <div class="form-group leasing" style="display:none;">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Leasing</label>
                     <div class="col-sm-8">
-                        <select name="fpt_leasid" id="fpt_leasid" class="form-control input-xxlarge" >
+                        <select name="fpt_leasid" id="fpt_leasid" class="form-control input-large" >
                             <option value="">PILIH</option>
                             <?php
                             if (count($leasing) > 0) {
@@ -281,18 +316,18 @@
                 </div>
                 <div class="form-group leasing" style="display:none;">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Jangka Waktu</label>
-                    <div class="col-sm-3">
-                        <div class="input-group col-sm-3">
-                             <input type="text" name="fpt_jangka" id="fpt_jangka" style="text-align: right;" maxlenght="3" value="0"  class="form-control number upper" />
+                    <div class="col-sm-1">
+                        <div class="input-group">
+                            <input type="text" name="fpt_jangka" id="fpt_jangka" style="text-align: right;" maxlenght="3" value="0"  class="form-control input-small number upper" />
                         </div>
-                    </div> <span align="left">BULAN</span>
+                    </div> <i> *BULAN</i>
                 </div>
                 <div class="space-2"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Harga Kosong</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                             <input type="text" name="fpt_hargako" id="fpt_hargako" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()"  class="form-control harga number upper" />
+                            <input type="text" name="fpt_hargako" id="fpt_hargako" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()"  class="form-control harga number upper" />
                         </div>
                     </div>
                 </div>
@@ -308,7 +343,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Asuransi</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                             <input type="text" name="fpt_asuransi" id="fpt_asuransi" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()"  class="form-control harga number upper" />
+                            <input type="text" name="fpt_asuransi" id="fpt_asuransi" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()"  class="form-control harga number upper" />
                         </div>
                     </div>
                 </div>
@@ -316,7 +351,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Aksesories</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                             <input type="text" name="fpt_aksesories" id="fpt_aksesories" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()" class="form-control harga number upper" />
+                            <input type="text" name="fpt_aksesories" id="fpt_aksesories" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()" class="form-control harga number upper" />
                         </div>
                     </div>
                 </div>
@@ -324,7 +359,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Karoseri</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                             <input type="text" name="fpt_karoseri" id="fpt_karoseri" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()"  class="form-control harga number upper" />
+                            <input type="text" name="fpt_karoseri" id="fpt_karoseri" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()"  class="form-control harga number upper" />
                         </div>
                     </div>
                 </div>
@@ -332,7 +367,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Administrasi</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                             <input type="text" name="fpt_administrasi" id="fpt_administrasi" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()"  class="form-control harga number upper" />
+                            <input type="text" name="fpt_administrasi" id="fpt_administrasi" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()"  class="form-control harga number upper" />
                         </div>
                     </div>
                 </div>
@@ -340,13 +375,13 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1"><b>TOTAL</b></label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                             <input type="text" name="fpt_total" id="fpt_total" style="text-align: right;" value="0" readonly  class="form-control number upper" />
+                            <input type="text" name="fpt_total" id="fpt_total" style="text-align: right;" value="0" readonly  class="form-control number upper" />
                         </div>
                     </div>
                 </div>
             </div>
 
-            
+
         </form>
     </div>
 
@@ -458,10 +493,10 @@
                 modelid : $("#fpt_modelid").val()
             },
             success: function(data) {
-                $('#fpt_ccoid').html('');
-                $('#fpt_ccoid').append('<option value="">PILIH</option>');
+                $('#fpt_warnaid').html('');
+                $('#fpt_warnaid').append('<option value="">PILIH</option>');
                 $.each(data, function(messageIndex, message) {
-                    $('#fpt_ccoid').append('<option value="' + message['warnaid'] + '">' + message['warna_deskripsi'] + '</option>');
+                    $('#fpt_warnaid').append('<option value="' + message['warnaid'] + '">' + message['warna_deskripsi'] + '</option>');
                 });
             }
         })
@@ -488,6 +523,86 @@
         }
     }
     
+    function acomplete(inc){
+        $("#dtrans_aksname" + inc).autocomplete({
+            minLength: 1,
+            source: function(req, add) {
+                $.ajax({
+                    url: "<?php echo site_url('transaksi_prospect/autoAksesories'); ?>",
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {
+                        param : $("#dtrans_aksname" + inc).val(),
+                        cbid : '<?php echo ses_cabang ; ?>'
+                    },
+                    success: function(data) {
+                        add(data.message);
+                    }
+                });
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                    .append("<a><strong>" + item.value + "</strong><br>" + item.desc + "</a>")
+                    .appendTo(ul);
+                };
+            },select: function(event, ui) {
+                var kode = ui.item.value;
+                $("input[name^=dtrans_aksname]").each(function() {
+                    var k = $(this).val().replace(/,/g, "");
+                    if (k == kode) {
+                        bootbox.dialog({
+                            message: "<span class='bigger-110'>Aksesories Ini Sudah dipilih</span>",
+                            buttons: 			
+                                {
+                                "danger" :
+                                    {
+                                    "label" : "Error !!",
+                                    "className" : "btn-sm btn-danger"
+                                }
+                            }
+                        });
+                        kode = '';
+                        valid = 1;
+                        return false;
+                    }
+                });
+                
+            }
+        });
+    }
+    
+    function Delete() {
+        var par = $(this).parent().parent(); //tr
+        if( $('.dtlaksesories').length > 1)
+        par.remove();
+    }
+    
+    function addRow() {
+        var inc = $('.dtlaksesories').length+1;
+        $(".item-row:last").after('<tr  class="item-row">\n\
+            <td class="dtlaksesories" style="text-align: center; vertical-align: middle;">\n\
+                '+(inc)+'\n\
+            </td>\n\
+            <td>\n\
+                <input type="text"  autocomplete="off" onkeyup="acomplete('+(inc)+')"  placeholder="NAMA AKSESORIES"\n\
+                       class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dtrans_aksname'+(inc)+'"  name="dtrans_aksname[]" />\n\
+                <input type="hidden"  id="dtrans_aksid1"  name="dtrans_aksid[]" />\n\
+            </td>\n\
+            <td>\n\
+                    <input type="text" id="dtrans_harga'+(inc)+'" name="dtrans_harga[]"  placeholder="HARGA" class="form-control number upper" />\n\
+            </td>\n\
+            <td class="center" style="vertical-align: middle;">\n\
+                <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>\n\
+            </td>\n\
+            <td  class="center" style="vertical-align: middle;">\n\
+                <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
+            </td>\n\
+        </tr>');
+         $(".btnDelete").bind("click", Delete);
+         numberOnly();
+    }
+    
 				
     $(this).ready(function() {
         //called when key is pressed in textbox
@@ -498,27 +613,7 @@
             }
         });
         
-        $( "#datepicker" ).datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: false,
-            isRTL:true,
-            yearRange: "c-30:c+3",
-            changeMonth: true,
-            changeYear: true,
-					
-            showButtonPanel: true,
-            beforeShow: function() {
-                //change button colors
-                var datepicker = $(this).datepicker( "widget" );
-                setTimeout(function(){
-                    var buttons = datepicker.find('.ui-datepicker-buttonpane')
-                    .find('button');
-                    buttons.eq(0).addClass('btn btn-xs');
-                    buttons.eq(1).addClass('btn btn-xs btn-success');
-                    buttons.wrapInner('<span class="bigger-110" />');
-                }, 0);
-            }
-        });
+        $( ".datepicker" ).datepicker();
                 
         $('#formAdd').submit(function() {
             $.ajax({

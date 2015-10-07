@@ -24,6 +24,7 @@ class Transaksi_Finance extends Application {
             'targetSave' => 'transaksi_finance/kasinSave',
             'trans' => 'KAS',
             'type' => 'I',
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang))
         );
         $this->load->view('addTrans', $this->data);
     }
@@ -62,6 +63,8 @@ class Transaksi_Finance extends Application {
             'targetSave' => 'transaksi_finance/bankinSave',
             'trans' => 'bnk',
             'type' => 'I',
+            'type' => 'I',
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang))
         );
         $this->load->view('addTrans', $this->data);
     }

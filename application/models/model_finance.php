@@ -17,6 +17,7 @@ class Model_Finance extends CI_Model {
      * */
     public function cListCostCenter($data) {
         $this->db->where('cc_cbid', $data['cbid']);
+        $this->db->order_by('cc_kode', 'ASC');
         $sql = $this->db->get('ms_cost_center');
         return $sql->result_array();
     }
