@@ -13,7 +13,7 @@ class Model_Prospect extends CI_Model {
     
     /* UTILITY FUNCTION */
     public function cListSinfo() {
-        $this->db->where('info_cbid', ses_cabang);
+        $this->db->where('smbinfo_cbid', ses_cabang);
         $query = $this->db->get('ms_sumber_info');
         return $query->result_array();
     }
