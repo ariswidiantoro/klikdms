@@ -22,14 +22,82 @@ class Transaksi_Finance extends Application {
         $this->data['etc'] = array(
             'judul' => 'Penerimaan Kas',
             'targetSave' => 'transaksi_finance/kasinSave',
-            ''
+            'trans' => 'kas',
+            'type' => 'I',
             );
-        $this->data['type'] = 'I';
-        $this->data['kota'] = $this->model_finance->getCC(array('cbid'));
+        $this->load->view('addTrans', $this->data);
+    }
+    
+    public function kasinSave(){
+        $mainVar = array(
+            'kst_trans' => 'KAS',
+            'kst_type' => 'I',
+            'kst_nomer' => $this->input->post('trans_nomer', TRUE),
+            'kst_noreff' => $this->input->post('trans_noreff', TRUE),
+            'kst_tgl' => $this->input->post('trans_tgl', TRUE),
+            'kst_coa' => $this->input->post('trans_coa', TRUE),
+            'kst_desc' => $this->input->post('trans_desc', TRUE),
+            'kst_debit' => $this->input->post('trans_debit', TRUE),
+            'kst_kredit' => $this->input->post('trans_kredit', TRUE),
+            'kst_createon' => $this->input->post('trans_nomer', TRUE),
+            'kst_createby' => $this->input->post('trans_nomer', TRUE),
+        );
+    }
+    
+    public function kasout() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Pengeluaran Kas',
+            'targetSave' => 'transaksi_finance/kasoutSave',
+            'trans' => 'kas',
+            'type' => 'O',
+            );
+        $this->load->view('addTrans', $this->data);
+    }
+    
+    public function bankin() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Penerimaan Bank',
+            'targetSave' => 'transaksi_finance/bankinSave',
+            'trans' => 'bnk',
+            'type' => 'I',
+            );
+        $this->load->view('addTrans', $this->data);
+    }
+    
+    public function bankout() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Pengeluaran Bank',
+            'targetSave' => 'transaksi_finance/bankoutSave',
+            'trans' => 'bnk',
+            'type' => 'O',
+            );
+        $this->load->view('addTrans', $this->data);
+    }
+    
+    public function cekin() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Penerimaan Kas',
+            'targetSave' => 'transaksi_finance/cekinSave',
+            'type' => 'I',
+            );
+        $this->load->view('addTrans', $this->data);
+    }
+    
+    public function cekout() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Penerimaan Kas',
+            'targetSave' => 'transaksi_finance/kasinSave',
+            'type' => 'I',
+            );
         $this->load->view('addTrans', $this->data);
     }
 
-    public function loadKasin() {
+    public function loadTrans() {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
         $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'kasid';

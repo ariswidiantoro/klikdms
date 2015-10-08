@@ -264,7 +264,7 @@ class Master_Finance extends Application {
         $this->hakAkses(1053);
         $this->load->view('dataBank', $this->data);
     }
-    
+
     public function addBank() {
         $this->hakAkses(1053);
         $this->load->view('addBank', $this->data);
@@ -300,9 +300,8 @@ class Master_Finance extends Application {
                 $edit = '<a href="#master_finance/editBank?id=' . $row->bankid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->bankid;
                 $responce->rows[$i]['cell'] = array(
-                            $row->bankid,
-                            $row->bank_name,
-                            $row->bank_desc,
+                    $row->bank_name,
+                    $row->bank_desc,
                     $edit, $hapus);
                 $i++;
             }
@@ -329,7 +328,7 @@ class Master_Finance extends Application {
     public function saveBank() {
         $name = $this->input->post('bank_name', TRUE);
         $desc = $this->input->post('bank_desc', TRUE);
-        if (empty($name)|| empty($desc)) {
+        if (empty($name) || empty($desc)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_finance->addBank(array('bank_name' => strtoupper($name),
@@ -376,22 +375,22 @@ class Master_Finance extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     /* Function Master Tipe Jurnal
      * @author Rossi 
      * 2015-09-07
      */
-    
+
     public function tipe_jurnal() {
         $this->hakAkses(1091);
         $this->load->view('dataTipeJurnal', $this->data);
     }
-    
+
     public function addTipeJurnal() {
         $this->hakAkses(1091);
         $this->load->view('addTipeJurnal', $this->data);
     }
-    
+
     public function loadTipeJurnal() {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
@@ -420,15 +419,15 @@ class Master_Finance extends Application {
                 $del = "hapusData('" . $row->tipeid . "', '" . $row->tipe_deskripsi . "')";
                 $vie = "viewData('" . $row->tipeid . "', '" . $row->tipe_deskripsi . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                $viewjurnal = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $viewjurnal = '<a href="javascript:void(0);" onclick="' . $del . '" title="View"><i class="ace-icon fa fa-book bigger-120 orange"></i>';
                 $edit = '<a href="#master_finance/editTipeJurnal?id=' . $row->tipeid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $setjurnal = '<a href="#master_finance/setTipeJurnal?id=' . $row->tipeid . '" title="Setting"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->tipeid;
                 $responce->rows[$i]['cell'] = array(
-                            $row->tipeid,
-                            $row->tipe_postcode,
-                            $row->tipe_deskripsi,
-                   $viewjurnal, $setjurnal, $edit);
+                    $row->tipeid,
+                    $row->tipe_postcode,
+                    $row->tipe_deskripsi,
+                    $viewjurnal, $setjurnal, $edit);
                 $i++;
             }
         echo json_encode($responce);
@@ -440,6 +439,72 @@ class Master_Finance extends Application {
         $data = $this->model_finance->getTipeJurnal($id);
         $this->data['data'] = $data;
         $this->load->view('editTipeJurnal', $this->data);
+    }
+
+    public function setTipeJurnal() {
+        $this->hakAkses(1091);
+        $id = array(
+            'id' => $this->input->get('id'),
+            'cbid' => ses_cabang
+        );
+        $temp = $this->model_finance->getDetailTipeJurnal($id);
+        $totalDtipe = $this->model_finance->getTotalDtipe($id);
+        if ($totalDtipe > 0) {
+            foreach ($temp as $stemp) {
+                $data['tipeid'] = $stemp['tipeid'];
+                $data['cbid'] = ses_cabang;
+                $data['coa'][$stemp['dtipe_constant']] = $stemp['dtipe_coa'];
+            }
+        } else {
+            $data['tipeid'] = $id['id'];
+            $data['cbid'] = ses_cabang;
+            $data['coa']['A'] = '0';
+            $data['coa']['B'] = '0';
+            $data['coa']['C'] = '0';
+            $data['coa']['D'] = '0';
+            $data['coa']['E'] = '0';
+            $data['coa']['F'] = '0';
+            $data['coa']['G'] = '0';
+            $data['coa']['H'] = '0';
+            $data['coa']['I'] = '0';
+            $data['coa']['J'] = '0';
+            $data['coa']['K'] = '0';
+            $data['coa']['L'] = '0';
+            $data['coa']['M'] = '0';
+            $data['coa']['N'] = '0';
+            $data['coa']['O'] = '0';
+            $data['coa']['P'] = '0';
+        }
+        $this->data['data'] = $data;
+        $this->load->view('setTipeJurnal', $this->data);
+    }
+
+    public function saveSetTipeJurnal() {
+        $tipeid = $this->input->post('tipeid', TRUE);
+        $cbid = $this->input->post('cbid', TRUE);
+        $const = $this->input->post('const', TRUE);
+        $coa = $this->input->post('dtipe', TRUE);
+
+        if (empty($tipeid) || empty($cbid)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI ');
+        } else {
+            if (count($coa) > 0) {
+                $save = $this->model_finance->setTipeJurnal(array(
+                    'tipeid' => strtoupper($tipeid),
+                    'cbid' => strtoupper($cbid),
+                    'const' => $const,
+                    'coa' => $coa
+                        ));
+            } else {
+                $save['status'] = FALSE;
+            }
+            if ($save['status'] == TRUE) {
+                $hasil = $this->sukses($save['msg']);
+            } else {
+                $hasil = $this->error($save['msg']);
+            }
+        }
+        echo json_encode($hasil);
     }
 
     public function getTipeJurnal() {
@@ -454,13 +519,13 @@ class Master_Finance extends Application {
     public function saveTipeJurnal() {
         $post = $this->input->post('tipe_postcode', TRUE);
         $desc = $this->input->post('tipe_deskripsi', TRUE);
-        if ( empty($desc)|| empty($post)) {
-            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI '.$post.' '.$desc);
+        if (empty($desc) || empty($post)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI ' . $post . ' ' . $desc);
         } else {
             $save = $this->model_finance->addTipeJurnal(array(
                 'tipe_postcode' => strtoupper($post),
                 'tipe_deskripsi' => strtoupper($desc),
-                ));
+                    ));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -480,7 +545,7 @@ class Master_Finance extends Application {
             $save = $this->model_finance->updateTipeJurnal(array(
                 'tipe_deskripsi' => strtoupper($desc),
                 'tipe_postcode' => strtoupper($post)
-                ), $id);
+                    ), $id);
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -503,8 +568,7 @@ class Master_Finance extends Application {
         }
         echo json_encode($hasil);
     }
-    
-    
+
 }
 
 ?>
