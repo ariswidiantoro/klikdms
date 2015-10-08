@@ -80,18 +80,19 @@ class Utility_Sparepart extends Application {
             foreach ($query as $row) {
                 $batal = '-';
                 if ($row->spp_faktur == 0 && $row->spp_status == 0) {
-                    $batal = '<a href="javascript:;" onclick="batal(\'' . $row->sppid . '\',' . $i . ')" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                    $batal = '<a href="javascript:;" onclick="batal(\'' . $row->sppid . '\',\'' . $row->spp_jenis . '\')" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 }
-                $print = '<a href="javascript:;" onclick="print(\'' . $row->sppid . '\',' . $i . ')" title="Print"><i class="ace-icon glyphicon glyphicon-print bigger-120"></i>';
+                $print = '<a href="javascript:;" onclick="print(\'' . $row->sppid . '\',\'' . $row->spp_jenis . '\')" title="Print"><i class="ace-icon glyphicon glyphicon-print bigger-120"></i>';
                 $responce->rows[$i]['id'] = $row->sppid;
                 $responce->rows[$i]['cell'] = array(
                     $row->spp_noslip,
+                    $row->spp_jenis,
                     date('d-m-Y', strtotime($row->spp_tgl)),
                     $row->pel_nama,
                     $row->wo_nomer,
                     number_format($row->spp_total, 2),
                     '<input type="text" autocomplete="off" id="alasan' . $row->sppid . '" name="alasan' . $row->sppid . '" 
-                     class="form-control col-xs-10 col-sm-10" style="width:100%" />',
+                     class="col-xs-10 col-sm-5" style="width:100%" />',
                     $batal,
                     $print
                 );
@@ -228,7 +229,8 @@ class Utility_Sparepart extends Application {
     function batalSupply() {
         $sppid = strtoupper($this->input->post('id'));
         $alasan = strtoupper($this->input->post('alasan'));
-        echo json_encode($this->model_util_sparepart->batalSupply($sppid, $alasan));
+        $jenis = $this->input->post('jenis');
+        echo json_encode($this->model_util_sparepart->batalSupply($sppid, $alasan,$jenis));
     }
 
     function updatePrintFaktur() {

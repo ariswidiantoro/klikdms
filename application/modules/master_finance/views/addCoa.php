@@ -9,20 +9,20 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode COA</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="30" style='text-transform:uppercase' name="coa_kode" id="coa_kode" class="col-xs-10 col-sm-5" />
+            <input type="text" required="required" maxlength="30" name="coa_kode" id="coa_kode" class="col-xs-10 col-sm-5 upper req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsi</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="50" style='text-transform:uppercase' name="coa_desc" id="coa_desc"  class="ace col-xs-10 col-sm-10" />
+            <input type="text" required="required" maxlength="50" name="coa_desc" id="coa_desc"  class="ace col-xs-10 col-sm-10 upper req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tipe</label>
         <div class="col-sm-8">
-            <select class="form-control" id="coa_type" name="coa_type" style="width: 120px;">
-                <option value=""></option>
+            <select class="ace col-xs-10 col-sm-5 req" required id="coa_type" name="coa_type" style="width: 120px;">
+                <option value="">Pilih</option>
                 <option value="AL">Asset</option>
                 <option value="LI">Liability</option>    
                 <option value="EX">Expend</option>    
@@ -33,12 +33,30 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Level</label>
         <div class="col-sm-8">
-            <select class="form-control" id="coa_level" name="coa_level" style="width: 120px;">
-                <option value=""></option>
+            <select class="ace col-xs-10 col-sm-5 req" id="coa_level" name="coa_level" style="width: 120px;">
+                <option value="">Pilih</option>
                 <option value="1">1</option>
                 <option value="2">2</option>    
                 <option value="3">3</option>    
             </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>
+        <div class="col-sm-8">
+            <label>
+                <input class="ace" id="rugi_laba" value="1" type="checkbox" name="rugi_laba">
+                <span class="lbl"> Masuk Rugi Laba</span>
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>
+        <div class="col-sm-8">
+            <label>
+                <input class="ace" id="neraca" value="1" type="checkbox" name="neraca">
+                <span class="lbl"> Masuk Neraca</span>
+            </label>
         </div>
     </div>
     <div class="clearfix form-actions">
