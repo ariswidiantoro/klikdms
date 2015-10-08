@@ -89,11 +89,18 @@ class Model_Trspart extends CI_Model {
             $data['spp_noslip'] = NUM_SUPPLY_NOMER . $tahun . $noslip;
             // simpan data supply
             $this->db->INSERT('spa_supply', $data);
-            foreach ($detail as $value) {
-                $value['dsupp_sppid'] = NUM_SUPPLY_PK . $tahun . $id;
-                $insert = $this->db->INSERT('spa_supply_det', $value);
-                if (!$insert) {
-                    throw new Exception($this->db->_error_message());
+            if ($data['spp_jenis'] == 'so') {
+                foreach ($detail as $value) {
+                    $value['so_sppid'] = NUM_SUPPLY_PK . $tahun . $id;
+                    $insert = $this->db->INSERT('spa_supply_so', $value);
+                }
+            } else {
+                foreach ($detail as $value) {
+                    $value['dsupp_sppid'] = NUM_SUPPLY_PK . $tahun . $id;
+                    $insert = $this->db->INSERT('spa_supply_det', $value);
+                    if (!$insert) {
+                        throw new Exception($this->db->_error_message());
+                    }
                 }
             }
             if ($this->db->trans_status() === TRUE) {
@@ -245,11 +252,20 @@ class Model_Trspart extends CI_Model {
      * @return null
      */
     function getReturBeli($rbid) {
-        $sql = $this->db->query("SELECT rb_alasan,rb_total,trbr_faktur,rb_tgl,trbr_pay_method,trbr_supid,trbr_credit_term,sup_nama FROM spa_retbeli LEFT JOIN spa_trbr ON rb_trbrid = trbrid LEFT JOIN ms_supplier ON supid = trbr_supid WHERE rbid = '$rbid'");
+        $sql = $this->db->query("SELECT rb_alasan,rb_total,trbr_faktur,rb_tgl,trbr_pay_method,trbr_supid,trbr_kredit_term,sup_nama FROM spa_retbeli LEFT JOIN spa_trbr ON rb_trbrid = trbrid LEFT JOIN ms_supplier ON supid = trbr_supid WHERE rbid = '$rbid'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
         return null;
+    }
+
+    function cekFakturTrbr($faktur) {
+        $sql = $this->db->query("SELECT * FROM spa_trbr WHERE trbr_faktur = '$faktur' AND trbr_cbid = '" . ses_cabang . "'");
+        log_message('error', 'AAAAAAAAAAAAAA ' . $this->db->last_query());
+        if ($sql->num_rows() > 0) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -273,7 +289,7 @@ class Model_Trspart extends CI_Model {
      * @return null
      */
     function getSupplySlip($sppid) {
-        $sql = $this->db->query("SELECT sppid,spp_noslip,spp_print,spp_status,spp_tgl,spp_cetak_harga,spp_tgl_batal, spp_total,pel_nama, wo_nomer "
+        $sql = $this->db->query("SELECT spp_alasan_batal,sppid,spp_noslip,spp_print,spp_status,spp_tgl,spp_cetak_harga,spp_tgl_batal, spp_total,pel_nama, wo_nomer "
                 . "FROM spa_supply LEFT JOIN svc_wo ON woid = spp_woid LEFT JOIN "
                 . "ms_pelanggan ON pelid = spp_pelid WHERE sppid = '$sppid'");
         if ($sql->num_rows() > 0) {
@@ -325,6 +341,13 @@ class Model_Trspart extends CI_Model {
         }
         return null;
     }
+    function getSupplySlipSo($sppid) {
+        $sql = $this->db->query("SELECT * FROM spa_supply_so WHERE so_sppid = '$sppid'");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
 
     /**
      * 
@@ -369,6 +392,16 @@ class Model_Trspart extends CI_Model {
                 . " LEFT JOIN spa_rak ON rakid = inve_rakid LEFT JOIN spa_supply"
                 . " ON sppid = dsupp_sppid LEFT JOIN svc_wo ON woid = spp_woid "
                 . "WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "' AND spp_status = 0 ORDER BY spp_jenis,inve_kode ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    function getSupplySlipSoByWo($woNomer) {
+        $sql = $this->db->query("SELECT so_deskripsi,spp_jenis, so_harga FROM spa_supply_so  LEFT JOIN spa_supply"
+                . " ON sppid = so_sppid LEFT JOIN svc_wo ON woid = spp_woid "
+                . "WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "' AND spp_status = 0 ORDER BY spp_jenis,so_deskripsi ");
+       log_message('error', 'AAAAAAA '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }

@@ -48,6 +48,20 @@ class Model_Lap_Service extends CI_Model {
         return null;
     }
 
+    public function getFakturBelumDicetak($tgl, $cabang) {
+        $query = $this->db->query("SELECT wo_print,wo_km,pel_alamat, wo_nomer,kr_nama, wo_tgl,"
+                . " wo_numerator, wo_inv_status,pel_hp,pel_telpon,"
+                . " pel_nama, msc_nopol, msc_norangka, msc_nomesin FROM svc_invoice LEFT JOIN svc_wo ON woid = inv_woid LEFT"
+                . " JOIN ms_car ON mscid = wo_mscid LEFT JOIN ms_pelanggan ON pelid = wo_pelid "
+                . " LEFT JOIN ms_karyawan ON krid = wo_sa WHERE inv_tgl <= '$tgl' AND (inv_tgl_tagihan IS NULL OR (inv_tagihan = 1"
+                . " AND inv_tgl_tagihan > '$tgl') OR inv_tagihan = 0)  AND inv_cbid = '$cabang' ORDER BY wo_nomer");
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+
+        return null;
+    }
+
     /**
      * 
      * @param Date $start
@@ -108,29 +122,29 @@ class Model_Lap_Service extends CI_Model {
             case 'sa':
                 $sa = '';
                 if ($param['sa'] != 'all') {
-                    $sa = " AND wo_sa = '".$param['sa']."'";
+                    $sa = " AND wo_sa = '" . $param['sa'] . "'";
                 }
                 $wh = " AND inv_tgl_tagihan BETWEEN '$start' AND '$end' $sa AND inv_status = '0' AND inv_tagihan = 1";
                 break;
             case 'checker':
                 $sa = '';
                 if ($param['checker'] != 'all') {
-                    $sa = " AND inv_fchecker = '".$param['checker']."'";
+                    $sa = " AND inv_fchecker = '" . $param['checker'] . "'";
                 }
                 $wh = " AND inv_tgl_tagihan BETWEEN '$start' AND '$end' $sa AND inv_status = '0' AND inv_tagihan = 1";
                 break;
             case 'inextern':
                 $sa = '';
                 if ($param['inextern'] != 'all') {
-                    $sa = " AND inv_inextern = '".$param['inextern']."'";
+                    $sa = " AND inv_inextern = '" . $param['inextern'] . "'";
                 }
                 $wh = " AND inv_tgl_tagihan BETWEEN '$start' AND '$end' $sa AND inv_status = '0' AND inv_tagihan = 1";
                 break;
         }
         $query = $this->db->query("SELECT * FROM svc_invoice LEFT JOIN svc_wo ON inv_woid = woid LEFT"
                 . " JOIN ms_car ON mscid = wo_mscid LEFT JOIN ms_pelanggan ON pelid = wo_pelid "
-                . " WHERE inv_cbid = '$cabang' $wh ORDER BY wo_nomer");
-        log_message('error', 'AAAA '.$this->db->last_query());
+                . " LEFT JOIN ms_car_type ON ctyid = msc_ctyid WHERE inv_cbid = '$cabang' $wh ORDER BY wo_nomer");
+//        log_message('error', 'AAAA '.$this->db->last_query());
         if ($query->num_rows() > 0) {
             return $query->result_array();
         }

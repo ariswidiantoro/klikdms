@@ -12,6 +12,22 @@ if (!defined('BASEPATH'))
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
+        <ul class="list-unstyled spaced">
+            <li>
+                <i class="ace-icon glyphicon glyphicon-book bigger-110"></i>
+                Menambahkan Form Persetujuan Transaksi (FPT)
+            </li>
+
+            <li>
+                <i class="ace-icon glyphicon glyphicon-pencil bigger-110"></i>
+                Mengubah data prospect
+            </li>
+
+            <li>
+                <i class="ace-icon glyphicon glyphicon-list bigger-110"></i>
+                Melihat detail data prospect 
+            </li>
+        </ul>
     </div>
 </div>
 <script type="text/javascript">
@@ -31,8 +47,8 @@ if (!defined('BASEPATH'))
                         id: id
                     },
                     success: function(data) {
-                       $("#result").html(data).show().fadeIn("slow");
-                       $("#grid-table").trigger("reloadGrid");
+                        $("#result").html(data).show().fadeIn("slow");
+                        $("#grid-table").trigger("reloadGrid");
                     }
                 });
             }
@@ -44,17 +60,17 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('transaksi_prospect/loadProspect') ?>',     
             mtype : "post",             
             datatype: "json",           
-            colNames:['Aksi','Kode','Tgl', 'Nama','Alamat','HP','Telpon','Unit', 'Qty'],       
+            colNames:['','', '' ,'Nama','Alamat','HP','Salesman','Unit', 'Qty'],       
             colModel:[
-                {name:'aksi',index:'detail', width:40, align:"center"},
-                {name:'prosid',index:'prosid', width:40, align:"left"},
-                {name:'pros_createon',index:'pros_createon', width:30, align:"left"},
-                {name:'pros_nama',index:'pel_nama', width:80, align:"left"},
-                {name:'pros_alamat',index:'pel_alamat', width:100, align:"left"},
+                {name:'fpt',index:'fpt', width:14, align:"center"},
+                {name:'edit',index:'edit', width:14, align:"center"},
+                {name:'detail',index:'detail', width:14, align:"center"},
+                {name:'pros_nama',index:'pros_nama', width:80, align:"left"},
+                {name:'pros_alamat',index:'pros_alamat', width:100, align:"left"},
                 {name:'pros_hp',index:'pel_hp', width:30, align:"left"},
-                {name:'pros_telpon',index:'pel_telpon', width:30, align:"left"},
-                {name:'pros_unit_type',index:'pros_unit_type', width:130, align:"left"},
-                {name:'pros_qty',index:'pros_qty', width:20, align:"left"},
+                {name:'pros_sales',index:'pros_sales', width:80, align:"left"},
+                {name:'cty_deskripsi',index:'cty_deskripsi', width:130, align:"left"},
+                {name:'car_qty',index:'car_qty', width:20, align:"left"},
             ],
             rowNum:10,
             height : 300,
@@ -84,4 +100,4 @@ if (!defined('BASEPATH'))
     
 
 </script> 
-										
+

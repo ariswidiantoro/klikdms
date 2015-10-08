@@ -1,8 +1,4 @@
 <style type="text/css">
-    input:required {
-        box-shadow: 4px 4px 20px rgba(200, 0, 0, 0.85);
-
-    }
     .ui-autocomplete {
         max-height: 200px;
         overflow-y: auto;

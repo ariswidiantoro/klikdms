@@ -5,13 +5,24 @@ if (!defined('BASEPATH'))
 <div id="result"></div>
 <div class="row">
     <div class="col-xs-12">
-        <p>
-            <a href="#transaksi_prospect/addProspect" class="btn btn-sm btn-primary">
-                <i class="ace-icon fa fa-plus"></i>
-                Tambah Prospect</a>
-        </p>
         <table id="grid-table"></table>
         <div id="pager"></div>
+        <ul class="list-unstyled spaced">
+            <li>
+                <i class="ace-icon glyphicon glyphicon-check bigger-110"></i>
+                Validasi Pengajuan FPT
+            </li>
+
+            <li>
+                <i class="ace-icon glyphicon glyphicon-remove bigger-110"></i>
+                Tolak Pengajuan FPT
+            </li>
+
+            <li>
+                <i class="ace-icon glyphicon glyphicon-list bigger-110"></i>
+                Melihat detail FPT
+            </li>
+        </ul>
     </div>
 </div>
 <script type="text/javascript">
@@ -20,19 +31,38 @@ if (!defined('BASEPATH'))
         //inline scripts related to this page
     });  
     
-    function hapusData(id, kode) {
-        bootbox.confirm("Yakin Hapus Data "+kode+" ?", function(result) {
+    function validasiData(id, kode) {
+        bootbox.confirm("Yakin validasi data "+kode+" ?", function(result) {
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('transaksi_prospect/deleteProspect'); ?>',
+                    url: '<?php echo site_url('transaksi_prospect/saveValidasiFPT'); ?>',
                     dataType: "json",
                     data: {
                         id: id
                     },
                     success: function(data) {
-                       $("#result").html(data).show().fadeIn("slow");
-                       $("#grid-table").trigger("reloadGrid");
+                        $("#result").html(data).show().fadeIn("slow");
+                        $("#grid-table").trigger("reloadGrid");
+                    }
+                });
+            }
+        });
+    }
+    
+    function tolakData(id, kode) {
+        bootbox.confirm("Anda tidak menyetujui data "+kode+" ?", function(result) {
+            if(result) {
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo site_url('transaksi_prospect/saveTolakFPT'); ?>',
+                    dataType: "json",
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        $("#result").html(data).show().fadeIn("slow");
+                        $("#grid-table").trigger("reloadGrid");
                     }
                 });
             }
@@ -44,19 +74,17 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('transaksi_prospect/loadProspect') ?>',     
             mtype : "post",             
             datatype: "json",           
-            colNames:['Kode','Tgl', 'Nama','Alamat','HP','Telpon','Unit', 'Qty', 'Detail', 'Edit', 'Hapus'],       
+            colNames:['','', '' ,'Nama','Alamat','HP','Salesman','Unit', 'Qty'],       
             colModel:[
-                {name:'prosid',index:'prosid', width:40, align:"left"},
-                {name:'pros_createon',index:'pros_createon', width:25, align:"left"},
-                {name:'pros_nama',index:'pel_nama', width:80, align:"left"},
-                {name:'pros_alamat',index:'pel_alamat', width:100, align:"left"},
+                {name:'fpt',index:'fpt', width:14, align:"center"},
+                {name:'edit',index:'edit', width:14, align:"center"},
+                {name:'detail',index:'detail', width:14, align:"center"},
+                {name:'pros_nama',index:'pros_nama', width:80, align:"left"},
+                {name:'pros_alamat',index:'pros_alamat', width:100, align:"left"},
                 {name:'pros_hp',index:'pel_hp', width:30, align:"left"},
-                {name:'pros_telpon',index:'pel_telpon', width:30, align:"left"},
-                {name:'pros_unit_type',index:'pros_unit_type', width:30, align:"left"},
-                {name:'pros_qty',index:'pros_qty', width:30, align:"left"},
-                {name:'detail',index:'detail', width:20, align:"center"},
-                {name:'edit',index:'edit', width:20, align:"center"},
-                {name:'hapus',index:'hapus', width:20, align:"center"},
+                {name:'pros_sales',index:'pros_sales', width:80, align:"left"},
+                {name:'cty_deskripsi',index:'cty_deskripsi', width:130, align:"left"},
+                {name:'car_qty',index:'car_qty', width:20, align:"left"},
             ],
             rowNum:10,
             height : 300,
@@ -67,7 +95,7 @@ if (!defined('BASEPATH'))
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Prospect"
+            caption:"Daftar FPT"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
@@ -86,4 +114,4 @@ if (!defined('BASEPATH'))
     
 
 </script> 
-										
+

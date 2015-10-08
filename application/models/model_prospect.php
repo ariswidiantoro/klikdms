@@ -9,7 +9,27 @@ class Model_Prospect extends CI_Model {
 
     public function __construct() {
         parent::__construct();
-    } 
+    }
+
+    /* UTILITY FUNCTION */
+
+    public function cListSinfo() {
+        $this->db->where('smbinfo_cbid', ses_cabang);
+        $query = $this->db->get('ms_sumber_info');
+        return $query->result_array();
+    }
+
+    public function cListKontak() {
+        $this->db->where('kontak_cbid', ses_cabang);
+        $query = $this->db->get('ms_kontak_awal');
+        return $query->result_array();
+    }
+
+    public function cListBisnis() {
+        $this->db->where('bisnis_cbid', ses_cabang);
+        $query = $this->db->get('ms_bisnis');
+        return $query->result_array();
+    }
 
     /** TRANSAKSI PROSPECT
      * @author Rossi Erl <rosoningati@gmail.com>
@@ -26,20 +46,25 @@ class Model_Prospect extends CI_Model {
 
     public function getDataProspect($start, $limit, $sidx, $sord, $where) {
 
-        /* FILTER BY SUPERVISOR */
-        if (ses_jabatan == 'supervisor') {
-            $filter = $this->getSalesBySpv(array('krid' => ses_krid, 'cbid' => ses_cabang));
-        } else if (ses_jabatan == 'sales') {
-            $filter = array(ses_krid);
-        }
+        /* FILTER BY SUPERVISOR 
+          if (ses_jabatan == 'supervisor') {
+          $filter = $this->getSalesBySpv(array('krid' => ses_krid, 'cbid' => ses_cabang));
+          } else if (ses_jabatan == 'sales') {
+          $filter = array(ses_krid);
+          }
+         */
 
-        $this->db->select('*');
+
+        $this->db->select('prosid, pros_kode, pros_cbid, 
+            pros_salesman, pros_nama, pros_alamat, pros_hp, pros_telpon, car_qty,
+            cty_deskripsi, kr_nama');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('pros_data');
-        $this->db->join('pros_data_car','car_prosid=prosid', 'left');
-        $this->db->join('ms_car_type','ctyid=car_ctyid', 'left');
+        $this->db->join('pros_data_car', 'car_prosid=prosid', 'left');
+        $this->db->join('ms_car_type', 'ctyid=car_ctyid', 'left');
+        $this->db->join('ms_karyawan', 'krid=pros_salesman', 'left');
         $this->db->where('pros_cbid', ses_cabang);
         if (isset($filter)) {
             $this->db->where_in('pros_sales', $filter);
@@ -53,29 +78,29 @@ class Model_Prospect extends CI_Model {
         return null;
     }
 
-    public function addProspect($data = array()) {
+    public function addProspect($data = array(), $cars = array()) {
         $this->db->trans_begin();
         try {
-            /* PROSID PRIMARY KEY */
-            $code = $this->newCode(array('type' => 'PC'));
-            if ($code['status'] == FALSE) {
-                $warn = "FAILED GENERATE CODE : PROSPECT";
-                throw new Exception($warn);
-            }
-            /* PROS KODE CABANG */
-            $codeb = $this->newCode(array(
-                'type' => 'PC', 
-                'cbid' => ses_cabang));
-            if ($codeb['status'] == FALSE) {
-                $warn = "FAILED GENERATE CODE : PROSPECT";
-                throw new Exception($warn);
-            }
+            $tahun = date('y');
+            $data['prosid'] = NUM_PROSPECT . $tahun . sprintf("%08s", $this->getCounter(NUM_PROSPECT . $tahun));
+            $data['pros_kode'] = NUM_PROSPECT . $tahun . sprintf("%06s", $this->getCounterCabang(NUM_PROSPECT . $tahun));
 
-            $data['prosid'] = $code['code'];
-            $data['pros_kode'] = $codeb['code'];
             if ($this->db->insert('pros_data', $data) == FALSE) {
                 $warn = "FAILED INSERTING DATA : PROSPECT";
                 throw new Exception($warn);
+            }
+
+            if (count($cars) > 0) {
+                for ($i = 0; $i <= count($cars['ctyid']) - 1; $i++) {
+                    if ($this->db->insert('pros_data_car', array(
+                                'car_prosid' => $data['prosid'],
+                                'car_ctyid' => $cars['ctyid'][$i],
+                                'car_qty' => $cars['qty'][$i],
+                            )) == FALSE) {
+                        $warn = "FAILED INSERTING DATA CARS";
+                        throw new Exception($warn);
+                    }
+                }
             }
 
             if ($this->db->trans_status() == TRUE) {
@@ -110,10 +135,54 @@ class Model_Prospect extends CI_Model {
 
     public function getProspect($data) {
         $query = $this->db->query("
-            SELECT * FROM pros_data 
+            SELECT
+                prosid,
+                pros_kode,
+                pros_nama,
+                pros_alamat,
+                pros_createon,
+                pros_createby,
+                pros_cbid,
+                pros_hp,
+                pros_gender,
+                pros_fax,
+                pros_telpon,
+                pros_email,
+                pros_noid,
+                pros_npwp,
+                pros_tempat_lahir,
+                pros_tgl_lahir,
+                pros_type,
+                pros_keterangan,
+                kr_nama,
+                kota_deskripsi,
+                prop_deskripsi,
+                area_deskripsi,
+                kontak_deskripsi,
+                smbinfo_deskripsi, 
+                bisnis_deskripsi
+            FROM
+                pros_data
             LEFT JOIN ms_karyawan ON krid = pros_salesman
+            LEFT JOIN ms_area ON areaid = pros_area
+            LEFT JOIN ms_kota ON kotaid = pros_kotaid
+            LEFT JOIN ms_propinsi ON propid = kota_propid
+            LEFT JOIN ms_sumber_info ON smbinfoid = pros_sumber_info
+            LEFT JOIN ms_kontak_awal ON kontakid = pros_kontak_awal
+            LEFT JOIN ms_bisnis ON bisnisid = pros_bisnis
             WHERE prosid = '" . $data . "'  ");
         return $query->row_array();
+    }
+    
+    public function getDetailCars($data) {
+        $query = "SELECT merk_deskripsi, model_deskripsi, cty_deskripsi, car_qty 
+            FROM pros_data_car
+            LEFT JOIN ms_car_type ON ctyid = car_ctyid
+            LEFT JOIN ms_car_model ON modelid = cty_modelid
+            LEFT JOIN ms_car_merk ON merkid = model_merkid
+            WHERE car_prosid = '" . $data . "'";
+        $sql = $this->db->query($query);
+        return $sql->result_array();
     }
 
     /**
@@ -219,19 +288,19 @@ class Model_Prospect extends CI_Model {
 
     public function getAgenda($data) {
         $query = $this->db->query("
-            SELECT * FROM pros_agenda WHERE agenid = " . $data );
+            SELECT * FROM pros_agenda WHERE agenid = " . $data);
         return $query->row_array();
     }
-    
+
     /** AREA SALES
      * @author Rossi Erl
      * 2015-09-03
      */
     public function getTotalArea($where) {
-        $wh = "WHERE area_cbid = '".ses_cabang."'";
+        $wh = "WHERE area_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
             $wh = " AND " . $where;
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_area ".$wh);
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_area " . $wh);
         return $sql->row()->total;
     }
 
@@ -241,8 +310,8 @@ class Model_Prospect extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_area');
-        $this->db->join('ms_kota','kotaid = area_kotaid', 'left');
-        $this->db->join('ms_propinsi','propid = kota_propid', 'left');
+        $this->db->join('ms_kota', 'kotaid = area_kotaid', 'left');
+        $this->db->join('ms_propinsi', 'propid = kota_propid', 'left');
         $this->db->where('area_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
@@ -287,17 +356,16 @@ class Model_Prospect extends CI_Model {
             return FALSE;
         }
     }
-    
-        
+
     /** SUMBER INFORMASI
      * @author Rossi Erl
      * 2015-09-03
      */
     public function getTotalSmbInfo($where) {
-        $wh = "WHERE smbinfo_cbid = '".ses_cabang."'";
+        $wh = "WHERE smbinfo_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
             $wh = " AND " . $where;
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_sumber_info ".$wh);
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_sumber_info " . $wh);
         return $sql->row()->total;
     }
 
@@ -348,16 +416,16 @@ class Model_Prospect extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /** KONTAK AWAL
      * @author Rossi Erl
      * 2015-09-03
      */
     public function getTotalKontakAwal($where) {
-        $wh = "WHERE kontak_cbid = '".ses_cabang."'";
+        $wh = "WHERE kontak_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
             $wh = " AND " . $where;
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_kontak_awal ".$wh);
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_kontak_awal " . $wh);
         return $sql->row()->total;
     }
 
@@ -408,16 +476,16 @@ class Model_Prospect extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /** BISNIS
      * @author Rossi Erl
      * 2015-09-03
      */
     public function getTotalBisnis($where) {
-        $wh = "WHERE bisnis_cbid = '".ses_cabang."'";
+        $wh = "WHERE bisnis_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
             $wh = " AND " . $where;
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_bisnis ".$wh);
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_bisnis " . $wh);
         return $sql->row()->total;
     }
 
@@ -469,7 +537,20 @@ class Model_Prospect extends CI_Model {
         }
     }
     
-    
+    /* AUTO COMPLETE */
+    public function autoAksesories($data) {
+        $sql = $this->db->query("
+            SELECT aksid, aks_nama, aks_descrip, aks_harga, aks_status
+            FROM ms_aksesories WHERE (aks_nama LIKE '%".$data['param']."%' OR aks_descrip LIKE '%".$data['param']."%') 
+                AND aks_cbid = '".$data['cbid']."'
+            ORDER BY aks_nama ASC LIMIT 15 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
 }
 
 ?>

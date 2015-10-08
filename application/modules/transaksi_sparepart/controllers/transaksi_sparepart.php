@@ -28,6 +28,7 @@ class Transaksi_Sparepart extends Application {
         $this->hakAkses(61);
         $this->load->view('returPenjualan', $this->data);
     }
+
     public function claimBarang() {
         $this->hakAkses(63);
         $this->load->view('claimBarang', $this->data);
@@ -37,6 +38,7 @@ class Transaksi_Sparepart extends Application {
         $this->hakAkses(60);
         $this->load->view('fakturSparepart', $this->data);
     }
+
     public function adjustmentStock() {
         $this->hakAkses(62);
         $this->load->view('adjustmentStock', $this->data);
@@ -61,6 +63,11 @@ class Transaksi_Sparepart extends Application {
             $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
         }
         echo json_encode($data);
+    }
+
+    function cekFakturTrbr() {
+        $param = strtoupper($this->input->post('param'));
+        echo json_encode($this->model_trspart->cekFakturTrbr($param));
     }
 
     function jsonFakturJual() {
@@ -181,7 +188,7 @@ class Transaksi_Sparepart extends Application {
                 'spp_createon' => date('Y-m-d H:i:s'),
                 'spp_createby' => ses_username,
                 'spp_pelid' => $this->input->post('spp_pelid'),
-                'spp_woid' => $this->input->post('spp_pelid'),
+                'spp_woid' => $this->input->post('spp_woid'),
                 'spp_cetak_harga' => $cetakHarga,
                 'spp_pay_method' => $this->input->post('spp_pay_method'),
                 'spp_kredit_term' => $term,
@@ -193,30 +200,52 @@ class Transaksi_Sparepart extends Application {
             if ($jenis != 'ps') {
                 $data['spp_woid'] = $this->input->post('spp_woid');
             }
-            $dsupp_inveid = $this->input->post('dsupp_inveid');
-            $dsupp_qty = $this->input->post('dsupp_qty');
-            $dsupp_harga = $this->input->post('dsupp_harga');
-            $dsupp_hpp = $this->input->post('dsupp_hpp');
-            $dsupp_diskon = $this->input->post('dsupp_diskon');
-            $dsupp_subtotal = $this->input->post('dsupp_subtotal');
-            // get array spare part from table 
-            $detail = array();
-            $totalHpp = 0;
-            for ($i = 0; $i < count($dsupp_inveid); $i++) {
-                $subTotalHpp = numeric($dsupp_hpp[$i] * $dsupp_qty[$i]);
-                $totalHpp += $subTotalHpp;
-                $detail[] = array(
-                    'dsupp_inveid' => $dsupp_inveid[$i],
-                    'dsupp_qty' => $dsupp_qty[$i],
-                    'dsupp_hpp' => $dsupp_hpp[$i],
-                    'dsupp_harga' => numeric($dsupp_harga[$i]),
-                    'dsupp_diskon' => $dsupp_diskon[$i],
-                    'dsupp_subtotal' => numeric($dsupp_subtotal[$i]),
-                    'dsupp_subtotal_hpp' => $subTotalHpp,
-                );
+            if ($jenis != 'so') {
+                $dsupp_inveid = $this->input->post('dsupp_inveid');
+                $dsupp_qty = $this->input->post('dsupp_qty');
+                $dsupp_harga = $this->input->post('dsupp_harga');
+                $dsupp_hpp = $this->input->post('dsupp_hpp');
+                $dsupp_diskon = $this->input->post('dsupp_diskon');
+                $dsupp_subtotal = $this->input->post('dsupp_subtotal');
+                // get array spare part from table 
+                $detail = array();
+                $totalHpp = 0;
+                for ($i = 0; $i < count($dsupp_inveid); $i++) {
+                    $subTotalHpp = numeric($dsupp_hpp[$i] * $dsupp_qty[$i]);
+                    $totalHpp += $subTotalHpp;
+                    $detail[] = array(
+                        'dsupp_inveid' => $dsupp_inveid[$i],
+                        'dsupp_qty' => $dsupp_qty[$i],
+                        'dsupp_hpp' => $dsupp_hpp[$i],
+                        'dsupp_harga' => numeric($dsupp_harga[$i]),
+                        'dsupp_diskon' => $dsupp_diskon[$i],
+                        'dsupp_subtotal' => numeric($dsupp_subtotal[$i]),
+                        'dsupp_subtotal_hpp' => $subTotalHpp,
+                    );
+                }
+                $data['spp_total_hpp'] = $totalHpp;
+                $return = $this->model_trspart->saveSupplySlip($data, $detail);
+            } else {
+                $deskripsi = $this->input->post('so_deskripsi');
+                $harga = $this->input->post('so_harga');
+                $hpp = $this->input->post('so_hpp');
+                $totalHpp = 0;
+                $total = 0;
+                for ($i = 0; $i < count($deskripsi); $i++) {
+                    if (!empty($deskripsi[$i])) {
+                        $detail[] = array(
+                            'so_deskripsi' => strtoupper($deskripsi[$i]),
+                            'so_harga' => numeric($harga[$i]),
+                            'so_hpp' => numeric($hpp[$i]),
+                        );
+                    }
+                    $totalHpp += numeric($hpp[$i]);
+                    $total += numeric($harga[$i]);
+                }
+                $data['spp_total_hpp'] = $totalHpp;
+                $data['spp_total'] = $total;
+                $return = $this->model_trspart->saveSupplySlip($data, $detail);
             }
-            $data['spp_total_hpp'] = $totalHpp;
-            $return = $this->model_trspart->saveSupplySlip($data, $detail);
         }
         echo json_encode($return);
     }
@@ -293,7 +322,7 @@ class Transaksi_Sparepart extends Application {
                     'det_diskon' => $det_diskon[$i],
                     'det_hpp' => $det_hpp[$i],
                     'det_subtotal' => numeric($det_subtotal[$i]),
-                    'det_subtotal_hpp' => numeric($det_hpp[$i]*$det_qty[$i]),
+                    'det_subtotal_hpp' => numeric($det_hpp[$i] * $det_qty[$i]),
                 );
             }
             $return = $this->model_trspart->saveReturPenjualan($data, $detail, $this->input->post('sppid'));
@@ -303,6 +332,7 @@ class Transaksi_Sparepart extends Application {
         }
         echo json_encode($return);
     }
+
     function saveAdjustmentStock() {
         $return = false;
         $this->form_validation->set_rules('adj_nomer', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
@@ -381,7 +411,7 @@ class Transaksi_Sparepart extends Application {
         $this->data['barang'] = $this->model_trspart->getReturBeliDetail($kode);
         $this->load->view('printReturBeli', $this->data);
     }
-    
+
     /**
      * 
      * @param type $kode
@@ -391,6 +421,7 @@ class Transaksi_Sparepart extends Application {
         $this->data['barang'] = $this->model_trspart->getAdjustmentStockDetail($kode);
         $this->load->view('printAdjustmentStock', $this->data);
     }
+
     /**
      * 
      * @param type $kode
@@ -415,10 +446,15 @@ class Transaksi_Sparepart extends Application {
      * 
      * @param type $kode
      */
-    function printSupplySlip($kode) {
+    function printSupplySlip($kode, $jenis) {
         $this->data['data'] = $this->model_trspart->getSupplySlip($kode);
-        $this->data['barang'] = $this->model_trspart->getSupplySlipDetail($kode);
-        $this->load->view('printSupplySlip', $this->data);
+        if ($jenis == 'so') {
+            $this->data['so'] = $this->model_trspart->getSupplySlipSo($kode);
+            $this->load->view('printSupplySlipSo', $this->data);
+        } else {
+            $this->data['barang'] = $this->model_trspart->getSupplySlipDetail($kode);
+            $this->load->view('printSupplySlip', $this->data);
+        }
     }
 
 }

@@ -1,3 +1,17 @@
+<style type="text/css">
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 20px;
+    }
+    * html .ui-autocomplete {
+        height: 200px;
+    }
+    input:focus {
+        background-color: yellow;
+    } 
+</style>
 <div id="result"></div>
 <div class="page-header">
     <h1>
@@ -38,7 +52,7 @@
         </div>
     </div>
 
-    <div id="jasa">
+    <div id="detailtrans">
         <div class="table-header">
             DETAIL TRANSAKSI
         </div>
@@ -61,11 +75,11 @@
 
                 <tbody>
                     <tr  class="item-row">
-                        <td class="nomorjasa" style="text-align: center;">
+                        <td class="dtrans" style="text-align: center; vertical-align: middle;">
                             1
                         </td>
                         <td>
-                            <input type="text"  autocomplete="off" onkeyup="acomplete('')"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dtrans_coa1"  name="dtrans_coa[]" />
+                            <input type="text"  autocomplete="off" onkeyup="acomplete('dtrans_coa1', 'auto_coa', 'dtrans_coa1', 'dtrans_desk1', 'dtrans_desk1')"  class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dtrans_coa1"  name="dtrans_coa[]" />
                         </td>
                         <td>
                             <input type="text" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_desk[]" id="dtrans_desk1" />
@@ -79,7 +93,11 @@
                             <input type="hidden" id="dtrans_custid1"  name="dtrans_custid[]" />
                         </td>
                         <td>
-                            <select class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="flat_lc[]" id="flat_lc1" />
+                            <select class="form-control input-small" style="width:100%;"  name="dtrans_ccid[]" id="dtrans_ccid">
+                                <?php foreach($etc['costcenter'] as $ccid){
+                                    echo "<option value = '".$ccid['ccid']."'>".$ccid['cc_kode']." | ".$ccid['cc_name']."</option>";
+                                }?>
+                            </select>
                         </td>
                         <td>
                             <input type="text"  autocomplete="off" value="0" onkeyup="subTotal('1')" class="number ace col-xs-10 col-sm-10" style="width:100%;"  name="dinv_diskon[]" id="dinv_diskon1" />
@@ -87,10 +105,10 @@
                         <td>
                             <input type="text"  readonly="readonly"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dinv_subtotal[]" id="dinv_subtotal1" />
                         </td>
-                        <td class="center">
+                        <td class="center" style="vertical-align: middle;">
                             <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
                         </td>
-                        <td  class="center">
+                        <td  class="center" style="vertical-align: middle;">
                             <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
                         </td>
                     </tr>
@@ -114,7 +132,8 @@
             </table>
         </div>
     </div>
-
+    
+    <?php if($etc['trans'] != 'KAS'){?>
     <div id="bank">
         <div class="table-header">
             DETAIL BANK
@@ -159,10 +178,10 @@
                         <td>
                             <input type="text"  readonly="readonly" value="0" onkeyup="subTotal('1')"  class="ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dbnk_nominal[]" id="dbnk_nominal1" />
                         </td>
-                        <td class="center">
+                        <td class="center" style="vertical-align:middle;">
                             <a class="green btnAdd"  onclick="addRowBank()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
                         </td>
-                        <td  class="center">
+                        <td  class="center" style="vertical-align:middle;">
                             <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
                         </td>
                     </tr>
@@ -186,7 +205,8 @@
             </table>
         </div>
     </div>
-
+    <?php } ?>
+    
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
             <button class="btn btn-success" type="button" onclick="javascript:saveData()">
@@ -228,16 +248,15 @@
     function Delete() {
         var par = $(this).parent().parent(); //tr
         par.remove();
-        totalLc();
     }
     
     function addRow() {
-        var inc = $('.nomorjasa').length+1;
+        var inc = $('.dtrans').length+1;
         $(".item-row:last").after(
         '<tr class="item-row">\n\
-                    <td class="nomorjasa center">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
+                    <td class="dtrans center">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
                          <td>\n\
-                             <input type="text"  autocomplete="off" onkeyup="autoCompleteJasa(' + inc + ')" class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dinv_kode'+ inc +'"  name="dinv_kode[]" />\n\
+                             <input type="text"  autocomplete="off" onkeyup="acomplete(' + inc + ')" class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dinv_kode'+ inc +'"  name="dinv_kode[]" />\n\
                             <input type="hidden" id="dinv_flatid'+ inc +'"  name="dinv_flatid[]" />\n\
                          </td>\n\
                          <td>\n\
@@ -250,7 +269,12 @@
                             <input type="text"  readonly="readonly"  class="upper ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="flat_lc[]" id="flat_lc'+ inc +'" />\n\
                          </td>\n\
                          <td>\n\
-                            <input type="text"  readonly="readonly"  class="upper ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="flat_lc[]" id="flat_lc'+ inc +'" />\n\
+                            <select class="form-control input-small" style="width:100%;"  name="dtrans_ccid[]" id="dtrans_ccid">\n\
+                                <option value=""></option>\n\
+                                <?php foreach($etc['costcenter'] as $ccid){
+                                    echo "<option value = \'".$ccid['ccid']."\'>".$ccid['cc_kode']." | ".$ccid['cc_name']."</option>";
+                                }?>\n\
+                            </select>\n\
                          </td>\n\
                          <td>\n\
                              <input type="text"  autocomplete="off" value="0" onkeyup="subTotal('+inc+')"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dinv_diskon[]" id="dinv_diskon'+ inc +'" />\n\
@@ -258,10 +282,10 @@
                          <td>\n\
                              <input type="text"  readonly="readonly"  class="upper ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dinv_subtotal[]" id="dinv_subtotal'+ inc +'" />\n\
                          </td>\n\
-                         <td  class="center">\n\
+                         <td  class="center" style="vertical-align: middle;">\n\
                              <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
                          </td>\n\
-                         <td style="text-align: center">\n\
+                         <td class="center" style="vertical-align: middle;">\n\
                              <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
                          </td>\n\
                        </tr>\n\
@@ -274,7 +298,7 @@
         var inc = $('.detailbank').length+1;
         $(".item-row-bank:last").after(
         '<tr class="item-row-bank">\n\
-                    <td class="nomorjasa center">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
+                    <td class="detailbnk center" style="vertical-align:middle;">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
                          <td>\n\
                              <input type="text"  autocomplete="off" onkeyup="autoCompleteJasa(' + inc + ')" class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dinv_kode'+ inc +'"  name="dinv_kode[]" />\n\
                             <input type="hidden" id="dinv_flatid'+ inc +'"  name="dinv_flatid[]" />\n\
@@ -294,10 +318,10 @@
                          <td>\n\
                              <input type="text"  readonly="readonly"  class="upper ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="dinv_subtotal[]" id="dinv_subtotal'+ inc +'" />\n\
                          </td>\n\
-                         <td  class="center">\n\
+                         <td class="center" style="vertical-align: middle;">\n\
                              <a class="green btnAdd"  onclick="addRowBank()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
                          </td>\n\
-                         <td style="text-align: center">\n\
+                         <td class="center" style="vertical-align: middle;">\n\
                              <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
                          </td>\n\
                        </tr>\n\
@@ -311,11 +335,11 @@
             minLength: 1,
             source: function(req, add) {
                 $.ajax({
-                    url: "<?php echo site_url('transaksi_finance/'); ?>"+url,
+                    url: "<?php echo site_url('transaksi_finance'); ?>/"+url,
                     dataType: 'json',
                     type: 'POST',
                     data: {
-                        term : $("#" + id).val(),
+                        param : $("#" + id).val(),
                         cbid : '<?php echo ses_cabang; ?>'
                     },
                     success: function(data) {
@@ -330,10 +354,10 @@
                     .appendTo(ul);
                 };
             },select: function(event, ui) {
-                $('#' + trglocal ).val(item.trgid);
+                $('#' + trglocal ).val(ui.item.trglocal);
                 if(trgid != ''){
-                    $('#' + trgid).val(item.trgid);
-                    $('#' + trgname).val(item.trgname);
+                    $('#' + trgid).val(ui.item.trgid);
+                    $('#' + trgname).val(ui.item.trgname);
                 }
                 
                 

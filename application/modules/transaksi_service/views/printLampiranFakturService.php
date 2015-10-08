@@ -173,18 +173,19 @@
                 </tr>
                 <?php
             }
-            foreach ($part as $row) {
+        } else if (count($dataso) > 0) {
+            foreach ($dataso as $row) {
                 if ($row['spp_jenis'] == 'so') {
                     ?>
                     <tr>
-                        <td colspan="2"><?php echo $row['inve_nama']; ?></td>
-                        <td style="text-align: right;"><?php echo $row['dsupp_qty']; ?></td>
-                        <td style="text-align: right;"><?php echo number_format($row['dsupp_harga']); ?></td>
-                        <td style="text-align: right;"><?php echo $row['dsupp_diskon']; ?></td>
-                        <td style="text-align: right;"><?php echo number_format($row['dsupp_subtotal']); ?></td>
+                        <td colspan="2"><?php echo $row['so_deskripsi']; ?></td>
+                        <td style="text-align: right;"><?php echo '1'; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['so_harga']); ?></td>
+                        <td style="text-align: right;"><?php echo '0'; ?></td>
+                        <td style="text-align: right;"><?php echo number_format($row['so_harga']); ?></td>
                     </tr>
                     <?php
-                    $so += $row['dsupp_subtotal'];
+                    $so += $row['so_harga'];
                 }
             }
             if ($so > 0) {

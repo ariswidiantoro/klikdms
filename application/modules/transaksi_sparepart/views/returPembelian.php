@@ -19,26 +19,34 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Faktur Terima</label>
         <div class="col-sm-8">
-            <input type="text" required="required" autocomplete="off" name="trbr_faktur" maxlength="30" id="trbr_faktur" class="upper ace col-xs-10 col-sm-3 req" />
-            <input type="hidden"  autocomplete="off" name="trbrid" id="trbrid"/>
+            <div class='input-group col-xs-10 col-sm-10'>
+                <input type="text" required="required" autocomplete="off" name="trbr_faktur" maxlength="30" id="trbr_faktur" class="upper ace col-xs-10 col-sm-4 req" />
+                <input type="hidden"  autocomplete="off" name="trbrid" id="trbrid"/>
+            </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Supplier</label>
         <div class="col-sm-8">
-            <input type="text" autocomplete="off" required="required" name="supplier" id="supplier" class="upper col-xs-10 col-sm-3 req" />
+            <div class='input-group col-xs-10 col-sm-10'>
+                <input type="text" autocomplete="off" required="required" name="supplier" id="supplier" class="upper col-xs-10 col-sm-6 req" />
+            </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Supplier</label>
         <div class="col-sm-8">
-            <input type="text" required="required"  id="trbr_supid" name="trbr_supid" class="upper col-xs-10 col-sm-3 req" />* Otomatis terisi saat nama supplier dipilih
+            <div class='input-group col-xs-10 col-sm-10'>
+                <input type="text" required="required"  id="trbr_supid" name="trbr_supid" class="upper col-xs-10 col-sm-4 req" />* Otomatis terisi saat nama supplier dipilih
+            </div>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alasan Retur</label>
         <div class="col-sm-8">
-            <textarea name="rb_alasan" required="required" class="ace col-xs-10 col-sm-5  req" rows="4"></textarea>
+            <div class='input-group col-xs-10 col-sm-10'>
+                <textarea name="rb_alasan" required="required" class="ace col-xs-10 col-sm-5  req" rows="4"></textarea>
+            </div>
         </div>
     </div>
     <div class="hr hr-16 hr-dotted"></div>
@@ -46,20 +54,6 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bantuan</label>
         <div class="col-sm-8">
-            <!--            <div class="radio" style="margin-left: 0">
-                            <label>
-                                <input name="auto" id="check" type="radio" value="auto" class="ace" />
-                                <span class="lbl">Auto Complete</span>
-                            </label>
-                        </div>
-                        <div class="radio" style="margin-left: 0">
-                            <label>
-                                <input name="auto" id="noncheck"  checked type="radio" value="auto" class="ace" />
-                                <span class="lbl">Tanpa Auto Complete</span>
-                            </label>
-                        </div>-->
-
-            <!--<div class="checkbox">-->
             <label>
                 <input class="ace" id="autocomplete" onclick="cekAutoComplete()" type="checkbox" name="form-field-checkbox">
                 <span class="lbl"> Auto Complete</span>
@@ -107,7 +101,7 @@
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
-            <button class="btn btn-info" type="submit">
+            <button class="btn btn-info" type="button" id="button">
                 <i class="ace-icon fa fa-check bigger-50"></i>
                 Submit
             </button>
@@ -131,17 +125,55 @@
             $('#kodeBarang').autocomplete("disable");
         }
     }
-    
-    //    $('#check').click(function() {
-    //        if ($(this).is(':checked')) {
-    //            $('#kodeBarang').autocomplete("enable");
-    //        }
-    //    })
-    //    $('#noncheck').click(function() {
-    //        if ($(this).is(':checked')) {
-    //            $('#kodeBarang').autocomplete("disable");
-    //        }
-    //    })
+    jQuery(function($) {
+        var $validation = true;
+        $('#button').on('click', function(e){
+            //             window.location = "#transaksi_sparepart/returPembelian";
+            if(!$('#form').valid())
+            {
+                e.preventDefault();
+            }else
+                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                    if(result) {
+                        $("#form").submit();
+                    }
+            });
+            return false;
+        });
+
+
+        $('#form').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+			
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+			
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+			
+            submitHandler: function (form) {
+            },
+            invalidHandler: function (form) {
+            }
+        });
+    });
 
 
 
@@ -200,10 +232,7 @@
             })
             return false;
         });
-        //                }
-        //            });  
     });
-    //    }
         
        
         
