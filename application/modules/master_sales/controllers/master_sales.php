@@ -857,7 +857,7 @@ class Master_Sales extends Application {
 
     public function addLeasing() {
         $this->hakAkses(1077);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addLeasing', $this->data);
     }
 
@@ -865,7 +865,7 @@ class Master_Sales extends Application {
         $this->hakAkses(1077);
         $id = $this->input->get('id');
         $data = $this->model_sales->getLeasing($id);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->data['data'] = $data;
         $this->load->view('editLeasing', $this->data);
     }
@@ -993,7 +993,7 @@ class Master_Sales extends Application {
 
     public function addKaroseri() {
         $this->hakAkses(1078);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addKaroseri', $this->data);
     }
 
@@ -1001,7 +1001,7 @@ class Master_Sales extends Application {
         $this->hakAkses(1078);
         $id = $this->input->get('id');
         $data = $this->model_sales->getKaroseri($id);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->data['data'] = $data;
         $this->load->view('editKaroseri', $this->data);
     }
@@ -1174,14 +1174,18 @@ class Master_Sales extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     /**
      * Master Stock Unit
      * @author Rossi
      * * */
-    public function StockUnit() {
+    public function stockUnit() {
         $this->hakAkses(1092);
         $this->load->view('dataStockUnit', $this->data);
+    }
+    public function supplier() {
+        $this->hakAkses(91);
+        $this->load->view('master_service/supplier', $this->data);
     }
 
     public function getStockUnit() {

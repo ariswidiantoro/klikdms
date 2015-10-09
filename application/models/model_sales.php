@@ -568,11 +568,11 @@ class Model_Sales extends CI_Model {
      * 2015-09-03
      */
     public function getTotalAksesories($where) {
-        $wh = "WHERE aks_status = 1 ";
+        $wh = "WHERE aks_status = 0 ";
         if ($where != NULL)
             $wh = " AND " . $where;
 
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_aksesories $wh");
+        $sql = $this->db->query("SELECT COUNT(aksid) AS total FROM ms_aksesories $wh");
         return $sql->row()->total;
     }
 
@@ -582,7 +582,7 @@ class Model_Sales extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_aksesories');
-        $this->db->where('aks_status', '1');
+        $this->db->where('aks_status', '0');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();

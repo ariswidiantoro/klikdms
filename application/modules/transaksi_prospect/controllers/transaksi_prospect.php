@@ -77,8 +77,8 @@ class Transaksi_Prospect extends Application {
 
     public function addProspect() {
         $this->hakAkses(1060);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
-        $this->data['merk'] = $this->model_sales->cListMerk();
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->data['merk'] = $this->model_admin->getMerk();
         $this->data['sinfo'] = $this->model_prospect->cListSinfo();
         $this->data['kontak'] = $this->model_prospect->cListKontak();
         $this->data['bisnis'] = $this->model_prospect->cListBisnis();
@@ -149,9 +149,11 @@ class Transaksi_Prospect extends Application {
             );
             $save = $this->model_prospect->addProspect($data, $cars);
             if ($save['status'] == TRUE) {
-                $hasil = $this->sukses($save['msg']);
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses($save['msg']);
             } else {
-                $hasil = $this->error($save['msg']);
+                 $hasil['result'] = false;
+                $hasil['msg'] = $this->error($save['msg']);
             }
         }
         echo json_encode($hasil);

@@ -8,22 +8,22 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="karo_nama" id="karo_nama" value="<?php echo $data['karo_nama'] ?>" class="ace col-xs-10 col-sm-8" />
+            <input type="text" required="required" maxlength="50"  
+                   name="karo_nama" id="karo_nama" value="<?php echo $data['karo_nama'] ?>" class="ace col-xs-10 col-sm-8  upper req" />
         </div>
-        <input type="hidden" required="required"  value="<?php echo $data['leasid'] ?>" name="leasid" id="leasid"/>
+        <input type="hidden" required="required"  value="<?php echo $data['karoid'] ?>" name="leasid" id="leasid"/>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-5">
-            <textarea id="form-field-8" name="karo_alamat" class="form-control" style='text-transform:uppercase'  placeholder="Alamat"><?php echo $data['karo_alamat'] ?></textarea>
+            <textarea id="form-field-8" name="karo_alamat" class="form-control upper req"  placeholder="Alamat"><?php echo $data['karo_alamat'] ?></textarea>
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
         <div class="col-sm-8">
-            <select name="propid" id="propid" onchange="getKota()" class="form-control" style="width: 30%;">
+            <select name="propid" id="propid" onchange="getKota()" required="required"  class="form-control  upper req" style="width: 30%;">
                 <option value="">PILIH</option>
                 <?php
                 if (count($propinsi) > 0) {
@@ -42,7 +42,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kota</label>
         <div class="col-sm-8">
-            <select name="karo_kotaid" id="karo_kotaid" class="form-control" style="width: 30%;">
+            <select name="karo_kotaid" id="karo_kotaid" required="required" class="form-control  upper req" style="width: 30%;">
                 <option value="">PILIH</option>
             </select>
         </div>
@@ -51,14 +51,14 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Telephone</label>
         <div class="col-sm-8">
             <input type="text" required="required" maxlength="20" style='text-transform:uppercase' 
-                   name="karo_telp" id="karo_telp" value="<?php echo $data['karo_telp'] ?>"  class="ace col-xs-10 col-sm-8 number" />
+                   name="karo_telp" id="karo_telp" value="<?php echo $data['karo_telp'] ?>"  class="ace col-xs-10 col-sm-8 number  upper req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kontak</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="karo_kontak" id="karo_kontak"  value="<?php echo $data['karo_kontak'] ?>" class="ace col-xs-10 col-sm-8" />
+            <input type="text" required="required" maxlength="50"  
+                   name="karo_kontak" id="karo_kontak"  value="<?php echo $data['karo_kontak'] ?>" class="ace col-xs-10 col-sm-8  upper req" />
         </div>
     </div>
     

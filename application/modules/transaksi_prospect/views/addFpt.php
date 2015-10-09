@@ -618,7 +618,7 @@
         $('#formAdd').submit(function() {
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url('transaksi_prospect/saveProspect') ?>",
+                url: "<?php echo site_url('transaksi_prospect/saveFpt') ?>",
                 dataType: "json",
                 async: false,
                 data: $(this).serialize(),

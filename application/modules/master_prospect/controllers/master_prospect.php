@@ -63,7 +63,7 @@ class Master_Prospect extends Application {
 
     public function addArea() {
         $this->hakAkses(1070);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addArea', $this->data);
     }
 
@@ -71,7 +71,7 @@ class Master_Prospect extends Application {
         $this->hakAkses(1070);
         $id = $this->input->get('id');
         $data = $this->model_prospect->getArea($id);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->data['data'] = $data;
         $this->load->view('editArea', $this->data);
     }
@@ -146,7 +146,7 @@ class Master_Prospect extends Application {
      * @since 1.0 2015-09-19
      */
     
-    public function sumber_informasi() {
+    public function sumberInformasi() {
         $this->hakAkses(1070);
         $this->load->view('dataSmbInfo', $this->data);
     }
@@ -266,7 +266,7 @@ class Master_Prospect extends Application {
      * @since 1.0 2015-09-19
      */
     
-    public function kontak_awal() {
+    public function kontakAwal() {
         $this->hakAkses(1070);
         $this->load->view('dataKontakAwal', $this->data);
     }

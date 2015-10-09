@@ -4,19 +4,19 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
             <input type="hidden" name="supid" value="<?php echo $data['supid']; ?>">
-            <input type="text" name="sup_nama" value="<?php echo $data['sup_nama']; ?>" required="required" placeholder="Nama" class="upper ace col-xs-10 col-sm-10" />
+            <input type="text" name="sup_nama" value="<?php echo $data['sup_nama']; ?>" required="required" placeholder="Nama" class="upper req ace col-xs-10 col-sm-10" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea name="sup_alamat" class="upper ace col-xs-10 col-sm-7" required="required" rows="4"><?php echo $data['sup_alamat']; ?></textarea>
+            <textarea name="sup_alamat" class="upper req ace col-xs-10 col-sm-7" required="required" rows="4"><?php echo $data['sup_alamat']; ?></textarea>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
         <div class="col-sm-8">
-            <select name="propinsi" id="propinsi" onchange="getKota()" class="ace col-xs-10 col-sm-3">
+            <select name="propinsi" id="propinsi" onchange="getKota()" class="upper req ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
                 <?php
                 if (count($propinsi) > 0) {
@@ -34,7 +34,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kab / Kota</label>
         <div class="col-sm-8">
-            <select name="sup_kotaid" id="sup_kotaid" class="ace col-xs-10 col-sm-3">
+            <select name="sup_kotaid" id="sup_kotaid" class="upper req ace col-xs-10 col-sm-3">
                 <?php
                 if (count($kota) > 0) {
                     foreach ($kota as $value) {
@@ -51,7 +51,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor HP</label>
         <div class="col-sm-8">
-            <input type="text" name="sup_hp" value="<?php echo $data['sup_hp']; ?>"  placeholder="Nomor HP" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="sup_hp" required value="<?php echo $data['sup_hp']; ?>"  placeholder="Nomor HP" class="upper req ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
