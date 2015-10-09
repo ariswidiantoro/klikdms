@@ -31,7 +31,7 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('master_sales/loadAksesories') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Nama', 'Deskripso', 'HPP', 'Harga Jual', 'Edit', 'Del'],     
+            colNames:['Nama', 'Deskripsi', 'HPP', 'Harga Jual', 'Edit', 'Del'],     
             colModel:[
                 {name:'aks_nama',index:'aks_nama', width:80, align:"left"},
                 {name:'aks_descrip',index:'aks_descrip', width:100, align:"left"},
