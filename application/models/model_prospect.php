@@ -209,6 +209,7 @@ class Model_Prospect extends CI_Model {
         $id = sprintf("%08s", $this->getCounter(NUM_FPT . $tahun));
         $data['fptid'] = NUM_FPT . $tahun . $id;
         $this->db->INSERT('pen_fpt', $data);
+        log_message('error', 'MASUKKKK '.$this->db->last_query());
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();
             return true;

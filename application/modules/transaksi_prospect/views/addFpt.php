@@ -627,7 +627,7 @@
                                 if (data.result) {
                                     document.formAdd.reset();
                                 }
-                                $("#result").html(data).show().fadeIn("slow");
+                                $("#result").html(data.msg).show().fadeIn("slow");
                             }
                         })
                         return false;
