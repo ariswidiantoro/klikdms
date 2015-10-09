@@ -16,34 +16,36 @@ class Master_Sales extends Application {
     public function index() {
         echo " ";
     }
-    
+
     /* UTILITY */
+
     public function jsonModelKendaraan() {
         $data = array(
-            'merkid' => $this->input->post('merkid', TRUE), 
+            'merkid' => $this->input->post('merkid', TRUE),
             'segid' => $this->input->post('segid', TRUE));
         echo json_encode($this->model_sales->getModelByMerk($data));
     }
-    
+
     public function jsonTypeKendaraan() {
         $modelid = $this->input->post('modelid');
         echo json_encode($this->model_sales->getTypeByModel($modelid));
     }
-    
+
     public function jsonWarnaModel() {
         $modelid = $this->input->post('modelid');
         echo json_encode($this->model_sales->getWarnaByModel($modelid));
     }
-    
+
     public function jsonKota() {
         $propid = $this->input->post('propid');
         echo json_encode($this->model_sales->getKotaByPropinsi($propid));
     }
-    
+
     public function jsonArea() {
         $kotaid = $this->input->post('kotaid');
         echo json_encode($this->model_sales->getAreaByKota($kotaid));
     }
+
     /* --------------  */
 
     public function masterMerk() {
@@ -382,7 +384,7 @@ class Master_Sales extends Application {
                 'model_merkid' => strtoupper($modelMerkid),
                 'model_deskripsi' => strtoupper($modelDesc),
                 'model_segment' => strtoupper($modelSeg)
-                ), $modelid);
+                    ), $modelid);
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -529,15 +531,12 @@ class Master_Sales extends Application {
         }
         echo json_encode($hasil);
     }
-    
-   
-    
+
     /**
      * WARNA KENDARAAN
      * @author Rossi
      * 2015-09-10
      */
-    
     public function masterWarna() {
         $this->hakAkses(1075);
         $this->load->view('dataWarna', $this->data);
@@ -647,7 +646,7 @@ class Master_Sales extends Application {
             $responce = $result;
         echo json_encode($responce);
     }
-    
+
     /**
      * Master Warna Model
      * @author Rossi
@@ -675,7 +674,7 @@ class Master_Sales extends Application {
             $save = $this->model_sales->addWarnaModel(array(
                 'mdlcolor_modelid' => $modelid,
                 'mdlcolor_warnaid' => $warnaid
-                 ));
+                    ));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -773,7 +772,7 @@ class Master_Sales extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     /**
      * Master Leasing
      * @author Rossi
@@ -796,7 +795,7 @@ class Master_Sales extends Application {
         $nama = strtoupper($this->input->post('leas_nama', TRUE));
         $alamat = strtoupper($this->input->post('leas_alamat', TRUE));
         $kota = strtoupper($this->input->post('leas_kotaid', TRUE));
-        if (empty($nama) || empty($alamat)|| empty($kota)) {
+        if (empty($nama) || empty($alamat) || empty($kota)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_sales->addLeasing(array(
@@ -804,8 +803,8 @@ class Master_Sales extends Application {
                 'leas_alamat' => $alamat,
                 'leas_cbid' => ses_cabang,
                 'leas_telp' => $this->input->post('leas_telp', TRUE),
-                'leas_kontak' => strtoupper($this->input->post('leas_kontak',TRUE)),
-                'leas_kotaid' => $kota ));
+                'leas_kontak' => strtoupper($this->input->post('leas_kontak', TRUE)),
+                'leas_kotaid' => $kota));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -877,7 +876,7 @@ class Master_Sales extends Application {
         $nama = strtoupper($this->input->post('leas_nama', TRUE));
         $alamat = strtoupper($this->input->post('leas_alamat', TRUE));
         $kota = strtoupper($this->input->post('leas_kotaid', TRUE));
-        if (empty($nama) || empty($alamat)|| empty($kota)|| empty($id)) {
+        if (empty($nama) || empty($alamat) || empty($kota) || empty($id)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_sales->updateLeasing(array(
@@ -885,8 +884,8 @@ class Master_Sales extends Application {
                 'leas_alamat' => $alamat,
                 'leas_cbid' => ses_cabang,
                 'leas_telp' => $this->input->post('leas_telp', TRUE),
-                'leas_kontak' => strtoupper($this->input->post('leas_kontak',TRUE)),
-                'leas_kotaid' => $kota ), $id);
+                'leas_kontak' => strtoupper($this->input->post('leas_kontak', TRUE)),
+                'leas_kotaid' => $kota), $id);
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -909,7 +908,7 @@ class Master_Sales extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     /**
      * Master Karoseri
      * @author Rossi
@@ -932,7 +931,7 @@ class Master_Sales extends Application {
         $nama = strtoupper($this->input->post('karo_nama', TRUE));
         $alamat = strtoupper($this->input->post('karo_alamat', TRUE));
         $kota = strtoupper($this->input->post('karo_kotaid', TRUE));
-        if (empty($nama) || empty($alamat)|| empty($kota)) {
+        if (empty($nama) || empty($alamat) || empty($kota)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_sales->addKaroseri(array(
@@ -940,8 +939,8 @@ class Master_Sales extends Application {
                 'karo_alamat' => $alamat,
                 'karo_cbid' => ses_cabang,
                 'karo_telp' => $this->input->post('karo_telp', TRUE),
-                'karo_kontak' => strtoupper($this->input->post('karo_kontak',TRUE)),
-                'karo_kotaid' => $kota ));
+                'karo_kontak' => strtoupper($this->input->post('karo_kontak', TRUE)),
+                'karo_kotaid' => $kota));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -1013,7 +1012,7 @@ class Master_Sales extends Application {
         $nama = strtoupper($this->input->post('karo_nama', TRUE));
         $alamat = strtoupper($this->input->post('karo_alamat', TRUE));
         $kota = strtoupper($this->input->post('karo_kotaid', TRUE));
-        if (empty($nama) || empty($alamat)|| empty($kota)|| empty($id)) {
+        if (empty($nama) || empty($alamat) || empty($kota) || empty($id)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_sales->updateKaroseri(array(
@@ -1021,8 +1020,8 @@ class Master_Sales extends Application {
                 'karo_alamat' => $alamat,
                 'karo_cbid' => ses_cabang,
                 'karo_telp' => $this->input->post('karo_telp', TRUE),
-                'karo_kontak' => strtoupper($this->input->post('karo_kontak',TRUE)),
-                'karo_kotaid' => $kota ), $id);
+                'karo_kontak' => strtoupper($this->input->post('karo_kontak', TRUE)),
+                'karo_kotaid' => $kota), $id);
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -1045,7 +1044,7 @@ class Master_Sales extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     /**
      * Master Aksesories
      * @author Rossi
@@ -1066,21 +1065,21 @@ class Master_Sales extends Application {
 
     public function saveAksesories() {
         $nama = strtoupper($this->input->post('aks_nama', TRUE));
-        $alamat = strtoupper($this->input->post('aks_descrip', TRUE));
-        if (empty($nama) || empty($alamat)) {
+        $desc = strtoupper($this->input->post('aks_descrip', TRUE));
+        if (empty($nama) || empty($desc)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_sales->addAksesories(array(
                 'aks_nama' => $nama,
-                'aks_descrip' => $alamat,
+                'aks_descrip' => $desc,
                 'aks_cbid' => ses_cabang,
-                'aks_hpp' => $this->input->post('aks_hpp', TRUE),
-                'aks_harga' => strtoupper($this->input->post('aks_harga',TRUE))
-                ));
-            if ($save['status'] == TRUE) {
-                $hasil = $this->sukses($save['msg']);
+                'aks_hpp' => numeric($this->input->post('aks_hpp', TRUE)),
+                'aks_harga' => numeric($this->input->post('aks_harga', TRUE))
+                    ));
+            if ($save == TRUE) {
+                $hasil = array('status' => '1', 'msg' => $this->sukses('DATA BERHASIL DISIMPAN'));
             } else {
-                $hasil = $this->error($save['msg']);
+                $hasil = array('status' => '0', 'msg' => $this->error('DATA GAGAL DISIMPAN'));
             }
         }
         echo json_encode($hasil);
@@ -1118,8 +1117,8 @@ class Master_Sales extends Application {
                 $responce->rows[$i]['cell'] = array(
                     $row->aks_nama,
                     $row->aks_descrip,
-                    $row->aks_hpp,
-                    $row->aks_harga,
+                    number_format($row->aks_hpp),
+                    number_format($row->aks_harga),
                     $edit, $hapus);
                 $i++;
             }
@@ -1128,39 +1127,35 @@ class Master_Sales extends Application {
 
     public function addAksesories() {
         $this->hakAkses(1092);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
         $this->load->view('addAksesories', $this->data);
     }
 
     public function editAksesories() {
         $this->hakAkses(1092);
-        $id = $this->input->get('id');
-        $data = $this->model_sales->getAksesories($id);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
-        $this->data['data'] = $data;
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] = $this->model_sales->getAksesories($id);
         $this->load->view('editAksesories', $this->data);
     }
 
     public function updateAksesories() {
         $id = strtoupper($this->input->post('aksid', TRUE));
         $nama = strtoupper($this->input->post('aks_nama', TRUE));
-        $nama = strtoupper($this->input->post('aks_nama', TRUE));
-        $alamat = strtoupper($this->input->post('aks_descrip', TRUE));
-        $kota = strtoupper($this->input->post('aks_kotaid', TRUE));
-        if (empty($nama) || empty($alamat)|| empty($kota)|| empty($id)) {
+        $desc = strtoupper($this->input->post('aks_descrip', TRUE));
+        $hpp = numeric($this->input->post('aks_harga', TRUE));
+        $harga = numeric($this->input->post('aks_hpp', TRUE));
+        if (empty($id) || empty($nama) || empty($desc) || empty($hpp) || empty($harga)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_sales->updateAksesories(array(
                 'aks_nama' => $nama,
-                'aks_descrip' => $alamat,
+                'aks_descrip' => $desc,
                 'aks_cbid' => ses_cabang,
-                'aks_hpp' => $this->input->post('aks_hpp', TRUE),
-                'aks_harga' => strtoupper($this->input->post('aks_harga',TRUE)),
-                'aks_kotaid' => $kota ), $id);
-            if ($save['status'] == TRUE) {
-                $hasil = $this->sukses($save['msg']);
+                'aks_hpp' => $hpp,
+                'aks_harga' => $harga), $id);
+            if ($save == TRUE) {
+                $hasil = array('status' => '1', 'msg' => $this->sukses('DATA BERHASIL DIUPDATE'));
             } else {
-                $hasil = $this->error($save['msg']);
+                $hasil = array('status' => '0', 'msg' => $this->error('DATA GAGAL DIUPDATE'));
             }
         }
         echo json_encode($hasil);
@@ -1169,12 +1164,142 @@ class Master_Sales extends Application {
     public function deleteAksesories() {
         $id = $this->input->post('id', TRUE);
         if (empty($id)) {
-            $hasil = $this->error('Hapus data gagal');
+            $hasil = $this->error('DATA GAGAL DIHAPUS');
         } else {
             if ($this->model_sales->deleteAksesories($id)) {
-                $hasil = $this->sukses('Hapus data berhasil');
+                $hasil = $this->sukses('DATA BERHASIL DIHAPUS');
             } else {
-                $hasil = $this->error('Hapus data gagal');
+                $hasil = $this->error('DATA GAGAL DIHAPUS');
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
+    /**
+     * Master Stock Unit
+     * @author Rossi
+     * * */
+    public function StockUnit() {
+        $this->hakAkses(1092);
+        $this->load->view('dataStockUnit', $this->data);
+    }
+
+    public function getStockUnit() {
+        $data = $this->input->get('mscid', TRUE);
+        $result = $this->model_sales->getStockUnit($data);
+        $responce = array();
+        if (count($result) > 0)
+            $responce = $result;
+        echo json_encode($responce);
+    }
+
+    public function saveStockUnit() {
+        $nama = strtoupper($this->input->post('aks_nama', TRUE));
+        $desc = strtoupper($this->input->post('aks_descrip', TRUE));
+        if (empty($nama) || empty($desc)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        } else {
+            $save = $this->model_sales->addStockUnit(array(
+                'aks_nama' => $nama,
+                'aks_descrip' => $desc,
+                'aks_cbid' => ses_cabang,
+                'aks_hpp' => numeric($this->input->post('aks_hpp', TRUE)),
+                'aks_harga' => numeric($this->input->post('aks_harga', TRUE))
+                    ));
+            if ($save == TRUE) {
+                $hasil = array('status' => '1', 'msg' => $this->sukses('DATA BERHASIL DISIMPAN'));
+            } else {
+                $hasil = array('status' => '0', 'msg' => $this->error('DATA GAGAL DISIMPAN'));
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function loadStockUnit() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_sales->getTotalStockUnit($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sales->getDataStockUnit($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusData('" . $row->mscid . "', '" . $row->aks_nama . "')";
+                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_sales/editStockUnit?id=' . $row->mscid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->mscid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->aks_nama,
+                    $row->aks_descrip,
+                    number_format($row->aks_hpp),
+                    number_format($row->aks_harga),
+                    $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    public function addStockUnit() {
+        $this->hakAkses(1092);
+        $this->load->view('addStockUnit', $this->data);
+    }
+
+    public function editStockUnit() {
+        $this->hakAkses(1092);
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] = $this->model_sales->getStockUnit($id);
+        $this->load->view('editStockUnit', $this->data);
+    }
+
+    public function updateStockUnit() {
+        $id = strtoupper($this->input->post('mscid', TRUE));
+        $nama = strtoupper($this->input->post('aks_nama', TRUE));
+        $desc = strtoupper($this->input->post('aks_descrip', TRUE));
+        $hpp = numeric($this->input->post('aks_harga', TRUE));
+        $harga = numeric($this->input->post('aks_hpp', TRUE));
+        if (empty($id) || empty($nama) || empty($desc) || empty($hpp) || empty($harga)) {
+            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        } else {
+            $save = $this->model_sales->updateStockUnit(array(
+                'aks_nama' => $nama,
+                'aks_descrip' => $desc,
+                'aks_cbid' => ses_cabang,
+                'aks_hpp' => $hpp,
+                'aks_harga' => $harga), $id);
+            if ($save == TRUE) {
+                $hasil = array('status' => '1', 'msg' => $this->sukses('DATA BERHASIL DIUPDATE'));
+            } else {
+                $hasil = array('status' => '0', 'msg' => $this->error('DATA GAGAL DIUPDATE'));
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function deleteStockUnit() {
+        $id = $this->input->post('id', TRUE);
+        if (empty($id)) {
+            $hasil = $this->error('DATA GAGAL DIHAPUS');
+        } else {
+            if ($this->model_sales->deleteStockUnit($id)) {
+                $hasil = $this->sukses('DATA BERHASIL DIHAPUS');
+            } else {
+                $hasil = $this->error('DATA GAGAL DIHAPUS');
             }
         }
         echo json_encode($hasil);

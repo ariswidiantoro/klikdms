@@ -40,8 +40,12 @@ class Transaksi_Finance extends Application {
             'kst_desc' => $this->input->post('trans_desc', TRUE),
             'kst_debit' => $this->input->post('trans_debit', TRUE),
             'kst_kredit' => $this->input->post('trans_kredit', TRUE),
-            'kst_createon' => $this->input->post('trans_nomer', TRUE),
-            'kst_createby' => $this->input->post('trans_nomer', TRUE),
+            'kst_createon' => date('Y-m-d H:i:s'),
+            'kst_createby' => ses_krid,
+        );
+        
+        $detail = array(
+            'dkst_kstid' => $this->input->post('trans_nomer', TRUE),
         );
     }
 

@@ -57,7 +57,6 @@ define('NUM_SUPPLY_PK', 'SS');
 define('NUM_SUPPLY_NOMER', 'SP');
 define('NUM_ADJUSTMENT_STOCK', 'AD');
 
-
 /* Rossi */
 define('NUM_TIPE_JURNAL', 'TJ');
 define('NUM_SETTING_JURNAL', 'SJ');

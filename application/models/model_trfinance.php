@@ -61,12 +61,17 @@ class Model_Trfinance extends CI_Model {
 
     /* INPUT TRANSAKSI */
 
-    public function addTrans($main = array(), $detail = array()) {
+    public function addTrans($etc = array(), $main = array(), $detail = array()) {
         $this->db->trans_begin();
         try {
-
-            $this->addMain($main);
-
+            
+            if($etc['purpose'] == 'ADD'){
+                $this->addMain($main);
+            }else{
+                $this->editMain($main);
+                $this->flagDetail($detail);
+            }
+            
             if (count($detail) < 1) {
                 $e = "DETAIL TRANSAKSI KOSONG";
                 throw new Exception($e);
@@ -75,10 +80,12 @@ class Model_Trfinance extends CI_Model {
                     $this->addDetail(array(
                         'dkst_kstid' => $main['kst_kstid'],
                         'dkst_coa' => $detail['coa'][$i],
-                        'dkst_decrip' => $detail['coa'][$i],
-                        'dkst_nota' => $detail['coa'][$i],
-                        'dkst_pelid' => $detail['coa'][$i],
-                        'dkst_supkode' => $detail['coa'][$i],
+                        'dkst_decrip' => $detail['desc'][$i],
+                        'dkst_nota' => $detail['nota'][$i],
+                        'dkst_pelid' => $detail['pelid'][$i],
+                        'dkst_supkode' => $detail['supkode'][$i],
+                        'dkst_debit' => $detail['debit'][$i],
+                        'dkst_kredit' => $detail['kredit'][$i],
                         'dkst_lastupdate' => $detail['coa'][$i]
                     ));
                 }
