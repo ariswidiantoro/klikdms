@@ -173,7 +173,7 @@ class Model_Prospect extends CI_Model {
             WHERE prosid = '" . $data . "'  ");
         return $query->row_array();
     }
-    
+
     public function getDetailCars($data) {
         $query = "SELECT merk_deskripsi, model_deskripsi, cty_deskripsi, car_qty 
             FROM pros_data_car
@@ -205,30 +205,18 @@ class Model_Prospect extends CI_Model {
      */
     public function addFPT($data = array()) {
         $this->db->trans_begin();
-        try {
-            $code = $this->newCode(array('type' => 'FP'));
-            if ($code['status'] == FALSE) {
-                $warn = "FAILED GENERATE CODE : FPT";
-                throw new Exception($warn);
-            }
-
-            $data['fptid'] = $code['code'];
-            if ($this->db->insert('pros_data', $data) == FALSE) {
-                $warn = "FAILED INSERTING DATA : FPT";
-                throw new Exception($warn);
-            }
-
-            if ($this->db->trans_status() == TRUE) {
-                $this->db->trans_commit();
-                return array('status' => TRUE, 'msg' => 'FPT BERHASIL DITAMBAHKAN ');
-            } else {
-                $this->db->trans_rollback();
-                return array('status' => FALSE, 'msg' => 'FPT GAGAL DITAMBAHKAN ');
-            }
-        } catch (Exception $e) {
+        $tahun = substr(date('Y'), 2, 2);
+        $id = sprintf("%08s", $this->getCounter(NUM_FPT . $tahun));
+        $data['fptid'] = NUM_FPT . $tahun . $id;
+        $this->db->INSERT('pen_fpt', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
             $this->db->trans_rollback();
-            return array('status' => FALSE, 'msg' => $e->getMessage());
+            return false;
         }
+        return false;
     }
 
     public function updateFPT($data, $where) {
@@ -536,13 +524,14 @@ class Model_Prospect extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /* AUTO COMPLETE */
+
     public function autoAksesories($data) {
         $sql = $this->db->query("
             SELECT aksid, aks_nama, aks_descrip, aks_harga, aks_status
-            FROM ms_aksesories WHERE (aks_nama LIKE '%".$data['param']."%' OR aks_descrip LIKE '%".$data['param']."%') 
-                AND aks_cbid = '".$data['cbid']."'
+            FROM ms_aksesories WHERE (aks_nama LIKE '%" . $data['param'] . "%' OR aks_descrip LIKE '%" . $data['param'] . "%') 
+                AND aks_cbid = '" . $data['cbid'] . "'
             ORDER BY aks_nama ASC LIMIT 15 OFFSET 0
         ");
         if ($sql->num_rows() > 0) {
