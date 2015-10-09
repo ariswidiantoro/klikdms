@@ -206,12 +206,11 @@ class Transaksi_Service extends Application {
         $return = false;
         $this->form_validation->set_rules('msc_nopol', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
         if ($this->form_validation->run() == TRUE) {
-            $woid = $this->input->post('inv_woid');
             $data = array(
                 'inv_tgl' => date('Y-m-d'),
                 'inv_createon' => date('Y-m-d H:i:s'),
                 'inv_createby' => ses_username,
-                'inv_woid' => $woid,
+                'inv_woid' => $this->input->post('inv_woid'),
                 'inv_catatan' => $this->input->post('inv_catatan'),
                 'inv_fchecker' => $this->input->post('inv_fchecker'),
                 'inv_kasir' => $this->input->post('inv_kasir'),
@@ -228,6 +227,7 @@ class Transaksi_Service extends Application {
                 'inv_hpp_sm' => numeric($this->input->post('total_sm_hpp')),
                 'inv_hpp_so' => numeric($this->input->post('total_so_hpp')),
                 'inv_cbid' => ses_cabang,
+                'inv_print' => 1,
             );
 
             $wo = array(
@@ -306,6 +306,13 @@ class Transaksi_Service extends Application {
         $this->data['sp'] = $this->model_trservice->getSparepartWorkOrder($kode);
         $this->data['so'] = $this->model_trservice->getSoWorkOrder($kode);
         $this->load->view('printWo', $this->data);
+    }
+    function printInvoice($invid) {
+        $this->data['faktur'] = $this->model_trservice->getFakturService($invid);
+        $this->data['jasa'] = $this->model_trservice->getJasaWorkOrder($kode);
+        $this->data['sp'] = $this->model_trservice->getSparepartWorkOrder($kode);
+        $this->data['so'] = $this->model_trservice->getSoWorkOrder($kode);
+        $this->load->view('printInvoice', $this->data);
     }
 
     /**

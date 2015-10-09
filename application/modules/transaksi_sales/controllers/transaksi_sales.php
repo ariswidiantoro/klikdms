@@ -60,16 +60,10 @@ class Transaksi_Sales extends Application {
         echo json_encode($responce);
     }
 
-    public function addMerk() {
-        $this->hakAkses(1070);
-        $this->load->view('addMerk', $this->data);
-    }
-
-    public function editMerk() {
-        $this->hakAkses(1070);
-        $id = $this->input->get('id');
-        $data = $this->model_sales->getMerk($id);
-        $this->data['data'] = $data;
+    public function editBMK() {
+        $this->hakAkses(1094);
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] = $this->model_sales->getMerk($id);
         $this->load->view('editModel', $this->data);
     }
 

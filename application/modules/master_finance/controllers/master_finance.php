@@ -92,8 +92,16 @@ class Master_Finance extends Application {
         if (empty($kode) || empty($desc) || empty($type) || empty($level)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_finance->addCoa(array('coa_kode' => $kode,
-                'coa_desc' => $desc, 'coa_type' => $type, 'coa_level' => $level, 'coa_cbid' => ses_cabang));
+            $save = $this->model_finance->addCoa(
+                    array(
+                        'coa_kode' => $kode,
+                        'coa_desc' => $desc,
+                        'coa_type' => $type,
+                        'coa_level' => $level,
+                        'coa_is_rugilaba' => $this->input->post('rugi_laba'),
+                        'coa_is_neraca' => $this->input->post('neraca'),
+                        'coa_cbid' => ses_cabang
+                        ));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {

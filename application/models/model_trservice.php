@@ -27,12 +27,12 @@ class Model_Trservice extends CI_Model {
         }
         return null;
     }
+
     public function getWoAll($woNomer) {
         $sql = $this->db->query("SELECT wo_nomer,woid,wo_type,wo_inextern, pel_nama,pelid, msc_nopol,"
                 . " msc_norangka,wo_km,msc_nomesin, clo_status FROM svc_wo"
                 . " LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_car ON mscid = wo_mscid "
                 . " LEFT JOIN svc_clock ON clo_woid = woid WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "'");
-//        log_message('error', 'WO '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }
@@ -238,6 +238,25 @@ class Model_Trservice extends CI_Model {
 
     /**
      * 
+     * @param type $invid
+     * @return null
+     */
+    public function getFakturService($invid) {
+        $sql = $this->db->query("SELECT inv_numerator,inv_tgl,wo_numerator,wo_status,wo_booking,wo_inextern,wo_nomer,msc_nopol,"
+                . " msc_norangka,msc_nomesin,msc_tahun,wo_km,kr_nama,pel_nama,pel_alamat,model_deskripsi,"
+                . " pel_hp,wo_createon,wo_selesai,pel_telpon, wo_pembawa"
+                . " FROM svc_wo LEFT JOIN ms_car ON mscid = wo_mscid LEFT JOIN ms_car_type"
+                . " ON msc_ctyid = ctyid LEFT JOIN ms_car_model ON modelid = cty_modelid"
+                . " LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_karyawan ON krid = wo_sa"
+                . " WHERE woid = '$woid'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
      * @param type $where
      * @return type
      */
@@ -375,10 +394,10 @@ class Model_Trservice extends CI_Model {
         // UPDATE WO
         $this->db->where('woid', $wo['woid']);
         $this->db->update('svc_wo', $wo);
-        
+
         // UPDATE SUPPLY
-        $this->db->query("UPDATE spa_supply SET spp_faktur = 1 WHERE spp_woid = '".$wo['woid']."'");
-        
+        $this->db->query("UPDATE spa_supply SET spp_faktur = 1 WHERE spp_woid = '" . $wo['woid'] . "'");
+
         // SIMPAN WO JASA
         if (count($jasa) > 0) {
             foreach ($jasa as $d) {

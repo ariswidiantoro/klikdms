@@ -9,28 +9,28 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="aks_nama" id="aks_nama"  class="ace col-xs-10 col-sm-8 req" />
+            <input type="text" required="required" maxlength="50"  
+                   name="aks_nama" id="aks_nama"  class="ace col-xs-10 col-sm-6 upper req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsi</label>
         <div class="col-sm-5">
-            <textarea id="form-field-8" name="aks_alamat" class="form-control req" style='text-transform:uppercase'  placeholder="Alamat"></textarea>
+            <textarea id="aks_descrip" name="aks_descrip" class="autosize-transition form-control upper req"  placeholder="DESKRIPSI"></textarea>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">HPP</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="20" style='text-transform:uppercase' 
-                   name="aks_hpp" id="aks_hpp"  class="ace col-xs-10 col-sm-8 number align-right req" />
+            <input type="text" required="required" placeholder="0" maxlength="15" onchange="$('#'+this.id).val(formatDefault(this.value));"
+                   name="aks_hpp" id="aks_hpp"  class="ace col-xs-10 col-sm-6 number align-right req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Harga Jual</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="20" style='text-transform:uppercase' 
-                   name="aks_harga" id="aks_harga"  class="ace col-xs-10 col-sm-8 number align-right req" />
+            <input type="text" required="required" placeholder="0" maxlength="15" onchange="$('#'+this.id).val(formatDefault(this.value));"
+                   name="aks_harga" id="aks_harga"  class="ace col-xs-10 col-sm-6 number align-right req" />
         </div>
     </div>
     <div class="clearfix form-actions">
@@ -57,7 +57,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
-                window.location.href = "#master_sales/masterAksesories";
+                window.location.href = "#master_sales/aksesories";
             }});
     }
     
@@ -70,26 +70,7 @@
         });
         return false;
     }
-    
-    function getKota(){
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo site_url('master_sales/jsonKota') ?>',
-            dataType: "json",
-            async: false,
-            data: {
-                propid : $("#propid").val()
-            },
-            success: function(data) {
-                $('#aks_kotaid').html('');
-                $('#aks_kotaid').append('<option value="">PILIH</option>');
-                $.each(data, function(messageIndex, message) {
-                    $('#aks_kotaid').append('<option value="' + message['kotaid'] + '">' + message['kota_deskripsi'] + '</option>');
-                });
-            }
-        })
-    }
-    
+        
     $(this).ready(function() {
         //called when key is pressed in textbox
         $(".number").keypress(function (e) {
@@ -108,8 +89,10 @@
                 data: $(this).serialize(),
                 success: function(data) {
                     window.scrollTo(0, 0);
-                    document.formAdd.reset();
-                    $("#result").html(data).show().fadeIn("slow");
+                    if(data.status == '1'){
+                        document.formAdd.reset();
+                    }
+                    $("#result").html(data.msg).show().fadeIn("slow");
                 }
             })
             return false;
