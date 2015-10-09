@@ -251,40 +251,49 @@ class Transaksi_Prospect extends Application {
     }
     
     public function saveFpt(){
-        $prosid = strtoupper($this->input->post('pros_type', TRUE));
-        $fptdate = strtoupper($this->input->post('pros_nama', TRUE));
+        $prosid = strtoupper($this->input->post('fpt_prosid', TRUE));
+        $fptdate = dateToIndo($this->input->post('fpt_tgl', TRUE));
         $alamat = strtoupper($this->input->post('pros_alamat', TRUE));
         $hp = strtoupper($this->input->post('pros_hp', TRUE));
-        $kota = strtoupper($this->input->post('pros_kotaid', TRUE));
-        if (empty($tipe)||empty($nama)||empty($alamat)||empty($hp)||empty($kota)) {
+        $hargakosong = numeric($this->input->post('fpt_hargako', TRUE));
+        if (empty($tipe)||empty($nama)||empty($hargakosong)||empty($hp)||empty($kota)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_prospect->addProspect(array(
-                'pros_type' => $tipe,
-                'pros_nama' => $nama,
-                'pros_alamat' => $alamat,
-                'pros_hp' => $hp,
-                'pros_kotaid' => $kota,
-                'pros_telpon' => $this->input->post('pros_telpon', TRUE),
-                'pros_alamat_surat' => $this->input->post('pros_alamat_surat', TRUE),
-                'pros_fax' => $this->input->post('pros_fax', TRUE),
-                'pros_sumber_info' => $this->input->post('pros_sumber_info', TRUE),
-                'pros_email' => $this->input->post('pros_email', TRUE),
-                'pros_npwp' => $this->input->post('pros_npwp', TRUE),
-                'pros_gender' => $this->input->post('pros_gender', TRUE),
-                'pros_tempat_lahir' => $this->input->post('pros_tempat_lahir', TRUE),
-                'pros_tgl_lahir' => dateToIndo($this->input->post('pros_tgl_lahir', TRUE)),
-                'pros_cbid' => ses_cabang,
-                'pros_salesman' => ses_krid,
-                'pros_status' => 1,
-                'pros_status_hot' => 0,
-                'pros_createby' => ses_username,
-                'pros_createon' => date('Y-m-d H:i:s'),
+            $save = $this->model_prospect->addFPT(array(
+                'fpt_prosid' => $prosid,
+                'fpt_tgl' => $nama,
+                'fpt_cbid' => ses_cabang,
+                'fpt_note' => strtoupper($this->input->post('fpt_keterangan', TRUE)),
+                'fpt_penerima_komisi' => strtoupper($this->input->post('fpt_penerima_komisi', TRUE)),
+                'fpt_komisi' => numeric($this->input->post('fpt_komisi', TRUE)),
+                'fpt_kondisi' => $this->input->post('fpt_kondisi', TRUE),
+                'fpt_merkid' => $this->input->post('fpt_merkid', TRUE),
+                'fpt_modelid' => $this->input->post('fpt_modelid', TRUE),
+                'fpt_ctyid' => $this->input->post('fpt_ctyid', TRUE),
+                'fpt_warnaid' => $this->input->post('fpt_warnaid', TRUE),
+                'fpt_karoid' => $this->input->post('fpt_karoid', TRUE),
+                'fpt_pay_method' => $this->input->post('fpt_pay_method', TRUE),
+                'fpt_harga_method' => $this->input->post('fpt_harga_method', TRUE),
+                'fpt_leasing' => $this->input->post('fpt_leasing', TRUE),
+                'fpt_jangka' => $this->input->post('fpt_jangka', TRUE),
+                'fpt_diskon' => numeric($this->input->post('fpt_diskon', TRUE)),
+                'fpt_cashback' => numeric($this->input->post('fpt_cashback', TRUE)),
+                'fpt_uangmuka' => numeric($this->input->post('fpt_uangmuka', TRUE)),
+                'fpt_approve' => '0',
+                'fpt_hargako' => numeric($this->input->post('fpt_hargako', TRUE)),
+                'fpt_bbn' => numeric($this->input->post('fpt_bbn', TRUE)),
+                'fpt_asuransi' => numeric($this->input->post('fpt_asuransi', TRUE)),
+                'fpt_karoseri' => numeric($this->input->post('fpt_karoseri', TRUE)),
+                'fpt_administrasi' => numeric($this->input->post('fpt_administrasi', TRUE)),
+                'fpt_total' => numeric($this->input->post('fpt_total', TRUE)),
+                'fpt_status' => '1',
+                'fpt_createon' => date('Y-m-d H:i:s'),
+                'fpt_createby' => ses_krid,
                 ));
             if ($save['status'] == TRUE) {
-                $hasil = $this->sukses($save['msg']);
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
-                $hasil = $this->error($save['msg']);
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
             }
         }
         echo json_encode($hasil);

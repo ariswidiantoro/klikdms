@@ -206,14 +206,11 @@ class Model_Prospect extends CI_Model {
     public function addFPT($data = array()) {
         $this->db->trans_begin();
         try {
-            $code = $this->newCode(array('type' => 'FP'));
-            if ($code['status'] == FALSE) {
-                $warn = "FAILED GENERATE CODE : FPT";
-                throw new Exception($warn);
-            }
+            $tahun = date('y');
+            $data['fptid'] = NUM_FPT . $tahun . sprintf("%08s", $this->getCounter(NUM_FPT . $tahun));
+            $data['fpt_kode'] = NUM_FPT . $tahun . sprintf("%06s", $this->getCounterCabang(NUM_FPT . $tahun));
 
-            $data['fptid'] = $code['code'];
-            if ($this->db->insert('pros_data', $data) == FALSE) {
+            if ($this->db->insert('pen_fpt', $data) == FALSE) {
                 $warn = "FAILED INSERTING DATA : FPT";
                 throw new Exception($warn);
             }

@@ -8,15 +8,15 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
+            <input type="text" required="required" maxlength="50" amd 
                    name="aks_nama" id="aks_nama" value="<?php echo $data['aks_nama'] ?>" class="ace col-xs-10 col-sm-8" />
         </div>
         <input type="hidden" required="required"  value="<?php echo $data['aksid'] ?>" name="aksid" id="aksid"/>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deskripsi</label>
         <div class="col-sm-5">
-            <textarea id="form-field-8" name="aks_descrip" class="form-control" style='text-transform:uppercase'  placeholder="Alamat"><?php echo $data['aks_descrip'] ?></textarea>
+            <textarea id="form-field-8" name="aks_descrip" class="form-control" style='text-transform:uppercase'  placeholder="DESKRIPSI"><?php echo $data['aks_descrip'] ?></textarea>
         </div>
     </div>
     <div class="form-group">

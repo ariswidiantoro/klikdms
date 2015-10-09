@@ -388,11 +388,11 @@
 
                     if(url == 'auto_coa'){
                         /* UNIT */
-                        if(ui.item.value == '<?php PIUTANG_UNIT ?>'){
+                        if(ui.item.value == '100601'){
                               row.find("input[name^=dtrans_nota]").attr('required','required');
                               row.find("input[name^=dtrans_nota]").attr('required','required');
                         /* SERVICE */
-                        }else if(ui.item.value == '<?php PIUTANG_SERVICE ?>'){
+                        }else if(ui.item.value == '100102'){
                               row.find("input[name^=dtrans_nota]").attr('required','required');
                               row.find("input[name^=dtrans_nota]").attr('required','required');
                         }

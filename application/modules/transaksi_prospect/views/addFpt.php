@@ -322,6 +322,32 @@
                         </div>
                     </div> <i> *BULAN</i>
                 </div>
+                <div class="hr hr-16 hr-dotted"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Uang Muka</label>
+                    <div class="col-sm-8">
+                        <div class="input-group col-sm-6">
+                            <input type="text" name="fpt_uangmuka" id="fpt_uangmuka" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control harga number upper" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Cashback</label>
+                    <div class="col-sm-8">
+                        <div class="input-group col-sm-6">
+                            <input type="text" name="fpt_cashback" id="fpt_cashback" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control harga number upper" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Diskon</label>
+                    <div class="col-sm-8">
+                        <div class="input-group col-sm-6">
+                            <input type="text" name="fpt_diskon" id="fpt_diskon" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control harga number upper" />
+                        </div>
+                    </div>
+                </div>
+                <div class="hr hr-16 hr-dotted"></div>
                 <div class="space-2"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Harga Kosong</label>
@@ -624,7 +650,9 @@
                 data: $(this).serialize(),
                 success: function(data) {
                     window.scrollTo(0, 0);
-                    document.formAdd.reset();
+                    if(data.status == true){
+                        document.formAdd.reset();
+                    }
                     $("#result").html(data).show().fadeIn("slow");
                 }
             })

@@ -37,7 +37,6 @@ define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('DEFAULT_TGL',		'01-01-9999');
 
-
 define('JAB_SVC_MEKANIK', 'JAB002');
 define('JAB_SVC_SA_FRONTMAN', 'JAB003');
 define('JAB_SVC_FINAL_CHECKER', 'JAB004');
