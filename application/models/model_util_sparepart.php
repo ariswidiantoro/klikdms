@@ -24,7 +24,7 @@ class Model_Util_Sparepart extends CI_Model {
                 . " ms_pelanggan ON pelid = spp_pelid LEFT JOIN svc_wo ON woid = spp_woid $wh");
         return $sql->row()->total;
     }
-    
+
     public function getTotalAdjustment($where) {
         $wh = "WHERE adj_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
@@ -67,7 +67,7 @@ class Model_Util_Sparepart extends CI_Model {
      * @return type
      */
     function getAllSupplySlip($start, $limit, $sidx, $sord, $where) {
-        $this->db->select('sppid,spp_noslip, spp_total,spp_tgl, pel_nama, spp_status,spp_faktur,wo_nomer');
+        $this->db->select('sppid,spp_noslip, spp_total,spp_jenis,spp_tgl, pel_nama, spp_status,spp_faktur,wo_nomer');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
@@ -137,6 +137,7 @@ class Model_Util_Sparepart extends CI_Model {
         }
         return null;
     }
+
     /**
      * 
      * @param type $start
@@ -169,7 +170,7 @@ class Model_Util_Sparepart extends CI_Model {
      * @param type $alasan
      * @return type
      */
-    function batalSupply($sppid, $alasan) {
+    function batalSupply($sppid, $alasan, $jenis) {
         $result = array();
         $this->db->trans_begin();
 
@@ -177,27 +178,29 @@ class Model_Util_Sparepart extends CI_Model {
         $this->db->where('sppid', $sppid);
         $this->db->update('spa_supply', array('spp_status' => 1, 'spp_tgl_batal' => date('Y-m-d H:i:s'), 'spp_alasan_batal' => $alasan, 'spp_batalby' => ses_username));
 
-        $sql = $this->db->query("SELECT * FROM spa_supply_det WHERE dsupp_sppid = '$sppid'");
-        foreach ($sql->result_array() as $value) {
-            $barang = $this->db->query("SELECT * FROM spa_inventory WHERE inveid = '" . $value['dsupp_inveid'] . "' FOR UPDATE");
-            $row = $barang->row_array();
-            $hpp = (($row['inve_qty'] * $row['inve_hpp']) + ($value['dsupp_subtotal_hpp'])) / ($row['inve_qty'] + $value['dsupp_qty']);
-            //INSERT KARTU STOCK
-            $kartuStock = array(
-                'ks_tgl' => date('Y-m-d H:i:s'),
-                'ks_cbid' => ses_cabang,
-                'ks_inveid' => $value['dsupp_inveid'],
-                'ks_in' => $value['dsupp_qty'],
-                'ks_type' => 'BS',
-                'ks_hpp' => $hpp,
-                'ks_debit' => $value['dsupp_subtotal_hpp'],
-                'ks_saldo' => $value['dsupp_subtotal_hpp'] + $row['inve_saldo'],
-                'ks_total' => $row['inve_qty'] + $value['dsupp_qty'],
-            );
-            $this->db->INSERT('spa_kartu_stock', $kartuStock);
-            // UDPATE INVENTORY
-            $this->db->query("UPDATE spa_inventory SET inve_qty = inve_qty + " . $value['dsupp_qty'] .
-                    ",inve_hpp = $hpp, inve_saldo = inve_saldo + " . $value['dsupp_subtotal_hpp'] . " WHERE inveid = '" . $value['dsupp_inveid'] . "'");
+        if ($jenis != 'so') {
+            $sql = $this->db->query("SELECT * FROM spa_supply_det WHERE dsupp_sppid = '$sppid'");
+            foreach ($sql->result_array() as $value) {
+                $barang = $this->db->query("SELECT * FROM spa_inventory WHERE inveid = '" . $value['dsupp_inveid'] . "' FOR UPDATE");
+                $row = $barang->row_array();
+                $hpp = (($row['inve_qty'] * $row['inve_hpp']) + ($value['dsupp_subtotal_hpp'])) / ($row['inve_qty'] + $value['dsupp_qty']);
+                //INSERT KARTU STOCK
+                $kartuStock = array(
+                    'ks_tgl' => date('Y-m-d H:i:s'),
+                    'ks_cbid' => ses_cabang,
+                    'ks_inveid' => $value['dsupp_inveid'],
+                    'ks_in' => $value['dsupp_qty'],
+                    'ks_type' => 'BS',
+                    'ks_hpp' => $hpp,
+                    'ks_debit' => $value['dsupp_subtotal_hpp'],
+                    'ks_saldo' => $value['dsupp_subtotal_hpp'] + $row['inve_saldo'],
+                    'ks_total' => $row['inve_qty'] + $value['dsupp_qty'],
+                );
+                $this->db->INSERT('spa_kartu_stock', $kartuStock);
+                // UDPATE INVENTORY
+                $this->db->query("UPDATE spa_inventory SET inve_qty = inve_qty + " . $value['dsupp_qty'] .
+                        ",inve_hpp = $hpp, inve_saldo = inve_saldo + " . $value['dsupp_subtotal_hpp'] . " WHERE inveid = '" . $value['dsupp_inveid'] . "'");
+            }
         }
 
         if ($this->db->trans_status() === TRUE) {
