@@ -63,12 +63,12 @@ class Transaksi_Prospect extends Application {
 
                 $responce->rows[$i]['id'] = $row->prosid;
                 $responce->rows[$i]['cell'] = array(
-                    $fpt, $edit,$detail,
-                    $row->pros_nama, 
-                    $row->pros_alamat, 
-                    $row->pros_hp, 
-                    $row->kr_nama, 
-                    $row->cty_deskripsi, 
+                    $fpt, $edit, $detail,
+                    $row->pros_nama,
+                    $row->pros_alamat,
+                    $row->pros_hp,
+                    $row->kr_nama,
+                    $row->cty_deskripsi,
                     $row->car_qty);
                 $i++;
             }
@@ -77,15 +77,15 @@ class Transaksi_Prospect extends Application {
 
     public function addProspect() {
         $this->hakAkses(1060);
-        $this->data['propinsi'] = $this->model_sales->cListPropinsi();
-        $this->data['merk'] = $this->model_sales->cListMerk();
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->data['merk'] = $this->model_admin->getMerk();
         $this->data['sinfo'] = $this->model_prospect->cListSinfo();
         $this->data['kontak'] = $this->model_prospect->cListKontak();
         $this->data['bisnis'] = $this->model_prospect->cListBisnis();
         $this->data['title'] = 'Tambah Prospect';
         $this->load->view('addProspect', $this->data);
     }
-    
+
     public function editProspect() {
         $this->hakAkses(1060);
         $id = $this->input->get('id');
@@ -95,7 +95,7 @@ class Transaksi_Prospect extends Application {
         $this->data['data'] = $data;
         $this->load->view('editProspect', $this->data);
     }
-    
+
     public function detailProspect() {
         $this->hakAkses(1060);
         $id = $this->input->get('id');
@@ -111,8 +111,9 @@ class Transaksi_Prospect extends Application {
         $hp = strtoupper($this->input->post('pros_hp', TRUE));
         $kota = strtoupper($this->input->post('pros_kotaid', TRUE));
         $tgl = strtoupper($this->input->post('pros_tgl_lahir', TRUE));
-        if(empty($tgl)) $tgl = defaultTgl();
-        if (empty($tipe)||empty($nama)||empty($alamat)||empty($hp)||empty($kota)) {
+        if (empty($tgl))
+            $tgl = defaultTgl();
+        if (empty($tipe) || empty($nama) || empty($alamat) || empty($hp) || empty($kota)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI FIELD YG BERWARNA MERAH');
         } else {
             $data = array(
@@ -140,7 +141,7 @@ class Transaksi_Prospect extends Application {
                 'pros_status_hot' => 0,
                 'pros_createby' => ses_username,
                 'pros_createon' => date('Y-m-d H:i:s'),
-                );
+            );
             $cars = array(
                 'merkid' => $this->input->post('cars_merkid', TRUE),
                 'modelid' => $this->input->post('cars_modelid', TRUE),
@@ -149,9 +150,11 @@ class Transaksi_Prospect extends Application {
             );
             $save = $this->model_prospect->addProspect($data, $cars);
             if ($save['status'] == TRUE) {
-                $hasil = $this->sukses($save['msg']);
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses($save['msg']);
             } else {
-                $hasil = $this->error($save['msg']);
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error($save['msg']);
             }
         }
         echo json_encode($hasil);
@@ -164,10 +167,10 @@ class Transaksi_Prospect extends Application {
         $alamat = strtoupper($this->input->post('pros_alamat', TRUE));
         $hp = strtoupper($this->input->post('pros_hp', TRUE));
         $kota = strtoupper($this->input->post('pros_kotaid', TRUE));
-        if (empty($tipe)||empty($nama)||empty($alamat)||empty($hp)||empty($kota)) {
+        if (empty($tipe) || empty($nama) || empty($alamat) || empty($hp) || empty($kota)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-           $save = $this->model_prospect->updateProspect(array(
+            $save = $this->model_prospect->updateProspect(array(
                 'pros_type' => $tipe,
                 'pros_nama' => $nama,
                 'pros_alamat' => $alamat,
@@ -182,7 +185,7 @@ class Transaksi_Prospect extends Application {
                 'pros_gender' => $this->input->post('pros_gender', TRUE),
                 'pros_tempat_lahir' => $this->input->post('pros_tempat_lahir', TRUE),
                 'pros_tgl_lahir' => $this->input->post('pros_tgl_lahir', TRUE),
-                ), $prosid);
+                    ), $prosid);
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
@@ -205,7 +208,7 @@ class Transaksi_Prospect extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     public function batalProspect() {
         $id = $this->input->post('id', TRUE);
         if (empty($id)) {
@@ -228,15 +231,14 @@ class Transaksi_Prospect extends Application {
             $responce = $result;
         echo json_encode($responce);
     }
-    
+
     /**
      * This function is used for display FPT Form
      * @author Rossi <rosoningati@gmail.com>
      * @since 1.0
      * Created on 2015-09-18
      */
-    
-    public function addFpt(){
+    public function addFpt() {
         $this->hakAkses(1060);
         $id = $this->input->get('id', TRUE);
         $this->data['data'] = $this->model_prospect->getProspect($id);
@@ -298,8 +300,7 @@ class Transaksi_Prospect extends Application {
         }
         echo json_encode($hasil);
     }
-   
-    
+
     /**
      * This function displays list of prospect datas
      * @author Rossi
@@ -310,7 +311,7 @@ class Transaksi_Prospect extends Application {
         $this->data['title'] = 'Daftar FPT';
         $this->load->view('dataFpt', $this->data);
     }
-    
+
     /**
      * This function is used for display cabang
      * @author Rossi
@@ -334,8 +335,9 @@ class Transaksi_Prospect extends Application {
         $this->data['content'] = 'searchVehicle';
         $this->load->view('template', $this->data);
     }
-    
+
     /* AUTO COMPLETE */
+
     public function autoAksesories() {
         $param = $this->input->post('param');
         $cbid = $this->input->post('cbid');
@@ -344,23 +346,21 @@ class Transaksi_Prospect extends Application {
             $data['message'] = array();
             foreach ($query as $row) {
                 $data['message'][] = array(
-                    'value' => $row['aks_nama'], 
-                    'desc' => $row['aks_nama'].'<br/>'.$row['aks_descrip'], 
-                    'trgone' => $row['aksid'], 
+                    'value' => $row['aks_nama'],
+                    'desc' => $row['aks_nama'] . '<br/>' . $row['aks_descrip'],
+                    'trgone' => $row['aksid'],
                     'trgtwo' => $row['aks_harga']
-                    );
+                );
             }
         } else {
             $data['message'][] = array(
-                'value' => 'DATA TIDAK ADA', 
-                'desc' => "", 
-                'trgone' => '', 
+                'value' => 'DATA TIDAK ADA',
+                'desc' => "",
+                'trgone' => '',
                 'trgtwo' => '0');
         }
         echo json_encode($data);
     }
-
-   
 
 }
 

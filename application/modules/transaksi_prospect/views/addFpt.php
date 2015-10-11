@@ -44,7 +44,7 @@
     <hr />
 
     <div class="step-content pos-rel">
-        <form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('transaksi_prospect/saveProspect'); ?>" name="formAdd">
+        <form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('transaksi_prospect/saveFpt'); ?>" name="formAdd">
             <div class="step-pane active" data-step="1">
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Prospect</label>
@@ -264,7 +264,7 @@
                                         <input type="hidden"  id="dtrans_aksid1"  name="dtrans_aksid[]" />
                                     </td>
                                     <td>
-                                            <input type="text" id="dtrans_harga1" name="dtrans_harga[]"  placeholder="HARGA" class="form-control number upper" />
+                                        <input type="text" id="dtrans_harga1" name="dtrans_harga[]"  placeholder="HARGA" class="form-control number upper" />
                                     </td>
                                     <td class="center" style="vertical-align: middle;">
                                         <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>
@@ -559,7 +559,7 @@
                     type: 'POST',
                     data: {
                         param : $("#dtrans_aksname" + inc).val(),
-                        cbid : '<?php echo ses_cabang ; ?>'
+                        cbid : '<?php echo ses_cabang; ?>'
                     },
                     success: function(data) {
                         add(data.message);
@@ -601,7 +601,7 @@
     function Delete() {
         var par = $(this).parent().parent(); //tr
         if( $('.dtlaksesories').length > 1)
-        par.remove();
+            par.remove();
     }
     
     function addRow() {
@@ -625,132 +625,132 @@
                 <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
             </td>\n\
         </tr>');
-         $(".btnDelete").bind("click", Delete);
-         numberOnly();
-    }
+                    $(".btnDelete").bind("click", Delete);
+                    numberOnly();
+                }
     
 				
-    $(this).ready(function() {
-        //called when key is pressed in textbox
-        $(".number").keypress(function (e) {
-            //if the letter is not digit then display error and don't type anything
-            if (e.which != 8 && e.which != 47 && e.which != 0 && (e.which < 46 || e.which > 57)){
-                return false;
-            }
-        });
+                $(this).ready(function() {
+                    //called when key is pressed in textbox
+                    $(".number").keypress(function (e) {
+                        //if the letter is not digit then display error and don't type anything
+                        if (e.which != 8 && e.which != 47 && e.which != 0 && (e.which < 46 || e.which > 57)){
+                            return false;
+                        }
+                    });
         
-        $( ".datepicker" ).datepicker();
+                    $( ".datepicker" ).datepicker();
                 
-        $('#formAdd').submit(function() {
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo site_url('transaksi_prospect/saveProspect') ?>",
-                dataType: "json",
-                async: false,
-                data: $(this).serialize(),
-                success: function(data) {
-                    window.scrollTo(0, 0);
-                    if(data.status == true){
-                        document.formAdd.reset();
-                    }
-                    $("#result").html(data).show().fadeIn("slow");
-                }
-            })
-            return false;
-        });
+                    $('#formAdd').submit(function() {
+                        $.ajax({
+                            type: 'POST',
+                            url: "<?php echo site_url('transaksi_prospect/saveFpt') ?>",
+                            dataType: "json",
+                            async: false,
+                            data: $(this).serialize(),
+                            success: function(data) {
+                                window.scrollTo(0, 0);
+                                if (data.result) {
+                                    document.formAdd.reset();
+                                }
+                                $("#result").html(data.msg).show().fadeIn("slow");
+                            }
+                        })
+                        return false;
+                    });
 
-    });
+                });
     
-    var scripts = [null, null]
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-        //inline scripts related to this page
-    });
+                var scripts = [null, null]
+                $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+                    //inline scripts related to this page
+                });
     
-    jQuery(function($) {
-        var $validation = false;
-        $('#fuelux-wizard-container')
-        .ace_wizard({
-            //step: 2 //optional argument. wizard will jump to step "2" at first
-            //buttons: '.wizard-actions:eq(0)'
-        })
-        .on('actionclicked.fu.wizard' , function(e, info){
-            if(info.step == 1 && $validation) {
-                if(!$('#formAdd').valid()) e.preventDefault();
-            }
-        })
-        .on('finished.fu.wizard', function(e) {
-            var result = false;
-            bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
-                if(result) {
-                    $("#formAdd").submit();
-                }
-            });
-            return false;
-        })
-        .on('stepclick.fu.wizard', function(e){
-            // e.preventDefault();//this will prevent clicking and selecting steps
-        });
+                jQuery(function($) {
+                    var $validation = false;
+                    $('#fuelux-wizard-container')
+                    .ace_wizard({
+                        //step: 2 //optional argument. wizard will jump to step "2" at first
+                        //buttons: '.wizard-actions:eq(0)'
+                    })
+                    .on('actionclicked.fu.wizard' , function(e, info){
+                        if(info.step == 1 && $validation) {
+                            if(!$('#formAdd').valid()) e.preventDefault();
+                        }
+                    })
+                    .on('finished.fu.wizard', function(e) {
+                        var result = false;
+                        bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                            if(result) {
+                                $("#formAdd").submit();
+                            }
+                        });
+                        return false;
+                    })
+                    .on('stepclick.fu.wizard', function(e){
+                        // e.preventDefault();//this will prevent clicking and selecting steps
+                    });
 			
-        $('#formAdd').validate({
-            errorElement: 'div',
-            errorClass: 'help-block',
-            focusInvalid: false,
-            ignore: "",
-            rules: {
-                pros_type: {
-                    required: true
-                },
-                pros_nama: {
-                    required: true
-                },
-                pros_alamat: {
-                    required: true
-                },
-                pros_hp: {
-                    required: true
-                }
-            },
+                    $('#formAdd').validate({
+                        errorElement: 'div',
+                        errorClass: 'help-block',
+                        focusInvalid: false,
+                        ignore: "",
+                        rules: {
+                            pros_type: {
+                                required: true
+                            },
+                            pros_nama: {
+                                required: true
+                            },
+                            pros_alamat: {
+                                required: true
+                            },
+                            pros_hp: {
+                                required: true
+                            }
+                        },
 			
-            messages: {
-                pros_type: {
-                    required: "Pastikan tipe pelanggan tidak kosong."
-                },
-                pros_nama: {
-                    required: "Pastikan nama pelanggan tidak kosong."
-                },
-                pros_alamat: {
-                    required: "Pastikan alamat pelanggan tidak kosong."
-                },
-                pros_hp: {
-                    required: "Pastikan no. handphone tidak kosong."
-                }
-            },
+                        messages: {
+                            pros_type: {
+                                required: "Pastikan tipe pelanggan tidak kosong."
+                            },
+                            pros_nama: {
+                                required: "Pastikan nama pelanggan tidak kosong."
+                            },
+                            pros_alamat: {
+                                required: "Pastikan alamat pelanggan tidak kosong."
+                            },
+                            pros_hp: {
+                                required: "Pastikan no. handphone tidak kosong."
+                            }
+                        },
 			
-            highlight: function (e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-            },
+                        highlight: function (e) {
+                            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                        },
 			
-            success: function (e) {
-                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-                $(e).remove();
-            },
+                        success: function (e) {
+                            $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                            $(e).remove();
+                        },
 			
-            errorPlacement: function (error, element) {
-                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
-                    var controls = element.closest('div[class*="col-"]');
-                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
-                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
-                }
-                else if(element.is('.chosen-select')) {
-                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
-                }
-                else error.insertAfter(element.parent());
-            },
+                        errorPlacement: function (error, element) {
+                            if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                                var controls = element.closest('div[class*="col-"]');
+                                if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                                else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                            }
+                            else if(element.is('.chosen-select')) {
+                                error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                            }
+                            else error.insertAfter(element.parent());
+                        },
 			
-            submitHandler: function (form) {
-            },
-            invalidHandler: function (form) {
-            }
-        });
-    })
+                        submitHandler: function (form) {
+                        },
+                        invalidHandler: function (form) {
+                        }
+                    });
+                })
 </script>

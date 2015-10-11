@@ -9,14 +9,14 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
-            <input type="text" required="required" maxlength="50" style='text-transform:uppercase' 
-                   name="karo_nama" id="karo_nama"  class="ace col-xs-10 col-sm-8" />
+            <input type="text" required="required" maxlength="50" 
+                   name="karo_nama" id="karo_nama"  class="ace col-xs-10 col-sm-8 upper req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-5">
-            <textarea id="form-field-8" name="karo_alamat" class="form-control" style='text-transform:uppercase'  placeholder="Alamat"></textarea>
+            <textarea id="form-field-8" name="karo_alamat" class="form-control upper req"   placeholder="Alamat"></textarea>
         </div>
     </div>
 
@@ -97,24 +97,26 @@
         return false;
     }
     
-    function getKota(){
+    function getKota()
+    {
         $.ajax({
             type: 'POST',
-            url: '<?php echo site_url('master_sales/jsonKota') ?>',
+            url: '<?php echo site_url('admin/jsonKota') ?>',
             dataType: "json",
             async: false,
             data: {
                 propid : $("#propid").val()
             },
             success: function(data) {
-                $('#karo_kotaid').html('');
+                 $('#karo_kotaid').html('');
                 $('#karo_kotaid').append('<option value="">PILIH</option>');
                 $.each(data, function(messageIndex, message) {
-                    $('#karo_kotaid').append('<option value="' + message['kotaid'] + '">' + message['kota_deskripsi'] + '</option>');
+                    $('#karo_kotaid').append('<option value="' + message.kotaid + '">' + message.kota_deskripsi + '</option>');
                 });
             }
         })
     }
+    
     
     $(this).ready(function() {
         //called when key is pressed in textbox

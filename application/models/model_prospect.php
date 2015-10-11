@@ -173,7 +173,7 @@ class Model_Prospect extends CI_Model {
             WHERE prosid = '" . $data . "'  ");
         return $query->row_array();
     }
-    
+
     public function getDetailCars($data) {
         $query = "SELECT merk_deskripsi, model_deskripsi, cty_deskripsi, car_qty 
             FROM pros_data_car
@@ -224,8 +224,9 @@ class Model_Prospect extends CI_Model {
             }
         } catch (Exception $e) {
             $this->db->trans_rollback();
-            return array('status' => FALSE, 'msg' => $e->getMessage());
+            return false;
         }
+        return false;
     }
 
     public function updateFPT($data, $where) {
@@ -533,13 +534,14 @@ class Model_Prospect extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /* AUTO COMPLETE */
+
     public function autoAksesories($data) {
         $sql = $this->db->query("
             SELECT aksid, aks_nama, aks_descrip, aks_harga, aks_status
-            FROM ms_aksesories WHERE (aks_nama LIKE '%".$data['param']."%' OR aks_descrip LIKE '%".$data['param']."%') 
-                AND aks_cbid = '".$data['cbid']."'
+            FROM ms_aksesories WHERE (aks_nama LIKE '%" . $data['param'] . "%' OR aks_descrip LIKE '%" . $data['param'] . "%') 
+                AND aks_cbid = '" . $data['cbid'] . "'
             ORDER BY aks_nama ASC LIMIT 15 OFFSET 0
         ");
         if ($sql->num_rows() > 0) {

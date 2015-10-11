@@ -111,7 +111,6 @@ jQuery(function($) {
                 //                var path = document.location.pathname;
 
                 //for example in Ace PHP demo version we convert "ajax.php#page/dashboard" to "ajax.php?page=dashboard" and load it
-                //                alert(path +hash);
                 path = '/'+path[1]+'/';
                 return path + hash;
             }			  

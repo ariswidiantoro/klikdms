@@ -473,11 +473,11 @@
                          <td>\n\
                              <select class="form-control input-xlarge" style="width:100%;" onchange="getModel('+( inc )+')"  name="merkid[]" id="merkid'+(inc)+'" >\n\
                             <option value="">PILIH</option>\n\
-                        <?php
-                        foreach ($merk as $value) {
-                            echo "<option value=\'" . $value['merkid'] . "\' > " . $value['merk_deskripsi'] . "</option> ";
-                        }
-                        ?> \n\
+<?php
+foreach ($merk as $value) {
+    echo "<option value=\'" . $value['merkid'] . "\' > " . $value['merk_deskripsi'] . "</option> ";
+}
+?> \n\
                         </select> \n\
                          </td>\n\
                          <td>\n\
@@ -507,145 +507,147 @@
                                  $(".btnDelete").bind("click", Delete);
                              }
     
-    $(this).ready(function() {
-        //called when key is pressed in textbox
-        $(".number").keypress(function (e) {
-            //if the letter is not digit then display error and don't type anything
-            if (e.which != 8 && e.which != 47 && e.which != 0 && (e.which < 46 || e.which > 57)){
-                return false;
-            }
-        });
+                             $(this).ready(function() {
+                                 //called when key is pressed in textbox
+                                 $(".number").keypress(function (e) {
+                                     //if the letter is not digit then display error and don't type anything
+                                     if (e.which != 8 && e.which != 47 && e.which != 0 && (e.which < 46 || e.which > 57)){
+                                         return false;
+                                     }
+                                 });
 
-        $( "#datepicker" ).datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: false,
-            isRTL:true,
-            yearRange: "c-30:c+3",
-            changeMonth: true,
-            changeYear: true,
+                                 $( "#datepicker" ).datepicker({
+                                     showOtherMonths: true,
+                                     selectOtherMonths: false,
+                                     isRTL:true,
+                                     yearRange: "c-30:c+3",
+                                     changeMonth: true,
+                                     changeYear: true,
 
-            showButtonPanel: true,
-            beforeShow: function() {
-                //change button colors
-                var datepicker = $(this).datepicker( "widget" );
-                setTimeout(function(){
-                    var buttons = datepicker.find('.ui-datepicker-buttonpane')
-                    .find('button');
-                    buttons.eq(0).addClass('btn btn-xs');
-                    buttons.eq(1).addClass('btn btn-xs btn-success');
-                    buttons.wrapInner('<span class="bigger-110" />');
-                }, 0);
-            }
-        });
+                                     showButtonPanel: true,
+                                     beforeShow: function() {
+                                         //change button colors
+                                         var datepicker = $(this).datepicker( "widget" );
+                                         setTimeout(function(){
+                                             var buttons = datepicker.find('.ui-datepicker-buttonpane')
+                                             .find('button');
+                                             buttons.eq(0).addClass('btn btn-xs');
+                                             buttons.eq(1).addClass('btn btn-xs btn-success');
+                                             buttons.wrapInner('<span class="bigger-110" />');
+                                         }, 0);
+                                     }
+                                 });
 
-        $('#formAdd').submit(function() {
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo site_url('transaksi_prospect/saveProspect') ?>",
-                dataType: "json",
-                async: false,
-                data: $(this).serialize(),
-                success: function(data) {
-                    window.scrollTo(0, 0);
-                    document.formAdd.reset();
-                    $("#result").html(data).show().fadeIn("slow");
-                }
-            })
-            return false;
-        });
+                                 $('#formAdd').submit(function() {
+                                     $.ajax({
+                                         type: 'POST',
+                                         url: "<?php echo site_url('transaksi_prospect/saveProspect') ?>",
+                                         dataType: "json",
+                                         async: false,
+                                         data: $(this).serialize(),
+                                         success: function(data) {
+                                             window.scrollTo(0, 0);
+                                             if (data.result) {
+                                                 document.formAdd.reset();
+                                             }
+                                             $("#result").html(data.msg).show().fadeIn("slow");
+                                         }
+                                     })
+                                     return false;
+                                 });
 
-    });
+                             });
 
-    var scripts = [null, null]
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-        //inline scripts related to this page
-    });
+                             var scripts = [null, null]
+                             $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+                                 //inline scripts related to this page
+                             });
 
-    jQuery(function($) {
-        var $validation = false;
-        $('#fuelux-wizard-container')
-        .ace_wizard({
-            //step: 2 //optional argument. wizard will jump to step "2" at first
-            //buttons: '.wizard-actions:eq(0)'
-        })
-        .on('actionclicked.fu.wizard' , function(e, info){
-            if(info.step == 1 && $validation) {
-                if(!$('#formAdd').valid()) e.preventDefault();
-            }
-        })
-        .on('finished.fu.wizard', function(e) {
-            var result = false;
-            bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
-                if(result) {
-                    $("#formAdd").submit();
-                }
-            });
-            return false;
-        })
-        .on('stepclick.fu.wizard', function(e){
-            // e.preventDefault();//this will prevent clicking and selecting steps
-        });
+                             jQuery(function($) {
+                                 var $validation = false;
+                                 $('#fuelux-wizard-container')
+                                 .ace_wizard({
+                                     //step: 2 //optional argument. wizard will jump to step "2" at first
+                                     //buttons: '.wizard-actions:eq(0)'
+                                 })
+                                 .on('actionclicked.fu.wizard' , function(e, info){
+                                     if(info.step == 1 && $validation) {
+                                         if(!$('#formAdd').valid()) e.preventDefault();
+                                     }
+                                 })
+                                 .on('finished.fu.wizard', function(e) {
+                                     var result = false;
+                                     bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                                         if(result) {
+                                             $("#formAdd").submit();
+                                         }
+                                     });
+                                     return false;
+                                 })
+                                 .on('stepclick.fu.wizard', function(e){
+                                     // e.preventDefault();//this will prevent clicking and selecting steps
+                                 });
 
-        $('#formAdd').validate({
-            errorElement: 'div',
-            errorClass: 'help-block',
-            focusInvalid: false,
-            ignore: "",
-            rules: {
-                pros_type: {
-                    required: true
-                },
-                pros_nama: {
-                    required: true
-                },
-                pros_alamat: {
-                    required: true
-                },
-                pros_hp: {
-                    required: true
-                }
-            },
+                                 $('#formAdd').validate({
+                                     errorElement: 'div',
+                                     errorClass: 'help-block',
+                                     focusInvalid: false,
+                                     ignore: "",
+                                     rules: {
+                                         pros_type: {
+                                             required: true
+                                         },
+                                         pros_nama: {
+                                             required: true
+                                         },
+                                         pros_alamat: {
+                                             required: true
+                                         },
+                                         pros_hp: {
+                                             required: true
+                                         }
+                                     },
 
-            messages: {
-                pros_type: {
-                    required: "Pastikan tipe pelanggan tidak kosong."
-                },
-                pros_nama: {
-                    required: "Pastikan nama pelanggan tidak kosong."
-                },
-                pros_alamat: {
-                    required: "Pastikan alamat pelanggan tidak kosong."
-                },
-                pros_hp: {
-                    required: "Pastikan no. handphone tidak kosong."
-                }
-            },
+                                     messages: {
+                                         pros_type: {
+                                             required: "Pastikan tipe pelanggan tidak kosong."
+                                         },
+                                         pros_nama: {
+                                             required: "Pastikan nama pelanggan tidak kosong."
+                                         },
+                                         pros_alamat: {
+                                             required: "Pastikan alamat pelanggan tidak kosong."
+                                         },
+                                         pros_hp: {
+                                             required: "Pastikan no. handphone tidak kosong."
+                                         }
+                                     },
 
-            highlight: function (e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-            },
+                                     highlight: function (e) {
+                                         $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                                     },
 
-            success: function (e) {
-                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-                $(e).remove();
-            },
+                                     success: function (e) {
+                                         $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                                         $(e).remove();
+                                     },
 
-            errorPlacement: function (error, element) {
-                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
-                    var controls = element.closest('div[class*="col-"]');
-                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
-                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
-                }
-                else if(element.is('.chosen-select')) {
-                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
-                }
-                else error.insertAfter(element.parent());
-            },
+                                     errorPlacement: function (error, element) {
+                                         if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                                             var controls = element.closest('div[class*="col-"]');
+                                             if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                                             else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                                         }
+                                         else if(element.is('.chosen-select')) {
+                                             error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                                         }
+                                         else error.insertAfter(element.parent());
+                                     },
 
-            submitHandler: function (form) {
-            },
-            invalidHandler: function (form) {
-            }
-        });
-    })
+                                     submitHandler: function (form) {
+                                     },
+                                     invalidHandler: function (form) {
+                                     }
+                                 });
+                             })
 </script>

@@ -34,7 +34,6 @@
             this.force_reload = (cache === false);
             this.getUrl(url, hash, false);
         }
-		
         this.getUrl = function(url, hash, manual_trigger) {
             if(working) {
                 return;
@@ -48,7 +47,6 @@
             if (event.isDefaultPrevented()) return;
 			
             self.startLoading();
-
             $.ajax({
                 'url': url,
                 'cache': !this.force_reload
@@ -68,7 +66,6 @@
                 });
 				
                 var link_element = null, link_text = '';
-                ;
                 if(typeof self.settings.update_active === 'function') {
                     link_element = self.settings.update_active.call(null, hash, url);
                 }
