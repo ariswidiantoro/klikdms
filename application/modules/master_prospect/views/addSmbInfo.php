@@ -31,12 +31,11 @@
         </div>
     </div>
 </form>
-
 <script type="text/javascript">
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
-                window.location.href = "#master_prospect/sumber_informasi";
+                window.location.href = "#master_prospect/sumberinformasi";
             }});
     }
     
@@ -66,8 +65,8 @@
             })
             return false;
         });
-
     });
+    
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page

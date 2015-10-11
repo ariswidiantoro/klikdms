@@ -1175,6 +1175,11 @@ class Master_Sales extends Application {
         echo json_encode($hasil);
     }
 
+    public function supplier() {
+        $this->hakAkses(91);
+        $this->load->view('master_service/supplier', $this->data);
+    }
+    
     /**
      * Master Stock Unit
      * @author Rossi
@@ -1183,11 +1188,7 @@ class Master_Sales extends Application {
         $this->hakAkses(1092);
         $this->load->view('dataStockUnit', $this->data);
     }
-    public function supplier() {
-        $this->hakAkses(91);
-        $this->load->view('master_service/supplier', $this->data);
-    }
-
+    
     public function getStockUnit() {
         $data = $this->input->get('mscid', TRUE);
         $result = $this->model_sales->getStockUnit($data);
@@ -1198,22 +1199,42 @@ class Master_Sales extends Application {
     }
 
     public function saveStockUnit() {
-        $nama = strtoupper($this->input->post('aks_nama', TRUE));
-        $desc = strtoupper($this->input->post('aks_descrip', TRUE));
-        if (empty($nama) || empty($desc)) {
-            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        $norangka = strtoupper($this->input->post('msc_norangka', TRUE));
+        $nomesin = strtoupper($this->input->post('msc_nomesin', TRUE));
+        $jkend = strtoupper($this->input->post('msc_segid', TRUE));
+        $type = strtoupper($this->input->post('msc_ctyid', TRUE));
+        $warna = strtoupper($this->input->post('msc_warnaid', TRUE));
+        $tahun = strtoupper($this->input->post('msc_tahun', TRUE));
+        $kondisi = strtoupper($this->input->post('msc_kondisi', TRUE));
+        if (empty($norangka) || empty($nomesin)|| empty($jkend)|| empty($type)|| 
+                empty($warna)|| empty($tahun)|| empty($kondisi)) {
+            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : '.$norangka.' | Mesin : '.$nomesin.
+                    ' | Jkend : '.$jkend.' | Type : '.$type.' | Warna : '.$warna.' | Tahun : '.$tahun.' | Kondisi : '.$kondisi));
         } else {
             $save = $this->model_sales->addStockUnit(array(
-                'aks_nama' => $nama,
-                'aks_descrip' => $desc,
-                'aks_cbid' => ses_cabang,
-                'aks_hpp' => numeric($this->input->post('aks_hpp', TRUE)),
-                'aks_harga' => numeric($this->input->post('aks_harga', TRUE))
-                    ));
-            if ($save == TRUE) {
-                $hasil = array('status' => '1', 'msg' => $this->sukses('DATA BERHASIL DISIMPAN'));
+                'msc_norangka' => $norangka,
+                'msc_nomesin' => $nomesin,
+                'msc_jenis' => $jkend,
+                'msc_ctyid' => $type,
+                'msc_warnaid' => $warna,
+                'msc_tahun' => $tahun,
+                'msc_kondisi' => $kondisi,
+                'msc_cbid' => ses_cabang,
+                'msc_roda' => strtoupper($this->input->post('msc_roda', TRUE)),
+                'msc_chasis' => strtoupper($this->input->post('msc_chasis', TRUE)),
+                'msc_vinlot' => strtoupper($this->input->post('msc_vinlot', TRUE)),
+                'msc_bodyseri' => strtoupper($this->input->post('msc_bodyseri', TRUE)),
+                'msc_nokunci' => strtoupper($this->input->post('msc_nokunci', TRUE)),
+                'msc_fuel' => strtoupper($this->input->post('msc_fuel', TRUE)),
+                'msc_regckd' => strtoupper($this->input->post('msc_regckd', TRUE)),
+                'msc_silinder' => numeric($this->input->post('msc_silinder', TRUE)),
+                'msc_createon' => date('Y-m-d H:i:s'),
+                'msc_createby' => ses_krid
+                ));
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
-                $hasil = array('status' => '0', 'msg' => $this->error('DATA GAGAL DISIMPAN'));
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
             }
         }
         echo json_encode($hasil);
@@ -1244,16 +1265,19 @@ class Master_Sales extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $del = "hapusData('" . $row->mscid . "', '" . $row->aks_nama . "')";
+                $del = "hapusData('" . $row->mscid . "', '" . $row->cty_deskripsi . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 $edit = '<a href="#master_sales/editStockUnit?id=' . $row->mscid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $view = '<a href="#master_sales/viewStockUnit?id=' . $row->mscid . '" title="View"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->mscid;
                 $responce->rows[$i]['cell'] = array(
-                    $row->aks_nama,
-                    $row->aks_descrip,
-                    number_format($row->aks_hpp),
-                    number_format($row->aks_harga),
-                    $edit, $hapus);
+                    $view, $edit, $hapus,
+                    $row->merk_deskripsi,
+                    $row->cty_deskripsi,
+                    $row->warna_deskripsi,
+                    $row->msc_norangka,
+                    $row->msc_nomesin,
+                    $row->msc_kondisi);
                 $i++;
             }
         echo json_encode($responce);
@@ -1261,11 +1285,15 @@ class Master_Sales extends Application {
 
     public function addStockUnit() {
         $this->hakAkses(1092);
+        $this->data['merk'] = $this->model_sales->cListMerk();
+        $this->data['segment'] = $this->model_sales->cListSegment();
         $this->load->view('addStockUnit', $this->data);
     }
 
     public function editStockUnit() {
         $this->hakAkses(1092);
+        $this->data['merk'] = $this->model_sales->cListMerk();
+        $this->data['segment'] = $this->model_sales->cListSegment();
         $id = $this->input->get('id', TRUE);
         $this->data['data'] = $this->model_sales->getStockUnit($id);
         $this->load->view('editStockUnit', $this->data);
@@ -1273,23 +1301,42 @@ class Master_Sales extends Application {
 
     public function updateStockUnit() {
         $id = strtoupper($this->input->post('mscid', TRUE));
-        $nama = strtoupper($this->input->post('aks_nama', TRUE));
-        $desc = strtoupper($this->input->post('aks_descrip', TRUE));
-        $hpp = numeric($this->input->post('aks_harga', TRUE));
-        $harga = numeric($this->input->post('aks_hpp', TRUE));
-        if (empty($id) || empty($nama) || empty($desc) || empty($hpp) || empty($harga)) {
-            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+        $norangka = strtoupper($this->input->post('msc_norangka', TRUE));
+        $nomesin = strtoupper($this->input->post('msc_nomesin', TRUE));
+        $jkend = strtoupper($this->input->post('msc_segid', TRUE));
+        $type = strtoupper($this->input->post('msc_ctyid', TRUE));
+        $warna = strtoupper($this->input->post('msc_warnaid', TRUE));
+        $tahun = strtoupper($this->input->post('msc_tahun', TRUE));
+        $kondisi = strtoupper($this->input->post('msc_kondisi', TRUE));
+        if (empty($id) ||empty($norangka) || empty($nomesin)|| empty($jkend)|| empty($type)|| 
+                empty($warna)|| empty($tahun)|| empty($kondisi)) {
+            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : '.$norangka.' | Mesin : '.$nomesin.
+                    ' | Jkend : '.$jkend.' | Type : '.$type.' | Warna : '.$warna.' | Tahun : '.$tahun.' | Kondisi : '.$kondisi));
         } else {
             $save = $this->model_sales->updateStockUnit(array(
-                'aks_nama' => $nama,
-                'aks_descrip' => $desc,
-                'aks_cbid' => ses_cabang,
-                'aks_hpp' => $hpp,
-                'aks_harga' => $harga), $id);
-            if ($save == TRUE) {
-                $hasil = array('status' => '1', 'msg' => $this->sukses('DATA BERHASIL DIUPDATE'));
+                'msc_norangka' => $norangka,
+                'msc_nomesin' => $nomesin,
+                'msc_jenis' => $jkend,
+                'msc_ctyid' => $type,
+                'msc_warnaid' => $warna,
+                'msc_tahun' => $tahun,
+                'msc_kondisi' => $kondisi,
+                'msc_cbid' => ses_cabang,
+                'msc_roda' => strtoupper($this->input->post('msc_roda', TRUE)),
+                'msc_chasis' => strtoupper($this->input->post('msc_chasis', TRUE)),
+                'msc_vinlot' => strtoupper($this->input->post('msc_vinlot', TRUE)),
+                'msc_bodyseri' => strtoupper($this->input->post('msc_bodyseri', TRUE)),
+                'msc_nokunci' => strtoupper($this->input->post('msc_nokunci', TRUE)),
+                'msc_fuel' => strtoupper($this->input->post('msc_fuel', TRUE)),
+                'msc_regckd' => strtoupper($this->input->post('msc_regckd', TRUE)),
+                'msc_silinder' => numeric($this->input->post('msc_silinder', TRUE)),
+                'msc_createon' => date('Y-m-d H:i:s'),
+                'msc_createby' => ses_krid
+                ), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
-                $hasil = array('status' => '0', 'msg' => $this->error('DATA GAGAL DIUPDATE'));
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
             }
         }
         echo json_encode($hasil);
@@ -1308,7 +1355,6 @@ class Master_Sales extends Application {
         }
         echo json_encode($hasil);
     }
-
 }
 
 ?>

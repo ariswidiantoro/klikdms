@@ -255,15 +255,13 @@ class Transaksi_Prospect extends Application {
     public function saveFpt(){
         $prosid = strtoupper($this->input->post('fpt_prosid', TRUE));
         $fptdate = dateToIndo($this->input->post('fpt_tgl', TRUE));
-        $alamat = strtoupper($this->input->post('pros_alamat', TRUE));
-        $hp = strtoupper($this->input->post('pros_hp', TRUE));
         $hargakosong = numeric($this->input->post('fpt_hargako', TRUE));
-        if (empty($tipe)||empty($nama)||empty($hargakosong)||empty($hp)||empty($kota)) {
+        if (empty($prosid)||empty($fptdate)||empty($hargakosong)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
             $save = $this->model_prospect->addFPT(array(
                 'fpt_prosid' => $prosid,
-                'fpt_tgl' => $nama,
+                'fpt_tgl' => $fptdate,
                 'fpt_cbid' => ses_cabang,
                 'fpt_note' => strtoupper($this->input->post('fpt_keterangan', TRUE)),
                 'fpt_penerima_komisi' => strtoupper($this->input->post('fpt_penerima_komisi', TRUE)),
@@ -311,6 +309,98 @@ class Transaksi_Prospect extends Application {
         $this->data['title'] = 'Daftar FPT';
         $this->load->view('dataFpt', $this->data);
     }
+    
+    public function loadDataFpt() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'prosid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : 'DESC';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_prospect->getTotalFpt($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_prospect->getDataFpt($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $val = "validasiData('" . $row->fptid . "','" . $row->pros_nama . "')";
+                $validasi = '<a href="javascript:void(0);" onclick="' . $val . '" title="Validasi"><i class="ace-icon glyphicon glyphicon-check bigger-110 green"></i>';
+                $edit = '<a href="#transaksi_prospect/editFpt?id=' . $row->fptid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-110 orange"></i>';
+                $detail = '<a href="#transaksi_prospect/detailFpt?id=' . $row->fptid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-110"></i>';
+
+                $responce->rows[$i]['id'] = $row->fptid;
+                $responce->rows[$i]['cell'] = array(
+                    $validasi, $edit, $detail,
+                    $row->pros_nama,
+                    $row->pros_alamat,
+                    $row->fpt_status,
+                    $row->kr_nama,
+                    dateToIndo($row->fpt_tgl),
+                    $row->pros_hp,
+                    );
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+    
+    public function detailFpt() {
+        $this->hakAkses(1060);
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] = $this->model_prospect->getFpt($id);
+        $this->load->view('detailFpt', $this->data);
+    }
+    
+    public function saveValidasiFPT() {
+        $id = $this->input->post('id', TRUE);
+        if (empty($id)) {
+            $hasil = $this->error('GAGAL VALIDASI DATA KOSONG');
+        } else {
+            $save = $this->model_prospect->updateFpt(array(
+                'fptid' => ses_cabang,
+                'fpt_approve' => '1',
+                'fpt_approve_id' => ses_krid,
+                'fpt_approve_tgl' => date('Y-m-d')
+                ), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses('DATA BERHASIL DIVALIDASI'));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error('DATA GAGAL DIVALIDASI'));
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
+    public function saveTolakFPT() {
+        $id = $this->input->post('id', TRUE);
+        if (empty($id)) {
+            $hasil = $this->error('GAGAL TOLAK DATA KOSONG');
+        } else {
+            $save = $this->model_prospect->updateFpt(array(
+                'fptid' => ses_cabang,
+                'fpt_approve' => '2',
+                'fpt_approve_id' => ses_krid,
+                'fpt_approve_tgl' => date('Y-m-d')
+                ), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses('DATA BERHASIL DIVALIDASI'));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error('DATA GAGAL DIVALIDASI'));
+            }
+        }
+        echo json_encode($hasil);
+    }
 
     /**
      * This function is used for display cabang
@@ -318,7 +408,7 @@ class Transaksi_Prospect extends Application {
      * @since 1.0
      */
     public function transferProspect() {
-        $this->hakAkses(76);
+        $this->hakAkses(1068);
         $this->data['title'] = 'Transfer Prospect';
         $this->data['content'] = 'transferProspect';
         $this->load->view('template', $this->data);
@@ -330,7 +420,7 @@ class Transaksi_Prospect extends Application {
      * @since 1.0
      */
     public function searchVehicle() {
-        $this->hakAkses(74);
+        $this->hakAkses(1069);
         $this->data['title'] = 'Pencarian Kendaraan';
         $this->data['content'] = 'searchVehicle';
         $this->load->view('template', $this->data);

@@ -224,9 +224,49 @@ class Model_Prospect extends CI_Model {
             }
         } catch (Exception $e) {
             $this->db->trans_rollback();
-            return false;
+            return array('status' => FALSE, 'msg' =>  $e->getMessage());
         }
-        return false;
+    }
+    
+    public function getTotalFpt($where) {
+        $wh = "WHERE fpt_cbid = '" . ses_cabang . "' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM pen_fpt " . $wh);
+        return $sql->row()->total;
+    }
+    
+    public function getDataFpt($start, $limit, $sidx, $sord, $where) {
+
+        /* FILTER BY SUPERVISOR 
+          if (ses_jabatan == 'supervisor') {
+          $filter = $this->getSalesBySpv(array('krid' => ses_krid, 'cbid' => ses_cabang));
+          } else if (ses_jabatan == 'sales') {
+          $filter = array(ses_krid);
+          }
+         */
+        $wh = ($where != NULL)?" AND " . $where: " ";
+        
+        $query = $this->db->query("
+            SELECT fptid, fpt_kode, prosid, pros_nama, pros_alamat, 
+            CASE WHEN fpt_approve = 1 THEN 'DISETUJUI' 
+                WHEN fpt_approve = 2 THEN 'DITOLAK'
+                ELSE 'PROSES' END as fpt_status, 
+            pros_salesman, pros_hp, fpt_tgl, kr_nama, cty_deskripsi
+            FROM pen_fpt
+            LEFT JOIN pros_data ON prosid = fpt_prosid
+            LEFT JOIN pros_data_car ON car_prosid = fpt_prosid
+            LEFT JOIN ms_car_type ON ctyid = car_ctyid
+            LEFT JOIN ms_karyawan ON krid = pros_salesman
+            WHERE fpt_cbid =  '".ses_cabang."' ".$wh."
+            ORDER BY ".$sidx." ".$sord."
+            LIMIT ".$limit." OFFSET ".$start."
+        ");
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
     }
 
     public function updateFPT($data, $where) {

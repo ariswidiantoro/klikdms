@@ -42,7 +42,7 @@ if (!defined('BASEPATH'))
                         id: id
                     },
                     success: function(data) {
-                        $("#result").html(data).show().fadeIn("slow");
+                        $("#result").html(data.msg).show().fadeIn("slow");
                         $("#grid-table").trigger("reloadGrid");
                     }
                 });
@@ -61,7 +61,7 @@ if (!defined('BASEPATH'))
                         id: id
                     },
                     success: function(data) {
-                        $("#result").html(data).show().fadeIn("slow");
+                        $("#result").html(data.msg).show().fadeIn("slow");
                         $("#grid-table").trigger("reloadGrid");
                     }
                 });
@@ -71,27 +71,27 @@ if (!defined('BASEPATH'))
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('transaksi_prospect/loadProspect') ?>',     
+            url:'<?php echo site_url('transaksi_prospect/loadDataFpt') ?>',     
             mtype : "post",             
             datatype: "json",           
-            colNames:['','', '' ,'Nama','Alamat','HP','Salesman','Unit', 'Qty'],       
+            colNames:['','', '' ,'Nama','Alamat','Status','Salesman', 'Tgl FPT', 'HP'],       
             colModel:[
-                {name:'fpt',index:'fpt', width:14, align:"center"},
+                {name:'validasi',index:'validasi', width:14, align:"center"},
                 {name:'edit',index:'edit', width:14, align:"center"},
                 {name:'detail',index:'detail', width:14, align:"center"},
-                {name:'pros_nama',index:'pros_nama', width:80, align:"left"},
-                {name:'pros_alamat',index:'pros_alamat', width:100, align:"left"},
-                {name:'pros_hp',index:'pel_hp', width:30, align:"left"},
-                {name:'pros_sales',index:'pros_sales', width:80, align:"left"},
-                {name:'cty_deskripsi',index:'cty_deskripsi', width:130, align:"left"},
-                {name:'car_qty',index:'car_qty', width:20, align:"left"},
+                {name:'pros_nama',index:'pros_nama', width:60, align:"left"},
+                {name:'pros_alamat',index:'pros_alamat', width:80, align:"left"},
+                {name:'fpt_status',index:'fpt_status', width:25, align:"left"},
+                {name:'pros_sales',index:'pros_sales', width:60, align:"left"},
+                {name:'fpt_tgl',index:'fpt_tgl', width:25, align:"left"},
+                {name:'pros_hp',index:'pel_hp', width:35, align:"left"},
             ],
             rowNum:10,
             height : 300,
             width: $(".page-content").width(),
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'prosid',
+            sortname: 'fptid',
             viewrecords: true,
             rownumbers: true,
             gridview: true,

@@ -1,6 +1,6 @@
 <div class="page-header">
     <h1>
-        Detail FPT
+        Detail Prospect
     </h1>
 </div>   
 <div>
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-9">
                             <h4 class="blue">
-                                <span class="left"><?php echo $data['pros_nama']; ?></span>
+                                <span class="left"><?php echo $data['fpt_kode']; ?></span>
 
                                 <!--<span class="label label-purple arrowed-in-right">
                                     <i class="ace-icon fa fa-circle smaller-80 align-middle"></i>
@@ -43,7 +43,12 @@
                                         <span><?php echo $data['pros_type']; ?></span>
                                     </div>
                                 </div>
-
+                                <div class="profile-info-row">
+                                    <div class="profile-info-name align-left"> Nama Customer </div>
+                                    <div class="profile-info-value">
+                                        <span><?php echo $data['pros_nama']; ?></span>
+                                    </div>
+                                </div>
                                 <div class="profile-info-row">
                                     <div class="profile-info-name align-left"> Alamat </div>
 
@@ -54,40 +59,45 @@
                                         <span><?php echo $data['prop_deskripsi']; ?></span>
                                     </div>
                                 </div>
-
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name align-left"> Area </div>
-
+                                    <div class="profile-info-name align-left"> Penerima Komisi </div>
                                     <div class="profile-info-value">
-                                        <span><?php echo $data['area_deskripsi']; ?></span>
+                                        <span><?php echo $data['fpt_penerima_komisi']; ?></span>
                                     </div>
                                 </div>
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name align-left"> No. HP </div>
+                                    <div class="profile-info-name align-left"> Komisi </div>
 
-                                    <div class="profile-info-value">
-                                        <span><?php echo $data['pros_hp']; ?></span>
+                                    <div class="profile-info-value align-right">
+                                        <span><?php echo number_format($data['fpt_komisi'],2); ?></span>
                                     </div>
                                 </div>
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name align-left"> No. Telp </div>
+                                    <div class="profile-info-name align-left"> Diskon<div>
 
                                     <div class="profile-info-value">
-                                        <span><?php echo $data['pros_telpon']; ?></span>
+                                        <span><?php echo number_format($data['fpt_diskon'],2); ?></span>
                                     </div>
                                 </div>
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name align-left"> No. Fax </div>
+                                    <div class="profile-info-name align-left"> Cashback </div>
 
                                     <div class="profile-info-value">
-                                        <span><?php echo $data['pros_fax']; ?></span>
+                                        <span><?php echo number_format($data['fpt_cashback'],2); ?></span>
                                     </div>
                                 </div>
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name align-left"> No. KTP </div>
+                                    <div class="profile-info-name align-left"> Uangmuka </div>
 
                                     <div class="profile-info-value">
-                                        <span><?php echo $data['pros_noid']; ?></span>
+                                        <span><?php echo $data['fpt_uangmuka']; ?></span>
+                                    </div>
+                                </div>
+                                <div class="profile-info-row">
+                                    <div class="profile-info-name align-left"> Uangmuka </div>
+
+                                    <div class="profile-info-value">
+                                        <span><?php echo $data['fpt_uangmuka']; ?></span>
                                     </div>
                                 </div>
                                 <div class="profile-info-row">

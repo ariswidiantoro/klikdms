@@ -32,7 +32,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin ?", function(result) {
             if(result) {
-                window.location.href = "#master_prospect/sumber_informasi";
+                window.location.href = "#master_prospect/sumberinformasi";
             }});
     }
     
