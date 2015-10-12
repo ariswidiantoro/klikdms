@@ -1,0 +1,402 @@
+<?php
+
+/**
+ * The MODEL FINANCE
+ * @author Rossi Erl
+ * 2015-08-29
+ */
+class Model_Finance extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    /**
+     * Utility - Finance
+     * @author Rossi on 2015-09-25
+     * */
+    public function cListCostCenter($data) {
+        $this->db->where('cc_cbid', $data['cbid']);
+        $this->db->order_by('cc_kode', 'ASC');
+        $sql = $this->db->get('ms_cost_center');
+        return $sql->result_array();
+    }
+
+    public function cListKota($data) {
+        $this->db->where('cc_cbid', $data['cbid']);
+        $sql = $this->db->get('ms_cost_center');
+        return $sql->result_array();
+    }
+
+    /** Chart Of Account (COA) 
+     * @author Rossi Erl
+     * 2015-09-04
+     */
+    public function getTotalCoa($where) {
+        $wh = "WHERE coa_cbid = '" . ses_cabang . "' and coa_flag = 1 ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_coa $wh");
+        return $sql->row()->total;
+    }
+
+    public function getDataCoa($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_coa');
+        $this->db->where('coa_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function deleteCoa($data) {
+        if ($this->db->query('DELETE FROM ms_coa WHERE coaid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function addCoa($data = array()) {
+        $cek = $this->db->query("SELECT coa_kode FROM ms_coa WHERE coa_kode = '" . $data['coa_kode'] . "'
+            AND coa_cbid = '" . $data['coa_cbid'] . "'");
+        if ($cek->num_rows() > 0) {
+            return array('status' => FALSE, 'msg' => 'Duplikasi Kode COA');
+        } else {
+            if ($this->db->insert('ms_coa', $data)) {
+                return array('status' => TRUE, 'msg' => 'Kode COA ' . $data['coa_kode'] . ' berhasil disimpan');
+            } else {
+                return array('status' => FALSE, 'msg' => 'Kode COA ' . $data['coa_kode'] . ' gagal disimpan');
+            }
+        }
+    }
+
+    public function updateCoa($data, $where) {
+        $this->db->where('coaid', $where);
+        if ($this->db->update('ms_coa', $data)) {
+            return array('status' => TRUE, 'msg' => 'Kode COA ' . $data['coa_kode'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Kode COA ' . $data['coa_kode'] . ' gagal diupdate');
+        }
+    }
+
+    public function getCoa($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_coa WHERE coaid = " . $data . "  ");
+        return $query->row_array();
+    }
+
+    /** Cost Center 
+     * @author Rossi Erl
+     * 2015-09-07
+     */
+    public function getTotalCostCenter($where) {
+        $wh = "WHERE cc_cbid = '" . ses_cabang . "' and cc_flag = '1' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_cost_center $wh");
+        return $sql->row()->total;
+    }
+
+    public function getAllCostCenter($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_cost_center');
+        $this->db->where('cc_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function deleteCostCenter($data) {
+        if ($this->db->query('DELETE FROM ms_cost_center WHERE ccid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function addCostCenter($data) {
+        $cek = $this->db->query("SELECT cc_kode FROM ms_cost_center WHERE cc_kode = '" . $data['cc_kode'] . "'
+            AND cc_cbid = '" . $data['cc_cbid'] . "'");
+        if ($cek->num_rows() > 0) {
+            return array('status' => FALSE, 'msg' => 'Duplikasi Kode Cost Center');
+        } else {
+            if ($this->db->insert('ms_cost_center', $data)) {
+                return array('status' => TRUE, 'msg' => 'Kode Cost Center ' . $data['cc_kode'] . ' berhasil disimpan');
+            } else {
+                return array('status' => FALSE, 'msg' => 'Kode Cost Center ' . $data['cc_kode'] . ' gagal disimpan');
+            }
+        }
+    }
+
+    public function updateCostCenter($data, $where) {
+        $this->db->where('ccid', $where);
+        if ($this->db->update('ms_cost_center', $data)) {
+            return array('status' => TRUE, 'msg' => 'Kode cost center berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Kode cost center gagal diupdate');
+        }
+    }
+
+    public function getCostCenter($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_cost_center WHERE ccid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    /** Master Bank
+     * @author Rossi Erl
+     * 2015-09-07
+     */
+    public function getTotalBank($where) {
+        $wh = "WHERE bank_cbid = '" . ses_cabang . "' and bank_flag = '1' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_bank $wh");
+        return $sql->row()->total;
+    }
+
+    public function getAllBank($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_bank');
+        $this->db->where('bank_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function deleteBank($data) {
+        if ($this->db->query('DELETE FROM ms_bank WHERE bankid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function addBank($data) {
+        $cek = $this->db->query("SELECT bank_name FROM ms_bank WHERE bank_name = '" . $data['bank_name'] . "'
+            AND bank_cbid = '" . $data['bank_cbid'] . "'");
+        if ($cek->num_rows() > 0) {
+            return array('status' => FALSE, 'msg' => 'Duplikasi nama bank');
+        } else {
+            if ($this->db->insert('ms_bank', $data)) {
+                return array('status' => TRUE, 'msg' => 'Data bank berhasil disimpan');
+            } else {
+                return array('status' => FALSE, 'msg' => 'Data bank gagal disimpan');
+            }
+        }
+    }
+
+    public function updateBank($data, $where) {
+        $this->db->where('bankid', $where);
+        if ($this->db->update('ms_bank', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data bank berhasil disimpan');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data bank gagal disimpan');
+        }
+    }
+
+    public function getBank($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_bank WHERE bankid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    /** Master Tipe Jurnal 
+     * @author Rossi Erl
+     * 2015-09-03
+     */
+    public function getTotalTipeJurnal($where) {
+        $wh = "WHERE tipeid != '0' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_tipe_jurnal $wh");
+        return $sql->row()->total;
+    }
+
+    public function getDataTipeJurnal($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_tipe_jurnal');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function addTipeJurnal($data) {
+        $this->db->trans_begin();
+        $data['tipeid'] = NUM_TIPE_JURNAL . sprintf("%03s", $this->getCounter(NUM_TIPE_JURNAL));
+        $this->db->insert('ms_tipe_jurnal', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' berhasil disimpan');
+        } else {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' gagal disimpan');
+        }
+    }
+
+    public function setTipeJurnal($data) {
+        $this->db->trans_begin();
+        try {
+            if($this->db->query("DELETE FROM ms_dtipe_jurnal WHERE 
+                dtipe_cbid = '".$data['cbid']."' AND dtipe_tipeid = '".$data['tipeid']."'") == FALSE){
+                 throw new excetion('GAGAL HAPUS DATA : ' . $data['tipeid']);
+            }
+            for ($i = 0; $i <= count($data['const']) - 1; $i++) {
+                if ($this->db->insert('ms_dtipe_jurnal', array(
+                            'dtipe_tipeid' => $data['tipeid'],
+                            'dtipe_cbid' => $data['cbid'],
+                            'dtipe_constant' => $data['const'][$i],
+                            'dtipe_coa' => $data['coa'][$i],
+                            'dtipe_flag' => '0'
+                        )) == FALSE) {
+                    throw new Exception('GAGAL MENYIMPAN DATA : ' . $data['coa'][$i]);
+                }
+            }
+            if ($this->db->trans_status() === TRUE) {
+                $this->db->trans_commit();
+                return array('status' => TRUE, 'msg' => 'Data ' . $data['tipeid'] . ' berhasil disimpan');
+            } else {
+                throw new excetion('GAGAL MENYIMPAN DATA : ' . $data['coa'][$i]);
+            }
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => $e->getMessage());
+        }
+    }
+
+    public function getTipeJurnal($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_tipe_jurnal WHERE tipeid = '" . $data . "'");
+        return $query->row_array();
+    }
+
+    public function updateTipeJurnal($data, $where) {
+        $this->db->where('tipeid', $where);
+        if ($this->db->update('ms_tipe_jurnal', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteTipeJurnal($data) {
+        if ($this->db->query('DELETE FROM ms_tipe_jurnal WHERE tipeid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function getDetailTipeJurnal($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_tipe_jurnal 
+            LEFT JOIN ms_dtipe_jurnal ON dtipe_tipeid = tipeid AND dtipe_cbid = '" . $data['cbid'] . "'
+            WHERE tipeid = '" . $data['id'] . "'");
+        return $query->result_array();
+    }
+
+    public function getTotalDtipe($data) {
+        $query = $this->db->query("
+            SELECT count(dtipe_coa) as total FROM ms_dtipe_jurnal WHERE 
+            dtipe_tipeid = '" . $data['id'] . "' AND dtipe_cbid = '" . $data['cbid'] . "'");
+        return $query->row()->total;
+    }
+
+    /** Master Tipe Jurnal 
+     * @author Rossi Erl
+     * 2015-09-03
+     */
+    public function getTotalMasterJurnal($where) {
+        $wh = "WHERE tipeid != '0' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_tipe_jurnal $wh");
+        return $sql->row()->total;
+    }
+
+    public function getDataMasterJurnal($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_auto_jurnal');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function addMasterJurnal($data) {
+        if ($this->db->insert('ms_tipe_jurnal', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' berhasil disimpan');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' gagal disimpan');
+        }
+    }
+
+    public function getMasterJurnal($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_tipe_jurnal WHERE tipeid = " . $data . "
+            ");
+        return $query->row_array();
+    }
+
+    public function updateMasterJurnal($data, $where) {
+        $this->db->where('tipeid', $where);
+        if ($this->db->update('ms_tipe_jurnal', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data ' . $data['tipe_deskripsi'] . ' gagal diupdate');
+        }
+    }
+
+    public function deleteMasterJurnal($data) {
+        if ($this->db->query('DELETE FROM ms_tipe_jurnal WHERE tipeid = ' . $data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+}
+
+?>
