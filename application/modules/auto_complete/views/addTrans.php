@@ -44,22 +44,13 @@
         </div>
     </div>
     <div class="form-group">
-        <!--<label class="col-sm-2 control-label no-padding-left" for="form-field-1">COA (DEB)</label>
+        <label class="col-sm-2 control-label no-padding-left" for="form-field-1">COA (DEB)</label>
         <div class="col-sm-8">
             <input type="text" id="trans_coa" name="trans_coa" required="required" maxlength="30" 
                    onkeyup="acomplete('trans_coa', 'auto_coa', 'trans_coa', 'trans_desc', '')" 
                    placeholder="COA" class="col-xs-10 col-sm-3 upper req" />&nbsp;
             <input type="text" id="trans_desc" name="trans_desc" maxlength="40" 
                    placeholder="DESKRIPSI"class="col-xs-10 col-sm-5 upper req" />
-        </div> -->
-        <label class="col-sm-2 control-label no-padding-left" for="form-field-1">COA</label>
-        <div class="col-sm-8">
-            <select id="trans_coa" name="trans_coa" required="required" class="form-control input-xlarge req">
-                <option value ="">PILIH</option>
-                <?php foreach($etc['mainCoa'] as $rows){
-                    echo "<option value = '".$rows['coa_kode']."'>".$rows['coa_desc']."</option>";
-                } ?>
-            </select>
         </div>
     </div>
 
@@ -398,7 +389,7 @@
                 minLength: 1,
                 source: function(req, add) {
                     $.ajax({
-                        url: "<?php echo site_url('auto_complete'); ?>/"+url,
+                        url: "<?php echo site_url('transaksi_finance'); ?>/"+url,
                         dataType: 'json',
                         type: 'POST',
                         data: {
@@ -488,7 +479,7 @@
                 return false;
             });
 
-            $('#formAdd').validate({
+            $('#formAddX').validate({
                 errorElement: 'div',
                 errorClass: 'help-block',
                 focusInvalid: false,
@@ -518,6 +509,25 @@
                 invalidHandler: function (form) {
                 }
             });
+            
+            $("#formAdd").validate({
+				rules: {
+					trans_docno: {
+						required: true
+					}
+				},
+				messages: {
+					trans_docno: "Just check the box<h5 class='text-danger'>You aren't going to read the EULA</h5>"
+				},
+				tooltip_options: {
+					example5: {
+						trans_docno: 'right',
+						html: true
+					}
+				},
+				submitHandler: function(form) {},
+				invalidHandler: function(form, validator) {}
+			});
 
         });
 

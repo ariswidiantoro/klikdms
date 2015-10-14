@@ -64,6 +64,7 @@ define('NUM_STOCK_UNIT', 'ST');
 define('NUM_BPK', 'BP');
 define('NUM_SPK', 'SK');
 define('NUM_FPT', 'FP');
+define('NUM_TRANS', 'TR');
 
 
 
