@@ -404,7 +404,7 @@
             });
         }
         
-        function totalLc(){
+        function totalTrans(){
             var total = 0;
             var price;
             $("input[name^=dtrans_nominal]").each(function() {

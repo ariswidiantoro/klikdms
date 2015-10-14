@@ -18,7 +18,7 @@ class Model_Sales extends CI_Model {
         $query = $this->db->get('ms_car_merk');
         return $query->result_array();
     }
-    
+
     public function cListWarna() {
         $this->db->order_by('warna_deskripsi', 'ASC');
         $query = $this->db->get('ms_warna');
@@ -41,24 +41,24 @@ class Model_Sales extends CI_Model {
         $query = $this->db->get('ms_segment');
         return $query->result_array();
     }
-    
+
     public function cListPropinsi() {
         $query = $this->db->get('ms_propinsi');
         return $query->result_array();
     }
-    
+
     public function cListAksesories() {
         $this->db->where('aks_cbid', ses_cabang);
         $query = $this->db->get('ms_aksesories');
         return $query->result_array();
     }
-    
+
     public function cListKaroseri() {
         $this->db->where('karo_cbid', ses_cabang);
         $query = $this->db->get('ms_karoseri');
         return $query->result_array();
     }
-    
+
     public function cListLeasing() {
         $this->db->where('leas_cbid', ses_cabang);
         $query = $this->db->get('ms_leasing');
@@ -66,15 +66,15 @@ class Model_Sales extends CI_Model {
     }
 
     public function getModelByMerk($data) {
-        $segid = empty($data['segid'])?"": " AND model_segment = '".$data['segid']."'";
+        $segid = empty($data['segid']) ? "" : " AND model_segment = '" . $data['segid'] . "'";
         $sql = $this->db->query("SELECT * FROM ms_car_model WHERE 
-            model_merkid = '".$data['merkid']."' ".$segid." ORDER BY model_deskripsi ASC");
+            model_merkid = '" . $data['merkid'] . "' " . $segid . " ORDER BY model_deskripsi ASC");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
         return null;
     }
-    
+
     public function getTypeByModel($modelid) {
         $sql = $this->db->query("SELECT * FROM ms_car_type WHERE cty_modelid = '$modelid' ORDER BY cty_deskripsi ASC");
         if ($sql->num_rows() > 0) {
@@ -82,7 +82,7 @@ class Model_Sales extends CI_Model {
         }
         return null;
     }
-    
+
     public function getWarnaByModel($modelid) {
         $sql = $this->db->query("SELECT * FROM ms_warna_model 
             LEFT JOIN ms_warna ON warnaid = mdlcolor_warnaid
@@ -93,15 +93,15 @@ class Model_Sales extends CI_Model {
         return null;
     }
 
-    public function getKotaByPropinsi($data){
+    public function getKotaByPropinsi($data) {
         $sql = $this->db->query("SELECT * FROM ms_kota WHERE kota_propid = '$data' ORDER BY kota_deskripsi");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
         return null;
     }
-    
-    public function getAreaByKota($data){
+
+    public function getAreaByKota($data) {
         $sql = $this->db->query("SELECT * FROM ms_area WHERE area_kotaid = '$data' ORDER BY area_deskripsi");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
@@ -360,7 +360,7 @@ class Model_Sales extends CI_Model {
             }
         }
     }
-    
+
     public function getCarType($data) {
         $query = $this->db->query("
             SELECT * FROM ms_car_type 
@@ -474,7 +474,7 @@ class Model_Sales extends CI_Model {
     public function addWarnaModel($data) {
         $qcek = $this->db->query("SELECT mdlcolorid FROM ms_warna_model WHERE 
             mdlcolor_modelid = '" . $data['mdlcolor_modelid'] . "' AND 
-            mdlcolor_warnaid = '".$data['mdlcolor_warnaid']."'");
+            mdlcolor_warnaid = '" . $data['mdlcolor_warnaid'] . "'");
         if ($qcek->num_rows() > 0) {
             return array('status' => FALSE, 'msg' => 'TIPE KENDARAAN SUDAH TERDAFTAR');
         } else {
@@ -485,7 +485,7 @@ class Model_Sales extends CI_Model {
             }
         }
     }
-    
+
     public function getWarnaModel($data) {
         $query = $this->db->query("
             SELECT * FROM ms_warna_model 
@@ -513,7 +513,7 @@ class Model_Sales extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /** JENIS KENDARAAN 
      * @author Rossi Erl
      * 2015-09-03
@@ -582,7 +582,7 @@ class Model_Sales extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_aksesories');
-        $this->db->where('aks_status', '0');
+        $this->db->where('aks_status', '1');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -622,10 +622,10 @@ class Model_Sales extends CI_Model {
      * 2015-09-03
      */
     public function getTotalKaroseri($where) {
-        $wh = "WHERE karo_cbid = '".ses_cabang."'";
+        $wh = "WHERE karo_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
             $wh = " AND " . $where;
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_karoseri ".$wh);
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_karoseri " . $wh);
         return $sql->row()->total;
     }
 
@@ -648,21 +648,21 @@ class Model_Sales extends CI_Model {
 
     public function addKaroseri($data) {
         if ($this->db->insert('ms_karoseri', $data)) {
-             return array('status' => TRUE, 'msg' => 'DATA KAROSERI '.$data['karo_nama'].' BERHASIL DIUPDATE');
+            return array('status' => TRUE, 'msg' => 'DATA KAROSERI ' . $data['karo_nama'] . ' BERHASIL DIUPDATE');
         } else {
-            return array('status' => FALSE, 'msg' => 'DATA KAROSERI '.$data['karo_nama'].' GAGAL DIUPDATE');
+            return array('status' => FALSE, 'msg' => 'DATA KAROSERI ' . $data['karo_nama'] . ' GAGAL DIUPDATE');
         }
     }
 
     public function updateKaroseri($data, $where) {
         $this->db->where('karoid', $where);
         if ($this->db->update('ms_karoseri', $data)) {
-            return array('status' => TRUE, 'msg' => 'DATA KAROSERI '.$data['karo_nama'].' BERHASIL DIUPDATE');
+            return array('status' => TRUE, 'msg' => 'DATA KAROSERI ' . $data['karo_nama'] . ' BERHASIL DIUPDATE');
         } else {
-            return array('status' => FALSE, 'msg' => 'DATA KAROSERI '.$data['karo_nama'].' GAGAL DIUPDATE');
+            return array('status' => FALSE, 'msg' => 'DATA KAROSERI ' . $data['karo_nama'] . ' GAGAL DIUPDATE');
         }
     }
-    
+
     public function getKaroseri($data) {
         $query = $this->db->query("
             SELECT * FROM ms_karoseri 
@@ -680,13 +680,13 @@ class Model_Sales extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /** MASTER LEASING 
      * @author Rossi Erl
      * 2015-09-18
      */
     public function getTotalLeasing($where) {
-        $wh = "WHERE leas_cbid = '".ses_cabang."'";
+        $wh = "WHERE leas_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
             $wh = " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_leasing ");
@@ -712,21 +712,21 @@ class Model_Sales extends CI_Model {
 
     public function addLeasing($data) {
         if ($this->db->insert('ms_leasing', $data)) {
-                return array('status' => TRUE, 'msg' => 'DATA LEASING BERHASIL DITAMBAHKAN');
-            } else {
-                return array('status' => FALSE, 'msg' => 'DATA LEASING GAGAL DITAMBAHKAN');
-            }
+            return array('status' => TRUE, 'msg' => 'DATA LEASING BERHASIL DITAMBAHKAN');
+        } else {
+            return array('status' => FALSE, 'msg' => 'DATA LEASING GAGAL DITAMBAHKAN');
+        }
     }
 
     public function updateLeasing($data, $where) {
         $this->db->where('leasid', $where);
         if ($this->db->update('ms_leasing', $data)) {
-            return array('status' => TRUE, 'msg' => 'DATA LEASING '.$data['leas_nama'].' BERHASIL DIUPDATE');
+            return array('status' => TRUE, 'msg' => 'DATA LEASING ' . $data['leas_nama'] . ' BERHASIL DIUPDATE');
         } else {
-            return array('status' => FALSE, 'msg' => 'DATA LEASING '.$data['leas_nama'].' GAGAL DIUPDATE');
+            return array('status' => FALSE, 'msg' => 'DATA LEASING ' . $data['leas_nama'] . ' GAGAL DIUPDATE');
         }
     }
-    
+
     public function getLeasing($data) {
         $query = $this->db->query("
             SELECT * FROM ms_leasing 
@@ -744,27 +744,31 @@ class Model_Sales extends CI_Model {
             return FALSE;
         }
     }
-    
-    /** MASTER LEASING 
+
+    /** MASTER STOCK UNIT 
      * @author Rossi Erl
      * 2015-09-18
      */
-    public function getTotalCar($where) {
-        $wh = "WHERE leas_cbid = '".ses_cabang."'";
+    public function getTotalStockUnit($where) {
+        $wh = "WHERE msc_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
             $wh = " AND " . $where;
-        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_leasing ");
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_car ");
         return $sql->row()->total;
     }
 
-    public function getDataCar($start, $limit, $sidx, $sord, $where) {
+    public function getDataStockUnit($start, $limit, $sidx, $sord, $where) {
         $this->db->select('*');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
-        $this->db->from('ms_leasing');
-        $this->db->join('ms_kota', 'kotaid = leas_kotaid', 'left');
-        $this->db->where('leas_cbid', ses_cabang);
+        $this->db->from('ms_car');
+        $this->db->join('ms_car_type', 'ctyid = msc_ctyid', 'left');
+        $this->db->join('ms_car_model', 'modelid = cty_modelid', 'left');
+        $this->db->join('ms_segment', 'segid = model_segment', 'left');
+        $this->db->join('ms_car_merk', 'merkid = model_merkid', 'left');
+        $this->db->join('ms_warna', 'warnaid = msc_warnaid', 'left');
+        $this->db->where('msc_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -774,33 +778,53 @@ class Model_Sales extends CI_Model {
         return null;
     }
 
-    public function addCar($data) {
-        if ($this->db->insert('ms_car', $data)) {
-                return array('status' => TRUE, 'msg' => 'DATA KENDARAAN BERHASIL DITAMBAHKAN');
-            } else {
-                return array('status' => FALSE, 'msg' => 'DATA KENDARAAN GAGAL DITAMBAHKAN');
-            }
-    }
+    public function addStockUnit($data) {
+        $this->db->trans_begin();
+        try {
+            $tahun = date('y');
+            $data['mscid'] = NUM_STOCK_UNIT . $tahun . sprintf("%08s", $this->getCounter(NUM_FPT . $tahun));
 
-    public function updateCar($data, $where) {
-        $this->db->where('mscid', $where);
-        if ($this->db->update('ms_car', $data)) {
-            return array('status' => TRUE, 'msg' => 'DATA KENDARAAN BERHASIL DIUPDATE');
-        } else {
-            return array('status' => FALSE, 'msg' => 'DATA KENDARAAN GAGAL DIUPDATE');
+            if ($this->db->insert('ms_car', $data) == FALSE) {
+                $warn = "FAILED INSERTING DATA : STOCK UNIT";
+                throw new Exception($warn);
+            }
+
+            if ($this->db->trans_status() == TRUE) {
+                $this->db->trans_commit();
+                return array('status' => TRUE, 'msg' => 'STOCK UNIT BERHASIL DITAMBAHKAN ');
+            } else {
+                $this->db->trans_rollback();
+                return array('status' => FALSE, 'msg' => 'STOCK UNIT GAGAL DITAMBAHKAN ');
+            }
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => $e->getMessage());
         }
     }
-    
-    public function getCar($data) {
+
+    public function updateStockUnit($data, $where) {
+        $this->db->where('mscid', $where);
+        if ($this->db->update('ms_car', $data)) {
+            return array('status' => TRUE, 'msg' => 'STOCK UNIT BERHASIL DIUPDATE');
+        } else {
+            return array('status' => FALSE, 'msg' => 'STOCK UNIT GAGAL DIUPDATE');
+        }
+    }
+
+    public function getStockUnit($data) {
         $query = $this->db->query("
             SELECT * FROM ms_car
-            WHERE mscid = " . $data . "
-            ");
+            LEFT JOIN ms_car_type ON ctyid = msc_ctyid
+            LEFT JOIN ms_car_model ON modelid = cty_modelid 
+            LEFT JOIN ms_segment ON segid = model_segment 
+            LEFT JOIN ms_car_merk ON merkid = model_merkid 
+            LEFT JOIN ms_warna ON warnaid = msc_warnaid 
+            WHERE mscid = '" . $data . "'");
         return $query->row_array();
     }
 
-    public function deleteCar($data) {
-        if ($this->db->query("DELETE FROM ms_car WHERE mscid = ' ". $data."'")) {
+    public function deleteStockUnit($data) {
+        if ($this->db->query("DELETE FROM ms_car WHERE mscid = ' " . $data . "'")) {
             return TRUE;
         } else {
             return FALSE;

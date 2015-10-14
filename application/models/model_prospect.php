@@ -224,9 +224,8 @@ class Model_Prospect extends CI_Model {
             }
         } catch (Exception $e) {
             $this->db->trans_rollback();
-            return false;
+            return array('status' => FALSE, 'msg' =>  $e->getMessage());
         }
-        return false;
     }
     
     public function getTotalFpt($where) {

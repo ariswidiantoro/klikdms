@@ -61,6 +61,7 @@ define('NUM_TIPE_JURNAL', 'TJ');
 define('NUM_SETTING_JURNAL', 'SJ');
 define('NUM_PROSPECT', 'PC');
 define('NUM_STOCK_UNIT', 'ST');
+define('NUM_BPK', 'BP');
 define('NUM_SPK', 'SK');
 define('NUM_FPT', 'FP');
 

@@ -408,7 +408,7 @@ class Transaksi_Prospect extends Application {
      * @since 1.0
      */
     public function transferProspect() {
-        $this->hakAkses(76);
+        $this->hakAkses(1068);
         $this->data['title'] = 'Transfer Prospect';
         $this->data['content'] = 'transferProspect';
         $this->load->view('template', $this->data);
@@ -420,7 +420,7 @@ class Transaksi_Prospect extends Application {
      * @since 1.0
      */
     public function searchVehicle() {
-        $this->hakAkses(74);
+        $this->hakAkses(1069);
         $this->data['title'] = 'Pencarian Kendaraan';
         $this->data['content'] = 'searchVehicle';
         $this->load->view('template', $this->data);

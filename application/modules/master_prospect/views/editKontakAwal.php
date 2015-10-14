@@ -32,7 +32,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin ?", function(result) {
             if(result) {
-                window.location.href = "#master_prospect/kontak_awal";
+                window.location.href = "#master_prospect/kontakawal";
             }});
     }
     

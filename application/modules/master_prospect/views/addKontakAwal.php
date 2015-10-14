@@ -36,7 +36,7 @@
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
-                window.location.href = "#master_prospect/kontak_awal";
+                window.location.href = "#master_prospect/kontakAwal";
             }});
     }
     
