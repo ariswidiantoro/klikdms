@@ -1,0 +1,11 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
+
+ERROR - 2015-10-15 04:51:53 --> AAAAAAAAa SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid WHERE menu_parent_id = -1 AND userro_krid = 'KR20001' ORDER BY menu_urut ASC
+ERROR - 2015-10-15 04:51:54 --> AAAAAAAAa SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid WHERE menu_parent_id = -1 AND userro_krid = 'KR20001' ORDER BY menu_urut ASC
+ERROR - 2015-10-15 04:51:54 --> Severity: Notice  --> Undefined variable: menuid C:\xampp\htdocs\klikdms\application\views\attribut\menu.php 39
+ERROR - 2015-10-15 04:51:54 --> Severity: Notice  --> Undefined variable: menuid C:\xampp\htdocs\klikdms\application\views\attribut\menu.php 81
+ERROR - 2015-10-15 04:51:57 --> AAAAAAAAa SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid WHERE menu_parent_id = -1 AND userro_krid = 'KR20001' ORDER BY menu_urut ASC
+ERROR - 2015-10-15 04:51:58 --> AAAAAAAA SELECT menu_nama,menu_parent_id,menuid,menu_icon,menu_deskripsi,menu_url FROM ms_user_role LEFT JOIN ms_role_det ON userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid WHERE menu_parent_id != -1 AND menu_module = 6 AND userro_krid = 'KR20001' ORDER BY menu_urut, menuid ASC
+ERROR - 2015-10-15 05:17:58 --> AAAAAAAAa SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid WHERE menu_parent_id = -1 AND userro_krid = 'KR20001' ORDER BY menu_urut ASC
+ERROR - 2015-10-15 05:17:59 --> AAAAAAAAa SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid WHERE menu_parent_id = -1 AND userro_krid = 'KR20001' ORDER BY menu_urut ASC
+ERROR - 2015-10-15 05:18:04 --> AAAAAAAA SELECT menu_nama,menu_parent_id,menuid,menu_icon,menu_deskripsi,menu_url FROM ms_user_role LEFT JOIN ms_role_det ON userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid WHERE menu_parent_id != -1 AND menu_module = 5 AND userro_krid = 'KR20001' ORDER BY menu_urut, menuid ASC

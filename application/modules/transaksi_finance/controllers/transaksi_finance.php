@@ -26,6 +26,7 @@ class Transaksi_Finance extends Application {
             'purpose' => 'ADD',
             'trans' => 'KAS',
             'type' => 'I',
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
@@ -40,6 +41,7 @@ class Transaksi_Finance extends Application {
             'purpose' => 'ADD',
             'trans' => 'KAS',
             'type' => 'O',
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
@@ -64,8 +66,12 @@ class Transaksi_Finance extends Application {
         $this->data['etc'] = array(
             'judul' => 'Pengeluaran Bank',
             'targetSave' => 'transaksi_finance/bankoutSave',
-            'trans' => 'bnk',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'BNK',
             'type' => 'O',
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
     }
@@ -73,9 +79,14 @@ class Transaksi_Finance extends Application {
     public function cekin() {
         $this->hakAkses(1051);
         $this->data['etc'] = array(
-            'judul' => 'Penerimaan Kas',
+            'judul' => 'Penerimaan Cek',
             'targetSave' => 'transaksi_finance/cekinSave',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'CEK',
             'type' => 'I',
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
     }
@@ -83,9 +94,14 @@ class Transaksi_Finance extends Application {
     public function cekout() {
         $this->hakAkses(1051);
         $this->data['etc'] = array(
-            'judul' => 'Penerimaan Kas',
-            'targetSave' => 'transaksi_finance/kasinSave',
-            'type' => 'I',
+            'judul' => 'Pengeluaran Cek',
+            'targetSave' => 'transaksi_finance/cekoutSave',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'CEK',
+            'type' => 'O',
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
     }
@@ -98,7 +114,7 @@ class Transaksi_Finance extends Application {
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;
         $where = whereLoad();
-        $count = $this->model_finance->getTotalKasin($where);
+        $count = $this->model_finance->getTotalTrans($where);
         if ($count > 0) {
             $total_pages = ceil($count / $limit);
         } else {
@@ -107,7 +123,7 @@ class Transaksi_Finance extends Application {
 
         if ($page > $total_pages)
             $page = $total_pages;
-        $query = $this->model_finance->getDataKasin($start, $limit, $sidx, $sord, $where);
+        $query = $this->model_finance->getDataTrans($start, $limit, $sidx, $sord, $where);
         $responce = new stdClass;
         $responce->page = $page;
         $responce->total = $total_pages;
@@ -171,6 +187,7 @@ class Transaksi_Finance extends Application {
         );
         
         $save = $this->model_trfinance->addTrans($etc, $main, $detail, $bank);
+        
         if($save['status'] == TRUE){
             $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
         }else{
@@ -192,6 +209,23 @@ class Transaksi_Finance extends Application {
             }
         }
         echo json_encode($hasil);
+    }
+    
+    /* UANG MUKA */
+    
+    public function uangMuka(){
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Uang Muka Penjualan',
+            'targetSave' => 'transaksi_finance/saveUangMuka',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'KAS',
+            'type' => 'I',
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
+        );
+        $this->load->view('addUangMuka', $this->data);
     }
 
    
