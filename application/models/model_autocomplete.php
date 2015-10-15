@@ -41,11 +41,26 @@ class Model_Autocomplete extends CI_Model {
     
     public function autoBank($data) {
         $sql = $this->db->query("
-            select bank_name, bank_deskripsi, bank_flag, bankid 
+            select bank_name, bank_desc, bank_flag, bankid 
             from ms_bank
             WHERE bank_name LIKE '%".$data['param']."%'
                 AND bank_cbid = '".$data['cbid']."'
+                AND bank_flag = '1'
             ORDER BY bank_name ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
+    public function autoPelid($data) {
+        $sql = $this->db->query("
+            select pelid, pel_nama, pel_alamat 
+            from ms_pelanggan
+            WHERE pel_nama LIKE '%".$data['param']."%'
+                AND pel_cbid = '".$data['cbid']."'
+            ORDER BY pel_nama ASC LIMIT 20 OFFSET 0
         ");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();

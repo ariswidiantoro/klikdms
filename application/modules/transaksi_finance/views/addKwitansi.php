@@ -57,7 +57,7 @@
         <div class="col-sm-10">
             <input type="text" id="trans_pelname" name="trans_pelname" required="required" maxlength="50" 
                    onkeyup="acomplete('trans_pelname', 'auto_pelid', 'trans_pelid', '','')"class="req upper ace col-xs-10 col-sm-4" />
-            <a href="#master_service/addPelanggan?href=transaksi_finance/uangMuka" class="btn btn-sm btn-primary">
+            <a href="#master_service/addPelanggan?href=transaksi_finance/kwitansi" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Pelanggan</a>
             <input type="hidden" id="trans_pelid" name="trans_pelid" required="required" />
@@ -302,7 +302,7 @@
     }
     
     function terbilang(total){
-        $('#terbilang').html((toWords(total)+" rupiah").toUpperCase());
+    $('#terbilang').html((toWords(total)+" rupiah").toUpperCase());
     }
     
     function displayDate(){
@@ -368,20 +368,23 @@
         });
 
         $('#formAdd').submit(function() {
-            if($("#totalTrans").val())
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo site_url('transaksi_finance/saveUmTrans') ?>",
-                dataType: "json",
-                async: false,
-                data: $(this).serialize(),
-                success: function(data) {
-                    window.scrollTo(0, 0);
-                    if(data.status == true)
-                        document.formAdd.reset();
-                    $("#result").html(data.msg).show().fadeIn("slow");
-                }
-            })
+            if($("#totalTrans").val()){
+                $
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo site_url('transaksi_finance/saveKwitansi') ?>",
+                    dataType: "json",
+                    async: false,
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        window.scrollTo(0, 0);
+                        if(data.status == true)
+                            document.formAdd.reset();
+                        $("#result").html(data.msg).show().fadeIn("slow");
+                    }
+                })
+            }
             return false;
         });
 

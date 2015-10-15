@@ -255,6 +255,17 @@ class Model_Trfinance extends CI_Model {
         return $sql->result_array();
     }
     
+    public function getMainCoa($data = array()){
+        $sql = $this->db->query("
+            SELECT * FROM ms_coa WHERE coa_is_kas_bank = '".$data['type']."'
+                AND coa_cbid = '".$data['cbid']."' AND coa_level != '1'
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
     
 
 }

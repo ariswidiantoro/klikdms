@@ -26,7 +26,7 @@ class Transaksi_Finance extends Application {
             'purpose' => 'ADD',
             'trans' => 'KAS',
             'type' => 'I',
-            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid' => ses_cabang)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
@@ -41,7 +41,7 @@ class Transaksi_Finance extends Application {
             'purpose' => 'ADD',
             'trans' => 'KAS',
             'type' => 'O',
-            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid' => ses_cabang)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
@@ -70,7 +70,7 @@ class Transaksi_Finance extends Application {
             'purpose' => 'ADD',
             'trans' => 'BNK',
             'type' => 'O',
-            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid' => ses_cabang)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
@@ -85,7 +85,7 @@ class Transaksi_Finance extends Application {
             'purpose' => 'ADD',
             'trans' => 'CEK',
             'type' => 'I',
-            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid' => ses_cabang)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
@@ -100,7 +100,7 @@ class Transaksi_Finance extends Application {
             'purpose' => 'ADD',
             'trans' => 'CEK',
             'type' => 'O',
-            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid' => ses_cabang)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addTrans', $this->data);
@@ -145,7 +145,7 @@ class Transaksi_Finance extends Application {
             }
         echo json_encode($responce);
     }
-    
+
     public function saveTrans() {
         $main = array(
             'kst_trans' => $this->input->post('trans_trans', TRUE),
@@ -161,7 +161,7 @@ class Transaksi_Finance extends Application {
             'kst_createby' => ses_krid,
             'kst_cbid' => ses_cabang,
         );
-        
+
         $detail = array(
             'coa' => $this->input->post('dtrans_coa', TRUE),
             'desc' => $this->input->post('dtrans_desc', TRUE),
@@ -171,7 +171,7 @@ class Transaksi_Finance extends Application {
             'ccid' => $this->input->post('dtrans_ccid', TRUE),
             'nominal' => $this->input->post('dtrans_nominal', TRUE)
         );
-        
+
         $bank = array(
             'bank' => $this->input->post('dbnk_bankid', TRUE),
             'norek' => $this->input->post('dbnk_norek', TRUE),
@@ -180,23 +180,23 @@ class Transaksi_Finance extends Application {
             'kota' => $this->input->post('dbnk_kotaid', TRUE),
             'nominal' => $this->input->post('dbnk_nominal', TRUE)
         );
-        
+
         $etc = array(
             'purpose' => $this->input->post('trans_purpose', TRUE),
             'kstid' => $this->input->post('trans_id', TRUE)
         );
-        
+
         $save = $this->model_trfinance->addTrans($etc, $main, $detail, $bank);
-        
-        if($save['status'] == TRUE){
+
+        if ($save['status'] == TRUE) {
             $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
-        }else{
+        } else {
             $result = array('status' => FALSE, 'msg' => $this->error($save['msg']));
         }
-        
+
         echo json_encode($result);
     }
-    
+
     public function cancelTrans() {
         $id = $this->input->post('id', TRUE);
         if (empty($id)) {
@@ -210,10 +210,10 @@ class Transaksi_Finance extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     /* UANG MUKA */
-    
-    public function uangMuka(){
+
+    public function uangMuka() {
         $this->hakAkses(1051);
         $this->data['etc'] = array(
             'judul' => 'Uang Muka Penjualan',
@@ -222,14 +222,119 @@ class Transaksi_Finance extends Application {
             'purpose' => 'ADD',
             'trans' => 'KAS',
             'type' => 'I',
-            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid'=>ses_cabang)),
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid' => ses_cabang)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addUangMuka', $this->data);
     }
 
-   
+    public function getMainCoa() {
+        $type = $this->input->post('type', TRUE);
+        $data = $this->model_trfinance->getMainCoa($type);
+        if (count($data) > 0) {
+            foreach ($data as $rows) {
+                echo "<option value='" . $rows['coa_kode'] . "'></option>";
+            }
+        }
+    }
 
+    public function jsonMainCoa() {
+        $type = $this->input->post('type', TRUE);
+        echo json_encode($this->model_trfinance->getMainCoa(array(
+                    'cbid' => ses_cabang,
+                    'type' => $type
+                )));
+    }
+
+    public function saveUmTrans(){
+        $t_trans = $this->input->post('trans_trans', TRUE);
+        if ($t_trans == '1') {
+            $trans = 'KAS';
+        }else if ($t_trans == '2') {
+            $trans = 'BNK';
+        }else{
+            $trans = 'CEK';
+        }
+        
+        $main = array(
+            'kst_trans' => $trans,
+            'kst_type' => $this->input->post('trans_type', TRUE),
+            'kst_nomer' => strtoupper($this->input->post('trans_docno', TRUE)),
+            'kst_noreff' => $this->input->post('trans_noreff', TRUE),
+            'kst_tgl' => $this->input->post('trans_tgl', TRUE),
+            'kst_coa' => $this->input->post('trans_coa', TRUE),
+            'kst_desc' => $this->input->post('trans_desc', TRUE),
+            'kst_debit' => numeric($this->input->post('totalTrans', TRUE)),
+            'kst_kredit' => numeric($this->input->post('totalTrans', TRUE)),
+            'kst_createon' => date('Y-m-d H:i:s'),
+            'kst_createby' => ses_krid,
+            'kst_cbid' => ses_cabang,
+        );
+
+        $detail = array(
+            'coa' => $this->input->post('dtrans_coa', TRUE),
+            'desc' => $this->input->post('dtrans_desc', TRUE),
+            'nota' => $this->input->post('dtrans_notaid', TRUE),
+            'pelid' => $this->input->post('dtrans_pelid', TRUE),
+            'supid' => $this->input->post('dtrans_supid', TRUE),
+            'ccid' => $this->input->post('dtrans_ccid', TRUE),
+            'nominal' => $this->input->post('dtrans_nominal', TRUE)
+        );
+
+        $bank = array(
+            'bank' => $this->input->post('dbnk_bankid', TRUE),
+            'norek' => $this->input->post('dbnk_norek', TRUE),
+            'nocek' => $this->input->post('dbnk_nocek', TRUE),
+            'jtempo' => $this->input->post('dbnk_jtempo', TRUE),
+            'kota' => $this->input->post('dbnk_kotaid', TRUE),
+            'nominal' => $this->input->post('dbnk_nominal', TRUE)
+        );
+
+        $etc = array(
+            'purpose' => $this->input->post('trans_purpose', TRUE),
+            'kstid' => $this->input->post('trans_id', TRUE)
+        );
+
+        $save = $this->model_trfinance->addTrans($etc, $main, $detail, $bank);
+
+        if ($save['status'] == TRUE) {
+            $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+        } else {
+            $result = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+        }
+
+        echo json_encode($result);
+    }
+    
+    public function kwitansi() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Kwitansi',
+            'targetSave' => 'transaksi_finance/saveKwitansi',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'KWI',
+            'type' => 'I',
+            'mainCoa' => $this->model_trfinance->mainCoa(array('cbid' => ses_cabang)),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
+        );
+        $this->load->view('addKwitansi', $this->data);
+    }
+    
+    public function penyesuaian() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Jurnal Penyesuaian',
+            'targetSave' => 'transaksi_finance/savePenyesuaian',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'ADJ',
+            'type' => 'I',
+            'mainCoa' => '',
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
+        );
+        $this->load->view('addPenyesuaian', $this->data);
+    }
 }
 
 ?>

@@ -98,14 +98,15 @@ class Master_Finance extends Application {
                         'coa_desc' => $desc,
                         'coa_type' => $type,
                         'coa_level' => $level,
-                        'coa_is_rugilaba' => $this->input->post('rugi_laba'),
-                        'coa_is_neraca' => $this->input->post('neraca'),
+                        'coa_is_rugi_laba' => $this->input->post('rugi_laba'),
+                        'coa_is_kas_bank' => $this->input->post('kas_bank'),
+                        'coa_is_auto_jurnal' => $this->input->post('auto_jurnal'),
                         'coa_cbid' => ses_cabang
-                        ));
-            if ($save['status'] == TRUE) {
-                $hasil = $this->sukses($save['msg']);
+                    ));
+           if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
-                $hasil = $this->error($save['msg']);
+                $hasil = array('status' => FALSE, 'msg' => $this->sukses($save['msg']));
             }
         }
         echo json_encode($hasil);
@@ -120,12 +121,18 @@ class Master_Finance extends Application {
         if (empty($kode) || empty($desc) || empty($type) || empty($level)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_finance->updateCoa(array('coa_kode' => $kode,
-                'coa_desc' => $desc, 'coa_type' => $type, 'coa_level' => $level), $coaid);
+            $save = $this->model_finance->updateCoa(array(
+                'coa_kode' => $kode,
+                'coa_desc' => $desc,
+                'coa_type' => $type,
+                'coa_is_rugi_laba' => $this->input->post('rugi_laba', TRUE),
+                'coa_is_kas_bank' => $this->input->post('kas_bank', TRUE),
+                'coa_is_auto_jurnal' => $this->input->post('auto_jurnal', TRUE),
+                'coa_level' => $level), $coaid);
             if ($save['status'] == TRUE) {
-                $hasil = $this->sukses($save['msg']);
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
-                $hasil = $this->error($save['msg']);
+                $hasil = array('status' => FALSE, 'msg' => $this->sukses($save['msg']));
             }
         }
         echo json_encode($hasil);
