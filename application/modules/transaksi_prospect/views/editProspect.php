@@ -27,18 +27,19 @@
     <hr />
 
     <div class="step-content pos-rel">
-        <form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('transaksi_prospect/saveProspect'); ?>" name="formAdd">
+        <form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url('transaksi_prospect/updateProspect'); ?>" name="formAdd">
             <div class="step-pane active" data-step="1">
+                <input type="hidden" name="prosid" value="<?php echo $data['prosid'] ?>">
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Type Pelanggan</label>
                     <div class="col-sm-3">
                         <div class="input-group">
                             <select name="pros_type" required="required" class="form-control">
                                 <option value="">PILIH</option>
-                                <option value="retail">RETAIL</option>
-                                <option value="broker">BROKER</option>
-                                <option value="fleet">FLEET</option>
-                                <option value="gso">GSO / PEMERINTAHAN</option>
+                                <option value="retail" <?php if ($data['pros_type'] == 'RETAIL') echo 'selected'; ?>>RETAIL</option>
+                                <option value="broker" <?php if ($data['pros_type'] == 'BROKER') echo 'selected'; ?>>BROKER</option>
+                                <option value="fleet" <?php if ($data['pros_type'] == 'FLEET') echo 'selected'; ?>>FLEET</option>
+                                <option value="gso" <?php if ($data['pros_type'] == 'GSO') echo 'selected'; ?>>GSO / PEMERINTAHAN</option>
                             </select>
                         </div>
                     </div>
@@ -47,7 +48,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-8">
-                            <input type="text" name="pros_nama" required="required" placeholder="Nama" class="form-control upper" />
+                            <input type="text" name="pros_nama" value="<?php echo $data['pros_nama'] ?>" required="required" placeholder="Nama" class="form-control upper" />
                         </div>
                     </div>
                 </div>
@@ -55,7 +56,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-8">
-                            <textarea name="pros_alamat" class="form-control upper" required="required" rows="4"></textarea>
+                            <textarea name="pros_alamat"  class="form-control upper" required="required" rows="4"><?php echo $data['pros_alamat'] ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -67,8 +68,9 @@
                             <?php
                             if (count($propinsi) > 0) {
                                 foreach ($propinsi as $value) {
+                                    $select = ($data['kota_propid'] == $value['propid']) ? 'selected' : '';
                                     ?>
-                                    <option value="<?php echo $value['propid']; ?>"><?php echo $value['prop_deskripsi'] ?></option> 
+                                    <option value="<?php echo $value['propid']; ?>" <?php echo $select; ?>><?php echo $value['prop_deskripsi'] ?></option> 
                                     <?php
                                 }
                             }
@@ -79,21 +81,31 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kab / Kota</label>
                     <div class="col-sm-8">
-                        <select name="pros_kotaid" id="kotaid" class="form-control" style="width: 30%;">
+                        <select name="pros_kotaid" id="kotaid" class="ace col-xs-10 col-sm-3">
+                            <?php
+                            if (count($kota) > 0) {
+                                foreach ($kota as $value) {
+                                    $select = ($data['pros_kotaid'] == $value->kotaid) ? 'selected' : '';
+                                    ?>
+                                    <option value="<?php echo $value->kotaid; ?>"<?php echo $select; ?>><?php echo $value->kota_deskripsi ?></option> 
+                                    <?php
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor KTP</label>
                     <div class="col-sm-8">
-                        <input type="text" name="pros_nomor_id" placeholder="Nomor KTP" class="ace col-xs-10 col-sm-5 number upper" />
+                        <input type="text" name="pros_nomor_id" value="<?php echo $data['prop_nomor_id']; ?>" placeholder="Nomor KTP" class="ace col-xs-10 col-sm-5 number upper" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor HP</label>
                     <div class="col-sm-3">
                         <div class="input-group">
-                            <input type="text" name="pros_hp" id="pros_hp"  placeholder="Nomor HP" class="form-control number upper" />
+                            <input type="text" name="pros_hp" id="pros_hp" value="<?php echo $data['pros_hp']; ?>"  placeholder="Nomor HP" class="form-control number upper" />
                             <span class="input-group-addon">
                                 <i class="ace-icon fa fa-mobile-phone" style="width: 12px;"></i>
                             </span>
@@ -104,7 +116,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Telpon</label>
                     <div class="col-sm-3">
                         <div class="input-group">
-                            <input type="text" id="pros_telpon"  name="pros_telpon" placeholder="Nomor Telpon" class="form-control number upper" />
+                            <input type="text" id="pros_telpon"  name="pros_telpon" value="<?php echo $data['pros_telpon']; ?>" placeholder="Nomor Telpon" class="form-control number upper" />
                             <span class="input-group-addon">
                                 <i class="ace-icon fa fa-phone" style="width: 12px;"></i>
                             </span>
@@ -115,7 +127,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Fax</label>
                     <div class="col-sm-3">
                         <div class="input-group">
-                            <input type="text" name="pros_fax"  placeholder="Nomor Fax" class="form-control number upper" />
+                            <input type="text" name="pros_fax" value="<?php echo $data['pros_fax']; ?>"  placeholder="Nomor Fax" class="form-control number upper" />
                             <span class="input-group-addon">
                                 <i class="ace-icon fa fa-fax" style="width: 12px;"></i>
                             </span>
@@ -126,14 +138,14 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tempat Lahir</label>
                     <div class="col-sm-8">
-                        <input type="text" name="pros_tempat_lahir"  placeholder="Tempat Lahir" class="ace col-xs-10 col-sm-5 upper" />
+                        <input type="text" name="pros_tempat_lahir" value="<?php echo $data['pros_tempat_lahir']; ?>"  placeholder="Tempat Lahir" class="ace col-xs-10 col-sm-5 upper" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tgl Lahir</label>
                     <div class="col-sm-2">
                         <div class="input-group">
-                            <input type="text" name="pros_tgl_lahir" id="datepicker" readonly="readonly" class="form-control" />
+                            <input type="text" name="pros_tgl_lahir" value="<?php if ($data['pros_tgl_lahir'] != dateToIndo(DEFAULT_TGL)) echo dateToIndo($data['pros_tgl_lahir']); ?>" id="datepicker" readonly="readonly" class="form-control" />
                             <span class="input-group-addon">
                                 <i class="ace-icon fa fa-calendar" style="width: 12px;"></i>
                             </span>
@@ -145,14 +157,14 @@
                     <div class="col-sm-8">
                         <div class="radio">
                             <label>
-                                <input name="pros_gender" type="radio" value="L" class="ace" />
+                                <input name="pros_gender"  <?php if ($data['pros_gender'] == 'L') echo 'checked'; ?> type="radio" value="L" class="ace" />
                                 <span class="lbl">Laki-Laki</span>
                             </label>
                         </div>
 
                         <div class="radio">
                             <label>
-                                <input name="pros_gender" type="radio" value="P" class="ace" />
+                                <input name="pros_gender" type="radio" <?php if ($data['pros_gender'] == 'P') echo 'checked'; ?> value="P" class="ace" />
                                 <span class="lbl">Perempuan</span>
                             </label>
                         </div>
@@ -161,7 +173,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Email</label>
                     <div class="col-sm-8">
-                        <input type="text" name="pros_email"  placeholder="Email" class="ace col-xs-10 col-sm-5" />
+                        <input type="text" name="pros_email" value="<?php echo $data['pros_email']; ?>"  placeholder="Email" class="ace col-xs-10 col-sm-5" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -169,31 +181,31 @@
                     <div class="col-sm-8">
                         <div class="radio">
                             <label>
-                                <input name="pros_agama" type="radio" value="islam" class="ace" />
+                                <input name="pros_agama" <?php if ($data['pros_agama'] == 'islam') echo 'checked'; ?> type="radio" value="islam" class="ace" />
                                 <span class="lbl">Islam</span>
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input name="pros_agama" type="radio" value="kristen" class="ace" />
+                                <input name="pros_agama" <?php if ($data['pros_agama'] == 'kristen') echo 'checked'; ?> type="radio" value="kristen" class="ace" />
                                 <span class="lbl">Kristen</span>
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input name="pros_agama" type="radio" value="budha" class="ace" />
+                                <input name="pros_agama" type="radio" <?php if ($data['pros_agama'] == 'budha') echo 'checked'; ?> value="budha" class="ace" />
                                 <span class="lbl">Budha</span>
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input name="pros_agama" type="radio" value="katolik" class="ace" />
+                                <input name="pros_agama" type="radio" <?php if ($data['pros_agama'] == 'katolik') echo 'checked'; ?> value="katolik" class="ace" />
                                 <span class="lbl">Katolik</span>
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input name="pros_agama" type="radio" value="hindu" class="ace" />
+                                <input name="pros_agama" type="radio" <?php if ($data['pros_agama'] == 'hindu') echo 'checked'; ?> value="hindu" class="ace" />
                                 <span class="lbl">Hindu</span>
                             </label>
                         </div>
@@ -219,48 +231,102 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr  class="item-row">
-                                    <td class="dtlkendaraan" style="text-align: center;">
-                                        1
-                                    </td>
-                                    <td>
-                                        <select class="form-control input-small" style="width:100%;text-align: left" onchange="getModel('1')"  name="merkid[]" id="merkid1" >
-                                            <option value="">PILIH</option>
-                                            <?php
-                                            if (count($merk) > 0) {
-                                                foreach ($merk as $value) {
-                                                    ?>
-                                                    <option value="<?php echo $value['merkid']; ?>"><?php echo $value['merk_deskripsi'] ?></option> 
+                                <?php
+                                if (count($cars) > 0) {
+                                    $i = 1;
+                                    foreach ($cars as $car) {
+                                        ?>
+                                        <tr  class="item-row">
+                                            <td class="dtlkendaraan" style="text-align: center;">
+                                                <?php echo $i; ?>
+                                            </td>
+                                            <td>
+                                                <select class="form-control input-small" style="width:100%;text-align: left" onchange="getModel('<?php echo $i; ?>')"  name="merkid[]" id="merkid<?php echo $i; ?>" >
+                                                    <option value="">PILIH</option>
                                                     <?php
+                                                    if (count($merk) > 0) {
+                                                        foreach ($merk as $value) {
+                                                            $select = ($car['merkid'] == $value['merkid']) ? 'selected' : '';
+                                                            ?>
+                                                            <option value="<?php echo $value['merkid']; ?>" <?php echo $select; ?>><?php echo $value['merk_deskripsi'] ?></option> 
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select name="modelid[]" id="modelid<?php echo $i; ?>" onchange="getType('<?php echo $i; ?>')" class="form-control input-small" style="width: 100%;">
+                                                    <?php echo "<option value='" . $car['modelid'] . "'>" . $car['model_deskripsi'] . "</option>" ?>  
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select name="car_ctyid[]" id="ctyid<?php echo $i; ?>" class="form-control input-xxlarge" style="width: 100%;">
+                                                    <?php echo "<option value='" . $car['ctyid'] . "'>" . $car['cty_deskripsi'] . "</option>" ?> 
+                                                </select>
+                                            </td>
+                                            <td><div class="input-group">
+                                                    <input type="text" name="car_qty[]" value="<?php echo $car['car_qty'] ?>"  placeholder="Kuantitas" class="form-control number upper" />
+                                                    <span class="input-group-addon">
+                                                        <i class="ace-icon fa fa-car" style="width: 12px;"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td class="center">
+                                                <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
+                                            </td>
+                                            <td  class="center">
+                                                <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                        $i++;
+                                    }
+                                } else {
+                                    ?>
+                                    <tr  class="item-row">
+                                        <td class="dtlkendaraan" style="text-align: center;">
+                                            1
+                                        </td>
+                                        <td>
+                                            <select class="form-control input-small" style="width:100%;text-align: left" onchange="getModel('1')"  name="merkid[]" id="merkid1" >
+                                                <option value="">PILIH</option>
+                                                <?php
+                                                if (count($merk) > 0) {
+                                                    foreach ($merk as $value) {
+                                                        ?>
+                                                        <option value="<?php echo $value['merkid']; ?>"><?php echo $value['merk_deskripsi'] ?></option> 
+                                                        <?php
+                                                    }
                                                 }
-                                            }
-                                            ?>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="modelid[]" id="modelid1" onchange="getType('1')" class="form-control input-small" style="width: 100%;">
-                                            <option value="">PILIH</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="ctyid[]" id="ctyid1" class="form-control input-xxlarge" style="width: 100%;">
-                                            <option value="">PILIH</option>
-                                        </select>
-                                    </td>
-                                    <td><div class="input-group">
-                                            <input type="text" name="pros_kuantitas"  placeholder="Kuantitas" class="form-control number upper" />
-                                            <span class="input-group-addon">
-                                                <i class="ace-icon fa fa-car" style="width: 12px;"></i>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="center">
-                                        <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
-                                    </td>
-                                    <td  class="center">
-                                        <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
-                                    </td>
-                                </tr>
+                                                ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="modelid[]" id="modelid1" onchange="getType('1')" class="form-control input-small" style="width: 100%;">
+                                                <option value="">PILIH</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="car_ctyid[]" id="ctyid1" class="form-control input-xxlarge" style="width: 100%;">
+                                                <option value="">PILIH</option>
+                                            </select>
+                                        </td>
+                                        <td><div class="input-group">
+                                                <input type="text" name="car_qty[]"  placeholder="Kuantitas" class="form-control number upper" />
+                                                <span class="input-group-addon">
+                                                    <i class="ace-icon fa fa-car" style="width: 12px;"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="center">
+                                            <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
+                                        </td>
+                                        <td  class="center">
+                                            <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>
@@ -269,26 +335,62 @@
 
             <div class="step-pane" data-step="3">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Sumber Informasi</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">NPWP</label>
                     <div class="col-sm-8">
-                        <select name="pros_sumber_informasi" class="form-control" style="width: 30%;">
+                        <input type="text" name="pros_npwp" value="<?php echo $data['pros_npwp'] ?>" placeholder="Nomor NPWP" class="ace col-xs-10 col-sm-5 number upper" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Bisnis</label>
+                    <div class="col-sm-8">
+                        <select name="pros_bisnis" class="form-control input-medium">
                             <option value="">PILIH</option>
-                            <option value="retail">RETAIL</option>
-                            <option value="broker">BROKER</option>
-                            <option value="fleet">FLEET</option>
-                            <option value="gso">GSO / PEMERINTAHAN</option>
+                            <?php
+                            if (count($bisnis) > 0) {
+                                foreach ($bisnis as $fbisnis) {
+                                    $select = ($data['pros_bisnis'] == $fbisnis['bisnisid']) ? 'selected' : '';
+                                    ?>
+                                    <option value="<?php echo $fbisnis['bisnisid']; ?>" <?php echo $select; ?>><?php echo $fbisnis['bisnis_nama'] ?></option> 
+                                    <?php
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Sumber Informasi</label>
                     <div class="col-sm-8">
-                        <select name="pros_sumber_informasi" class="form-control" style="width: 30%;">
+                        <select name="pros_sumber_info" class="form-control input-medium">
                             <option value="">PILIH</option>
-                            <option value="retail">RETAIL</option>
-                            <option value="broker">BROKER</option>
-                            <option value="fleet">FLEET</option>
-                            <option value="gso">GSO / PEMERINTAHAN</option>
+                            <?php
+                            if (count($sinfo) > 0) {
+                                foreach ($sinfo as $fsinfo) {
+                                    $select = ($data['pros_sumber_info'] == $fsinfo['smbinfoid']) ? 'selected' : '';
+                                    ?>
+                                    <option value="<?php echo $fsinfo['smbinfoid']; ?>" <?php echo $select; ?>><?php echo $fsinfo['smbinfo_deskripsi'] ?></option> 
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kontak Awal</label>
+                    <div class="col-sm-8">
+                        <select name="pros_kontak_awal" class="form-control input-medium">
+                            <option value="">PILIH</option>
+                            <?php
+                            if (count($kontak) > 0) {
+                                foreach ($kontak as $fkontak) {
+                                    $select = ($data['pros_kontak_awal'] == $fkontak['kontakid']) ? 'selected' : '';
+                                    ?>
+                                    <option value="<?php echo $fkontak['kontakid']; ?>" <?php echo $select; ?>><?php echo $fkontak['kontak_deskripsi'] ?></option> 
+                                    <?php
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -296,7 +398,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Keterangan</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-8">
-                            <textarea name="pros_keterangan" class="form-control upper" rows="4"></textarea>
+                            <textarea name="pros_keterangan" class="form-control upper" rows="4"><?php echo $data['pros_keterangan'] ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -327,6 +429,10 @@
 <script src="<?php echo path_js(); ?>ace/elements.wizard.js"></script>
 <script src="<?php echo path_js(); ?>fuelux/fuelux.wizard.js"></script>
 <script type="text/javascript">
+    var scripts = [null, null]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+        //inline scripts related to this page
+    });
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
@@ -415,7 +521,11 @@
                          <td>\n\
                              <select class="form-control input-small" style="width:100%;text-align: left" onchange="getModel('+( inc )+')"  name="merkid[]" id="merkid'+(inc)+'" >\n\
                             <option value="">PILIH</option>\n\
-                                <?php foreach ($merk as $value) {echo "<option value=\'" . $value['merkid'] . "\' > " . $value['merk_deskripsi'] . "</option> ";}?> \n\
+<?php
+foreach ($merk as $value) {
+    echo "<option value=\'" . $value['merkid'] . "\' > " . $value['merk_deskripsi'] . "</option> ";
+}
+?> \n\
                         </select> \n\
                          </td>\n\
                          <td>\n\
@@ -480,14 +590,16 @@
                                  $('#formAdd').submit(function() {
                                      $.ajax({
                                          type: 'POST',
-                                         url: "<?php echo site_url('transaksi_prospect/saveProspect') ?>",
+                                         url: "<?php echo site_url('transaksi_prospect/updateProspect') ?>",
                                          dataType: "json",
                                          async: false,
                                          data: $(this).serialize(),
                                          success: function(data) {
                                              window.scrollTo(0, 0);
-                                             document.formAdd.reset();
-                                             $("#result").html(data).show().fadeIn("slow");
+                                             if (data.result) {
+                                                 document.formAdd.reset();
+                                             }
+                                             $("#result").html(data.msg).show().fadeIn("slow");
                                          }
                                      })
                                      return false;

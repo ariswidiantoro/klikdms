@@ -174,6 +174,14 @@ class Model_Sales extends CI_Model {
         return $sql->row()->total;
     }
 
+    public function getTotalKontrak() {
+        $wh = "WHERE kon_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(kon_nomer) AS total FROM ms_kontrak $wh");
+        return $sql->row()->total;
+    }
+
     public function getDataSegment($start, $limit, $sidx, $sord, $where) {
         $this->db->select('*');
         $this->db->limit($limit);
@@ -582,7 +590,7 @@ class Model_Sales extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_aksesories');
-        $this->db->where('aks_status', '1');
+//        $this->db->where('aks_status', '1');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -637,6 +645,23 @@ class Model_Sales extends CI_Model {
         $this->db->from('ms_karoseri');
         $this->db->join('ms_kota', 'kotaid = karo_kotaid', 'left');
         $this->db->where('karo_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function getAllKontrak($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_kontrak');
+        $this->db->join('ms_pelanggan', 'kon_pelid = pelid', 'left');
+        $this->db->where('kon_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();

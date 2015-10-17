@@ -250,12 +250,12 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="cars_ctyid[]" id="ctyid1" class="form-control" style="width: 100%;">
+                                        <select name="car_ctyid[]" id="ctyid1" class="form-control" style="width: 100%;">
                                             <option value="">PILIH</option>
                                         </select>
                                     </td>
                                     <td><div class="input-group">
-                                            <input type="text" name="cars_qty[]"  placeholder="Kuantitas" class="form-control number upper" />
+                                            <input type="text" name="car_qty[]"  placeholder="Kuantitas" class="form-control number upper" />
                                             <span class="input-group-addon">
                                                 <i class="ace-icon fa fa-car" style="width: 12px;"></i>
                                             </span>

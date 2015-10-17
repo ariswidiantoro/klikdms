@@ -46,6 +46,15 @@ class Master_Sales extends Application {
         echo json_encode($this->model_sales->getAreaByKota($kotaid));
     }
 
+    public function noKontrak() {
+        $this->hakAkses(93);
+        $this->load->view('noKontrak', $this->data);
+    }
+    public function addNoKontrak() {
+        $this->hakAkses(93);
+        $this->load->view('addNoKontrak', $this->data);
+    }
+
     /* --------------  */
 
     public function masterMerk() {
@@ -86,6 +95,49 @@ class Master_Sales extends Application {
                     $row->merkid,
                     $row->merk_deskripsi,
                     $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    /**
+     * 
+     */
+    public function loadNoKontrak() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'kon_nomer';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_sales->getTotalKontrak($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sales->getAllKontrak($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $hapus = '<a href="javascript:void(0);" onclick="hapusKontrak(\"' . $row->kon_nomer . '\")" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_sales/editKontrak?id=' . $row->kon_nomer . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->kon_nomer;
+                $responce->rows[$i]['cell'] = array(
+                    $row->kon_nomer,
+                    $row->pel_nama,
+                    $row->pel_alamat,
+                    $row->pel_hp,
+                    $edit,
+                    $hapus);
                 $i++;
             }
         echo json_encode($responce);
@@ -1179,7 +1231,7 @@ class Master_Sales extends Application {
         $this->hakAkses(91);
         $this->load->view('master_service/supplier', $this->data);
     }
-    
+
     /**
      * Master Stock Unit
      * @author Rossi
@@ -1188,7 +1240,7 @@ class Master_Sales extends Application {
         $this->hakAkses(1092);
         $this->load->view('dataStockUnit', $this->data);
     }
-    
+
     public function getStockUnit() {
         $data = $this->input->get('mscid', TRUE);
         $result = $this->model_sales->getStockUnit($data);
@@ -1206,10 +1258,10 @@ class Master_Sales extends Application {
         $warna = strtoupper($this->input->post('msc_warnaid', TRUE));
         $tahun = strtoupper($this->input->post('msc_tahun', TRUE));
         $kondisi = strtoupper($this->input->post('msc_kondisi', TRUE));
-        if (empty($norangka) || empty($nomesin)|| empty($jkend)|| empty($type)|| 
-                empty($warna)|| empty($tahun)|| empty($kondisi)) {
-            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : '.$norangka.' | Mesin : '.$nomesin.
-                    ' | Jkend : '.$jkend.' | Type : '.$type.' | Warna : '.$warna.' | Tahun : '.$tahun.' | Kondisi : '.$kondisi));
+        if (empty($norangka) || empty($nomesin) || empty($jkend) || empty($type) ||
+                empty($warna) || empty($tahun) || empty($kondisi)) {
+            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : ' . $norangka . ' | Mesin : ' . $nomesin .
+                        ' | Jkend : ' . $jkend . ' | Type : ' . $type . ' | Warna : ' . $warna . ' | Tahun : ' . $tahun . ' | Kondisi : ' . $kondisi));
         } else {
             $save = $this->model_sales->addStockUnit(array(
                 'msc_norangka' => $norangka,
@@ -1230,7 +1282,7 @@ class Master_Sales extends Application {
                 'msc_silinder' => numeric($this->input->post('msc_silinder', TRUE)),
                 'msc_createon' => date('Y-m-d H:i:s'),
                 'msc_createby' => ses_krid
-                ));
+                    ));
             if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
@@ -1308,10 +1360,10 @@ class Master_Sales extends Application {
         $warna = strtoupper($this->input->post('msc_warnaid', TRUE));
         $tahun = strtoupper($this->input->post('msc_tahun', TRUE));
         $kondisi = strtoupper($this->input->post('msc_kondisi', TRUE));
-        if (empty($id) ||empty($norangka) || empty($nomesin)|| empty($jkend)|| empty($type)|| 
-                empty($warna)|| empty($tahun)|| empty($kondisi)) {
-            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : '.$norangka.' | Mesin : '.$nomesin.
-                    ' | Jkend : '.$jkend.' | Type : '.$type.' | Warna : '.$warna.' | Tahun : '.$tahun.' | Kondisi : '.$kondisi));
+        if (empty($id) || empty($norangka) || empty($nomesin) || empty($jkend) || empty($type) ||
+                empty($warna) || empty($tahun) || empty($kondisi)) {
+            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : ' . $norangka . ' | Mesin : ' . $nomesin .
+                        ' | Jkend : ' . $jkend . ' | Type : ' . $type . ' | Warna : ' . $warna . ' | Tahun : ' . $tahun . ' | Kondisi : ' . $kondisi));
         } else {
             $save = $this->model_sales->updateStockUnit(array(
                 'msc_norangka' => $norangka,
@@ -1332,7 +1384,7 @@ class Master_Sales extends Application {
                 'msc_silinder' => numeric($this->input->post('msc_silinder', TRUE)),
                 'msc_createon' => date('Y-m-d H:i:s'),
                 'msc_createby' => ses_krid
-                ), $id);
+                    ), $id);
             if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
@@ -1355,6 +1407,7 @@ class Master_Sales extends Application {
         }
         echo json_encode($hasil);
     }
+
 }
 
 ?>
