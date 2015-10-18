@@ -1,30 +1,40 @@
-<?php
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
-?> 
 <div id="result"></div>
-<div class="row">
-    <div class="col-xs-12">
-        <table id="grid-table"></table>
-        <div id="pager"></div>
-        <ul class="list-unstyled spaced">
-            <li>
-                <i class="ace-icon glyphicon glyphicon-check bigger-110"></i>
-                Validasi Pengajuan FPT
-            </li>
+<?php
+echo $this->session->flashdata('msg');
+?>
+<form>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="header" class="info">
+                <select class="form-control input-large" name="status" onchange='$("#grid-table").trigger("reloadGrid");' id="status" >
+                    <option value="0">--Pilih Status--</option>
+                    <option value="1">Menunggu Persetujuan</option>
+                    <option value="2">Disetujui</option>
+                    <option value="4">Ditolak</option>
+                    <option value="3">Spk</option>
+                </select>
+            </div>
+            <table id="grid-table"></table>
+            <div id="pager"></div>
+            <ul class="list-unstyled spaced">
+                <li>
+                    <i class="ace-icon glyphicon glyphicon-check bigger-110"></i>
+                    Validasi Pengajuan FPT
+                </li>
 
-            <li>
-                <i class="ace-icon glyphicon glyphicon-remove bigger-110"></i>
-                Tolak Pengajuan FPT
-            </li>
+                <li>
+                    <i class="ace-icon glyphicon glyphicon-remove bigger-110"></i>
+                    Tolak Pengajuan FPT
+                </li>
 
-            <li>
-                <i class="ace-icon glyphicon glyphicon-list bigger-110"></i>
-                Melihat detail FPT
-            </li>
-        </ul>
+                <li>
+                    <i class="ace-icon glyphicon glyphicon-list bigger-110"></i>
+                    Melihat detail FPT
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
+</form>
 <script type="text/javascript">
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
@@ -50,6 +60,14 @@ if (!defined('BASEPATH'))
         });
     }
     
+    function print(fptid)
+    {
+        var params  = 'width='+screen.width;
+        params += ', height='+screen.height;
+        params += ', fullscreen=yes,scrollbars=yes';
+        window.open("<?php echo site_url("transaksi_prospect/printFpt"); ?>/"+fptid,'_blank', params);
+    }
+    
     function tolakData(id, kode) {
         bootbox.confirm("Anda tidak menyetujui data "+kode+" ?", function(result) {
             if(result) {
@@ -70,21 +88,26 @@ if (!defined('BASEPATH'))
     }
 
     $(document).ready(function (){
+        //    alert($("#status").val());
         jQuery("#grid-table").jqGrid({
             url:'<?php echo site_url('transaksi_prospect/loadDataFpt') ?>',     
             mtype : "post",             
-            datatype: "json",           
-            colNames:['','', '' ,'Nama','Alamat','Status','Salesman', 'Tgl FPT', 'HP'],       
+            datatype: "json",
+            postData: {
+                status: function() { return $("#status").val(); }
+            },
+            colNames:['Kode Fpt','Nama','Alamat','Status','Salesman', 'Tgl FPT','Validasi','Edit','Print', 'Detail'],       
             colModel:[
-                {name:'validasi',index:'validasi', width:14, align:"center"},
-                {name:'edit',index:'edit', width:14, align:"center"},
-                {name:'detail',index:'detail', width:14, align:"center"},
+                {name:'fpt_kode',index:'fpt_kode', width:30, align:"left"},
                 {name:'pros_nama',index:'pros_nama', width:60, align:"left"},
                 {name:'pros_alamat',index:'pros_alamat', width:80, align:"left"},
-                {name:'fpt_status',index:'fpt_status', width:25, align:"left"},
+                {name:'fpt_approve',index:'fpt_approve', width:25, align:"left"},
                 {name:'pros_sales',index:'pros_sales', width:60, align:"left"},
                 {name:'fpt_tgl',index:'fpt_tgl', width:25, align:"left"},
-                {name:'pros_hp',index:'pel_hp', width:35, align:"left"},
+                {name:'validasi',index:'validasi', width:25, align:"center"},
+                {name:'edit',index:'edit', width:14, align:"center"},
+                {name:'print',index:'print', width:14, align:"center"},
+                {name:'detail',index:'detail', width:14, align:"center"},
             ],
             rowNum:10,
             height : 300,
@@ -92,11 +115,13 @@ if (!defined('BASEPATH'))
             rowList:[10,20,30],
             pager: '#pager',
             sortname: 'fptid',
+            filters: '1',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
             caption:"Daftar FPT"
         }).navGrid('#pager',{edit:false,add:false,del:false});
+        $("#pager").append("<input type='button' value='Click Me' style='height:20px;font-size:-3'/>");
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
         })

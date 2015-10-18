@@ -296,6 +296,9 @@ function whereLoad() {
 }
 
 function numeric($data) {
+    if ($data == '') {
+        $data = 0;
+    }
     $numeric = str_replace(',', '', $data);
     return $numeric;
 }

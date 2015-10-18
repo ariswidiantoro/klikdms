@@ -112,7 +112,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Komisi</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-8">
-                            <input type="text" name="fpt_komisi" id="fpt_komisi" style="text-align: right;" value="0"  class="form-control number upper" />
+                            <input type="text" name="fpt_komisi" id="fpt_komisi" onchange="$('#'+this.id).val(formatDefault(this.value));" style="text-align: right;" value="0"  class="form-control number upper" />
                         </div> <i>*) DI ISI BESARAN KOMISI</i>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tipe Kendaraan</label>
                     <div class="col-sm-6">
-                        <select name="fpt_ctyid" id="fpt_ctyid" required class="form-control input-xxlarge">
+                        <select name="fpt_ctyid" id="fpt_ctyid" required class="form-control input-xlarge">
                             <option value="">PILIH</option>
                         </select>
                     </div>
@@ -212,7 +212,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kuantitas</label>
                     <div class="col-sm-2">
                         <div class="input-group">
-                            <input type="text" name="pros_kuantitas"  placeholder="Kuantitas" class="form-control number upper" />
+                            <input type="text" name="fpt_qty"  placeholder="Kuantitas" class="form-control number upper" />
                             <span class="input-group-addon">
                                 <i class="ace-icon fa fa-car" style="width: 12px;"></i>
                             </span>
@@ -327,7 +327,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Uang Muka</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                            <input type="text" name="fpt_uangmuka" id="fpt_uangmuka" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control harga number upper" />
+                            <input type="text" name="fpt_uangmuka" id="fpt_uangmuka" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control number upper" />
                         </div>
                     </div>
                 </div>
@@ -335,7 +335,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Cashback</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                            <input type="text" name="fpt_cashback" id="fpt_cashback" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control harga number upper" />
+                            <input type="text" name="fpt_cashback" id="fpt_cashback" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control number upper" />
                         </div>
                     </div>
                 </div>
@@ -343,7 +343,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Diskon</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                            <input type="text" name="fpt_diskon" id="fpt_diskon" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control harga number upper" />
+                            <input type="text" name="fpt_diskon" id="fpt_diskon" style="text-align: right;" value="0" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control number upper" />
                         </div>
                     </div>
                 </div>
@@ -566,14 +566,10 @@
                     }
                 });
             },
-            create: function () {
-                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li>')
-                    .append("<a><strong>" + item.value + "</strong><br>" + item.desc + "</a>")
-                    .appendTo(ul);
-                };
-            },select: function(event, ui) {
+            select: function(event, ui) {
                 var kode = ui.item.value;
+                $("#dtrans_harga"+inc).val(formatDefault(ui.item.trgtwo));
+                $("#dtrans_aksid"+inc).val(ui.item.trgone);
                 $("input[name^=dtrans_aksname]").each(function() {
                     var k = $(this).val().replace(/,/g, "");
                     if (k == kode) {
