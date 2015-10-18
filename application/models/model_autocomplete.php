@@ -68,6 +68,34 @@ class Model_Autocomplete extends CI_Model {
         return null;
     }
     
+    public function autoSupid($data) {
+        $sql = $this->db->query("
+            select supid, sup_nama, sup_alamat 
+            from ms_supplier
+            WHERE sup_nama LIKE '%".$data['param']."%'
+                AND sup_cbid = '".$data['cbid']."'
+            ORDER BY sup_nama ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
+    public function autoFaktur($data) {
+        $sql = $this->db->query("
+            select supid, sup_nama, sup_alamat 
+            from ms_supplier
+            WHERE sup_nama LIKE '%".$data['param']."%'
+                AND sup_cbid = '".$data['cbid']."'
+            ORDER BY sup_nama ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
     
 }
 

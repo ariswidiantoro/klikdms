@@ -29,6 +29,7 @@ class Transaksi_Finance extends Application {
             'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => 1)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
+        $this->data['settingCoa'] = $this->model_trfinance->getSettingCoa(ses_cabang);
         $this->load->view('addTrans', $this->data);
     }
 

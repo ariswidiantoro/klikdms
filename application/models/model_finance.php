@@ -27,12 +27,12 @@ class Model_Finance extends CI_Model {
         $sql = $this->db->get('ms_cost_center');
         return $sql->result_array();
     }
-    
+
     public function cListJenisCoa() {
         $sql = $this->db->get('ms_coa_jenis');
         return $sql->result_array();
     }
-    
+
     /** Jenis Chart Of Account (COA) 
      * @author Rossi Erl
      * 2015-09-04
@@ -62,7 +62,7 @@ class Model_Finance extends CI_Model {
     }
 
     public function deleteJenisCoa($data) {
-        if ($this->db->query("DELETE FROM ms_coa_jenis WHERE jeniscoaid = '".$data."'")) {
+        if ($this->db->query("DELETE FROM ms_coa_jenis WHERE jeniscoaid = '" . $data . "'")) {
             return TRUE;
         } else {
             return FALSE;
@@ -102,7 +102,7 @@ class Model_Finance extends CI_Model {
             SELECT * FROM ms_coa_jenis WHERE jeniscoaid = '" . $data . "'  ");
         return $query->row_array();
     }
-    
+
     /** Special Chart Of Account (COA) 
      * @author Rossi Erl
      * 2015-09-04
@@ -133,7 +133,7 @@ class Model_Finance extends CI_Model {
     }
 
     public function deleteSpecialCoa($data) {
-        if ($this->db->query("DELETE FROM ms_coa_special WHERE specid = '".$data."'")) {
+        if ($this->db->query("DELETE FROM ms_coa_special WHERE specid = '" . $data . "'")) {
             return TRUE;
         } else {
             return FALSE;
@@ -158,17 +158,17 @@ class Model_Finance extends CI_Model {
             return array('status' => FALSE, 'msg' => 'Data gagal disimpan');
         }
     }
-    
+
     public function setSpecialCoa($data = array()) {
         $this->db->trans_begin();
         $cek = $this->db->query("SELECT setcoa_kode FROM ms_coa_setting 
-            WHERE setcoa_kode = '" . $data['setcoa_kode'] . "' AND setcoa_cbid = '".$data['setcoa_cbid']."'");
+            WHERE setcoa_kode = '" . $data['setcoa_kode'] . "' AND setcoa_cbid = '" . $data['setcoa_cbid'] . "'");
         if ($cek->num_rows() > 0) {
             $this->db->trans_rollback();
             return array('status' => FALSE, 'msg' => 'Duplikasi Special COA');
         }
         $cek = $this->db->query("DELETE FROM ms_coa_setting 
-            WHERE setcoa_specid = '" . $data['setcoa_specid'] . "' AND setcoa_cbid = '".$data['setcoa_cbid']."'");
+            WHERE setcoa_specid = '" . $data['setcoa_specid'] . "' AND setcoa_cbid = '" . $data['setcoa_cbid'] . "'");
         $this->db->insert('ms_coa_setting', $data);
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();
@@ -191,12 +191,12 @@ class Model_Finance extends CI_Model {
     public function getSpecialCoa($data) {
         $query = $this->db->query("
             SELECT * FROM ms_coa_special 
-            LEFT JOIN ms_coa_setting ON setcoa_cbid = '".ses_cabang."' 
+            LEFT JOIN ms_coa_setting ON setcoa_cbid = '" . ses_cabang . "' 
                 AND setcoa_specid = specid
             WHERE specid = '" . $data . "'  ");
         return $query->row_array();
     }
-    
+
     /** Chart Of Account (COA) 
      * @author Rossi Erl
      * 2015-09-04
@@ -442,9 +442,9 @@ class Model_Finance extends CI_Model {
     public function setTipeJurnal($data) {
         $this->db->trans_begin();
         try {
-            if($this->db->query("DELETE FROM ms_dtipe_jurnal WHERE 
-                dtipe_cbid = '".$data['cbid']."' AND dtipe_tipeid = '".$data['tipeid']."'") == FALSE){
-                 throw new excetion('GAGAL HAPUS DATA : ' . $data['tipeid']);
+            if ($this->db->query("DELETE FROM ms_dtipe_jurnal WHERE 
+                dtipe_cbid = '" . $data['cbid'] . "' AND dtipe_tipeid = '" . $data['tipeid'] . "'") == FALSE) {
+                throw new excetion('GAGAL HAPUS DATA : ' . $data['tipeid']);
             }
             for ($i = 0; $i <= count($data['const']) - 1; $i++) {
                 if ($this->db->insert('ms_dtipe_jurnal', array(
@@ -566,6 +566,8 @@ class Model_Finance extends CI_Model {
             return FALSE;
         }
     }
+
+    
 
 }
 

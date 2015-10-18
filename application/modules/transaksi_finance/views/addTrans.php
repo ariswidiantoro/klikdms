@@ -100,14 +100,14 @@
                         </td>
                         <td>
                             <input type="text" autocomplete ="off" placeholder="NO. NOTA"
-                                   onkeyup="acomplete('dtrans_nota1', 'auto_spk', 'dtrans_notaid1', 'dtrans_pelid1', 'dtrans_pelname1')" 
+                                   onkeyup="acomplete('dtrans_nota1', 'auto_faktur', 'dtrans_notaid1', 'dtrans_pelid1', 'dtrans_pelname1')" 
                                    class="ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_nota[]" id="dtrans_nota1" />
                             <input type="hidden" id="dtrans_notaid1"  name="dtrans_notaid[]" />
                         </td>
                         <td>
                             <input type="text" autocomplete ="off" placeholder="NO. CUSTOMER"
-                                   onkeyup="acomplete('dtrans_pelname1', 'auto_plg', 'dtrans_pelid1', '', '')" 
-                                   class="ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_pelname[]" id="dtrans_pelname1" />
+                                   onkeyup="acomplete('dtrans_pelname1', 'auto_pelid', 'dtrans_pelid1', '', '')" 
+                                   class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_pelname[]" id="dtrans_pelname1" />
                             <input type="hidden" id="dtrans_pelid1"  name="dtrans_pelid[]" />
                         </td>
                         <td>
@@ -122,8 +122,8 @@
                         </td>
                         <td>
                             <input type="text" autocomplete="off" 
-                                   onkeyup="acomplete('dtrans_supname1', 'auto_supid', 'dtrans_supid1', '', '')" placeholder="ID SUPPLIER"
-                                   class="number ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_supnama[]" id="dtrans_supnama1" />
+                                   onkeyup="acomplete('dtrans_supnama1', 'auto_supid', 'dtrans_supid1', '', '')" placeholder="ID SUPPLIER"
+                                   class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_supnama[]" id="dtrans_supnama1" />
                             <input type="hidden" id="dtrans_supid1" name="dtrans_supid[]" />
                         </td>
                         <td>
@@ -307,14 +307,14 @@
                         </td>\n\
                         <td>\n\
                             <input type="text" autocomplete="off" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  \n\
-                                onkeyup = "acomplete(\'dtrans_nota'+inc+'\', \'auto_spk\', \'dtrans_notaid'+inc+'\', \'dtrans_pelid'+inc+'\', \'dtrans_pelname'+inc+'\')"\n\
+                                onkeyup = "acomplete(\'dtrans_nota'+inc+'\', \'auto_faktur\', \'dtrans_notaid'+inc+'\', \'dtrans_pelid'+inc+'\', \'dtrans_pelname'+inc+'\')"\n\
                                 placeholder = "NO. NOTA"\n\
                                 name="dtrans_nota[]" id="dtrans_nota'+ inc +'" />\n\
                             <input type="hidden" name="dtrans_notaid[]" id="dtrans_notaid'+inc+'"/>\n\
                          </td>\n\
                         <td>\n\
                             <input type="text" autocomplete="off" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  \n\
-                                onkeyup = "acomplete(\'dtrans_pelname'+inc+'\', \'auto_plg\', \'dtrans_pelid'+inc+'\', \'\', \'\')"\n\
+                                onkeyup = "acomplete(\'dtrans_pelname'+inc+'\', \'auto_pelid\', \'dtrans_pelid'+inc+'\', \'\', \'\')"\n\
                                 placeholder = "NO. CUSTOMER"\n\
                                 name="dtrans_pelname[]" id="dtrans_pelname'+ inc +'" />\n\
                             <input type="hidden" name="dtrans_pelid[]" id="dtrans_pelid'+inc+'"/>\n\
@@ -327,7 +327,7 @@
                          </td>\n\
                          <td>\n\
                              <input type="text"  autocomplete="off" \n\
-                                onkeyup="acomplete(dtrans_supnama'+inc+', auto_supid, dtrans_supid'+inc+', \'\', \'\')" \n\
+                                onkeyup="acomplete(dtrans_supnama'+inc+', \'auto_supid\', \'dtrans_supid'+inc+'\', \'\', \'\')" \n\
                                 placeholder = "ID SUPPLIER"\n\
                                 class="upper ace col-xs-10 col-sm-10" style="width:100%;" \n\
                                 name="dtrans_supnama[]" id="dtrans_supnama'+ inc +'" />\n\
@@ -426,28 +426,23 @@
                     }
 
                     if(url == 'auto_coa'){
-                        if( ui.item.value == '<?php PIUTANG_UNIT ?>'||
-                            ui.item.value == '<?php PIUTANG_SERVICE ?>' ||
-                            ui.item.value == '<?php PIUTANG_SPART ?>'
+                        if( ui.item.value == '<?php echo $settingCoa[PIUTANG_UNIT]; ?>'||
+                            ui.item.value == '<?php echo $settingCoa[PIUTANG_SERVICE]; ?>' ||
+                            ui.item.value == '<?php echo $settingCoa[PIUTANG_SPART]; ?>'
                         ){
                                 /* PIUTANG */
                                 row.find("input[name^=dtrans_nota]").addClass('req');
-                        }else if( ui.item.value == '<?php UANGMUKA_UNIT ?>'||
-                            ui.item.value == '<?php UANGMUKA_SERVICE ?>' ||
-                            ui.item.value == '<?php UANGMUKA_SPART ?>'
+                        }else if( ui.item.value == '<?php echo $settingCoa[UANGMUKA_UNIT]; ?>'||
+                            ui.item.value == '<?php echo $settingCoa[UANGMUKA_SERVICE]; ?>' ||
+                            ui.item.value == '<?php echo $settingCoa[UANGMUKA_SPART]; ?>'
                         ){
                                 /* UANGMUKA */
                                 row.find("input[name^=dtrans_pelname]").addClass('req');
-                        }else if( ui.item.value == '<?php HUTANG_UNIT ?>'||
-                            ui.item.value == '<?php HUTANG_SPART ?>' 
+                        }else if( ui.item.value == '<?php echo $settingCoa[HUTANG_UNIT]; ?>'||
+                            ui.item.value == '<?php echo $settingCoa[HUTANG_SPART]; ?>' 
                         ){
                                 /* HUTANG */
                                 row.find("input[name^=dtrans_supnama]").addClass('req');
-                        }else if( ui.item.value == '<?php HUTANG_UNIT ?>'||
-                            ui.item.value == '<?php HUTANG_SPART ?>' 
-                        ){
-                                /* BIAYA & PENDAPATAN */
-                                row.find("input[name^=dtrans_ccid]").addClass('req');
                         }
                     }
                 }

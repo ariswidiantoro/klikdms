@@ -84,7 +84,6 @@ class Welcome extends Application {
             if ($login) {
                 $data_user = $this->model_admin->getUser($username);
                 $cbg = $this->model_admin->getCabangById($cbid);
-                $setting = $this->model_admin->initSetting($cbid);
                 $this->session->set_userdata('username', $username);
                 $this->session->set_userdata('nama', $data_user['kr_nama']);
                 $this->session->set_userdata('cbid', $cbid);
@@ -96,7 +95,7 @@ class Welcome extends Application {
                 $this->session->set_userdata('kota', $cbg['kota_deskripsi']);
                 $this->session->set_userdata('krid', $data_user['krid']);
                 $this->session->set_userdata('isLogin', 'true');
-                //$init_setting = $this->model_setting->initSetting();
+                $this->session->set_userdata('settingCoa', $setting);
                 redirect('welcome/home');
             } else {
                 $this->session->set_flashdata('msg', $this->error("Username / Password Tidak Terdaftar"));

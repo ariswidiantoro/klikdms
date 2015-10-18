@@ -83,6 +83,27 @@ class Auto_Complete extends Application {
         }
         echo json_encode($data);
     }
+    
+    public function auto_supid() {
+        $param = $this->input->post('param');
+        $cbid = $this->input->post('cbid');
+        $query = $this->model_autocomplete->autoSupid(array('param' => strtoupper($param), 'cbid' => $cbid));
+        if (!empty($query)) {
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array(
+                    'value' => $row['sup_nama'],
+                    'desc' => substr($row['sup_alamat'], 0, 20),
+                    'trglocal' => $row['supid'],
+                    'trgid' => $row['supid'],
+                    'trgname' => $row['supid'],
+                );
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'desc' => "DATA TIDAK ADA");
+        }
+        echo json_encode($data);
+    }
 
     public function auto_kota() {
         $param = $this->input->post('param');
