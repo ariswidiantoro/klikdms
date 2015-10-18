@@ -27,7 +27,7 @@ class Laporan_Finance extends Application {
         $this->hakAkses(1051);
         $this->data['etc'] = array(
             'judul' => 'Transaction Ledger',
-            'targetLoad' => 'getTransLedger',
+            'targetLoad' => 'ledgerShow',
             'groupCabang' => $this->model_lap_finance->getGroupCabang(array('krid' => ses_krid)),
         );
         $this->load->view('ledgerForm', $this->data);

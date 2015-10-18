@@ -660,13 +660,13 @@ class Master_Finance extends Application {
      * 2015-09-07
      */
 
-    public function tipe_jurnal() {
-        $this->hakAkses(1091);
+    public function tipeJurnal() {
+        $this->hakAkses(1090);
         $this->load->view('dataTipeJurnal', $this->data);
     }
 
     public function addTipeJurnal() {
-        $this->hakAkses(1091);
+        $this->hakAkses(1090);
         $this->load->view('addTipeJurnal', $this->data);
     }
 
@@ -713,7 +713,7 @@ class Master_Finance extends Application {
     }
 
     public function editTipeJurnal() {
-        $this->hakAkses(1091);
+        $this->hakAkses(1090);
         $id = $this->input->get('id');
         $data = $this->model_finance->getTipeJurnal($id);
         $this->data['data'] = $data;
@@ -721,7 +721,7 @@ class Master_Finance extends Application {
     }
 
     public function setTipeJurnal() {
-        $this->hakAkses(1091);
+        $this->hakAkses(1090);
         $id = array(
             'id' => $this->input->get('id'),
             'cbid' => ses_cabang
