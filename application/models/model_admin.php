@@ -181,7 +181,6 @@ class Model_Admin extends CI_Model {
         $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON"
                 . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
                 . " WHERE menu_parent_id = -1 AND userro_krid = '" . ses_krid . "' ORDER BY menu_urut ASC");
-        log_message('error', 'AAAAAAAAa '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -676,7 +675,6 @@ class Model_Admin extends CI_Model {
         $this->db->trans_begin();
         $this->db->where('krid', $data['krid']);
         $this->db->update('ms_karyawan', $data);
-        log_message('error', 'AAAAAAAAAAA ' . $this->db->last_query());
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             return false;
@@ -953,6 +951,18 @@ class Model_Admin extends CI_Model {
             return true;
         }
     }
+    
+    /**
+     * Digunakan untuk mengambil data pengaturan kode COA
+     * @param type $cbid
+     * @return array of data
+     */
+    function initSetting($cbid) {
+        $query = $this->db->query("SELECT setcoa_specid, setcoa_kode 
+            FROM ms_coa_setting WHERE setcoa_cbid = '".ses_cabang."'");
+        
+    }
+
 
 }
 

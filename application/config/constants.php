@@ -66,6 +66,9 @@ define('NUM_SPK', 'SK');
 define('NUM_FPT', 'FP');
 define('NUM_TRANS', 'TR');
 
+define('NUM_JENIS_COA', 'JC');
+define('NUM_SPECIAL_COA', 'SC');
+
 
 
 

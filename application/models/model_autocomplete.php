@@ -14,7 +14,7 @@ class Model_Autocomplete extends CI_Model {
     /* AUTO COMPLETE */
     public function autoCoa($data) {
         $sql = $this->db->query("
-            SELECT coa_kode, coa_cbid, coa_desc, coa_type
+            SELECT coa_kode, coa_cbid, coa_desc, coa_jenis
             FROM ms_coa WHERE (coa_kode LIKE '%".$data['param']."%' OR coa_desc LIKE '%".$data['param']."%') 
                 AND coa_cbid = '".$data['cbid']."'
             ORDER BY coa_kode ASC LIMIT 30 OFFSET 0

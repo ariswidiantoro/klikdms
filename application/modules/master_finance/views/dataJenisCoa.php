@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('master_finance/deleteCoa'); ?>',
+                    url: '<?php echo site_url('master_finance/deleteJenisCoa'); ?>',
                     dataType: "json",
                     data: {
                         id: id
@@ -28,15 +28,13 @@ if (!defined('BASEPATH'))
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_finance/loadCoa') ?>',     
+            url:'<?php echo site_url('master_finance/loadJenisCoa') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Kode','Deskripsi', 'Tipe', 'Level', 'Edit', 'Del'],     
+            colNames:['Kode','Deskripsi', 'Edit', 'Del'],     
             colModel:[
-                {name:'coa_kode',index:'coa_kode', width:60, align:"left"},
-                {name:'coa_desc',index:'coa_desc', width:100, align:"left"},
-                {name:'coa_type',index:'coa_type', width:70, align:"left"},
-                {name:'coa_level',index:'coa_level', width:40, align:"left"},
+                {name:'jeniscoaid',index:'jeniscoaid', width:30, align:"left"},
+                {name:'jeniscoa_deskripsi',index:'jeniscoa_deskripsi', width:100, align:"left"},
                 {name:'edit',index:'edit', width:12, align:"center"},
                 {name:'hapus',index:'hapus', width:12, align:"center"},
             ],
@@ -46,11 +44,11 @@ if (!defined('BASEPATH'))
             height: 300,
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'coa_kode',
+            sortname: 'jeniscoaid',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Chart Of Account (COA)"
+            caption:"Jenis Chart Of Account (COA)"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
@@ -71,9 +69,9 @@ if (!defined('BASEPATH'))
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_finance/addCoa" class="btn btn-sm btn-primary">
+            <a href="#master_finance/addJenisCoa" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah COA</a>
+                Tambah Jenis COA</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>

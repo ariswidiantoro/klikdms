@@ -27,7 +27,176 @@ class Model_Finance extends CI_Model {
         $sql = $this->db->get('ms_cost_center');
         return $sql->result_array();
     }
+    
+    public function cListJenisCoa() {
+        $sql = $this->db->get('ms_coa_jenis');
+        return $sql->result_array();
+    }
+    
+    /** Jenis Chart Of Account (COA) 
+     * @author Rossi Erl
+     * 2015-09-04
+     */
+    public function getTotalJenisCoa($where) {
+        $wh = "WHERE  jeniscoaid != '' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
 
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_coa_jenis $wh");
+        return $sql->row()->total;
+    }
+
+    public function getDataJenisCoa($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_coa_jenis');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function deleteJenisCoa($data) {
+        if ($this->db->query("DELETE FROM ms_coa_jenis WHERE jeniscoaid = '".$data."'")) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function addJenisCoa($data = array()) {
+        $this->db->trans_begin();
+        $cek = $this->db->query("SELECT jeniscoa_deskripsi FROM ms_coa_jenis 
+            WHERE jeniscoa_deskripsi = '" . $data['jeniscoa_deskripsi'] . "'");
+        if ($cek->num_rows() > 0) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Duplikasi Jenis COA');
+        }
+        $data['jeniscoaid'] = NUM_JENIS_COA . sprintf("%02s", $this->getCounter(NUM_JENIS_COA));
+        $this->db->insert('ms_coa_jenis', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return array('status' => TRUE, 'msg' => 'Data berhasil disimpan');
+        } else {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Data gagal disimpan');
+        }
+    }
+
+    public function updateJenisCoa($data, $where) {
+        $this->db->where('jeniscoaid', $where);
+        if ($this->db->update('ms_coa_jenis', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data gagal diupdate');
+        }
+    }
+
+    public function getJenisCoa($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_coa_jenis WHERE jeniscoaid = '" . $data . "'  ");
+        return $query->row_array();
+    }
+    
+    /** Special Chart Of Account (COA) 
+     * @author Rossi Erl
+     * 2015-09-04
+     */
+    public function getTotalSpecialCoa($where) {
+        $wh = "WHERE  specid != '' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_coa_special $wh");
+        return $sql->row()->total;
+    }
+
+    public function getDataSpecialCoa($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_coa_special');
+        $this->db->join('ms_coa_setting', 'specid = setcoa_specid', 'left');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function deleteSpecialCoa($data) {
+        if ($this->db->query("DELETE FROM ms_coa_special WHERE specid = '".$data."'")) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function addSpecialCoa($data = array()) {
+        $this->db->trans_begin();
+        $cek = $this->db->query("SELECT spec_deskripsi FROM ms_coa_special 
+            WHERE spec_deskripsi = '" . $data['spec_deskripsi'] . "'");
+        if ($cek->num_rows() > 0) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Duplikasi Special COA');
+        }
+        $data['specid'] = NUM_SPECIAL_COA . sprintf("%02s", $this->getCounter(NUM_SPECIAL_COA));
+        $this->db->insert('ms_coa_special', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return array('status' => TRUE, 'msg' => 'Data berhasil disimpan');
+        } else {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Data gagal disimpan');
+        }
+    }
+    
+    public function setSpecialCoa($data = array()) {
+        $this->db->trans_begin();
+        $cek = $this->db->query("SELECT setcoa_kode FROM ms_coa_setting 
+            WHERE setcoa_kode = '" . $data['setcoa_kode'] . "' AND setcoa_cbid = '".$data['setcoa_cbid']."'");
+        if ($cek->num_rows() > 0) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Duplikasi Special COA');
+        }
+        $cek = $this->db->query("DELETE FROM ms_coa_setting 
+            WHERE setcoa_specid = '" . $data['setcoa_specid'] . "' AND setcoa_cbid = '".$data['setcoa_cbid']."'");
+        $this->db->insert('ms_coa_setting', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return array('status' => TRUE, 'msg' => 'Data berhasil disimpan');
+        } else {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Data gagal disimpan');
+        }
+    }
+
+    public function updateSpecialCoa($data, $where) {
+        $this->db->where('specid', $where);
+        if ($this->db->update('ms_coa_special', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data gagal diupdate');
+        }
+    }
+
+    public function getSpecialCoa($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_coa_special 
+            LEFT JOIN ms_coa_setting ON setcoa_cbid = '".ses_cabang."' 
+                AND setcoa_specid = specid
+            WHERE specid = '" . $data . "'  ");
+        return $query->row_array();
+    }
+    
     /** Chart Of Account (COA) 
      * @author Rossi Erl
      * 2015-09-04
@@ -47,6 +216,7 @@ class Model_Finance extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_coa');
+        $this->db->join('ms_coa_jenis', 'jeniscoaid = coa_jenis', 'left');
         $this->db->where('coa_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
