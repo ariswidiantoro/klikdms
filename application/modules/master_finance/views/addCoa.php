@@ -21,8 +21,9 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tipe</label>
         <div class="col-sm-8">
-            <select class="ace col-xs-10 col-sm-5 req" required id="coa_type" name="coa_type" style="width: 120px;">
+            <select class="form-control input-xlarge" id="coa_type" name="coa_type">
                 <option value="">PILIH</option>
+                <optgroup label="AKTIVA">
                 <option value="1">KAS</option>
                 <option value="2">BANK</option>
                 <option value="3">PIUTANG DAGANG</option>
@@ -32,11 +33,14 @@
                 <option value="7">HARTA TETAP BERWUJUD</option>
                 <option value="8">HARTA TETAP TIDAK BERWUJUD</option>
                 <option value="9">HARTA LAINNYA</option>
+                <optgroup label="PASIVA">
                 <option value="10">HUTANG LANCAR</option>
                 <option value="11">PENDAPATAN DITERIMA DIMUKA</option>
                 <option value="12">HUTANG JANGKA PANJANG</option>
                 <option value="13">HUTANG LAINNYA</option>
+                <optgroup label="MODAL">
                 <option value="14">MODAL</option>
+                <optgroup label="RUGI LABA">
                 <option value="15">PENJUALAN</option>
                 <option value="16">HPP</option>
                 <option value="17">PENDAPATAN USAHA</option>
@@ -54,11 +58,11 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Level</label>
         <div class="col-sm-8">
-            <select class="ace col-xs-10 col-sm-5 req" id="coa_level" name="coa_level" style="width: 120px;">
+            <select class="form-control input-medium" id="coa_level" name="coa_level">
                 <option value="">PILIH</option>
-                <option value="1">1</option>
-                <option value="2">2</option>    
-                <option value="3">3</option>    
+                <option value="1">1. GENERAL</option>
+                <option value="2">2. SUB GENERAL</option>    
+                <option value="3">3. DETAIL</option>    
             </select>
         </div>
     </div>
@@ -70,8 +74,8 @@
                 <option value="1">KAS</option>
                 <option value="2">BANK</option>    
                 <option value="3">CEK</option>    
-            </select>
-        </div> <i>* PILIH JIKA ACCOUNT UTAMA KAS/BANK/CEK</i>
+            </select><i>* PILIH JIKA ACCOUNT UTAMA KAS/BANK/CEK</i>
+        </div> 
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>

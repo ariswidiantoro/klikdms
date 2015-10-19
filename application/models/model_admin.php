@@ -676,7 +676,6 @@ class Model_Admin extends CI_Model {
         $this->db->trans_begin();
         $this->db->where('krid', $data['krid']);
         $this->db->update('ms_karyawan', $data);
-        log_message('error', 'AAAAAAAAAAA ' . $this->db->last_query());
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             return false;

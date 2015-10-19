@@ -53,13 +53,14 @@
                    placeholder="DESKRIPSI"class="col-xs-10 col-sm-5 upper req" />
         </div> -->
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">COA</label>
-        <div class="col-sm-8">
+        <div class="col-sm-3">
             <select id="trans_coa" name="trans_coa" required="required" class="form-control input-xlarge req">
                 <option value ="">PILIH</option>
                 <?php foreach($etc['mainCoa'] as $rows){
-                    echo "<option value = '".$rows['coa_kode']."'>".$rows['coa_descrip']."</option>";
+                    echo "<option value = '".$rows['coa_kode']."'>".$rows['coa_desc']."</option>";
                 } ?>
             </select>
+            <input type="hidden" name="trans_desc" id="trans_desc" value=""/>
         </div>
     </div>
 
@@ -202,7 +203,7 @@
                             </td>
                             <td>
                                 <input type="text"  autocomplete="off" onkeyup="acomplete('dbnk_kota1', 'auto_kota', 'dbnk_kotaid1', '', '')" 
-                                       class="number ace col-xs-10 col-sm-10" style="width:100%;"  name="dbnk_kota[]" id="dbnk_kota1" />
+                                       class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dbnk_kota[]" id="dbnk_kota1" />
                                 <input type="hidden"  name="dbnk_kotaid[]" id="dbnk_kotaid1" />
                             </td>
                             <td>

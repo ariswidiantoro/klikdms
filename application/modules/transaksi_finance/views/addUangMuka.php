@@ -20,6 +20,8 @@
             <input type="text" id="trans_docno" name="trans_docno" required="required" maxlength="20" class="upper form-control input-xlarge req" />
             <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
             <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
+            <input type="hidden" id="trans_trans" name="trans_trans" value="" />
+            <input type="hidden" id="trans_type" name="trans_type" value="I" />
         </div>
     </div>
     <div class="form-group">
@@ -37,13 +39,12 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Jenis Penerimaan</label>
         <div class="col-sm-8">
-            <select id="trans_type" name="trans_type" required="required" onchange="changeType();" class="form-control input-medium req">
+            <select id="trans_jenis" name="trans_jenis" required="required" onchange="changeType();" class="form-control input-medium req">
                 <option value="">PILIH</option>
                 <option value ="1">KAS</option>
                 <option value ="2">BANK</option>
                 <option value ="3">CEK</option>
             </select>
-            <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
         </div>
     </div>
     <div class="form-group">
@@ -55,18 +56,26 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Pelanggan</label>
         <div class="col-sm-10">
-            <input type="text" id="trans_pelname" name="trans_pelname" required="required" maxlength="50" 
-                   onkeyup="acomplete('trans_pelname', 'auto_pelid', 'trans_pelid', '','')"class="req upper ace col-xs-10 col-sm-4" />
+            <input type="text" id="dtrans_pelname" name="dtrans_pelname[]" required="required" maxlength="50" 
+                   onkeyup="acomplete('dtrans_pelname', 'auto_pelid', 'dtrans_pelid', '','')"class="req upper ace col-xs-10 col-sm-4" />
             <a href="#master_service/addPelanggan?href=transaksi_finance/uangMuka" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Pelanggan</a>
-            <input type="hidden" id="trans_pelid" name="trans_pelid" required="required" />
+            <input type="hidden" id="dtrans_pelid" name="dtrans_pelid[]" required="required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Account Uangmuka</label>
+        <div class="col-sm-10">
+            <input type="text" id="dtrans_coa" name="dtrans_coa[]" required="required" maxlength="50" 
+                   onkeyup="acomplete('dtrans_coa', 'auto_coa', 'dtrans_coa', 'dtrans_desc', '')"
+                   class="req upper ace col-xs-10 col-sm-2" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Memo</label>
         <div class="col-sm-8">
-            <input type="text" id="trans_desc" name="trans_desc" required="required" maxlength="500" 
+            <input type="text" id="dtrans_desc" name="dtrans_desc[]" required="required" maxlength="500" 
                    placeholder="KETERANGAN" class="upper form-control input-xxlarge req" />
         </div>
     </div>
@@ -75,7 +84,9 @@
         <div class="col-sm-8">
             <input type="text" id="totalTrans" name="totalTrans" required="required" placeholder="0.00"
                    onchange="$('#'+this.id).val(formatCurrency(this.value));" onblur="terbilang(this.value)" 
+                   onkeyup="$('#dtrans_nominal').val(formatCurrency(this.value));"
                    class="number form-control input-xlarge req align-right" />
+            <input type="hidden" id="dtrans_nominal" name="dtrans_nominal[]" value = "0" />
         </div>
     </div>
     <div class="form-group">
@@ -215,7 +226,7 @@
                <td class="detailbank center" style="vertical-align:middle;">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
                     <td>\n\
                         <input type="text"  autocomplete="off" placeholder="BANK"\n\
-                            onkeyup="acomplete(dbnk_bankname'+inc+', auto_bank'+inc+', dbnk_bankname'+inc+',\'\', \'\')"\n\ \n\
+                            onkeyup="acomplete(dbnk_bankname'+inc+', auto_bank, dbnk_bankid'+inc+',\'\', \'\')"\n\ \n\
                             class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dbnk_bank'+ inc +'"  name="dbnk_bank[]" />\n\
                        <input type="hidden" id="dbnk_bankid'+ inc +'" name="dbnk_bankid[]" />\n\
                     </td>\n\
@@ -340,7 +351,7 @@
             dataType: "json",
             async: false,
             data: {
-                type : $('#trans_type').val()
+                type : $('#trans_jenis').val()
             },
             success: function(data) {
                 $('#trans_coa').html('');
@@ -351,9 +362,14 @@
             }
         })
         
-        if($('#trans_type').val() == '1'){
+        if($('#trans_jenis').val() == '1'){
             $('#bank').hide();
+            $('#trans_trans').val("KAS");
+        }else if($('#trans_jenis').val() == '2'){
+            $('#trans_trans').val("BNK");
+            $('#bank').show();
         }else{
+            $('#trans_trans').val("CEK");
             $('#bank').show();
         }
     }
@@ -371,7 +387,7 @@
             if($("#totalTrans").val())
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url('transaksi_finance/saveUmTrans') ?>",
+                url: "<?php echo site_url('transaksi_finance/saveTrans') ?>",
                 dataType: "json",
                 async: false,
                 data: $(this).serialize(),

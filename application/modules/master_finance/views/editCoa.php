@@ -21,8 +21,9 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tipe</label>
         <div class="col-sm-8">
-            <select class="form-control input-large" id="coa_type" name="coa_type">
+            <select class="form-control input-xlarge" id="coa_type" name="coa_type">
                 <option value="">PILIH</option>
+                <optgroup label="AKTIVA">
                 <option value="1" <?php if ($data['coa_type'] == '1') echo 'selected'; ?>>KAS</option>
                 <option value="2" <?php if ($data['coa_type'] == '2') echo 'selected'; ?>>BANK</option>
                 <option value="3" <?php if ($data['coa_type'] == '3') echo 'selected'; ?>>PIUTANG DAGANG</option>
@@ -32,11 +33,14 @@
                 <option value="7" <?php if ($data['coa_type'] == '7') echo 'selected'; ?>>HARTA TETAP BERWUJUD</option>
                 <option value="8" <?php if ($data['coa_type'] == '8') echo 'selected'; ?>>HARTA TETAP TIDAK BERWUJUD</option>
                 <option value="9" <?php if ($data['coa_type'] == '9') echo 'selected'; ?>>HARTA LAINNYA</option>
+                <optgroup label="PASIVA">
                 <option value="10" <?php if ($data['coa_type'] == '10') echo 'selected'; ?>>HUTANG LANCAR</option>
                 <option value="11" <?php if ($data['coa_type'] == '11') echo 'selected'; ?>>PENDAPATAN DITERIMA DIMUKA</option>
                 <option value="12" <?php if ($data['coa_type'] == '12') echo 'selected'; ?>>HUTANG JANGKA PANJANG</option>
                 <option value="13" <?php if ($data['coa_type'] == '13') echo 'selected'; ?>>HUTANG LAINNYA</option>
+                <optgroup label="MODAL">
                 <option value="14" <?php if ($data['coa_type'] == '14') echo 'selected'; ?>>MODAL</option>
+                <optgroup label="RUGI-LABA">
                 <option value="15" <?php if ($data['coa_type'] == '15') echo 'selected'; ?>>PENJUALAN</option>
                 <option value="16" <?php if ($data['coa_type'] == '16') echo 'selected'; ?>>HPP</option>
                 <option value="17" <?php if ($data['coa_type'] == '17') echo 'selected'; ?>>PENDAPATAN USAHA</option>
@@ -64,8 +68,8 @@
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kas / Bank</label>
-        <div class="col-sm-5">
-           <select class="form-control input-medium" id="kas_bank" name="kas_bank">
+        <div class="col-sm-8">
+           <select class="ace col-xs-10 col-sm-5" id="kas_bank" name="kas_bank">
                 <option value=""></option>
                 <option value="1" <?php if ($data['coa_is_kas_bank'] == '1') echo 'selected'; ?>>KAS</option>
                 <option value="2" <?php if ($data['coa_is_kas_bank'] == '2') echo 'selected'; ?>>BANK</option>    
