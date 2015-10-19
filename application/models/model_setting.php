@@ -11,7 +11,9 @@ class Model_Setting extends CI_Model {
         parent::__construct();
     }
     
-    
+    public function initSetting(){
+        
+    }
         
 }
 ?>

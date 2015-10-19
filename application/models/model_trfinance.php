@@ -327,8 +327,21 @@ class Model_Trfinance extends CI_Model {
     
     public function getMainTrans($data = array()){
         $sql = $this->db->query("
-            
+            SELECT * FROM ksr_trans WHERE kst_id = '".$data['kstid']."'
         ");
+        return $sql->result_array();
+    }
+    
+    public function getSettingCoa($data) {
+        $query = $this->db->query("SELECT setcoa_kode, setcoa_specid FROM ms_coa_setting 
+            WHERE setcoa_cbid = '" . $data . "'");
+        $sql = $query->result_array();
+        $temp = array();
+        foreach ($sql as $row) {
+            $temp[$row['setcoa_specid']] = $row['setcoa_kode'];
+        }
+
+        return $temp;
     }
 
 }

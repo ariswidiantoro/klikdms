@@ -14,19 +14,35 @@ if (!defined('BASEPATH'))
         <div id="pager"></div>
         <ul class="list-unstyled spaced">
             <li>
-                <i class="ace-icon glyphicon glyphicon-book bigger-110"></i>
-                Menambahkan Form Persetujuan Transaksi (FPT)
+                <img src="<?php echo path_img() ?>prospek.png" width=20;height=20;>
+                Prospek
             </li>
-
             <li>
+                <img src="<?php echo path_img() ?>warm.png" width=20;height=20;>
+                Warm
+            </li>
+            <li>
+                <img src="<?php echo path_img() ?>hot.png" width=20;height=20;>
+                Hot
+            </li>
+            <li>
+                <img src="<?php echo path_img() ?>hot_deal.png" width=20;height=20;>
+                Hot Deal
+            </li>
+<!--            <li>
+                <i class="ace-icon glyphicon glyphicon-plus bigger-110"></i>
+                Menambahkan Form Persetujuan Transaksi (FPT)
+            </li>-->
+
+<!--            <li>
                 <i class="ace-icon glyphicon glyphicon-pencil bigger-110"></i>
                 Mengubah data prospect
-            </li>
+            </li>-->
 
-            <li>
+<!--            <li>
                 <i class="ace-icon glyphicon glyphicon-list bigger-110"></i>
                 Melihat detail data prospect 
-            </li>
+            </li>-->
         </ul>
     </div>
 </div>
@@ -60,17 +76,16 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('transaksi_prospect/loadProspect') ?>',     
             mtype : "post",             
             datatype: "json",           
-            colNames:['Add Fpt','Edit', 'Detail' ,'Nama','Alamat','HP','Salesman','Unit', 'Qty'],       
+            colNames:['Kode Prospek','Nama Prospek','Salesman','Status','Agenda','Fpt','Edit', 'Detail'],       
             colModel:[
-                {name:'fpt',index:'fpt', width:30, align:"center"},
-                {name:'edit',index:'edit', width:30, align:"center"},
-                {name:'detail',index:'detail', width:30, align:"center"},
+                {name:'pros_kode',index:'pros_kode', width:30, align:"left"},
                 {name:'pros_nama',index:'pros_nama', width:60, align:"left"},
-                {name:'pros_alamat',index:'pros_alamat', width:100, align:"left"},
-                {name:'pros_hp',index:'pel_hp', width:50, align:"left"},
                 {name:'pros_sales',index:'pros_sales', width:80, align:"left"},
-                {name:'cty_deskripsi',index:'cty_deskripsi', width:130, align:"left"},
-                {name:'car_qty',index:'car_qty', width:20, align:"left"},
+                {name:'status',index:'status', width:15, align:"center"},
+                {name:'agenda',index:'agenda', width:20, align:"center"},
+                {name:'fpt',index:'fpt', width:20, align:"center"},
+                {name:'edit',index:'edit', width:20, align:"center"},
+                {name:'detail',index:'detail', width:20, align:"center"},
             ],
             rowNum:10,
             height : 300,
@@ -83,6 +98,12 @@ if (!defined('BASEPATH'))
             gridview: true,
             caption:"Daftar Prospect"
         }).navGrid('#pager',{edit:false,add:false,del:false});
+        //        jQuery("#grid-table").jqGrid('setGroupHeaders', {
+        //            useColSpanStyle: false, 
+        //            groupHeaders:[
+        //                {startColumnName: 'prospek', numberOfColumns: 5, titleText: 'Status Fpt'},
+        //            ]
+        //        });
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
         })

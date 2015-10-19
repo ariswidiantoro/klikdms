@@ -829,7 +829,7 @@ $.fn.jqGrid = function( pin ) {
 			treeANode : -1,
 			ExpandColumn: null,
 			tree_root_level : 0,
-			prmNames: {page:"page",rows:"rows", sort: "sidx",order: "sord", search:"_search", nd:"nd", id:"id",oper:"oper",editoper:"edit",addoper:"add",deloper:"del", subgridid:"id", npage: null, totalrows:"totalrows"},
+			prmNames: {page:"page",rows:"rows", sort: "sidx",order: "sord", search:"_search", nd:"nd", id:"id",oper:"oper",editoper:"edit",addoper:"add",deloper:"del", subgridid:"id", npage: null, totalrows:"totalrows", status : "status"},
 			forceFit : false,
 			gridstate : "visible",
 			cellEdit: false,
@@ -8884,11 +8884,11 @@ $.jgrid.extend({
 	},
 	navGrid : function (elem, o, pEdit,pAdd,pDel,pSearch, pView) {
 		o = $.extend({
-			edit: true,
+			edit: false,
 			editicon: "ace-icon fa fa-pencil blue",
-			add: true,
+			add: false,
 			addicon:"ace-icon fa fa-plus-circle purple",
-			del: true,
+			del: false,
 			delicon:"ace-icon fa fa-trash-o red",
 			search: true,
 			searchicon:"ace-icon fa fa-search orange",

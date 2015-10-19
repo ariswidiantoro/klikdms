@@ -21,37 +21,13 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tipe</label>
         <div class="col-sm-8">
-            <select class="form-control input-xlarge" id="coa_type" name="coa_type">
+            <select class="form-control input-xlarge" id="coa_jenis" name="coa_jenis">
                 <option value="">PILIH</option>
-                <optgroup label="AKTIVA">
-                <option value="1">KAS</option>
-                <option value="2">BANK</option>
-                <option value="3">PIUTANG DAGANG</option>
-                <option value="4">PERSEDIAAN</option>
-                <option value="5">BIAYA DIBAYAR DIMUKA</option>
-                <option value="6">INVESTASI JANGKA PANJANG</option>
-                <option value="7">HARTA TETAP BERWUJUD</option>
-                <option value="8">HARTA TETAP TIDAK BERWUJUD</option>
-                <option value="9">HARTA LAINNYA</option>
-                <optgroup label="PASIVA">
-                <option value="10">HUTANG LANCAR</option>
-                <option value="11">PENDAPATAN DITERIMA DIMUKA</option>
-                <option value="12">HUTANG JANGKA PANJANG</option>
-                <option value="13">HUTANG LAINNYA</option>
-                <optgroup label="MODAL">
-                <option value="14">MODAL</option>
-                <optgroup label="RUGI LABA">
-                <option value="15">PENJUALAN</option>
-                <option value="16">HPP</option>
-                <option value="17">PENDAPATAN USAHA</option>
-                <option value="18">PENDAPATAN LAIN</option>
-                <option value="19">BIAYA PRODUKSI</option>
-                <option value="20">BIAYA LAINNYA</option>
-                <option value="21">BIAYA OPERASIONAL</option>
-                <option value="22">BIAYA NON OPERASIONAL</option>
-                <option value="23">BIAYA LAINNYA</option>
-                <option value="24">PENDAPATAN LUAR USAHA</option>
-                <option value="25">PENGELUARAN LUAR USAHA</option>
+                <?php 
+                foreach($jeniscoa as $rows){
+                    echo "<option value='".$rows['jeniscoaid']."'>".$rows['jeniscoa_deskripsi']."</option>";
+                }
+                ?>
             </select>
         </div>
     </div>
@@ -59,7 +35,7 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Level</label>
         <div class="col-sm-8">
             <select class="form-control input-medium" id="coa_level" name="coa_level">
-                <option value="">PILIH</option>
+                <option value="0">PILIH</option>
                 <option value="1">1. GENERAL</option>
                 <option value="2">2. SUB GENERAL</option>    
                 <option value="3">3. DETAIL</option>    
@@ -69,7 +45,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kas / Bank</label>
         <div class="col-sm-8">
-            <select class="ace col-xs-10 col-sm-5" id="kas_bank" name="kas_bank" style="width: 120px;">
+            <select class="form-control input-medium" id="kas_bank" name="kas_bank" style="width: 120px;">
                 <option value="0">PILIH</option>
                 <option value="1">KAS</option>
                 <option value="2">BANK</option>    
@@ -77,7 +53,7 @@
             </select><i>* PILIH JIKA ACCOUNT UTAMA KAS/BANK/CEK</i>
         </div> 
     </div>
-    <div class="form-group">
+    <!--<div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>
         <div class="col-sm-8">
             <label>
@@ -85,7 +61,7 @@
                 <span class="lbl"> Masuk Rugi Laba</span>
             </label>
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>
         <div class="col-sm-8">

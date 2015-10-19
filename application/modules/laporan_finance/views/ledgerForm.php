@@ -1,3 +1,12 @@
+<style type="text/css">
+    html .ui-autocomplete { 
+        /* without this, the menu expands to 100% in IE6 */
+        max-height: 200px;
+        padding-right: 20px;
+        overflow-y: auto;
+        width:300px; 
+	}      
+</style>
 <div class="page-header">
     <h1>
         <?php echo $etc['judul']; ?>
@@ -31,11 +40,13 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group" style="width:100%;">
-                        <select id="cbid" name="cbid" class="input-sm input-medium">
+                        <select id="cbid" name="cbid" class="form-control input-small">
                             <option value ="">PILIH</option>
                             <?php
                             foreach ($etc['groupCabang'] as $cabang) {
-                                echo "<option value='" . $cabang['group_cbid'] . "'>" . $cabang['cb_nama'] . "</option>";
+                                echo "<option value='" . $cabang['group_cbid'] . "'"; 
+                                    if($cabang['group_cbid'] == ses_cabang) echo 'selected';
+                                echo ">" . $cabang['group_cbid']." | ". $cabang['cb_nama'] . "</option>";
                             }
                             ?>
                         </select>
@@ -45,7 +56,7 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group">
-                        <input type="text" name="start" value="<?php echo date('01/m/Y') ?>" class="datepicker input-sm input-small" style="position: static;"/>
+                        <input id="from" type="text" name="start" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control input-small" style="position: static;"/>
                         <span class="input-group-addon">
                             <i class="ace-icon fa fa-calendar"></i>
                         </span>
@@ -55,7 +66,7 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group" style="position: static">
-                        <input type="text" value="<?php echo date('d/m/Y') ?>" name="end" class="datepicker input-sm" />
+                        <input id="end" type="text" value="<?php echo date('d/m/Y') ?>" name="end" class="datepicker form-control input-small" />
                         <span class="input-group-addon">
                             <i class="ace-icon fa fa-calendar"></i>
                         </span>
@@ -65,7 +76,7 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group">
-                        <input type="text" name="coa" id="coa" class="form-control input-medium req"/>
+                        <input type="text" name="coa" id="coa" class="form-control input-small req"/>
                     </div>
                 </div>
             </div>
@@ -101,7 +112,7 @@
     }
 
     function lihat() {
-        submited('<?php echo site_url('laporan_service/' . $etc['targetLoad'] . '/lihat'); ?>');
+        submited('<?php echo site_url('laporan_finance/' . $etc['targetLoad'] . '/show'); ?>');
         if ($('#coa').val() == '') {
             alert('KODE PERKIRAAN TDK BOLEH KOSONG');
         } else {
@@ -112,7 +123,7 @@
 
     function excel() {
         $('#form').removeAttr('action');
-        $('#form').attr('action', "<?php echo site_url('laporan_service/' . $etc['targetLoad'] . '/excel'); ?>");
+        $('#form').attr('action', "<?php echo site_url('laporan_finance/' . $etc['targetLoad'] . '/excel'); ?>");
         if ($('#coa').val() == '') {
             alert('KODE PERKIRAAN TDK BOLEH KOSONG');
         } else {
@@ -122,7 +133,7 @@
 
     function print() {
         $('#form').removeAttr('action');
-        $('#form').attr('action', "<?php echo site_url('laporan_service/' . $etc['targetLoad'] . '/print'); ?>");
+        $('#form').attr('action', "<?php echo site_url('laporan_finance/' . $etc['targetLoad'] . '/print'); ?>");
         $('#form').attr('target', "_new");
 
         if ($('#coa').val() == '') {
@@ -144,7 +155,7 @@
                     type: 'POST',
                     data: {
                         param : this.value,
-                        cbid : '<?php echo ses_cabang; ?>'
+                        cbid : $('#cbid').val()
                     },
                     success: function(data) {
                         add(data.message);

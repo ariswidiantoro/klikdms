@@ -92,7 +92,6 @@ class Model_Admin extends CI_Model {
     public function getDetailRole($data) {
         $hasil = array();
         $sql = $this->db->query("SELECT * FROM ms_role_det WHERE roledet_roleid = '$data'");
-//        log_message('error', 'SQL ROLE = '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             foreach ($sql->result_array() as $value) {
                 $hasil[$value['roledet_menuid']] = 1;
@@ -112,7 +111,6 @@ class Model_Admin extends CI_Model {
             $where = "WHERE $sortby LIKE '%$cari%'";
         }
         $sql = $this->db->query("SELECT * FROM ms_menu $where ORDER BY menu_deskripsi ASC");
-//        log_message('error', 'MENUUUU ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -181,7 +179,6 @@ class Model_Admin extends CI_Model {
         $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_det ON"
                 . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
                 . " WHERE menu_parent_id = -1 AND userro_krid = '" . ses_krid . "' ORDER BY menu_urut ASC");
-        log_message('error', 'AAAAAAAAa '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -198,7 +195,6 @@ class Model_Admin extends CI_Model {
         $sql = $this->db->query("SELECT menu_nama,menu_parent_id,menuid,menu_icon,menu_deskripsi,menu_url FROM ms_user_role LEFT JOIN ms_role_det ON"
                 . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
                 . " WHERE menu_parent_id != -1 AND menu_module = ".$data." AND userro_krid = '" . ses_krid . "' ORDER BY menu_urut, menuid ASC");
-        log_message('error', 'AAAAAAAA '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -952,7 +948,7 @@ class Model_Admin extends CI_Model {
             return true;
         }
     }
-
+    
 }
 
 ?>

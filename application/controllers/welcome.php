@@ -95,6 +95,7 @@ class Welcome extends Application {
                 $this->session->set_userdata('kota', $cbg['kota_deskripsi']);
                 $this->session->set_userdata('krid', $data_user['krid']);
                 $this->session->set_userdata('isLogin', 'true');
+                $this->session->set_userdata('settingCoa', $setting);
                 redirect('welcome/home');
             } else {
                 $this->session->set_flashdata('msg', $this->error("Username / Password Tidak Terdaftar"));

@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('master_finance/deleteCoa'); ?>',
+                    url: '<?php echo site_url('master_sales/deleteSegment'); ?>',
                     dataType: "json",
                     data: {
                         id: id
@@ -28,29 +28,28 @@ if (!defined('BASEPATH'))
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('master_finance/loadCoa') ?>',     
+            url:'<?php echo site_url('master_sales/loadNoKontrak') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Kode','Deskripsi', 'Tipe', 'Level', 'Edit', 'Del'],     
+            colNames:['No Kontrak','Nama Pelanggan','Alamat', 'No Telpon', 'Edit', 'Del'],     
             colModel:[
-                {name:'coa_kode',index:'coa_kode', width:60, align:"left"},
-                {name:'coa_desc',index:'coa_desc', width:100, align:"left"},
-                {name:'coa_type',index:'coa_type', width:70, align:"left"},
-                {name:'coa_level',index:'coa_level', width:40, align:"left"},
+                {name:'kon_nomer',index:'kon_nomer', width:80, align:"left"},
+                {name:'pel_nama',index:'pel_nama', width:100, align:"left"},
+                {name:'pel_alamat',index:'pel_alamat', width:100, align:"left"},
+                {name:'pel_hp',index:'pel_hp', width:100, align:"left"},
                 {name:'edit',index:'edit', width:12, align:"center"},
                 {name:'hapus',index:'hapus', width:12, align:"center"},
             ],
             rowNum:10,
             height : 300,
             width: $(".page-content").width(),
-            height: 300,
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'coa_kode',
+            sortname: 'kon_nomer',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Chart Of Account (COA)"
+            caption:"Daftar Nomer Kontrak"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
@@ -71,9 +70,9 @@ if (!defined('BASEPATH'))
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_finance/addCoa" class="btn btn-sm btn-primary">
+            <a href="#master_sales/addNoKontrak" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah COA</a>
+                Tambah No Kontrak</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>

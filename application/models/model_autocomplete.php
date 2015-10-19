@@ -14,7 +14,7 @@ class Model_Autocomplete extends CI_Model {
     /* AUTO COMPLETE */
     public function autoCoa($data) {
         $sql = $this->db->query("
-            SELECT coa_kode, coa_cbid, coa_desc, coa_type
+            SELECT coa_kode, coa_cbid, coa_desc, coa_jenis
             FROM ms_coa WHERE (coa_kode LIKE '%".$data['param']."%' OR coa_desc LIKE '%".$data['param']."%') 
                 AND coa_cbid = '".$data['cbid']."'
             ORDER BY coa_kode ASC LIMIT 30 OFFSET 0
@@ -61,6 +61,34 @@ class Model_Autocomplete extends CI_Model {
             WHERE pel_nama LIKE '%".$data['param']."%'
                 AND pel_cbid = '".$data['cbid']."'
             ORDER BY pel_nama ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
+    public function autoSupid($data) {
+        $sql = $this->db->query("
+            select supid, sup_nama, sup_alamat 
+            from ms_supplier
+            WHERE sup_nama LIKE '%".$data['param']."%'
+                AND sup_cbid = '".$data['cbid']."'
+            ORDER BY sup_nama ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
+    public function autoFaktur($data) {
+        $sql = $this->db->query("
+            select supid, sup_nama, sup_alamat 
+            from ms_supplier
+            WHERE sup_nama LIKE '%".$data['param']."%'
+                AND sup_cbid = '".$data['cbid']."'
+            ORDER BY sup_nama ASC LIMIT 20 OFFSET 0
         ");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();

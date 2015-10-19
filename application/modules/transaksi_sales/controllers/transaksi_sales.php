@@ -16,7 +16,7 @@ class Transaksi_Sales extends Application {
     public function index() {
         echo " ";
     }
-    
+
     /**
      * Bukti Penerimaan Kendaraan (BPK)
      * @author Rossi
@@ -25,7 +25,8 @@ class Transaksi_Sales extends Application {
         $this->hakAkses(1092);
         $this->load->view('dataBpk', $this->data);
     }
-    
+
+  
     public function getBpk() {
         $data = $this->input->get('bpkid', TRUE);
         $result = $this->model_sales->getBpk($data);
@@ -43,31 +44,32 @@ class Transaksi_Sales extends Application {
         $warna = strtoupper($this->input->post('bpk_nomesin', TRUE));
         $tahun = strtoupper($this->input->post('msc_tahun', TRUE));
         $kondisi = strtoupper($this->input->post('msc_kondisi', TRUE));
-        if (empty($norangka) || empty($nomesin)|| empty($jkend)|| empty($type)|| 
-                empty($warna)|| empty($tahun)|| empty($kondisi)) {
-            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : '.$norangka.' | Mesin : '.$nomesin.
-                    ' | Jkend : '.$jkend.' | Type : '.$type.' | Warna : '.$warna.' | Tahun : '.$tahun.' | Kondisi : '.$kondisi));
+        if (empty($norangka) || empty($nomesin) || empty($jkend) || empty($type) ||
+                empty($warna) || empty($tahun) || empty($kondisi)) {
+            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : ' . $norangka . ' | Mesin : ' . $nomesin .
+                        ' | Jkend : ' . $jkend . ' | Type : ' . $type . ' | Warna : ' . $warna . ' | Tahun : ' . $tahun . ' | Kondisi : ' . $kondisi));
         } else {
-            $save = $this->model_sales->addBpk(array(
-                'msc_norangka' => $norangka,
-                'msc_nomesin' => $nomesin,
-                'msc_jenis' => $jkend,
-                'msc_ctyid' => $type,
-                'msc_warnaid' => $warna,
-                'msc_tahun' => $tahun,
-                'msc_kondisi' => $kondisi,
-                'msc_cbid' => ses_cabang,
-                'msc_roda' => strtoupper($this->input->post('msc_roda', TRUE)),
-                'msc_chasis' => strtoupper($this->input->post('msc_chasis', TRUE)),
-                'msc_vinlot' => strtoupper($this->input->post('msc_vinlot', TRUE)),
-                'msc_bodyseri' => strtoupper($this->input->post('msc_bodyseri', TRUE)),
-                'msc_nokunci' => strtoupper($this->input->post('msc_nokunci', TRUE)),
-                'msc_fuel' => strtoupper($this->input->post('msc_fuel', TRUE)),
-                'msc_regckd' => strtoupper($this->input->post('msc_regckd', TRUE)),
-                'msc_silinder' => numeric($this->input->post('msc_silinder', TRUE)),
-                'msc_createon' => date('Y-m-d H:i:s'),
-                'msc_createby' => ses_krid
-                ));
+            $save = $this->model_sales->addBpk(
+                    array(
+                        'msc_norangka' => $norangka,
+                        'msc_nomesin' => $nomesin,
+                        'msc_jenis' => $jkend,
+                        'msc_ctyid' => $type,
+                        'msc_warnaid' => $warna,
+                        'msc_tahun' => $tahun,
+                        'msc_kondisi' => $kondisi,
+                        'msc_cbid' => ses_cabang,
+                        'msc_roda' => strtoupper($this->input->post('msc_roda', TRUE)),
+                        'msc_chasis' => strtoupper($this->input->post('msc_chasis', TRUE)),
+                        'msc_vinlot' => strtoupper($this->input->post('msc_vinlot', TRUE)),
+                        'msc_bodyseri' => strtoupper($this->input->post('msc_bodyseri', TRUE)),
+                        'msc_nokunci' => strtoupper($this->input->post('msc_nokunci', TRUE)),
+                        'msc_fuel' => strtoupper($this->input->post('msc_fuel', TRUE)),
+                        'msc_regckd' => strtoupper($this->input->post('msc_regckd', TRUE)),
+                        'msc_silinder' => numeric($this->input->post('msc_silinder', TRUE)),
+                        'msc_createon' => date('Y-m-d H:i:s'),
+                        'msc_createby' => ses_krid
+                    ));
             if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
@@ -146,10 +148,10 @@ class Transaksi_Sales extends Application {
         $warna = strtoupper($this->input->post('msc_warnaid', TRUE));
         $tahun = strtoupper($this->input->post('msc_tahun', TRUE));
         $kondisi = strtoupper($this->input->post('msc_kondisi', TRUE));
-        if (empty($id) ||empty($norangka) || empty($nomesin)|| empty($jkend)|| empty($type)|| 
-                empty($warna)|| empty($tahun)|| empty($kondisi)) {
-            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : '.$norangka.' | Mesin : '.$nomesin.
-                    ' | Jkend : '.$jkend.' | Type : '.$type.' | Warna : '.$warna.' | Tahun : '.$tahun.' | Kondisi : '.$kondisi));
+        if (empty($id) || empty($norangka) || empty($nomesin) || empty($jkend) || empty($type) ||
+                empty($warna) || empty($tahun) || empty($kondisi)) {
+            $hasil = array('status' => '0', 'msg' => $this->error('Rangka : ' . $norangka . ' | Mesin : ' . $nomesin .
+                        ' | Jkend : ' . $jkend . ' | Type : ' . $type . ' | Warna : ' . $warna . ' | Tahun : ' . $tahun . ' | Kondisi : ' . $kondisi));
         } else {
             $save = $this->model_sales->updateBpk(array(
                 'msc_norangka' => $norangka,
@@ -170,7 +172,7 @@ class Transaksi_Sales extends Application {
                 'msc_silinder' => numeric($this->input->post('msc_silinder', TRUE)),
                 'msc_createon' => date('Y-m-d H:i:s'),
                 'msc_createby' => ses_krid
-                ), $id);
+                    ), $id);
             if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
@@ -193,22 +195,21 @@ class Transaksi_Sales extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     public function editHpp() {
         $this->hakAkses(1095);
         $this->load->view('editHpp', $this->data);
     }
-    
+
     public function spk() {
         $this->hakAkses(1096);
         $this->load->view('dataSpk', $this->data);
     }
-    
+
     public function addSpk() {
         $this->hakAkses(1096);
         $this->load->view('addSpk', $this->data);
     }
-    
 
 }
 
