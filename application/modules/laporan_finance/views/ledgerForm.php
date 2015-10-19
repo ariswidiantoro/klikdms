@@ -154,7 +154,7 @@
                     dataType: 'json',
                     type: 'POST',
                     data: {
-                        param : this.value,
+                        param :  $('#coa').val(),
                         cbid : $('#cbid').val()
                     },
                     success: function(data) {
