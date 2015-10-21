@@ -181,7 +181,7 @@ class Model_Trfinance extends CI_Model {
                                 'dbnk_bankid' => $bank['bank'][$i],
                                 'dbnk_norek' => $bank['norek'][$i],
                                 'dbnk_nocek' => $bank['nocek'][$i],
-                                'dbnk_jtempo' => $bank['jtempo'][$i],
+                                'dbnk_jtempo' => dateToIndo($bank['jtempo'][$i]),
                                 'dbnk_kotaid' => $bank['kota'][$i],
                                 'dbnk_nominal' => numeric($bank['nominal'][$i]),
                                 'dbnk_flag' => '1',

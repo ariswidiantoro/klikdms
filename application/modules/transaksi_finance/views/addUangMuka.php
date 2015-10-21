@@ -21,6 +21,7 @@
             <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
             <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
             <input type="hidden" id="trans_trans" name="trans_trans" value="" />
+            <input type="hidden" id="trans_is_uangmuka" name="trans_is_uangmuka" value="1" />
             <input type="hidden" id="trans_type" name="trans_type" value="I" />
         </div>
     </div>
@@ -38,7 +39,7 @@
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Jenis Penerimaan</label>
-        <div class="col-sm-8">
+        <div class="col-sm-3">
             <select id="trans_jenis" name="trans_jenis" required="required" onchange="changeType();" class="form-control input-medium req">
                 <option value="">PILIH</option>
                 <option value ="1">KAS</option>
@@ -49,39 +50,39 @@
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Account Penyimpanan</label>
-        <div class="col-sm-8">
+        <div class="col-sm-3">
             <select id="trans_coa" name="trans_coa" required="required" class="form-control input-xlarge req"></select>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Pelanggan</label>
-        <div class="col-sm-10">
+        <div class="col-sm-6">
             <input type="text" id="dtrans_pelname" name="dtrans_pelname[]" required="required" maxlength="50" 
                    onkeyup="acomplete('dtrans_pelname', 'auto_pelid', 'dtrans_pelid', '','')"class="req upper ace col-xs-10 col-sm-4" />
             <a href="#master_service/addPelanggan?href=transaksi_finance/uangMuka" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Pelanggan</a>
-            <input type="hidden" id="dtrans_pelid" name="dtrans_pelid[]" required="required" />
+            <input type="hidden" id="dtrans_pelid" name="dtrans_pelid[]"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Account Uangmuka</label>
-        <div class="col-sm-10">
+        <div class="col-sm-6">
             <input type="text" id="dtrans_coa" name="dtrans_coa[]" required="required" maxlength="50" 
-                   onkeyup="acomplete('dtrans_coa', 'auto_coa', 'dtrans_coa', 'dtrans_desc', '')"
-                   class="req upper ace col-xs-10 col-sm-2" />
+                   onkeyup="acomplete('dtrans_coa', 'auto_uangmuka', 'dtrans_coa', 'dtrans_desc', '')"
+                   class="form-control input-large number req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Memo</label>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <input type="text" id="dtrans_desc" name="dtrans_desc[]" required="required" maxlength="500" 
                    placeholder="KETERANGAN" class="upper form-control input-xxlarge req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Sebesar ( Rp. )</label>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <input type="text" id="totalTrans" name="totalTrans" required="required" placeholder="0.00"
                    onchange="$('#'+this.id).val(formatCurrency(this.value));" onblur="terbilang(this.value)" 
                    onkeyup="$('#dtrans_nominal').val(formatCurrency(this.value));"
@@ -226,8 +227,8 @@
                <td class="detailbank center" style="vertical-align:middle;">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
                     <td>\n\
                         <input type="text"  autocomplete="off" placeholder="BANK"\n\
-                            onkeyup="acomplete(dbnk_bankname'+inc+', auto_bank, dbnk_bankid'+inc+',\'\', \'\')"\n\ \n\
-                            class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dbnk_bank'+ inc +'"  name="dbnk_bank[]" />\n\
+                            onkeyup="acomplete(\'dbnk_bankname'+inc+'\', \'auto_bank\', \'dbnk_bankid'+inc+'\',\'\', \'\')"\n\ \n\
+                            class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dbnk_bankname'+ inc +'"  name="dbnk_bankname[]" />\n\
                        <input type="hidden" id="dbnk_bankid'+ inc +'" name="dbnk_bankid[]" />\n\
                     </td>\n\
                     <td>\n\
@@ -377,7 +378,8 @@
     $(this).ready(function() {
         $( ".datepicker" ).datepicker({
             autoclose: true,
-            todayHighlight: true
+            todayHighlight: true,
+            dateFormat:'dd-mm-yy'	
         })
         .next().on(ace.click_event, function(){
             $(this).prev().focus();

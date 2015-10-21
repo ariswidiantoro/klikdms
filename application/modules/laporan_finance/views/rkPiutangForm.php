@@ -1,12 +1,3 @@
-<style type="text/css">
-    html .ui-autocomplete { 
-        /* without this, the menu expands to 100% in IE6 */
-        max-height: 200px;
-        padding-right: 20px;
-        overflow-y: auto;
-        width:300px; 
-    }      
-</style>
 <div class="page-header">
     <h1>
         <?php echo $etc['judul']; ?>
@@ -28,11 +19,6 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <span>Sampai Dengan</span>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <span>COA</span>
                 </div>
             </div>
         </div>
@@ -76,8 +62,13 @@
             </div>
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <div class="input-group">
-                        <input type="text" name="coa" id="coa" class="form-control input-small req"/>
+                    <div class="input-group" style="width:100%;">
+                        <select id="dept" name="dept" class="form-control input-small">
+                            <option value ="1">UNIT</option>
+                            <option value ="2">SERVICE</option>
+                            <option value ="3">SPAREPART</option>
+                            <option value ="4">BODYREPAIR</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -91,9 +82,7 @@
     <div id="result" style="overflow-x: auto;margin:-2px 0 0 0;" >
     </div>
 </form>
-<!-- page specific plugin scripts -->
 <script type="text/javascript">
-    //isolate event
     function submited(actions) {
         $('#form').bind('submit', function() {
             $('#result').html('');
@@ -114,34 +103,21 @@
 
     function lihat() {
         submited('<?php echo site_url('laporan_finance/' . $etc['targetLoad'] . '/show'); ?>');
-        if ($('#coa').val() == '') {
-            alert('KODE PERKIRAAN TDK BOLEH KOSONG');
-        } else {
-            $('#form').submit();
-        }
+        $('#form').submit();
         $('#form').unbind('submit');
     }
 
     function excel() {
         $('#form').removeAttr('action');
         $('#form').attr('action', "<?php echo site_url('laporan_finance/' . $etc['targetLoad'] . '/excel'); ?>");
-        if ($('#coa').val() == '') {
-            alert('KODE PERKIRAAN TDK BOLEH KOSONG');
-        } else {
-            $('#form').submit();
-        }
+        $('#form').submit();
     }
 
     function print() {
         $('#form').removeAttr('action');
         $('#form').attr('action', "<?php echo site_url('laporan_finance/' . $etc['targetLoad'] . '/print'); ?>");
         $('#form').attr('target', "_new");
-
-        if ($('#coa').val() == '') {
-            alert('KODE PERKIRAAN TDK BOLEH KOSONG');
-        } else {
-            $('#form').submit();
-        }
+        $('#form').submit();
     }
     
     $(document).ready(function(){
@@ -162,31 +138,6 @@
                     dates.not( this ).datepicker( "option", "datFormat", "dd-mm-yy" );
                 }
             });
-        });
-    
-        $("#coa").autocomplete({
-            minLength: 1,
-            source: function(req, add) {
-                $.ajax({
-                    url: "<?php echo site_url('auto_complete/auto_coa'); ?>",
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {
-                        param :  $('#coa').val(),
-                        cbid : $('#cbid').val()
-                    },
-                    success: function(data) {
-                        add(data.message);
-                    }
-                });
-            },
-            create: function () {
-                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li></li>')
-                    .append("<strong>" + item.value + "</strong><br>" + item.desc + "")
-                    .appendTo(ul);
-                };
-            }
         });
     });
         

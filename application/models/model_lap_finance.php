@@ -32,7 +32,7 @@ class Model_Lap_Finance extends CI_Model {
         $this->db->where("trl_date BETWEEN '" . $var_recieve['dateFrom'] . "' 
             AND '" . $var_recieve['dateTo'] . "'", NULL, FALSE);
         if (!empty($var_recieve['cbid'])) {
-            $this->db->where('trl_coa', $var_recieve['cbid']);
+            $this->db->where('trl_cbid', $var_recieve['cbid']);
         }
         if (!empty($var_recieve['coa'])) {
             $this->db->where('trl_coa', $var_recieve['coa']);
@@ -51,13 +51,11 @@ class Model_Lap_Finance extends CI_Model {
         $this->db->order_by('trl_nomer', 'ASC');
         $this->db->order_by('trlid', 'ASC');
         $query = $this->db->get('ksr_ledger');
-        if ($query->num_rows() > 0) {
-            return $query->result();
-        }
+        return $query->result_array();
     }
     
     public function getSaldo($data){
-        $query = "SELECT sld_saldo FROM ksr_saldo 
+        /*$query = "SELECT sld_saldo FROM ksr_saldo 
             WHERE sld_tahun = ".$data['year']." AND sld_bulan = ".$data['month']."
                 AND sld_type = '".$data['type']."' AND sld_nodoc = '".$data['nodoc']."'";
         $sql = $this->db->query($query);
@@ -66,7 +64,28 @@ class Model_Lap_Finance extends CI_Model {
            return $sql->row()->sld_saldo; 
         }else{
             return 0;
-        }
+        }*/
+        return 0;
+    }
+    
+    public function getDetailCabang($data){
+        $query = "SELECT * FROM ms_cabang WHERE cbid = '".$data."'";
+        $sql = $this->db->query($query);
+        return $sql->row_array();
+    }
+    
+    public function getDetailCoa($data){
+        $query = "SELECT * FROM ms_coa WHERE cbid = '".$data."'";
+        $sql = $this->db->query($query);
+        return $sql->row_array();
+    }
+    
+    public function getMainCoa($data){
+        $query = "SELECT coa_kode, coa_desc FROM ms_coa WHERE coa_cbid = '".$data['cbid']."'
+            AND coa_is_kas_bank = ".$data['type']."
+            AND coa_flag = 1";
+        $sql = $this->db->query($query);
+        return $sql->result_array();
     }
     
     public function lapKasir($data){
@@ -202,7 +221,7 @@ class Model_Lap_Finance extends CI_Model {
             $datefirst = date('Y-m-d', mktime(0, 0, 0, $monthfrom, 1, $yearfrom));
             $datesecond = date('Y-m-d', mktime(0, 0, 0, $monthfrom, $datefrom - 1, $yearfrom));
             $qq = $this->db->query("SELECT trl_supid, SUM(trl_debit-trl_kredit) AS balance
-               FROM trledger WHERE trl_kodeid = '101704' AND" .
+               FROM trledger WHERE trl_kodeid = '".$data['coa']."' AND" .
                     " trl_date BETWEEN '" . $datefirst . "' AND '" . $datesecond . "' AND trl_cbid = " . $data['cbid'] . " 
 				GROUP BY trl_nota, trl_kodeid ");
             if ($qq->num_rows() > 0) {
@@ -211,6 +230,8 @@ class Model_Lap_Finance extends CI_Model {
                 }
             }
         }
+        
+        
 
     }
     

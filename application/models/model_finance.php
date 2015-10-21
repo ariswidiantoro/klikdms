@@ -122,7 +122,7 @@ class Model_Finance extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->from('ms_coa_special');
-        $this->db->join('ms_coa_setting', 'specid = setcoa_specid', 'left');
+        $this->db->join('ms_coa_setting', "specid = setcoa_specid and setcoa_cbid = '".ses_cabang."'", 'left');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();

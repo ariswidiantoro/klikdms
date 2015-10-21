@@ -31,10 +31,11 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('master_finance/loadJenisCoa') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Kode','Deskripsi', 'Edit', 'Del'],     
+            colNames:['Kode','Deskripsi', 'Kategori', 'Edit', 'Del'],     
             colModel:[
                 {name:'jeniscoaid',index:'jeniscoaid', width:30, align:"left"},
                 {name:'jeniscoa_deskripsi',index:'jeniscoa_deskripsi', width:100, align:"left"},
+                {name:'jeniscoa_kategori',index:'jeniscoa_kategori', width:80, align:"left"},
                 {name:'edit',index:'edit', width:12, align:"center"},
                 {name:'hapus',index:'hapus', width:12, align:"center"},
             ],

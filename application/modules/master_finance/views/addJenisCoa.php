@@ -13,6 +13,19 @@
                    class="ace col-xs-10 col-sm-10 upper req" />
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kategori</label>
+        <div class="col-sm-8">
+            <select class="form-control input-medium" id="jeniscoa_kategori" name="jeniscoa_kategori">
+                <option value="0">PILIH</option>
+                <option value="1">1. AKTIVA LANCAR</option>
+                <option value="2">2. AKTIVA TETAP</option>    
+                <option value="3">3. PASIVA</option>    
+                <option value="4">4. MODAL</option>    
+                <option value="5">5. RUGILABA</option>    
+            </select>
+        </div>
+    </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
             <button class="btn btn-success" type="button" onclick="javascript:saveData()">

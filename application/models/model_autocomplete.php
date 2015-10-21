@@ -25,6 +25,23 @@ class Model_Autocomplete extends CI_Model {
         return null;
     }
     
+    public function autoUangmuka($data) {
+        $sql = $this->db->query("
+            select coa_kode, coa_cbid, coa_desc, coa_jenis
+            from ms_coa_setting 
+            LEFT JOIN ms_coa on coa_kode = setcoa_kode and coa_cbid = setcoa_cbid
+            WHERE (coa_kode LIKE '%".$data['param']."%' OR coa_desc LIKE '%".$data['param']."%') 
+                AND setcoa_cbid = '".$data['cbid']."'
+                AND (setcoa_specid = '".UANGMUKA_UNIT."' or setcoa_specid = '".UANGMUKA_SERVICE."' or
+                    setcoa_specid = '".UANGMUKA_SPART."' or setcoa_specid = '".UANGMUKA_BREPAIR."')
+            ORDER BY coa_kode ASC LIMIT 30 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
     public function autoKota($data) {
         $sql = $this->db->query("
             select kotaid, propid, kota_deskripsi, prop_deskripsi 

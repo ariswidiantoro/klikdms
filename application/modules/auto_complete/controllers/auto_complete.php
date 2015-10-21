@@ -40,6 +40,28 @@ class Auto_Complete extends Application {
         }
         echo json_encode($data);
     }
+    
+    public function auto_uangmuka() {
+        $param = $this->input->post('param');
+        $cbid = $this->input->post('cbid');
+        $query = $this->model_autocomplete->autoUangmuka(array('param' => strtoupper($param), 'cbid' => $cbid));
+        if (!empty($query)) {
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array(
+                    'value' => $row['coa_kode'],
+                    'desc' => $row['coa_desc'],
+                    'type' => $row['coa_jenis'],
+                    'trglocal' => $row['coa_kode'],
+                    'trgid' => $row['coa_desc'],
+                    'trgname' => $row['coa_desc'],
+                );
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'desc' => "DATA TIDAK ADA");
+        }
+        echo json_encode($data);
+    }
 
     public function auto_bank() {
         $param = $this->input->post('param');

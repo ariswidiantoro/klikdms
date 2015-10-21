@@ -47,6 +47,19 @@ class Master_Finance extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
+                if($row->jeniscoa_kategori == '1'){
+                    $kategori = "AKTIVA LANCAR";
+                }else if($row->jeniscoa_kategori == '2'){
+                    $kategori = "AKTIVA TETAP";
+                }else if($row->jeniscoa_kategori == '3'){
+                    $kategori = "PASIVA";
+                }else if($row->jeniscoa_kategori == '4'){
+                    $kategori = "MODAL";
+                }else if($row->jeniscoa_kategori == '5'){
+                    $kategori = "RUGI LABA";
+                }else{
+                    $kategori = '-';
+                }
                 $del = "hapusData('" . $row->jeniscoaid . "', '" . $row->jeniscoa_deskripsi . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 $edit = '<a href="#master_finance/editJenisCoa?id=' . $row->jeniscoaid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
@@ -54,6 +67,7 @@ class Master_Finance extends Application {
                 $responce->rows[$i]['cell'] = array(
                     $row->jeniscoaid,
                     $row->jeniscoa_deskripsi,
+                    $kategori,
                     $edit, $hapus);
                 $i++;
             }
@@ -83,12 +97,14 @@ class Master_Finance extends Application {
 
     public function saveJenisCoa() {
         $desc = strtoupper($this->input->post('jeniscoa_deskripsi', TRUE));
-        if (empty($desc)) {
+        $kategori = strtoupper($this->input->post('jeniscoa_kategori', TRUE));
+        if (empty($desc) || empty($kategori)) {
             $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
         } else {
             $save = $this->model_finance->addJenisCoa(
                     array(
-                        'jeniscoa_deskripsi' => $desc
+                        'jeniscoa_deskripsi' => $desc,
+                        'jeniscoa_kategori' => $kategori
                     ));
             if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
@@ -102,12 +118,14 @@ class Master_Finance extends Application {
     public function updateJenisCoa() {
         $id = $this->input->post('jeniscoaid', TRUE);
         $desc = strtoupper($this->input->post('jeniscoa_deskripsi', TRUE));
-        if (empty($desc)) {
-            $hasil = array('status' => FALSE, 
-                'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
+        $kategori = strtoupper($this->input->post('jeniscoa_kategori', TRUE));
+        if (empty($desc) || empty($kategori)) {
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
         } else {
             $save = $this->model_finance->updateJenisCoa(array(
-                'jeniscoa_deskripsi' => $desc), $id);
+                'jeniscoa_deskripsi' => $desc,
+                'jeniscoa_kategori' => $kategori
+                ), $id);
             if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {

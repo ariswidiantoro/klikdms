@@ -194,6 +194,9 @@ function toWords(s) {
 	var words = words.replace(/satu ribu/g,"seribu");
 	var words = words.replace(/puluh seribu/g,"puluh satu ribu");
 	var words = words.replace(/ratus seribu/g,"ratus satu ribu");
-	return words;
+	var words = words.replace(/koma nol nol/g," ");
+    return words;
 }
+
+
 

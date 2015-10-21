@@ -13,6 +13,19 @@
             <input type="hidden" required="required"  value="<?php echo $data['jeniscoaid'] ?>" name="jeniscoaid" id="jeniscoaid"/>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kategori</label>
+        <div class="col-sm-8">
+            <select class="form-control input-medium" id="jeniscoa_kategori" name="jeniscoa_kategori">
+                <option value="0">PILIH</option>
+                <option value="1" <?php if($data['jeniscoa_kategori'] == '1') echo "selected";?>>1. AKTIVA LANCAR</option>
+                <option value="2" <?php if($data['jeniscoa_kategori'] == '2') echo "selected";?>>2. AKTIVA TETAP</option>    
+                <option value="3" <?php if($data['jeniscoa_kategori'] == '3') echo "selected";?>>3. PASIVA</option>    
+                <option value="4" <?php if($data['jeniscoa_kategori'] == '4') echo "selected";?>>4. MODAL</option>    
+                <option value="5" <?php if($data['jeniscoa_kategori'] == '5') echo "selected";?>>5. RUGILABA</option>    
+            </select>
+        </div>
+    </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
             <button class="btn btn-info" type="button" onclick="javascript:saveData()">
