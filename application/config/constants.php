@@ -67,6 +67,20 @@ define('NUM_SPK', 'SK');
 define('NUM_FPT', 'FP');
 define('NUM_TRANS', 'TR');
 
+define('NUM_JENIS_COA', 'JC');
+define('NUM_SPECIAL_COA', 'SC');
+
+/* SETTING COA */
+define('UANGMUKA_UNIT', 'SC01');
+define('UANGMUKA_SERVICE', 'SC02');
+define('UANGMUKA_SPART', 'SC03');
+define('UANGMUKA_BREPAIR', 'SC04');
+define('PIUTANG_UNIT', 'SC05');
+define('PIUTANG_SERVICE', 'SC06');
+define('PIUTANG_SPART', 'SC07');
+define('PIUTANG_BREPAIR', 'SC08');
+define('HUTANG_UNIT', 'SC09');
+define('HUTANG_SPART', 'SC10');
 
 
 

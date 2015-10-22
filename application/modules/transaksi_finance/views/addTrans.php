@@ -5,7 +5,7 @@
         padding-right: 20px;
         overflow-y: auto;
         width:300px; 
-	}      
+    }      
 </style>
 <div id="result"></div>
 <div class="page-header">
@@ -18,11 +18,13 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">No. Transaksi</label>
         <div class="col-sm-3">
-            <input type="text" id="trans_docno" name="trans_docno" required="required" maxlength="20" class="upper form-control input-xlarge req" />
-            <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
-            <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
-            <input type="hidden" id="trans_type" name="trans_type" value="<?php echo $etc['type']; ?>" />
-            <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
+            <div class="input-group">
+                <input type="text" id="trans_docno" name="trans_docno" required="required" maxlength="20" class="upper form-control input-xlarge req" />
+                <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
+                <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
+                <input type="hidden" id="trans_type" name="trans_type" value="<?php echo $etc['type']; ?>" />
+                <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
+            </div>
         </div>
     </div>
     <div class="form-group">
@@ -53,13 +55,16 @@
                    placeholder="DESKRIPSI"class="col-xs-10 col-sm-5 upper req" />
         </div> -->
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">COA</label>
-        <div class="col-sm-8">
+        <div class="col-sm-3">
             <select id="trans_coa" name="trans_coa" required="required" class="form-control input-xlarge req">
                 <option value ="">PILIH</option>
-                <?php foreach($etc['mainCoa'] as $rows){
-                    echo "<option value = '".$rows['coa_kode']."'>".$rows['coa_desc']."</option>";
-                } ?>
+                <?php
+                foreach ($etc['mainCoa'] as $rows) {
+                    echo "<option value = '" . $rows['coa_kode'] . "'>" . $rows['coa_desc'] . "</option>";
+                }
+                ?>
             </select>
+            <input type="hidden" name="trans_desc" id="trans_desc" value=""/>
         </div>
     </div>
 
@@ -99,14 +104,14 @@
                         </td>
                         <td>
                             <input type="text" autocomplete ="off" placeholder="NO. NOTA"
-                                   onkeyup="acomplete('dtrans_nota1', 'auto_spk', 'dtrans_notaid1', 'dtrans_pelid1', 'dtrans_pelname1')" 
+                                   onkeyup="acomplete('dtrans_nota1', 'auto_faktur', 'dtrans_notaid1', 'dtrans_pelid1', 'dtrans_pelname1')" 
                                    class="ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_nota[]" id="dtrans_nota1" />
                             <input type="hidden" id="dtrans_notaid1"  name="dtrans_notaid[]" />
                         </td>
                         <td>
                             <input type="text" autocomplete ="off" placeholder="NO. CUSTOMER"
-                                   onkeyup="acomplete('dtrans_pelname1', 'auto_plg', 'dtrans_pelid1', '', '')" 
-                                   class="ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_pelname[]" id="dtrans_pelname1" />
+                                   onkeyup="acomplete('dtrans_pelname1', 'auto_pelid', 'dtrans_pelid1', '', '')" 
+                                   class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_pelname[]" id="dtrans_pelname1" />
                             <input type="hidden" id="dtrans_pelid1"  name="dtrans_pelid[]" />
                         </td>
                         <td>
@@ -121,14 +126,14 @@
                         </td>
                         <td>
                             <input type="text" autocomplete="off" 
-                                   onkeyup="acomplete('dtrans_supname1', 'auto_supid', 'dtrans_supid1', '', '')" placeholder="ID SUPPLIER"
-                                   class="number ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_supnama[]" id="dtrans_supnama1" />
+                                   onkeyup="acomplete('dtrans_supnama1', 'auto_supid', 'dtrans_supid1', '', '')" placeholder="ID SUPPLIER"
+                                   class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_supnama[]" id="dtrans_supnama1" />
                             <input type="hidden" id="dtrans_supid1" name="dtrans_supid[]" />
                         </td>
                         <td>
                             <input type="text"  automplete="off"  class="number ace col-xs-10 col-sm-10" value="0" 
-                                 onchange="$('#'+this.id).val(formatCurrency(this.value));" onkeyup="countTotal()"  
-                                 style="width:100%;text-align: right"  name="dtrans_nominal[]" id="dtrans_nominal1" />
+                                   onchange="$('#'+this.id).val(formatCurrency(this.value));" onkeyup="countTotal()"  
+                                   style="width:100%;text-align: right"  name="dtrans_nominal[]" id="dtrans_nominal1" />
                         </td>
                         <td class="center" style="vertical-align: middle;">
                             <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>
@@ -202,7 +207,7 @@
                             </td>
                             <td>
                                 <input type="text"  autocomplete="off" onkeyup="acomplete('dbnk_kota1', 'auto_kota', 'dbnk_kotaid1', '', '')" 
-                                       class="number ace col-xs-10 col-sm-10" style="width:100%;"  name="dbnk_kota[]" id="dbnk_kota1" />
+                                       class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="dbnk_kota[]" id="dbnk_kota1" />
                                 <input type="hidden"  name="dbnk_kotaid[]" id="dbnk_kotaid1" />
                             </td>
                             <td>
@@ -306,27 +311,27 @@
                         </td>\n\
                         <td>\n\
                             <input type="text" autocomplete="off" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  \n\
-                                onkeyup = "acomplete(\'dtrans_nota'+inc+'\', \'auto_spk\', \'dtrans_notaid'+inc+'\', \'dtrans_pelid'+inc+'\', \'dtrans_pelname'+inc+'\')"\n\
+                                onkeyup = "acomplete(\'dtrans_nota'+inc+'\', \'auto_faktur\', \'dtrans_notaid'+inc+'\', \'dtrans_pelid'+inc+'\', \'dtrans_pelname'+inc+'\')"\n\
                                 placeholder = "NO. NOTA"\n\
                                 name="dtrans_nota[]" id="dtrans_nota'+ inc +'" />\n\
                             <input type="hidden" name="dtrans_notaid[]" id="dtrans_notaid'+inc+'"/>\n\
                          </td>\n\
                         <td>\n\
                             <input type="text" autocomplete="off" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  \n\
-                                onkeyup = "acomplete(\'dtrans_pelname'+inc+'\', \'auto_plg\', \'dtrans_pelid'+inc+'\', \'\', \'\')"\n\
+                                onkeyup = "acomplete(\'dtrans_pelname'+inc+'\', \'auto_pelid\', \'dtrans_pelid'+inc+'\', \'\', \'\')"\n\
                                 placeholder = "NO. CUSTOMER"\n\
                                 name="dtrans_pelname[]" id="dtrans_pelname'+ inc +'" />\n\
                             <input type="hidden" name="dtrans_pelid[]" id="dtrans_pelid'+inc+'"/>\n\
                          </td>\n\
                          <td>\n\
                             <select class="form-control input-small" style="width:100%;"  name="dtrans_ccid[]" id="dtrans_ccid'+inc+'">\n\
-                                <option value=""></option>\n\<?php foreach ($etc['costcenter'] as $ccid){    
-                                    echo "<option value = \'" . $ccid['ccid'] . "\'>" . $ccid['cc_kode'] . " | " . $ccid['cc_name'] . "</option>";}?>\n\
+                                <option value=""></option>\n\<?php foreach ($etc['costcenter'] as $ccid) {
+                                echo "<option value = \'" . $ccid['ccid'] . "\'>" . $ccid['cc_kode'] . " | " . $ccid['cc_name'] . "</option>";}?>\n\
                             </select>\n\
                          </td>\n\
                          <td>\n\
                              <input type="text"  autocomplete="off" \n\
-                                onkeyup="acomplete(dtrans_supnama'+inc+', auto_supid, dtrans_supid'+inc+', \'\', \'\')" \n\
+                                onkeyup="acomplete(dtrans_supnama'+inc+', \'auto_supid\', \'dtrans_supid'+inc+'\', \'\', \'\')" \n\
                                 placeholder = "ID SUPPLIER"\n\
                                 class="upper ace col-xs-10 col-sm-10" style="width:100%;" \n\
                                 name="dtrans_supnama[]" id="dtrans_supnama'+ inc +'" />\n\
@@ -345,14 +350,14 @@
                          </td>\n\
                        </tr>\n\
                     </tr>');
-            $(".btnDelete").bind("click", Delete);
-            numberOnly();
-        }
+                                 $(".btnDelete").bind("click", Delete);
+                                 numberOnly();
+                             }
                              
-        function addRowBank() {
-            var inc = $('.detailbank').length+1;
-            $(".item-row-bank:last").after(
-            '<tr class="item-row-bank">\n\
+                             function addRowBank() {
+                                 var inc = $('.detailbank').length+1;
+                                 $(".item-row-bank:last").after(
+                                 '<tr class="item-row-bank">\n\
                <td class="detailbnk center" style="vertical-align:middle;">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
                     <td>\n\
                         <input type="text"  autocomplete="off" placeholder="BANK"\n\
@@ -388,141 +393,149 @@
                     </td>\n\
                   </tr>\n\
                </tr>');
-            $(".btnDelete").bind("click", Delete);
-            numberOnly();
-        }
-    
-        function acomplete(id, url, trglocal, trgid, trgname){
-            var row = $("#"+id).parents('.item-row');
-            $("#" + id).autocomplete({
-                minLength: 1,
-                source: function(req, add) {
-                    $.ajax({
-                        url: "<?php echo site_url('auto_complete'); ?>/"+url,
-                        dataType: 'json',
-                        type: 'POST',
-                        data: {
-                            param : $("#" + id).val(),
-                            cbid : '<?php echo ses_cabang; ?>'
-                        },
-                        success: function(data) {
-                            add(data.message);
+                            $(".btnDelete").bind("click", Delete);
+                            numberOnly();
                         }
-                    });
-                },
-                create: function () {
-                    $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                        return $('<li></li>')
-                        .append("<strong>" + item.value + "</strong><br>" + item.desc + "")
-                        .appendTo(ul);
-                    };
-                },select: function(event, ui) {
-                    $('#' + trglocal ).val(ui.item.trglocal);
-                    if(trgid != ''){
-                        $('#' + trgid).val(ui.item.trgid);
-                        $('#' + trgname).val(ui.item.trgname);
-                    }
-
-                    if(url == 'auto_coa'){
-                        /* UNIT */
-                        if(ui.item.value == '100601'){
-                              row.find("input[name^=dtrans_nota]").attr('required','required');
-                              row.find("input[name^=dtrans_nota]").attr('required','required');
-                        /* SERVICE */
-                        }else if(ui.item.value == 'xx'){
-                              row.find("input[name^=dtrans_nota]").attr('required','required');
-                              row.find("input[name^=dtrans_nota]").attr('required','required');
-                        }
-                    }
-                    
-                    
-
-                }
-            });
-        }
-        
-        function countTotal(){
-            var total = 0;
-            var price;
-            $("input[name^=dtrans_nominal]").each(function() {
-                price = $(this).val().replace(/,/g, "");
-                total += Number(price);
-            });
-            $("#totalTrans").val(formatCurrency(total));
-        }
-        
-        function countTotalBank(){
-            var total = 0;
-            var price;
-            $("input[name^=dbnk_nominal]").each(function() {
-                price = $(this).val().replace(/,/g, "");
-                total += Number(price);
-            });
-            $("#totalTransBank").val(formatCurrency(total));
-        }
     
-        $(this).ready(function() {
-            $( ".datepicker" ).datepicker({
-                autoclose: true,
-                todayHighlight: true
-            })
-            .next().on(ace.click_event, function(){
-                $(this).prev().focus();
-            });
+                        function acomplete(id, url, trglocal, trgid, trgname){
+                            var row = $("#"+id).parents('.item-row');
+                            $("#" + id).autocomplete({
+                                minLength: 1,
+                                source: function(req, add) {
+                                    $.ajax({
+                                        url: "<?php echo site_url('auto_complete'); ?>/"+url,
+                                        dataType: 'json',
+                                        type: 'POST',
+                                        data: {
+                                            param : $("#" + id).val(),
+                                            coa : row.find("input[name^=dtrans_coa]").val(),
+                                            cbid : '<?php echo ses_cabang; ?>'
+                                        },
+                                        success: function(data) {
+                                            add(data.message);
+                                        }
+                                    });
+                                },
+                                create: function () {
+                                    $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                                        return $('<li></li>')
+                                        .append("<strong>" + item.value + "</strong><br>" + item.desc + "")
+                                        .appendTo(ul);
+                                    };
+                                },select: function(event, ui) {
+                                    $('#' + trglocal ).val(ui.item.trglocal);
+                                    if(trgid != ''){
+                                        $('#' + trgid).val(ui.item.trgid);
+                                        $('#' + trgname).val(ui.item.trgname);
+                                    }
+
+                                    if(url == 'auto_coa'){
+                                        if( ui.item.value == '<?php echo $settingCoa[PIUTANG_UNIT]; ?>'||
+                                            ui.item.value == '<?php echo $settingCoa[PIUTANG_SERVICE]; ?>' ||
+                                            ui.item.value == '<?php echo $settingCoa[PIUTANG_SPART]; ?>'
+                                    ){
+                                            /* PIUTANG */
+                                            row.find("input[name^=dtrans_nota]").addClass('req');
+                                        }else if( ui.item.value == '<?php echo $settingCoa[UANGMUKA_UNIT]; ?>'||
+                                            ui.item.value == '<?php echo $settingCoa[UANGMUKA_SERVICE]; ?>' ||
+                                            ui.item.value == '<?php echo $settingCoa[UANGMUKA_SPART]; ?>'
+                                    ){
+                                            /* UANGMUKA */
+                                            row.find("input[name^=dtrans_pelname]").addClass('req');
+                                        }else if( ui.item.value == '<?php echo $settingCoa[HUTANG_UNIT]; ?>'||
+                                            ui.item.value == '<?php echo $settingCoa[HUTANG_SPART]; ?>' 
+                                    ){
+                                            /* HUTANG */
+                                            row.find("input[name^=dtrans_supnama]").addClass('req');
+                                        }
+                                    }
+                                }
+                            });
+                        }
+        
+                        function countTotal(){
+                            var total = 0;
+                            var price;
+                            $("input[name^=dtrans_nominal]").each(function() {
+                                price = $(this).val().replace(/,/g, "");
+                                total += Number(price);
+                            });
+                            $("#totalTrans").val(formatCurrency(total));
+                        }
+        
+                        function countTotalBank(){
+                            var total = 0;
+                            var price;
+                            $("input[name^=dbnk_nominal]").each(function() {
+                                price = $(this).val().replace(/,/g, "");
+                                total += Number(price);
+                            });
+                            $("#totalTransBank").val(formatCurrency(total));
+                        }
+    
+                        $(this).ready(function() {
+                            $( ".datepicker" ).datepicker({
+                                autoclose: true,
+                                todayHighlight: true,
+                                dateFormat:'dd-mm-yyyy'
+                            })
+                            .next().on(ace.click_event, function(){
+                                $(this).prev().focus();
+                            });
 
 
-            $('#formAdd').submit(function() {
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo site_url('transaksi_finance/saveTrans') ?>",
-                    dataType: "json",
-                    async: false,
-                    data: $(this).serialize(),
-                    success: function(data) {
-                        window.scrollTo(0, 0);
-                        if(data.status == true)
-                        document.formAdd.reset();
-                        $("#result").html(data.msg).show().fadeIn("slow");
-                    }
-                })
-                return false;
-            });
+                            $('#formAdd').submit(function() {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "<?php echo site_url('transaksi_finance/saveTrans') ?>",
+                                    dataType: "json",
+                                    async: false,
+                                    data: $(this).serialize(),
+                                    success: function(data) {
+                                        window.scrollTo(0, 0);
+                                        if(data.status == true)
+                                            document.formAdd.reset();
+                                        $("#result").html(data.msg).show().fadeIn("slow");
+                                    }
+                                })
+                                return false;
+                            });
 
-            $('#formAdd').validate({
-                errorElement: 'div',
-                errorClass: 'help-block',
-                focusInvalid: false,
-                ignore: "",
-                rules: {},
-                messages: {},
-                highlight: function (e) {
-                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-                },
-                success: function (e) {
-                    $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-                    $(e).remove();
-                },
-                errorPlacement: function (error, element) {
-                    if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
-                        var controls = element.closest('div[class*="col-"]');
-                        if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
-                        else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
-                    }
-                    else if(element.is('.chosen-select')) {
-                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
-                    }
-                    else error.insertAfter(element.parent());
-                },
-                submitHandler: function (form) {
-                },
-                invalidHandler: function (form) {
-                }
-            });
+                            $('#formAdd').validate({
+                                errorElement: 'div',
+                                errorClass: 'help-block',
+                                focusInvalid: false,
+                                ignore: "",
+                                rules: {},
+                                messages: {},
+                                highlight: function (e) {
+                                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                                },
+                                success: function (e) {
+                                    $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                                    $(e).remove();
+                                },
+                                errorPlacement: function (error, element) {
+                                    if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                                        var controls = element.closest('div[class*="col-"]');
+                                        if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                                        else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                                    }
+                                    else if(element.is('.chosen-select')) {
+                                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                                    }
+                                    else error.insertAfter(element.parent());
+                                },
+                                submitHandler: function (form) {
+                                },
+                                invalidHandler: function (form) {
+                                }
+                            });
 
-        });
+                        });
 
-        var scripts = [null, null]
-        $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-            //inline scripts related to this page
-        });
+                        var scripts = [null, null]
+                        $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+                            //inline scripts related to this page
+                        });
 </script> 

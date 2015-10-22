@@ -17,6 +17,287 @@ class Master_Finance extends Application {
         echo " ";
     }
 
+    public function jenisCoa() {
+        $this->hakAkses(1120);
+        $this->load->view('dataJenisCoa', $this->data);
+    }
+
+    public function loadJenisCoa() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_finance->getTotalJenisCoa($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_finance->getDataJenisCoa($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                if($row->jeniscoa_kategori == '1'){
+                    $kategori = "AKTIVA LANCAR";
+                }else if($row->jeniscoa_kategori == '2'){
+                    $kategori = "AKTIVA TETAP";
+                }else if($row->jeniscoa_kategori == '3'){
+                    $kategori = "PASIVA";
+                }else if($row->jeniscoa_kategori == '4'){
+                    $kategori = "MODAL";
+                }else if($row->jeniscoa_kategori == '5'){
+                    $kategori = "RUGI LABA";
+                }else{
+                    $kategori = '-';
+                }
+                $del = "hapusData('" . $row->jeniscoaid . "', '" . $row->jeniscoa_deskripsi . "')";
+                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_finance/editJenisCoa?id=' . $row->jeniscoaid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->jeniscoaid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->jeniscoaid,
+                    $row->jeniscoa_deskripsi,
+                    $kategori,
+                    $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    public function addJenisCoa() {
+        $this->hakAkses(1120);
+        $this->load->view('addJenisCoa', $this->data);
+    }
+
+    public function editJenisCoa() {
+        $this->hakAkses(1120);
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] = $this->model_finance->getJenisCoa($id);
+        $this->load->view('editJenisCoa', $this->data);
+    }
+
+    public function getJenisCoa() {
+        $data = $this->input->get('jeniscoaid', TRUE);
+        $result = $this->model_finance->getJenisCoa($data);
+        $responce = array();
+        if (count($result) > 0)
+            $responce = $result;
+        echo json_encode($responce);
+    }
+
+    public function saveJenisCoa() {
+        $desc = strtoupper($this->input->post('jeniscoa_deskripsi', TRUE));
+        $kategori = strtoupper($this->input->post('jeniscoa_kategori', TRUE));
+        if (empty($desc) || empty($kategori)) {
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
+        } else {
+            $save = $this->model_finance->addJenisCoa(
+                    array(
+                        'jeniscoa_deskripsi' => $desc,
+                        'jeniscoa_kategori' => $kategori
+                    ));
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function updateJenisCoa() {
+        $id = $this->input->post('jeniscoaid', TRUE);
+        $desc = strtoupper($this->input->post('jeniscoa_deskripsi', TRUE));
+        $kategori = strtoupper($this->input->post('jeniscoa_kategori', TRUE));
+        if (empty($desc) || empty($kategori)) {
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
+        } else {
+            $save = $this->model_finance->updateJenisCoa(array(
+                'jeniscoa_deskripsi' => $desc,
+                'jeniscoa_kategori' => $kategori
+                ), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function deleteJenisCoa() {
+        $coaid = $this->input->post('id', TRUE);
+        if (empty($coaid)) {
+            $hasil = $this->error('Hapus data gagal');
+        } else {
+            if ($this->model_finance->deleteJenisCoa($coaid)) {
+                $hasil = $this->sukses('Hapus data berhasil');
+            } else {
+                $hasil = $this->error('Hapus data gagal');
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
+    /* SPECIAL COA */
+    
+    public function specialCoa() {
+        $this->hakAkses(1121);
+        $this->load->view('dataSpecialCoa', $this->data);
+    }
+
+    public function loadSpecialCoa() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_finance->getTotalSpecialCoa($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_finance->getDataSpecialCoa($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusData('" . $row->specid . "', '" . $row->spec_deskripsi . "')";
+                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_finance/editSpecialCoa?id=' . $row->specid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $setCoa = '<a href="#master_finance/setSpecialCoa?id=' . $row->specid . '" title="Setting"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->specid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->specid,
+                    $row->spec_deskripsi,
+                    $row->setcoa_kode,
+                    $edit, $setCoa, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    public function addSpecialCoa() {
+        $this->hakAkses(1121);
+        $this->load->view('addSpecialCoa', $this->data);
+    }
+
+    public function editSpecialCoa() {
+        $this->hakAkses(1121);
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] = $this->model_finance->getSpecialCoa($id);
+        $this->load->view('editSpecialCoa', $this->data);
+    }
+    
+    public function setSpecialCoa() {
+        $this->hakAkses(1121);
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] = $this->model_finance->getSpecialCoa($id);
+        $this->load->view('setSpecialCoa', $this->data);
+    }
+
+    public function getSpecialCoa() {
+        $data = $this->input->get('specid', TRUE);
+        $result = $this->model_finance->getSpecialCoa($data);
+        $responce = array();
+        if (count($result) > 0)
+            $responce = $result;
+        echo json_encode($responce);
+    }
+
+    public function saveSpecialCoa() {
+        $desc = strtoupper($this->input->post('spec_deskripsi', TRUE));
+        if (empty($desc)) {
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
+        } else {
+            $save = $this->model_finance->addSpecialCoa(
+                    array(
+                        'spec_deskripsi' => $desc
+                    ));
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function updateSpecialCoa() {
+        $id = $this->input->post('specid', TRUE);
+        $desc = strtoupper($this->input->post('spec_deskripsi', TRUE));
+        if (empty($desc)) {
+            $hasil = array('status' => FALSE, 
+                'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
+        } else {
+            $save = $this->model_finance->updateSpecialCoa(array(
+                'spec_deskripsi' => $desc), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
+    public function saveSetSpecialCoa() {
+        $specid = strtoupper($this->input->post('specid', TRUE));
+        $coa = strtoupper($this->input->post('coa', TRUE));
+        $cbid = ses_cabang;
+        if (empty($specid)||empty($coa)||empty($cbid)) {
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
+        } else {
+            $save = $this->model_finance->setSpecialCoa(
+                    array(
+                        'setcoa_specid' => $specid,
+                        'setcoa_kode' => $coa,
+                        'setcoa_cbid' => $cbid
+                    ));
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function deleteSpecialCoa() {
+        $coaid = $this->input->post('id', TRUE);
+        if (empty($coaid)) {
+            $hasil = $this->error('Hapus data gagal');
+        } else {
+            if ($this->model_finance->deleteSpecialCoa($coaid)) {
+                $hasil = $this->sukses('Hapus data berhasil');
+            } else {
+                $hasil = $this->error('Hapus data gagal');
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
+    /* CHART OF ACCOUNT */
+
     public function coa() {
         $this->hakAkses(1051);
         $this->load->view('dataCoa', $this->data);
@@ -54,7 +335,7 @@ class Master_Finance extends Application {
                 $responce->rows[$i]['cell'] = array(
                     $row->coa_kode,
                     $row->coa_desc,
-                    $row->coa_type,
+                    $row->jeniscoa_deskripsi,
                     $row->coa_level,
                     $edit, $hapus);
                 $i++;
@@ -64,14 +345,15 @@ class Master_Finance extends Application {
 
     public function addCoa() {
         $this->hakAkses(1051);
+        $this->data['jeniscoa'] = $this->model_finance->cListJenisCoa();
         $this->load->view('addCoa', $this->data);
     }
 
     public function editCoa() {
         $this->hakAkses(1051);
-        $id = $this->input->get('id');
-        $data = $this->model_finance->getCoa($id);
-        $this->data['data'] = $data;
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] =  $this->model_finance->getCoa($id);
+        $this->data['jeniscoa'] = $this->model_finance->cListJenisCoa();
         $this->load->view('editCoa', $this->data);
     }
 
@@ -87,26 +369,26 @@ class Master_Finance extends Application {
     public function saveCoa() {
         $kode = strtoupper($this->input->post('coa_kode', TRUE));
         $desc = strtoupper($this->input->post('coa_desc', TRUE));
-        $type = strtoupper($this->input->post('coa_type', TRUE));
+        $type = strtoupper($this->input->post('coa_jenis', TRUE));
         $level = strtoupper($this->input->post('coa_level', TRUE));
         if (empty($kode) || empty($desc) || empty($type) || empty($level)) {
-            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
         } else {
             $save = $this->model_finance->addCoa(
                     array(
                         'coa_kode' => $kode,
                         'coa_desc' => $desc,
-                        'coa_type' => $type,
+                        'coa_jenis' => $type,
                         'coa_level' => $level,
                         'coa_is_rugi_laba' => $this->input->post('rugi_laba'),
                         'coa_is_kas_bank' => $this->input->post('kas_bank'),
                         'coa_is_auto_jurnal' => $this->input->post('auto_jurnal'),
                         'coa_cbid' => ses_cabang
                     ));
-           if ($save['status'] == TRUE) {
+            if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
-                $hasil = array('status' => FALSE, 'msg' => $this->sukses($save['msg']));
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
             }
         }
         echo json_encode($hasil);
@@ -116,15 +398,15 @@ class Master_Finance extends Application {
         $coaid = $this->input->post('coaid', TRUE);
         $kode = strtoupper($this->input->post('coa_kode', TRUE));
         $desc = strtoupper($this->input->post('coa_desc', TRUE));
-        $type = strtoupper($this->input->post('coa_type', TRUE));
+        $type = strtoupper($this->input->post('coa_jenis', TRUE));
         $level = strtoupper($this->input->post('coa_level', TRUE));
         if (empty($kode) || empty($desc) || empty($type) || empty($level)) {
-            $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
         } else {
             $save = $this->model_finance->updateCoa(array(
                 'coa_kode' => $kode,
                 'coa_desc' => $desc,
-                'coa_type' => $type,
+                'coa_jenis' => $type,
                 'coa_is_rugi_laba' => $this->input->post('rugi_laba', TRUE),
                 'coa_is_kas_bank' => $this->input->post('kas_bank', TRUE),
                 'coa_is_auto_jurnal' => $this->input->post('auto_jurnal', TRUE),
@@ -132,7 +414,7 @@ class Master_Finance extends Application {
             if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
             } else {
-                $hasil = array('status' => FALSE, 'msg' => $this->sukses($save['msg']));
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
             }
         }
         echo json_encode($hasil);
@@ -396,13 +678,13 @@ class Master_Finance extends Application {
      * 2015-09-07
      */
 
-    public function tipe_jurnal() {
-        $this->hakAkses(1091);
+    public function tipeJurnal() {
+        $this->hakAkses(1090);
         $this->load->view('dataTipeJurnal', $this->data);
     }
 
     public function addTipeJurnal() {
-        $this->hakAkses(1091);
+        $this->hakAkses(1090);
         $this->load->view('addTipeJurnal', $this->data);
     }
 
@@ -449,7 +731,7 @@ class Master_Finance extends Application {
     }
 
     public function editTipeJurnal() {
-        $this->hakAkses(1091);
+        $this->hakAkses(1090);
         $id = $this->input->get('id');
         $data = $this->model_finance->getTipeJurnal($id);
         $this->data['data'] = $data;
@@ -457,7 +739,7 @@ class Master_Finance extends Application {
     }
 
     public function setTipeJurnal() {
-        $this->hakAkses(1091);
+        $this->hakAkses(1090);
         $id = array(
             'id' => $this->input->get('id'),
             'cbid' => ses_cabang

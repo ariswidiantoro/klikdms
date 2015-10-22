@@ -948,7 +948,7 @@ class Model_Admin extends CI_Model {
             return true;
         }
     }
-
+    
 }
 
 ?>
