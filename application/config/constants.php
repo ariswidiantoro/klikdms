@@ -46,6 +46,7 @@ define('JAB_MKT_SPVSALES', 'JAB007');
 define('JAB_MKT_GMOSALES', 'JAB007');
 
 // NUMERATOR KODE
+define('NUM_CAR', 'IV');
 define('NUM_INVOICE', 'IV');
 define('NUM_TERIMA_BARANG', 'TB');
 define('NUM_RETUR_JUAL_SPAREPART', 'RJ');

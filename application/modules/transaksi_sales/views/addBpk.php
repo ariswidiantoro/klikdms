@@ -1,4 +1,7 @@
 <div id="result"></div>
+<?php
+echo $this->session->flashdata('msg');
+?>
 <div class="page-header">
     <h1>
         Tambah Penerimaan Kendaraan
@@ -10,10 +13,10 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Jenis Penerimaan</label>
         <div class="col-sm-3">
             <select name="bpk_jenis" id="bpk_jenis" required="required" onchange="changeType();" class="form-control input-medium req"  >
-                <option value="1">ATPM</option>
-                <option value="2">ANTAR CABANG</option>
-                <option value="3">ANTAR GROUP</option>
-                <option value="4">PIHAK LAIN</option>
+                <option value="ATPM">ATPM</option>
+                <option value="ANTAR CABANG">ANTAR CABANG</option>
+                <option value="ANTAR GROUP">ANTAR GROUP</option>
+                <option value="PIHAK LAIN">PIHAK LAIN</option>
             </select> 
         </div>
     </div>
@@ -24,32 +27,32 @@
                    name="bpk_nomer" id="bpk_nomer"  class="form-control input-xlarge upper req" />
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tanggal</label>
-        <div class="col-sm-3">
-            <div class="input-group">
-                <input type="text" id="bpk_tgl" name="bpk_tgl" readonly="readonly" value="<?php echo date('d-m-Y'); ?>" 
-                       class="form-control datepicker input-small" data-date-format="dd-mm-yyyy" />
-                <span class="input-group-addon">
-                    <i class="fa fa-calendar bigger-110"></i>
-                </span>
-                </span>
+    <!--    <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tanggal</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input type="text" id="bpk_tgl" name="bpk_tgl" readonly="readonly" value="<?php echo date('d-m-Y'); ?>" 
+                           class="form-control datepicker input-small" data-date-format="dd-mm-yyyy" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                    </span>
+                </div>
             </div>
-        </div>
-    </div>
+        </div>-->
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">No. Rangka</label>
         <div class="col-sm-3">
             <input type="text" required="required" 
-                   name="bpk_norangka" id="bpk_norangka"  class="form-control input-xlarge datepicker upper req" />
-            <input type="hidden" name="bpk_norangka" id="bpk_norangka" />
+                   name="bpk_norangka" id="bpk_norangka"  class="form-control input-xlarge upper req" />
+            <input type="hidden" name="bpk_mscid" id="bpk_mscid" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">No. Mesin</label>
         <div class="col-sm-3">
             <input type="text" required="required" readonly ="readonly"
-                   name="bpk_norangka" id="bpk_norangka"  class="form-control input-xlarge datepicker upper req" />
+                   name="bpk_norangka" id="bpk_nomesin"  class="form-control input-xlarge datepicker upper req" />
         </div>
     </div>
     <div class="form-group">
@@ -64,13 +67,6 @@
         <div class="col-sm-3">
             <input type="text" required="required" readonly ="readonly"
                    name="bpk_type" id="bpk_type"  class="form-control input-xlarge datepicker upper req" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Warna Kendaraan</label>
-        <div class="col-sm-3">
-            <input type="text" required="required" readonly ="readonly"
-                   name="bpk_warna" id="bpk_warna"  class="form-control input-xlarge datepicker upper req" />
         </div>
     </div>
     <div class="form-group">
@@ -158,7 +154,7 @@
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Cabang</label>
             <div class="col-sm-3">
                 <input type="text" maxlength="8"
-                       name="bpk_cabnama" id="bpk_cabnama"  class="form-control input-xlarge upper req" />
+                       name="bpk_cabnama" id="bpk_cabnama"  class="form-control input-xlarge upper" />
             </div>
         </div>
         <div class="form-group">
@@ -179,8 +175,8 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">No. Delivery Order</label>
         <div class="col-sm-3">
-            <input type="text"  maxlength="50" name="bpk_nodo" id="bpk_nodo" required="required"  placeholder ="NO. DO"
-                   class="form-control input-xlarge req upper" />
+            <input type="text"  maxlength="50" name="bpk_nodo" id="bpk_nodo"  placeholder ="NO. DO"
+                   class="form-control input-xlarge upper" />
         </div>
     </div>
     <div class="form-group">
@@ -188,7 +184,7 @@
         <div class="col-sm-3">
             <div class="input-group">
                 <input type="text" id="bpk_tgldo" name="bpk_tgldo" required="required" readonly="readonly" placeholder ="TGL. DO"
-                       class="form-control datepicker input-small req" data-date-format="dd-mm-yyyy" />
+                       class="form-control datepicker input-small" data-date-format="dd-mm-yyyy" />
                 <span class="input-group-addon">
                     <i class="fa fa-calendar bigger-110"></i>
                 </span>
@@ -199,8 +195,8 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">No. Purchase Order</label>
         <div class="col-sm-3">
-            <input type="text" required="required" maxlength="50" placeholder ="NO. PO" 
-                   name="bpk_nopo" id="bpk_nopo"  class="form-control input-xlarge req upper" />
+            <input type="text" maxlength="50" placeholder ="NO. PO" 
+                   name="bpk_nopo" id="bpk_nopo"  class="form-control input-xlarge upper" />
         </div>
     </div>
     <div class="form-group">
@@ -208,11 +204,50 @@
         <div class="col-sm-3">
             <div class="input-group">
                 <input type="text" id="bpk_tglpo" name="bpk_tglpo" required="required" readonly="readonly" placeholder ="TGL. PO"
-                       class="form-control datepicker input-small req" data-date-format="dd-mm-yyyy" />
+                       class="form-control datepicker input-small" data-date-format="dd-mm-yyyy" />
                 <span class="input-group-addon">
                     <i class="fa fa-calendar bigger-110"></i>
                 </span>
                 </span>
+            </div>
+        </div>
+    </div>
+    <div class="page-header">
+        <h1>
+            <small>
+                HPP
+            </small>
+        </h1>
+    </div>
+    <div id="hpp" style="display: block;"> 
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Hpp</label>
+            <div class="col-sm-3">
+                <input type="text" name="bpk_hpp" style="text-align: right;" id="bpk_hpp" onchange="$('#'+this.id).val(formatDefault(this.value));" value="0" class="form-control input-xlarge number req" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Facility Fund</label>
+            <div class="col-sm-3">
+                <input type="text" name="bpk_ff" style="text-align: right;" id="bpk_ff" onchange="$('#'+this.id).val(formatDefault(this.value));" value="0" class="form-control input-xlarge number req" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Deposit Promosi</label>
+            <div class="col-sm-3">
+                <input type="text" name="bpk_deposit_promosi" style="text-align: right;" onchange="$('#'+this.id).val(formatDefault(this.value));" id="bpk_deposit_promosi" value="0" class="form-control input-xlarge number req" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">PPn BM</label>
+            <div class="col-sm-3">
+                <input type="text" name="bpk_ppnbm" style="text-align: right;" id="bpk_ppnbm" onchange="$('#'+this.id).val(formatDefault(this.value));" value="0" class="form-control input-xlarge number req" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Pph 22</label>
+            <div class="col-sm-3">
+                <input type="text"  name="bpk_pph22" style="text-align: right;" id="bpk_pph22" onchange="$('#'+this.id).val(formatDefault(this.value));" value="0" class="form-control input-xlarge number req" />
             </div>
         </div>
     </div>
@@ -237,6 +272,7 @@
 </form>
 
 <script type="text/javascript">
+    numberOnly();
     function redirect(data){
         bootbox.confirm("Anda yakin kembali ?", function(result) {
             if(result) {
@@ -271,12 +307,12 @@
     
     $(this).ready(function() {
         $( ".datepicker" ).datepicker({
-                autoclose: true,
-                todayHighlight: true
-            })
-            .next().on(ace.click_event, function(){
-                $(this).prev().focus();
-            });
+            autoclose: true,
+            todayHighlight: true
+        })
+        .next().on(ace.click_event, function(){
+            $(this).prev().focus();
+        });
         
         $('#formAdd').validate({
             errorElement: 'div',
@@ -318,14 +354,98 @@
                 data: $(this).serialize(),
                 success: function(data) {
                     window.scrollTo(0, 0);
-                    if(data.status == true)
-                        document.formAdd.reset();
-                    $("#result").html(data.msg).show().fadeIn("slow");
+                    if(data.result){
+                        var params  = 'width='+screen.width;
+                        params += ', height='+screen.height;
+                        params += ', fullscreen=yes,scrollbars=yes';
+                        window.open("<?php echo site_url("transaksi_sales/printBpk"); ?>/"+data.kode,'_blank', params);
+                        $('.page-content-area').ace_ajax('loadUrl', "#transaksi_sales/addBpk", false);
+                    }
+                    else
+                        $("#result").html(data.msg).show().fadeIn("slow");
                 }
             })
             return false;
         });
 
+    });
+    
+    $(this).ready(function() {
+        
+        
+        $("#bpk_supnama").autocomplete({
+            minLength: 1,
+            source: function(req, add) {
+                $.ajax({
+                    url: '<?php echo site_url('master_sparepart/jsonSupplier'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {param : $("#bpk_supnama").val()},
+                    success: function(data) {
+                        add(data.message);
+                    }
+                });
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                    .append("<a><strong>" + item.value + "</strong><br>" + item.desc + "</a>")
+                    .appendTo(ul);
+                };
+            },
+            select: function(event, ui) {
+                $("#bpk_supid").val(ui.item.supid);
+                $("#bpk_supaddress").val(ui.item.desc);
+            }
+        })
+        
+        $("#bpk_norangka").autocomplete({
+            minLength: 1,
+            source: function(req, add) {
+                $.ajax({
+                    url: '<?php echo site_url('transaksi_sales/autoRangkaUnit'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {param : $("#bpk_norangka").val()},
+                    success: function(data) {
+                        add(data.message);
+                    }
+                });
+            },
+            select: function(event, ui) {
+                $("#prosid").val(ui.item.prosid);
+                $('.page-content-area').ace_ajax('startLoading');
+                $.ajax({
+                    url: '<?php echo site_url('transaksi_sales/jsonDataStock'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {
+                        param : ui.item.value
+                    },
+                    success: function(data) {
+                        if (data == null) {
+                            $("#bpk_mscid").val('');
+                            $("#bpk_nomesin").val('');
+                            $("#bpk_merk").val('');
+                            $("#bpk_type").val('');
+                            $("#bpk_kondisi").val('');
+                            $("#bpk_vinlot").val('');
+                            $("#bpk_bodyseri").val('');
+                        }else{
+                            $("#bpk_mscid").val(data['mscid']);
+                            $("#bpk_nomesin").val(data['msc_nomesin']);
+                            $("#bpk_merk").val(data['merk_deskripsi']);
+                            $("#bpk_type").val(data['cty_deskripsi']);
+                            $("#bpk_kondisi").val(data['msc_kondisi']);
+                            $("#bpk_vinlot").val(data['msc_vinlot']);
+                            $("#bpk_bodyseri").val(data['msc_bodyseri']);
+                        }
+                        $('.page-content-area').ace_ajax('stopLoading', true);
+                    }
+                });
+            }
+        })
+        
     });
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {

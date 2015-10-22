@@ -17,6 +17,66 @@
         background-color: yellow;
     } 
 </style>
+<script type="text/javascript">
+    function addRow(inc) {
+        $(".item-row:last").after(
+        '<tr class="item-row">\n\
+                    <td class="nomororder">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
+                         <td>\n\
+                             <span id="kodeBrg' + inc + '"></span>\n\
+                            <input type="hidden" style="width:90%" id="dsupp_inve_kode' + inc + '" name="dsupp_inve_kode[]" />\n\
+                            <input type="hidden" style="width:90%" id="dsupp_inveid' + inc + '" name="dsupp_inveid[]" />\n\
+                            <input type="hidden" style="width:90%" id="dsupp_hpp' + inc + '" name="dsupp_hpp[]" />\n\
+                         </td>\n\
+                         <td>\n\
+                                <span id="inve_nama' + inc + '"></span>\n\
+                        </td>\n\
+                        <td>\n\
+                            <input type="text" onchange="cekQty('+inc+')" autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dsupp_qty' + inc + '" name="dsupp_qty[]" />\n\
+                            <input type="hidden" id="dsupp_qty_min' + inc + '" name="dsupp_qty_min[]" />\n\
+                         </td>\n\
+                         <td>\n\
+                             <input type="text" autocomplete="off" onchange="$(\'#\'+this.id).val(formatDefault(this.value));" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dsupp_harga' + inc + '" name="dsupp_harga[]" />\n\
+                         </td>\n\
+                         <td>\n\
+                             <input type="text"  autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dsupp_diskon' + inc + '" name="dsupp_diskon[]" />\n\
+                         </td>\n\
+                         <td>\n\
+                             <input type="text" class="subtotal ace col-xs-10 col-sm-10" readonly="readonly" style="width:100%;text-align: right" id="dsupp_subtotal' + inc + '" name="dsupp_subtotal[]" />\n\
+                         </td>\n\
+                         <td style="text-align: center">\n\
+                             <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
+                         </td>\n\
+                       </tr>\n\
+                    </tr>');
+                                 $(".btnDelete").bind("click", Delete);
+                                 numberOnly();
+                             }
+                             function addRowOrder() {
+                                 var inc = $('.nomorso').length+1;
+                                 $(".item-row-so:last").after(
+                                 '<tr class="item-row-so">\n\
+               <td class="nomorso"  style="text-align: center;">' + inc +'</td>\n\
+                    <td>\n\
+                        <input type="text" id="so_deskripsi' + inc + '"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="so_deskripsi[]" />\n\
+                    </td>\n\
+                    <td>\n\
+                           <input type="text" id="so_hpp' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalHppSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="so_hpp[]" />\n\
+                   </td>\n\
+                    <td>\n\
+                           <input type="text" id="so_harga' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="so_harga[]" />\n\
+                   </td>\n\
+                   <td class="center">\n\
+                       <a class="green btnAdd"  onclick="addRowOrder()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
+                    </td>\n\
+                    <td class="center">\n\
+                        <a class="red btnDeleteOrder" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
+                  </tr>\n\
+               </tr>');
+                            $(".btnDeleteOrder").bind("click", DeleteOrder);
+                            numberOnly();
+                        }
+</script>
 <form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/saveSupplySlip'); ?>" method="post" name="form">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" required="required" for="form-field-1">Kategori</label>
@@ -332,30 +392,30 @@
         $('#button').removeAttr("disabled", true);
     })
     
-    $("#wo").change(function(e) {
-        if ($("#wo").val() != '') {
-            $.ajax({
-                url: '<?php echo site_url('transaksi_service/jsonWo'); ?>',
-                dataType: 'json',
-                type: 'POST',
-                data: {param : $("#wo").val()},
-                success: function(data) {
-                    if (data.response) {
-                        document.getElementById("sukses").style.display = '';
-                        document.getElementById("error").style.display = 'none';
-                        $("#spp_pelid").val(data['pelid']);
-                        $("#spp_woid").val(data['woid']);
-                        $("#pel_nama").val(data['pel_nama']);
-                    } else {
-                        $("#spp_pelid").val("");
-                        $("#pel_nama").val("");
-                        document.getElementById("sukses").style.display = 'none';
-                        document.getElementById("error").style.display = '';
-                    }
-                }
-            });
-        }
-    })
+    //    $("#wo").change(function(e) {
+    //        if ($("#wo").val() != '') {
+    //            $.ajax({
+    //                url: '<?php echo site_url('transaksi_service/jsonWo'); ?>',
+    //                dataType: 'json',
+    //                type: 'POST',
+    //                data: {param : $("#wo").val()},
+    //                success: function(data) {
+    //                    if (data.response) {
+    //                        document.getElementById("sukses").style.display = '';
+    //                        document.getElementById("error").style.display = 'none';
+    //                        $("#spp_pelid").val(data['pelid']);
+    //                        $("#spp_woid").val(data['woid']);
+    //                        $("#pel_nama").val(data['pel_nama']);
+    //                    } else {
+    //                        $("#spp_pelid").val("");
+    //                        $("#pel_nama").val("");
+    //                        document.getElementById("sukses").style.display = 'none';
+    //                        document.getElementById("error").style.display = '';
+    //                    }
+    //                }
+    //            });
+    //        }
+    //    })
     
     function cekAutoComplete()
     {
@@ -430,7 +490,7 @@
                         param : $("#wo").val()
                     },
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },
@@ -441,7 +501,26 @@
                     .appendTo(ul);
                 };
             },select: function(event, ui) {
-                //                getDataWo(ui.item.value, ui.item.type);
+                $.ajax({
+                    url: '<?php echo site_url('transaksi_service/jsonWo'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {param : ui.item.value},
+                    success: function(data) {
+                        if (data.response) {
+                            document.getElementById("sukses").style.display = '';
+                            document.getElementById("error").style.display = 'none';
+                            $("#spp_pelid").val(data['pelid']);
+                            $("#spp_woid").val(data['woid']);
+                            $("#pel_nama").val(data['pel_nama']);
+                        } else {
+                            $("#spp_pelid").val("");
+                            $("#pel_nama").val("");
+                            document.getElementById("sukses").style.display = 'none';
+                            document.getElementById("error").style.display = '';
+                        }
+                    }
+                });
             }
         });
     });
@@ -449,7 +528,6 @@
     //    function simpan()
     //    {
     $(this).ready(function() {
-        
         $("#pel_nama").autocomplete({
             minLength: 1,
             source: function(req, add) {
@@ -474,15 +552,7 @@
                 $("#spp_pelid").val(ui.item.pelid);
             }
         })
-        
     });
-        
-       
-        
-       
-
-   
-    
     var inc = 0;
     function Delete() {
         var par = $(this).parent().parent(); //tr
@@ -647,64 +717,7 @@
         
     }
     
-    function addRow(inc) {
-        $(".item-row:last").after(
-        '<tr class="item-row">\n\
-                    <td class="nomororder">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
-                         <td>\n\
-                             <span id="kodeBrg' + inc + '"></span>\n\
-                            <input type="hidden" style="width:90%" id="dsupp_inve_kode' + inc + '" name="dsupp_inve_kode[]" />\n\
-                            <input type="hidden" style="width:90%" id="dsupp_inveid' + inc + '" name="dsupp_inveid[]" />\n\
-                            <input type="hidden" style="width:90%" id="dsupp_hpp' + inc + '" name="dsupp_hpp[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                                <span id="inve_nama' + inc + '"></span>\n\
-                        </td>\n\
-                        <td>\n\
-                            <input type="text" onchange="cekQty('+inc+')" autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dsupp_qty' + inc + '" name="dsupp_qty[]" />\n\
-                            <input type="hidden" id="dsupp_qty_min' + inc + '" name="dsupp_qty_min[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                             <input type="text" autocomplete="off" onchange="$(\'#\'+this.id).val(formatDefault(this.value));" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-3" style="width:100%;text-align: right" id="dsupp_harga' + inc + '" name="dsupp_harga[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                             <input type="text"  autocomplete="off" onkeyup="subTotal('+inc+')" class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right" id="dsupp_diskon' + inc + '" name="dsupp_diskon[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                             <input type="text" class="subtotal ace col-xs-10 col-sm-10" readonly="readonly" style="width:100%;text-align: right" id="dsupp_subtotal' + inc + '" name="dsupp_subtotal[]" />\n\
-                         </td>\n\
-                         <td style="text-align: center">\n\
-                             <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
-                         </td>\n\
-                       </tr>\n\
-                    </tr>');
-                                 $(".btnDelete").bind("click", Delete);
-                                 numberOnly();
-                             }
-                             function addRowOrder() {
-                                 var inc = $('.nomorso').length+1;
-                                 $(".item-row-so:last").after(
-                                 '<tr class="item-row-so">\n\
-               <td class="nomorso"  style="text-align: center;">' + inc +'</td>\n\
-                    <td>\n\
-                        <input type="text" id="so_deskripsi' + inc + '"  autocomplete="off"  class="upper ace col-xs-10 col-sm-10" style="width:100%;"  name="so_deskripsi[]" />\n\
-                    </td>\n\
-                    <td>\n\
-                           <input type="text" id="so_hpp' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalHppSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="so_hpp[]" />\n\
-                   </td>\n\
-                    <td>\n\
-                           <input type="text" id="so_harga' + inc + '"  onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalSo()" autocomplete="off"  class="number ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  name="so_harga[]" />\n\
-                   </td>\n\
-                   <td class="center">\n\
-                       <a class="green btnAdd"  onclick="addRowOrder()" href="javascript:;"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>\n\
-                    </td>\n\
-                    <td class="center">\n\
-                        <a class="red btnDeleteOrder" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
-                  </tr>\n\
-               </tr>');
-                            $(".btnDeleteOrder").bind("click", DeleteOrder);
-                            numberOnly();
-                        }
+   
 
     
 </script> 

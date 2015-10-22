@@ -389,7 +389,7 @@ class Master_Sparepart extends Application {
                 $data['message'][] = array('value' => $row['sup_nama'], 'supid' => $row['supid'], 'desc' => $row['sup_alamat']);
             }
         } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada", 'desc' => '');
         }
         echo json_encode($data);
     }

@@ -367,9 +367,9 @@ class Model_Service extends CI_Model {
 
     function saveKendaraan($data) {
         $this->db->trans_begin();
-        $tahun = substr(date('Y'), 2, 2);
-        $id = sprintf("%08s", $this->getCounter("CA" . $tahun));
-        $data['mscid'] = "CA" . $tahun . $id;
+        $tahun = date('y');
+        $id = sprintf("%08s", $this->getCounter(NUM_CAR. $tahun));
+        $data['mscid'] = NUM_CAR . $tahun . $id;
         $this->db->INSERT('ms_car', $data);
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();

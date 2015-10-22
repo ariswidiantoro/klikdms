@@ -7,12 +7,12 @@ if (!defined('BASEPATH'))
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });
-    function hapusData(id, kode) {
-        bootbox.confirm("Yakin Hapus Data "+kode+" ?", function(result) {
+    function hapusKontrak(id) {
+        bootbox.confirm("Yakin Hapus Data "+id+" ?", function(result) {
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('master_sales/deleteSegment'); ?>',
+                    url: '<?php echo site_url('master_sales/deleteKontrak'); ?>',
                     dataType: "json",
                     data: {
                         id: id

@@ -91,6 +91,7 @@ class Welcome extends Application {
                 $this->session->set_userdata('alamat', $data_user['cb_alamat']);
                 $this->session->set_userdata('cb_nama', $cbg['cb_nama']);
                 $this->session->set_userdata('phone', $cbg['cb_telpon']);
+                $this->session->set_userdata('icon', $cbg['cb_icon']);
                 $this->session->set_userdata('npwp', $cbg['cb_npwp']);
                 $this->session->set_userdata('kota', $cbg['kota_deskripsi']);
                 $this->session->set_userdata('krid', $data_user['krid']);

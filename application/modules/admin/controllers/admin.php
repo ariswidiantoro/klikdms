@@ -457,6 +457,13 @@ class Admin extends Application {
     public function saveCabang() {
         $this->form_validation->set_rules('cb_nama', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
+
+            $icon = '';
+            if (!empty($_FILES["cb_icon"]["name"])) {
+                $icon = 'file_' . rand(0, 100000) . '.' . end(explode(".", $_FILES["cb_icon"]["name"]));
+                $tmp_lock = $_FILES["cb_icon"]["tmp_name"];
+                move_uploaded_file($tmp_lock, 'media/images/' . $icon);
+            }
             $data = array(
                 'cb_nama' => $this->input->post('cb_nama'),
                 'cbid' => $this->input->post('cbid'),
@@ -465,6 +472,7 @@ class Admin extends Application {
                 'cb_fax' => $this->input->post('cb_fax'),
                 'cb_npwp' => $this->input->post('cb_npwp'),
                 'cb_email' => $this->input->post('cb_email'),
+                'cb_icon' => $icon,
                 'cb_kotaid' => $this->input->post('cb_kotaid'),
                 'cb_alamat' => $this->input->post('cb_alamat')
             );
@@ -951,6 +959,7 @@ class Admin extends Application {
     public function updateCabang() {
         $this->form_validation->set_rules('cb_nama', '<b>Fx</b>', 'xss_clean');
         if ($this->form_validation->run() == TRUE) {
+//            log_message('error', 'MASUKKKK ATAS');
             $data = array(
                 'cb_nama' => $this->input->post('cb_nama'),
                 'cbid' => $this->input->post('cbid'),
@@ -962,6 +971,13 @@ class Admin extends Application {
                 'cb_kotaid' => $this->input->post('cb_kotaid'),
                 'cb_alamat' => $this->input->post('cb_alamat')
             );
+            if (!empty($_FILES["cb_icon"]["name"])) {
+//                log_message('error', 'MASUKKKK');
+                $icon = 'file_' . rand(0, 100000) . '.' . end(explode(".", $_FILES["cb_icon"]["name"]));
+                $tmp_lock = $_FILES["cb_icon"]["tmp_name"];
+                move_uploaded_file($tmp_lock, 'media/images/' . $icon);
+                $data['cb_icon'] = $icon;
+            }
             $hasil = $this->model_admin->updateCabang($data);
             if ($hasil) {
                 $hasil = $this->sukses("Berhasil mengupdate cabang");

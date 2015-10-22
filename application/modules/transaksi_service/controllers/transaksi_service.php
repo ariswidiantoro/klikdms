@@ -21,14 +21,12 @@ class Transaksi_Service extends Application {
 
     function jsonWoBelumInvoiceAuto() {
         $wo = $this->input->post('param');
-        $query = $this->model_trservice->getWoBelumInvoiceAutoComplete(strtoupper($wo));
-        if (!empty($query)) {
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array('value' => $row['wo_nomer'], 'desc' => $row['msc_nopol'], 'type' => $row['wo_type']);
-            }
-        } else {
-            $data['message'][] = array('value' => 'Wo Tidak Ditemukan', 'desc' => "");
+        $data = $this->model_trservice->getWoBelumInvoiceAutoComplete(strtoupper($wo));
+        if ($data == null) {
+            $data[] = array(
+                'value' => 'Data Tidak Ditemukan',
+                'desc' => '',
+            );
         }
         echo json_encode($data);
     }
@@ -307,11 +305,15 @@ class Transaksi_Service extends Application {
         $this->data['so'] = $this->model_trservice->getSoWorkOrder($kode);
         $this->load->view('printWo', $this->data);
     }
+
     function printInvoice($invid) {
-        $this->data['faktur'] = $this->model_trservice->getFakturService($invid);
+        $data = $this->model_trservice->getFakturService($invid);
+        $this->data['data'] = $data;
         $this->data['jasa'] = $this->model_trservice->getJasaWorkOrder($kode);
         $this->data['sp'] = $this->model_trservice->getSparepartWorkOrder($kode);
         $this->data['so'] = $this->model_trservice->getSoWorkOrder($kode);
+        $this->data['sa'] = $this->model_admin->getKaryawanById($data['wo_sa']);
+        $this->data['fc'] = $this->model_admin->getKaryawanById($data['inv_fchecker']);
         $this->load->view('printInvoice', $this->data);
     }
 

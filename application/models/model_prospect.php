@@ -189,6 +189,7 @@ class Model_Prospect extends CI_Model {
                 pros_bisnis,
                 kr_nama,
                 kota_deskripsi,
+                kotaid,
                 kota_propid,
                 prop_deskripsi,
                 area_deskripsi,
@@ -358,10 +359,10 @@ class Model_Prospect extends CI_Model {
     public function getFptById($fptid) {
         $query = $this->db->query("
             SELECT fpt_print,prosid, pros_nama, pros_alamat, fptid,kr_nama,fpt_diskon,
-            merk_deskripsi,fpt_hargako,fpt_bbn,warna_deskripsi,fpt_komisi,fpt_penerima_komisi,
+            merk_deskripsi,fpt_hargako,fpt_bbn,warna_deskripsi,fpt_accesories,fpt_kondisi,fpt_komisi,fpt_penerima_komisi,
             fpt_asuransi,fpt_administrasi,fpt_qty,fpt_total,leas_nama,fpt_leasid,fpt_note, warnaid, fpt_merkid, fpt_ctyid,
             fpt_cashback,fpt_uangmuka, fpt_kode, cty_deskripsi, fpt_tgl, fpt_modelid,
-            pros_hp, fpt_pay_method,fpt_jangka,fpt_karoseri, fpt_segid
+            pros_hp,fpt_pay_method,fpt_jangka,fpt_karoseri, fpt_segid
             FROM pen_fpt 
             LEFT JOIN pros_data ON prosid = fpt_prosid 
             LEFT JOIN ms_karyawan ON krid = pros_salesman 

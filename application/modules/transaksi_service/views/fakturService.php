@@ -57,7 +57,7 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor WO</label>
         <div class="col-sm-8">
             <div class='input-group col-xs-10 col-sm-10'>
-                <input type="text" required="required" onchange="//getDataWo($(this).val())" name="wo" id="wo" class="upper ace col-xs-10 col-sm-3 req" />
+                <input type="text" required="required" onchange="//getDataWo($(this).val())" name="wo" id="wo" class="upper ace col-xs-10 col-sm-4 req" />
                 <input type="hidden" name="inv_woid" id="inv_woid"/>
                 <input type="hidden" name="inv_inextern" id="inv_inextern"/>
                 <input type="hidden"  id="wo_type" name="wo_type"/>
@@ -374,7 +374,7 @@
                         param : $("#wo").val()
                     },
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },
@@ -477,6 +477,8 @@
             success: function(data) {
                 if (data['response']) {
                     if (data['clo_status'] == 0) {
+                        $('.page-content-area').ace_ajax('stopLoading', true);
+                        $('.page-content-area').ace_ajax('loadUrl', "#transaksi_service/fakturService", false);
                         bootbox.dialog({
                             message: "<span class='bigger-110'>Silahkan Clock On Mekanik</span>",
                             buttons: 			
@@ -488,12 +490,11 @@
                                 }
                             }
                         });
-                        $("#msc_nopol").val("");
-                        $("#wo_km").val(0);
-                        $("#pel_nama").val("");
-                        $("#inv_woid").val("");
-                        document.form.reset();
-                        clearForm();
+                        //                        $("#msc_nopol").val("");
+                        //                        $("#wo_km").val(0);
+                        //                        $("#pel_nama").val("");
+                        //                        $("#inv_woid").val("");
+                      
                         return false;
                     }else if (data['clo_status'] == 1) {
                         bootbox.dialog({
@@ -507,12 +508,8 @@
                                 }
                             }
                         });
-                        $("#msc_nopol").val("");
-                        $("#wo_km").val(0);
-                        $("#pel_nama").val("");
-                        $("#inv_woid").val("");
-                        document.form.reset();
-                        clearForm();
+                        $('.page-content-area').ace_ajax('stopLoading', true);
+                        $('.page-content-area').ace_ajax('loadUrl', "#transaksi_service/fakturService", false);
                         return false;
                     }else if (data['clo_status'] == 2) {
                         bootbox.dialog({
@@ -526,12 +523,8 @@
                                 }
                             }
                         });
-                        $("#msc_nopol").val("");
-                        $("#wo_km").val(0);
-                        $("#pel_nama").val("");
-                        $("#inv_woid").val("");
-                        document.form.reset();
-                        clearForm();
+                        $('.page-content-area').ace_ajax('stopLoading', true);
+                        $('.page-content-area').ace_ajax('loadUrl', "#transaksi_service/fakturService", false);
                         return false;
                     }
                     $("#inv_woid").val(data['woid']);

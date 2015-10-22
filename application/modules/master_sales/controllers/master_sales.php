@@ -36,6 +36,28 @@ class Master_Sales extends Application {
         echo json_encode($this->model_sales->getWarnaByModel($modelid));
     }
 
+    function jsonNamaProspek() {
+        $nama = $this->input->post('param');
+        $cbid = ses_cabang;
+        $data['response'] = 'false';
+        $query = $this->model_sales->getProspekByNama($nama, $cbid);
+        if (!empty($query)) {
+            $data['response'] = 'true';
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array('value' => $row['pros_nama'], 'prosid' => $row['prosid'], 'desc' => $row['pros_alamat']);
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ditemukan", 'desc' => '');
+        }
+        echo json_encode($data);
+    }
+
+    function getDataProspek() {
+        $this->load->model('model_prospect');
+        echo json_encode($this->model_prospect->getProspect($this->input->post('param')));
+    }
+
     public function jsonKota() {
         $propid = $this->input->post('propid');
         echo json_encode($this->model_sales->getKotaByPropinsi($propid));
@@ -50,8 +72,10 @@ class Master_Sales extends Application {
         $this->hakAkses(93);
         $this->load->view('noKontrak', $this->data);
     }
+
     public function addNoKontrak() {
         $this->hakAkses(93);
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
         $this->load->view('addNoKontrak', $this->data);
     }
 
@@ -128,7 +152,7 @@ class Master_Sales extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $hapus = '<a href="javascript:void(0);" onclick="hapusKontrak(\"' . $row->kon_nomer . '\")" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $hapus = '<a href="javascript:void(0);" onclick="hapusKontrak(\'' . $row->kon_nomer . '\')" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 $edit = '<a href="#master_sales/editKontrak?id=' . $row->kon_nomer . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->kon_nomer;
                 $responce->rows[$i]['cell'] = array(
@@ -289,6 +313,49 @@ class Master_Sales extends Application {
         echo json_encode($hasil);
     }
 
+    function saveNoKontrak() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('pel_nama', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $tgl = $this->input->post('pel_tgl_lahir');
+            if (empty($tgl)) {
+                $tgl = defaultTgl();
+            }
+            $data = array(
+                'pel_cbid' => ses_cabang,
+                'pel_prosid' => strtoupper($this->input->post('prosid')),
+                'pel_nama' => strtoupper($this->input->post('pel_nama')),
+                'pel_alamat' => strtoupper($this->input->post('pel_alamat')),
+                'pel_gender' => $this->input->post('pel_gender'),
+                'pel_kotaid' => $this->input->post('pel_kotaid'),
+                'pel_type' => $this->input->post('pel_type'),
+                'pel_alamat_surat' => $this->input->post('pel_alamat_surat'),
+                'pel_hp' => $this->input->post('pel_hp'),
+                'pel_nomor_id' => $this->input->post('pel_nomor_id'),
+                'pel_telpon' => $this->input->post('pel_telpon'),
+                'pel_fax' => $this->input->post('pel_fax'),
+                'pel_tempat_lahir' => strtoupper($this->input->post('pel_tempat_lahir')),
+                'pel_tgl_lahir' => dateToIndo($tgl),
+                'pel_email' => $this->input->post('pel_email'),
+                'pel_agama' => $this->input->post('pel_agama')
+            );
+
+            $kontrak = $this->input->post('kon_nomer');
+            $hasil = $this->model_sales->saveNoKontrak($data, $kontrak);
+            $retur = array();
+            if ($hasil) {
+                $retur['result'] = true;
+                $this->session->set_flashdata('msg', $this->sukses('Berhasil menambah agenda'));
+                $retur['msg'] = $this->sukses("Berhasil menyimpan kontrak");
+            } else {
+                $retur['result'] = false;
+                $this->session->set_flashdata('msg', $this->error('Gagal menambah agenda'));
+                $retur['msg'] = $this->error("Gagal menyimpan kontrak");
+            }
+        }
+        echo json_encode($retur);
+    }
+
     public function updateSegment() {
         $segid = $this->input->post('segid', TRUE);
         $desc = strtoupper($this->input->post('seg_nama', TRUE));
@@ -311,6 +378,20 @@ class Master_Sales extends Application {
             $hasil = $this->error('Hapus data gagal');
         } else {
             if ($this->model_sales->deleteSegment($id)) {
+                $hasil = $this->sukses('Hapus data berhasil');
+            } else {
+                $hasil = $this->error('Hapus data gagal');
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function deleteKontrak() {
+        $id = $this->input->post('id', TRUE);
+        if (empty($id)) {
+            $hasil = $this->error('Hapus data gagal');
+        } else {
+            if ($this->model_sales->deleteKontrak($id)) {
                 $hasil = $this->sukses('Hapus data berhasil');
             } else {
                 $hasil = $this->error('Hapus data gagal');
@@ -1272,6 +1353,8 @@ class Master_Sales extends Application {
                 'msc_tahun' => $tahun,
                 'msc_kondisi' => $kondisi,
                 'msc_cbid' => ses_cabang,
+                'msc_isstock' => 1,
+                'msc_status' => "B",
                 'msc_roda' => strtoupper($this->input->post('msc_roda', TRUE)),
                 'msc_chasis' => strtoupper($this->input->post('msc_chasis', TRUE)),
                 'msc_vinlot' => strtoupper($this->input->post('msc_vinlot', TRUE)),
@@ -1374,6 +1457,7 @@ class Master_Sales extends Application {
                 'msc_tahun' => $tahun,
                 'msc_kondisi' => $kondisi,
                 'msc_cbid' => ses_cabang,
+                'msc_status' => "B",
                 'msc_roda' => strtoupper($this->input->post('msc_roda', TRUE)),
                 'msc_chasis' => strtoupper($this->input->post('msc_chasis', TRUE)),
                 'msc_vinlot' => strtoupper($this->input->post('msc_vinlot', TRUE)),

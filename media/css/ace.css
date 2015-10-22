@@ -14,6 +14,9 @@ body {
 .upper{
     text-transform:uppercase;
 } 
+.right{
+    text-align: right;
+}
 .req{
     background: #ffcccc;
 } 

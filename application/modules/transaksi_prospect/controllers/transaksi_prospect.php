@@ -439,7 +439,7 @@ class Transaksi_Prospect extends Application {
                 'fpt_karoseri' => numeric($this->input->post('fpt_karoseri', TRUE)),
                 'fpt_administrasi' => numeric($this->input->post('fpt_administrasi', TRUE)),
                 'fpt_total' => numeric($this->input->post('fpt_total', TRUE)),
-                'fpt_status' => '1',
+                'fpt_status' => '0',
                 'fpt_createon' => date('Y-m-d H:i:s'),
                 'fpt_createby' => ses_krid,
             );
@@ -447,6 +447,7 @@ class Transaksi_Prospect extends Application {
             $id = $this->input->post('dtrans_aksid', TRUE);
             $harga = $this->input->post('dtrans_harga', TRUE);
             $fat = array();
+            $acc = 0;
             for ($i = 0; $i < count($id); $i++) {
                 if ($id[$i] != 0) {
                     if ($harga[$i] == '') {
@@ -456,8 +457,11 @@ class Transaksi_Prospect extends Application {
                         'fat_aksid' => $id[$i],
                         'fat_harga' => numeric($harga[$i]),
                     );
+                    $acc += numeric($harga[$i]);
                 }
             }
+            $data['fpt_accesories'] = $acc;
+            $data['fpt_total'] += $acc;
             $save = $this->model_prospect->saveFPT($data, $fat);
             if ($save['status'] == TRUE) {
                 $hasil = array('result' => TRUE, 'msg' => $this->sukses($save['msg']));
@@ -502,7 +506,7 @@ class Transaksi_Prospect extends Application {
                 'fpt_karoseri' => numeric($this->input->post('fpt_karoseri', TRUE)),
                 'fpt_administrasi' => numeric($this->input->post('fpt_administrasi', TRUE)),
                 'fpt_total' => numeric($this->input->post('fpt_total', TRUE)),
-                'fpt_status' => '1',
+                'fpt_status' => '0',
                 'fpt_createon' => date('Y-m-d H:i:s'),
                 'fpt_createby' => ses_krid,
             );
@@ -510,6 +514,7 @@ class Transaksi_Prospect extends Application {
             $id = $this->input->post('dtrans_aksid', TRUE);
             $harga = $this->input->post('dtrans_harga', TRUE);
             $fat = array();
+            $acc = 0;
             for ($i = 0; $i < count($id); $i++) {
                 if ($harga[$i] > 0) {
                     if ($harga[$i] == '') {
@@ -519,8 +524,11 @@ class Transaksi_Prospect extends Application {
                         'fat_aksid' => $id[$i],
                         'fat_harga' => numeric($harga[$i]),
                     );
+                    $acc += numeric($harga[$i]);
                 }
             }
+            $data['fpt_accesories'] = $acc;
+            $data['fpt_total'] += $acc;
             $save = $this->model_prospect->updateFpt($data, $fat);
             if ($save['result'] == TRUE) {
                 $this->session->set_flashdata('msg', $this->sukses($save['msg']));
@@ -604,7 +612,7 @@ class Transaksi_Prospect extends Application {
             $where = "$searchField $ops '$searchString' ";
         }
         if ($where != '') {
-          $where .= " AND ";  
+            $where .= " AND ";
         }
         if ($status != '0') {
             $where .= " fpt_approve = $status";
