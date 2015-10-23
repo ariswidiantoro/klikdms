@@ -34,8 +34,7 @@
                         }
                         items[parentid].items[items[parentid].items.length] = item;
                         items[id] = item;
-                    }
-                    else {
+                    }else {
                         if (parentid == '<?php echo $menuid; ?>') {
                             items[id] = {parentid: parentid, label: label, url: url, item: item, icon: icon, dekripsi:dekripsi};
                             source[i] = items[id];
@@ -43,7 +42,7 @@
                     }
                 }
                 return source;
-            }
+            };
             var buildUL = function(parent, items) {
                 $.each(items, function() {
                     if (this.label) {

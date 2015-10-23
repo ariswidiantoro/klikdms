@@ -12,7 +12,7 @@ class Transaksi_Service extends Application {
      */
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('model_trservice'));
+        $this->load->model(array('model_trservice', 'model_trfinance', 'model_finance'));
     }
 
     public function index() {
@@ -413,6 +413,20 @@ class Transaksi_Service extends Application {
             $hasil['response'] = false;
         }
         echo json_encode($hasil);
+    }
+    
+    public function uangmukaService() {
+        $this->hakAkses(1122);
+        $this->data['etc'] = array(
+            'judul' => 'Uangmuka Service',
+            'targetSave' => 'transaksi_finance/saveTrans',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'KAS',
+            'type' => 'I',
+            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => '-1')),
+        );
+        $this->load->view('addUangMukaService', $this->data);
     }
 
 }

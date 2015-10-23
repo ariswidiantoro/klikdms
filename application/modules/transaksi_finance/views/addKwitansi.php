@@ -38,7 +38,7 @@
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Jenis Penerimaan</label>
-        <div class="col-sm-8">
+        <div class="col-sm-3">
             <select id="trans_jenis" name="trans_jenis" required="required" onchange="changeType();" class="form-control input-medium req">
                 <option value="">PILIH</option>
                 <option value ="1">KAS</option>
@@ -49,19 +49,19 @@
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Account Penyimpanan</label>
-        <div class="col-sm-8">
+        <div class="col-sm-3">
             <select id="trans_coa" name="trans_coa" required="required" class="form-control input-xlarge req"></select>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Pelanggan</label>
-        <div class="col-sm-10">
+        <div class="col-sm-6">
             <input type="text" id="dtrans_pelname" name="dtrans_pelname[]" required="required" maxlength="50" 
                    onkeyup="acomplete('dtrans_pelname', 'auto_pelid', 'dtrans_pelid', '','')"class="req upper ace col-xs-10 col-sm-4" />
             <a href="#master_service/addPelanggan?href=transaksi_finance/uangMuka" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Pelanggan</a>
-            <input type="hidden" id="dtrans_pelid" name="dtrans_pelid[]" required="required" />
+            <input type="hidden" id="dtrans_pelid" name="dtrans_pelid[]" />
         </div>
     </div>
     <div id="detailtrans">

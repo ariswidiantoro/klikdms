@@ -133,15 +133,6 @@ font-size: 11px;
 page-break-after: always;
 }
 
-
-/*
-Plugin Name: WP-Digg Style Paginator
-Plugin URI: http://www.mis-algoritmos.com/2007/09/09/wp-digg-style-pagination-plugin-v-10/
-Author: Victor De la Rocha
-Author URI: http://www.mis-algoritmos.com
-*/
-/* http://viciao2k3.net/blog style*/
-
 div.pagination {
 	margin-top: 20px;
 	margin-bottom: 10px;

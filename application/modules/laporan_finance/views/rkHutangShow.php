@@ -1,4 +1,3 @@
-<link type="text/css" href="<?php echo path_css(); ?>report.css" rel="stylesheet" />
 <?php
 define('METHOD', $etc['output']);
 
@@ -15,8 +14,10 @@ $asldawal = 0;
 $adeb = 0;
 $akre = 0;
 $asldakhir = 0;
-?>
 
+$departemen['1'] = 'UNIT';
+$departemen['2'] = 'SPAREPART';
+?>
 <?php 
 if ($etc['output'] != 'show') {
 ?>
@@ -32,7 +33,7 @@ if ($etc['output'] != 'show') {
             <td width="15px">&nbsp;</td>
             <td width="150px">ACCOUNT</td>
             <td width="1px">:</td>
-            <td><?php echo $etc['coa']?></td>
+            <td><?php echo '-'?></td>
         </tr>
         <tr>
             <td>ALAMAT</td>
@@ -48,9 +49,9 @@ if ($etc['output'] != 'show') {
             <td>:</td>
             <td><?php echo $cabang['cb_telpon']?></td>
             <td width="15px">&nbsp;</td>
-            <td width="150px;">DEPARTEMEN</td>
+            <td width="150px;">JENIS PIUTANG</td>
             <td width="1px;">:</td>
-            <td><?php echo $etc['dept']?></td>
+            <td><?php echo $departemen[$etc['dept']];?></td>
         </tr>
     </table>
 </div>
@@ -63,8 +64,8 @@ if ($etc['output'] != 'show') {
                 <th width="2%">NO</th>
                 <th width="10%">NO. FAKTUR</th>
                 <th width="10%">TGL. FAKTUR</th>
-                <th width="10%">NO. SUPPLIER</th>
-                <th WIDTH="20%">NAMA SUPPLIER</th>
+                <th width="10%">NO. CUSTOMER</th>
+                <th WIDTH="15%">NAMA CUSTOMER</th>
                 <th WIDTH="15%" align="right">SALDO AWAL</th>
                 <th WIDTH="15%" align="right">DEBIT</th>
                 <th WIDTH="15%" align="right">KREDIT</th>
@@ -72,11 +73,6 @@ if ($etc['output'] != 'show') {
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td colspan ="8">SALDO AWAL</td>
-                <td align="right"><?php echo format_number($saldoAwal); ?></td>
-                <td colspan="3">&nbsp;</td>
-            </tr>
             <?php
             if (count($listData) > 0) {
                 foreach ($listData as $value) {
@@ -88,7 +84,7 @@ if ($etc['output'] != 'show') {
                         <td><?php echo $no ?></td>
                         <td><?php echo strtoupper($value['faktur']); ?></td>
                         <td><?php echo strtoupper($value['tgl_faktur']); ?></td>
-                        <td><?php echo strtoupper($value['customer']); ?></td>
+                        <td><?php echo strtoupper($value['kontrak']); ?></td>
                         <td><?php echo strtoupper($value['nama']); ?></td>
                         <td align="right"><?php echo format_number($value['sld_awal']); ?></td>
                         <td align="right"><?php echo format_number($value['debit']); ?></td>
@@ -125,7 +121,7 @@ if ($etc['output'] == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=RK_HUTANG.xls");
+    header("Content-Disposition: attachment; filename=RK_PIUTANG.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

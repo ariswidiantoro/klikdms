@@ -69,17 +69,24 @@ define('NUM_TRANS', 'TR');
 define('NUM_JENIS_COA', 'JC');
 define('NUM_SPECIAL_COA', 'SC');
 
-/* SETTING COA */
-define('UANGMUKA_UNIT', 'SC01');
-define('UANGMUKA_SERVICE', 'SC02');
-define('UANGMUKA_SPART', 'SC03');
-define('UANGMUKA_BREPAIR', 'SC04');
-define('PIUTANG_UNIT', 'SC05');
-define('PIUTANG_SERVICE', 'SC06');
-define('PIUTANG_SPART', 'SC07');
-define('PIUTANG_BREPAIR', 'SC08');
-define('HUTANG_UNIT', 'SC09');
-define('HUTANG_SPART', 'SC10');
+define('DEPT_SALES', '1');
+define('DEPT_SERVICE', '2');
+define('DEPT_SPART', '3');
+define('DEPT_BREPAIR', '4');
+
+define('TR_UM_UNIT', '1');
+define('TR_UM_SERVICE', '2');
+define('TR_UM_SPART', '3');
+define('TR_UM_BREPAIR', '4');
+define('TR_BYR_PIU_UNIT', '5');
+define('TR_BYR_PIU_SERVICE', '6');
+define('TR_BYR_PIU_SPART', '7');
+define('TR_BYR_PIU_BREPAIR', '8');
+define('TR_BYR_HUT_UNIT', '9');
+define('TR_BYR_HUT_SPART', '10');
+define('TR_NOTA_KREDIT', '11');
+
+
 
 
 

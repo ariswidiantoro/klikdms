@@ -181,6 +181,28 @@ class Auto_Complete extends Application {
         }
         echo json_encode($data);
     }
+    
+    public function auto_faktur_unit(){
+        $param = $this->input->post('param');
+        $cbid = $this->input->post('cbid');
+        $query = $this->model_autocomplete->autoFakturUnit(array('param' => strtoupper($param), 'cbid' => $cbid));
+        if (!empty($query)) {
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array(
+                    'value' => $row['fkp_nofaktur'],
+                    'desc' => $row['spk_nokontrak'].'<br/>'.$row['pel_nama'],
+                    'trglocal' => $row['fkpid'],
+                    'trgkontrak' => $row['kon_nomer'],
+                    'trgpelid' => $row['pelid'],
+                    'trgpelname' => $row['pel_nama'],
+                );
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'desc' => "DATA TIDAK ADA");
+        }
+        echo json_encode($data);
+    }
 
 }
 

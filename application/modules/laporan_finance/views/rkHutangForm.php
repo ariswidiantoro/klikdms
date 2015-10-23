@@ -23,7 +23,7 @@
             </div>
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <span>Jenis Piutang</span>
+                    <span>Jenis Hutang</span>
                 </div>
             </div>
         </div>
@@ -68,11 +68,9 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group" style="width:100%;">
-                        <select id="coa" name="coa" class="form-control input-small">
-                            <option value ="<?php echo PIUTANG_UNIT ?>">UNIT</option>
-                            <option value ="<?php echo PIUTANG_SERVICE ?>">SERVICE</option>
-                            <option value ="<?php echo PIUTANG_SPART ?>">SPAREPART</option>
-                            <option value ="<?php echo PIUTANG_BREPAIR ?>">BODYREPAIR</option>
+                        <select id="dept" name="dept" class="form-control input-small">
+                            <option value ="1">UNIT</option>
+                            <option value ="2">SPAREPART</option>
                         </select>
                     </div>
                 </div>

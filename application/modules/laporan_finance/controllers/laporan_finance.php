@@ -55,13 +55,13 @@ class Laporan_Finance extends Application {
             'dateTo' => $end,
             'cbid' => $cbid,
             'coa' => $coa
-             ));
+                ));
         $this->data['saldoAwal'] = $this->model_lap_finance->getSaldo(array(
             'month' => $month,
             'year' => $year,
             'type' => '1',
             'cbid' => $cbid
-             ));
+                ));
         $this->load->view('ledgerShow', $this->data);
     }
 
@@ -75,7 +75,7 @@ class Laporan_Finance extends Application {
         );
         $this->load->view('kasForm', $this->data);
     }
-    
+
     public function getLapKas($output) {
         $end = dateToIndo($this->input->post('end', TRUE));
         $start = dateToIndo($this->input->post('start', TRUE));
@@ -97,7 +97,7 @@ class Laporan_Finance extends Application {
             'dateTo' => $end,
             'cbid' => $cbid,
             'coa' => $coa
-             ));
+                ));
         $this->load->view('kasShow', $this->data);
     }
 
@@ -110,7 +110,7 @@ class Laporan_Finance extends Application {
         );
         $this->load->view('kasirForm', $this->data);
     }
-    
+
     public function rkPiutang() {
         $this->hakAkses(1051);
         $this->data['etc'] = array(
@@ -125,22 +125,64 @@ class Laporan_Finance extends Application {
         $start = dateToIndo($this->input->post('start', TRUE));
         $end = dateToIndo($this->input->post('end', TRUE));
         $cbid = $this->input->post('cbid', TRUE);
+        $coa = $this->input->post('coa', TRUE);
+        $this->data['etc'] = array(
+            'judul' => 'Rekap Piutang',
+            'targetLoad' => 'rkPiutangShow',
+            'output' => $output,
+            'dateFrom' => dateToIndo($start),
+            'dateTo' => dateToIndo($end),
+            'coa' => $coa );
+        $this->data['cabang'] = $this->model_lap_finance->getDetailCabang($cbid);
+        $param = array(
+            'dateFrom' => $start,
+            'dateTo' => $end,
+            'cbid' => $cbid,
+            'coa' => $coa);
+        $this->data['listData'] = $this->model_lap_finance->rekapPiutang($param);
+        $this->load->view('rkPiutangShow', $this->data);
+    }
+
+    public function rkHutang() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Rekap Hutang',
+            'targetLoad' => 'rkPiutangShow',
+            'groupCabang' => $this->model_lap_finance->getGroupCabang(array('krid' => ses_krid)),
+        );
+        $this->load->view('rkPiutangForm', $this->data);
+    }
+
+    public function rkHutangShow($output) {
+        $start = dateToIndo($this->input->post('start', TRUE));
+        $end = dateToIndo($this->input->post('end', TRUE));
+        $cbid = $this->input->post('cbid', TRUE);
         $dept = $this->input->post('dept', TRUE);
         $this->data['etc'] = array(
-            'judul' => 'REKAP PITANG',
-            'targetLoad' => 'ledgerShow',
+            'judul' => 'Rekap Piutang',
+            'targetLoad' => 'rkPiutangShow',
             'output' => $output,
             'dateFrom' => dateToIndo($start),
             'dateTo' => dateToIndo($end),
             'dept' => $dept
         );
         $this->data['cabang'] = $this->model_lap_finance->getDetailCabang($cbid);
-        $this->data['listData'] = $this->model_lap_finance->rkPiutang(array(
-            'dateFrom' => $start,
-            'dateTo' => $end,
-            'cbid' => $cbid,
-            'dept' => $dept
-             ));
+        if ($dept == '1') {
+            $this->data['listData'] = $this->model_lap_finance->rekapPiutangUnit(array(
+                'dateFrom' => $start,
+                'dateTo' => $end,
+                'cbid' => $cbid,
+                'type' => 1,
+                'coa' => PIUTANG_UNIT
+                    ));
+        } else {
+            $this->data['listData'] = $this->model_lap_finance->rekapPiutangUnit(array(
+                'dateFrom' => $start,
+                'dateTo' => $end,
+                'cbid' => $cbid,
+                'coa' => PIUTANG_SERVICE
+                    ));
+        }
         $this->load->view('rkPiutangShow', $this->data);
     }
 
