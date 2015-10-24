@@ -18,13 +18,11 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">No. Transaksi</label>
         <div class="col-sm-3">
-            <div class="input-group">
                 <input type="text" id="trans_docno" name="trans_docno" required="required" maxlength="20" class="upper form-control input-xlarge req" />
                 <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
                 <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
                 <input type="hidden" id="trans_type" name="trans_type" value="<?php echo $etc['type']; ?>" />
                 <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
-            </div>
         </div>
     </div>
     <div class="form-group">
@@ -430,21 +428,19 @@
                                     }
 
                                     if(url == 'auto_coa'){
-                                        if( ui.item.value == '<?php echo $settingCoa[PIUTANG_UNIT]; ?>'||
-                                            ui.item.value == '<?php echo $settingCoa[PIUTANG_SERVICE]; ?>' ||
-                                            ui.item.value == '<?php echo $settingCoa[PIUTANG_SPART]; ?>'
-                                    ){
+                                        if( ui.item.value == '<?php echo PIUTANG_UNIT; ?>'||
+                                            ui.item.value == '<?php echo PIUTANG_SERVICE; ?>' ||
+                                            ui.item.value == '<?php echo PIUTANG_SPART; ?>'){
                                             /* PIUTANG */
                                             row.find("input[name^=dtrans_nota]").addClass('req');
-                                        }else if( ui.item.value == '<?php echo $settingCoa[UANGMUKA_UNIT]; ?>'||
-                                            ui.item.value == '<?php echo $settingCoa[UANGMUKA_SERVICE]; ?>' ||
-                                            ui.item.value == '<?php echo $settingCoa[UANGMUKA_SPART]; ?>'
-                                    ){
+                                        }else if( ui.item.value == '<?php echo UANGMUKA_UNIT; ?>'||
+                                            ui.item.value == '<?php echo UANGMUKA_SERVICE; ?>' ||
+                                            ui.item.value == '<?php echo UANGMUKA_BREPAIR; ?>' ||
+                                            ui.item.value == '<?php echo UANGMUKA_SPART; ?>'){
                                             /* UANGMUKA */
                                             row.find("input[name^=dtrans_pelname]").addClass('req');
-                                        }else if( ui.item.value == '<?php echo $settingCoa[HUTANG_UNIT]; ?>'||
-                                            ui.item.value == '<?php echo $settingCoa[HUTANG_SPART]; ?>' 
-                                    ){
+                                        }else if( ui.item.value == '<?php echo HUTANG_UNIT; ?>'||
+                                            ui.item.value == '<?php echo HUTANG_SPART; ?>' ){
                                             /* HUTANG */
                                             row.find("input[name^=dtrans_supnama]").addClass('req');
                                         }

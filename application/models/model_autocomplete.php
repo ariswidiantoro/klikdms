@@ -100,12 +100,48 @@ class Model_Autocomplete extends CI_Model {
     }
     
     public function autoFaktur($data) {
+        if($data['coa'] == PIUTANG_SERVICE or $data['coa'] == UANGMUKA_SERVICE){
+            $query = "SELECT woid as faktur, msc_nopol as kontrak, pel_nama as nama
+                FROM svc_wo 
+                LEFT JOIN ms_pelanggan ON pelid = wo_pelid 
+                LEFT JOIN ms_car ON mscid = wo_mscid
+                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'";
+        }else if ($data['coa'] == PIUTANG_SPART){
+            $query = "SELECT not_kode as faktur, msc_nopol as kontrak, pel_nama as nama
+                FROM svc_wo 
+                LEFT JOIN ms_pelanggan ON pelid = wo_pelid 
+                LEFT JOIN ms_car ON mscid = wo_mscid
+                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'";
+        }else if($data['coa'] == PIUTANG_UNIT){
+            $query = "SELECT spkid as faktur, msc_nopol as kontrak, pel_nama as nama
+                FROM svc_wo 
+                LEFT JOIN ms_pelanggan ON pelid = wo_pelid 
+                LEFT JOIN ms_car ON mscid = wo_mscid
+                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'";
+        }
         $sql = $this->db->query("
             select supid, sup_nama, sup_alamat 
             from ms_supplier
             WHERE sup_nama LIKE '%".$data['param']."%'
                 AND sup_cbid = '".$data['cbid']."'
             ORDER BY sup_nama ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
+    public function autoFakturUnit($data){
+        $sql = $this->db->query("
+            select pelid, pel_nama, pel_alamat, kon_nomer, fkpid, fkp_nofaktur 
+            from pen_faktur
+            LEFT JOIN pen_spk ON spkid = fkp_spkid
+            LEFT JOIN ms_kontrak ON kon_nomer = spk_nokontrak AND kon_cbid = fkp_cbid
+            LEFT JOIN ms_pelanggan ON pelid = kon_pelid
+            WHERE fkp_nofaktur LIKE '%".$data['param']."%'
+                AND pel_cbid = '".$data['cbid']."'
+            ORDER BY pel_nama ASC LIMIT 20 OFFSET 0
         ");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();

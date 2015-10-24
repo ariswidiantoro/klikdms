@@ -13,7 +13,7 @@
         <?php echo $etc['judul']; ?>
     </h1>
 </div>
-<form class="form-horizontal" id="formAdd" method="post" action="<?php echo site_url($etc['targetSave']); ?>" name="formAdd">
+<form class="form-horizontal" id="formAdd" method="post" action="" name="formAdd">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">No. Transaksi</label>
         <div class="col-sm-3">
@@ -21,7 +21,7 @@
             <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
             <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
             <input type="hidden" id="trans_trans" name="trans_trans" value="" />
-            <input type="hidden" id="trans_sub_trans" name="trans_sub_trans" value="<?php echo DEPT_SALES; ?>" />
+            <input type="hidden" id="trans_sub_trans" name="trans_sub_trans" value="<?php echo DEPT_SPART; ?>" />
             <input type="hidden" id="trans_type" name="trans_type" value="I" />
         </div>
     </div>
@@ -59,23 +59,31 @@
         <div class="col-sm-6">
             <input type="text" id="dtrans_pelname" name="dtrans_pelname[]" required="required" maxlength="50" 
                    onkeyup="acomplete('dtrans_pelname', 'auto_pelid', 'dtrans_pelid', '','')"class="req upper ace col-xs-10 col-sm-4" />
-            <a href="#master_service/addPelanggan?href=transaksi_finance/uangMuka" class="btn btn-sm btn-primary">
+            <a href="#master_service/addPelanggan?href=transaksi_sparepart/uangmukaSparepart" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Pelanggan</a>
             <input type="hidden" id="dtrans_pelid" name="dtrans_pelid[]"/>
         </div>
     </div>
+    <!--<div class="form-group">
+        <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Account Uangmuka</label>
+        <div class="col-sm-6">
+            <input type="hidden" id="dtrans_coa" name="dtrans_coa[]" value="<?php echo UANGMUKA_SPART; ?>" />
+    <!-- onkeyup="acomplete('dtrans_coa', 'auto_uangmuka', 'dtrans_coa', 'dtrans_desc', '')"
+     class="form-control input-large number req" 
+</div>
+</div> -->
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Memo</label>
         <div class="col-sm-6">
+            <input type="hidden" id="dtrans_coa" name="dtrans_coa[]" value="<?php echo UANGMUKA_SPART; ?>" />
             <input type="text" id="dtrans_desc" name="dtrans_desc[]" required="required" maxlength="500" 
                    placeholder="KETERANGAN" class="upper form-control input-xxlarge req" />
         </div>
-    </div> 
+    </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Sebesar ( Rp. )</label>
         <div class="col-sm-6">
-            <input type="hidden" id="dtrans_coa" name="dtrans_coa[]" value="<?php echo UANGMUKA_UNIT; ?>"/>
             <input type="text" id="totalTrans" name="totalTrans" required="required" placeholder="0.00"
                    onchange="$('#'+this.id).val(formatCurrency(this.value));" onblur="terbilang(this.value)" 
                    onkeyup="$('#dtrans_nominal').val(formatCurrency(this.value));"
@@ -252,185 +260,187 @@
                     </td>\n\
                   </tr>\n\
                </tr>');
-        $(".btnDelete").bind("click", Delete);
-        displayDate();
-        numberOnly();
-    }
+                            $(".btnDelete").bind("click", Delete);
+                            displayDate();
+                            numberOnly();
+                        }
 
-    function acomplete(id, url, trglocal, trgid, trgname){
-        var row = $("#"+id).parents('.item-row');
-        $("#" + id).autocomplete({
-            minLength: 1,
-            source: function(req, add) {
-                $.ajax({
-                    url: "<?php echo site_url('auto_complete'); ?>/"+url,
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {
-                        param : $("#" + id).val(),
-                        cbid : '<?php echo ses_cabang; ?>'
-                    },
-                    success: function(data) {
-                        add(data.message);
-                    }
-                });
-            },
-            create: function () {
-                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li></li>')
-                    .append("<strong>" + item.value + "</strong><br>" + item.desc + "")
-                    .appendTo(ul);
-                };
-            },select: function(event, ui) {
-                $('#' + trglocal ).val(ui.item.trglocal);
-                if(trgid != ''){
-                    $('#' + trgid).val(ui.item.trgid);
-                    $('#' + trgname).val(ui.item.trgname);
-                }
-
-                if(url == 'auto_coa'){
-                    /* UNIT */
-                    if(ui.item.value == '100601'){
-                        row.find("input[name^=dtrans_nota]").attr('required','required');
-                        row.find("input[name^=dtrans_nota]").attr('required','required');
-                        /* SERVICE */
-                    }else if(ui.item.value == 'xx'){
-                        row.find("input[name^=dtrans_nota]").attr('required','required');
-                        row.find("input[name^=dtrans_nota]").attr('required','required');
-                    }
-                }
-
-
-
-            }
-        });
-    }
+                        function acomplete(id, url, trglocal, trgid, trgname){
+                            var row = $("#"+id).parents('.item-row');
+                            $("#" + id).autocomplete({
+                                minLength: 1,
+                                source: function(req, add) {
+                                    $.ajax({
+                                        url: "<?php echo site_url('auto_complete'); ?>/"+url,
+                                        dataType: 'json',
+                                        type: 'POST',
+                                        data: {
+                                            param : $("#" + id).val(),
+                                            cbid : '<?php echo ses_cabang; ?>'
+                                        },
+                                        success: function(data) {
+                                            add(data.message);
+                                        }
+                                    });
+                                },
+                                create: function () {
+                                    $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                                        return $('<li></li>')
+                                        .append("<strong>" + item.value + "</strong><br>" + item.desc + "")
+                                        .appendTo(ul);
+                                    };
+                                },select: function(event, ui) {
+                                    $('#' + trglocal ).val(ui.item.trglocal);
+                                    if(trgid != ''){
+                                        $('#' + trgid).val(ui.item.trgid);
+                                        $('#' + trgname).val(ui.item.trgname);
+                                    }
+                                }
+                            });
+                        }
     
-    function terbilang(total){
-        $('#terbilang').html((toWords(total)+" rupiah").toUpperCase());
-    }
+                        function terbilang(total){
+                            $('#terbilang').html((toWords(total)+" rupiah").toUpperCase());
+                        }
     
-    function displayDate(){
-        $( ".datepicker").datepicker({
-            changeMonth: true,
-            changeYear: true,        
-            dateFormat:'dd-mm-yy'		
-        });	
-    }
+                        function displayDate(){
+                            $( ".datepicker").datepicker({
+                                changeMonth: true,
+                                changeYear: true,        
+                                dateFormat:'dd-mm-yy'		
+                            });	
+                        }
 
-    function countTotal(){
-        var total = 0;
-        var price;
-        $("input[name^=dtrans_nominal]").each(function() {
-            price = $(this).val().replace(/,/g, "");
-            total += Number(price);
-        });
-        $("#totalTrans").val(formatCurrency(total));
-    }
-
-    function countTotalBank(){
-        var total = 0;
-        var price;
-        $("input[name^=dbnk_nominal]").each(function() {
-            price = $(this).val().replace(/,/g, "");
-            total += Number(price);
-        });
-        $("#totalTransBank").val(formatCurrency(total));
-    }
+                        function countTotalBank(){
+                            var total = 0;
+                            var price;
+                            $("input[name^=dbnk_nominal]").each(function() {
+                                price = $(this).val().replace(/,/g, "");
+                                total += Number(price);
+                            });
+                            $("#totalTransBank").val(formatCurrency(total));
+                        }
     
-    function changeType(){
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo site_url('transaksi_finance/jsonMainCoa') ?>',
-            dataType: "json",
-            async: false,
-            data: {
-                type : $('#trans_jenis').val()
-            },
-            success: function(data) {
-                $('#trans_coa').html('');
-                $('#trans_coa').append('<option value="">PILIH</option>');
-                $.each(data, function(messageIndex, message) {
-                    $('#trans_coa').append('<option value="' + message['coa_kode'] + '">' + message['coa_desc'] + '</option>');
-                });
-            }
-        })
+                        function changeType(){
+                            $.ajax({
+                                type: 'POST',
+                                url: '<?php echo site_url('transaksi_finance/jsonMainCoa') ?>',
+                                dataType: "json",
+                                async: false,
+                                data: {
+                                    type : $('#trans_jenis').val()
+                                },
+                                success: function(data) {
+                                    $('#trans_coa').html('');
+                                    $('#trans_coa').append('<option value="">PILIH</option>');
+                                    $.each(data, function(messageIndex, message) {
+                                        $('#trans_coa').append('<option value="' + message['coa_kode'] + '">' + message['coa_desc'] + '</option>');
+                                    });
+                                }
+                            })
         
-        if($('#trans_jenis').val() == '1'){
-            $('#bank').hide();
-            $('#trans_trans').val("KAS");
-        }else if($('#trans_jenis').val() == '2'){
-            $('#trans_trans').val("BNK");
-            $('#bank').show();
-        }else{
-            $('#trans_trans').val("CEK");
-            $('#bank').show();
-        }
-    }
+                            if($('#trans_jenis').val() == '1'){
+                                $('#bank').hide();
+                                $('#trans_trans').val("KAS");
+                            }else if($('#trans_jenis').val() == '2'){
+                                $('#trans_trans').val("BNK");
+                                $('#bank').show();
+                            }else{
+                                $('#trans_trans').val("CEK");
+                                $('#bank').show();
+                            }
+                        }
 
-    $(this).ready(function() {
-        $( ".datepicker" ).datepicker({
-            autoclose: true,
-            todayHighlight: true,
-            dateFormat:'dd-mm-yy'	
-        })
-        .next().on(ace.click_event, function(){
-            $(this).prev().focus();
-        });
+                        $(this).ready(function() {
+                            $( ".datepicker" ).datepicker({
+                                autoclose: true,
+                                todayHighlight: true,
+                                dateFormat:'dd-mm-yy'	
+                            })
+                            .next().on(ace.click_event, function(){
+                                $(this).prev().focus();
+                            });
 
-        $('#formAdd').submit(function() {
-            if($("#totalTrans").val())
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo site_url('transaksi_finance/saveTrans') ?>",
-                dataType: "json",
-                async: false,
-                data: $(this).serialize(),
-                success: function(data) {
-                    window.scrollTo(0, 0);
-                    if(data.status == true)
-                        document.formAdd.reset();
-                    $("#result").html(data.msg).show().fadeIn("slow");
-                }
-            })
-            return false;
-        });
+                            $('#formAdd').submit(function() {
+                                if($("#trans_jenis").val() != '1'){
+                                    if($("#totalTrans").val() != $("#totalTransBank").val()){
+                                       bootbox.dialog({
+                                            message: "<span class='bigger-110'>Nominal penerimaan harus sama dengan total transaksi Bank</span>",
+                                            buttons: {   "button" :{
+                                                    "label" : "Tutup",
+                                                    "className" : "btn-sm"
+                                                }
+                                            }
+                                        });
+                                    }else{
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: "<?php echo site_url('transaksi_finance/saveTrans') ?>",
+                                            dataType: "json",
+                                            async: false,
+                                            data: $(this).serialize(),
+                                            success: function(data) {
+                                                window.scrollTo(0, 0);
+                                                if(data.status == true)
+                                                    document.formAdd.reset();
+                                                $("#result").html(data.msg).show().fadeIn("slow");
+                                            }
+                                        })
+                                    } 
+                                }else{
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: "<?php echo site_url('transaksi_finance/saveTrans') ?>",
+                                        dataType: "json",
+                                        async: false,
+                                        data: $(this).serialize(),
+                                        success: function(data) {
+                                            window.scrollTo(0, 0);
+                                            if(data.status == true)
+                                                document.formAdd.reset();
+                                            $("#result").html(data.msg).show().fadeIn("slow");
+                                        }
+                                    })
+                                }
+            
+                                return false;
+                            });
 
-        $('#formAdd').validate({
-            errorElement: 'div',
-            errorClass: 'help-block',
-            focusInvalid: false,
-            ignore: "",
-            rules: {},
-            messages: {},
-            highlight: function (e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-            },
-            success: function (e) {
-                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-                $(e).remove();
-            },
-            errorPlacement: function (error, element) {
-                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
-                    var controls = element.closest('div[class*="col-"]');
-                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
-                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
-                }
-                else if(element.is('.chosen-select')) {
-                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
-                }
-                else error.insertAfter(element.parent());
-            },
-            submitHandler: function (form) {
-            },
-            invalidHandler: function (form) {
-            }
-        });
+                            $('#formAdd').validate({
+                                errorElement: 'div',
+                                errorClass: 'help-block',
+                                focusInvalid: false,
+                                ignore: "",
+                                rules: {},
+                                messages: {},
+                                highlight: function (e) {
+                                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                                },
+                                success: function (e) {
+                                    $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                                    $(e).remove();
+                                },
+                                errorPlacement: function (error, element) {
+                                    if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                                        var controls = element.closest('div[class*="col-"]');
+                                        if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                                        else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                                    }
+                                    else if(element.is('.chosen-select')) {
+                                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                                    }
+                                    else error.insertAfter(element.parent());
+                                },
+                                submitHandler: function (form) {
+                                },
+                                invalidHandler: function (form) {
+                                }
+                            });
 
-    });
+                        });
 
-    var scripts = [null, null]
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-        //inline scripts related to this page
-    });
+                        var scripts = [null, null]
+                        $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+                            //inline scripts related to this page
+                        });
 </script> 

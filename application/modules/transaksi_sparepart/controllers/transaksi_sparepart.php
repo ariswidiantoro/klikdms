@@ -12,7 +12,7 @@ class Transaksi_Sparepart extends Application {
      */
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('model_trspart'));
+        $this->load->model(array('model_trspart', 'model_trfinance', 'model_finance'));
     }
 
     public function index() {
@@ -455,6 +455,21 @@ class Transaksi_Sparepart extends Application {
             $this->data['barang'] = $this->model_trspart->getSupplySlipDetail($kode);
             $this->load->view('printSupplySlip', $this->data);
         }
+    }
+    
+    public function uangmukaSparepart() {
+        $this->hakAkses(1123);
+        $this->data['etc'] = array(
+            'judul' => 'Uangmuka Sparepart',
+            'targetSave' => 'transaksi_finance/saveUangMuka',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'KAS',
+            'type' => 'I',
+            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => '-1')),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
+        );
+        $this->load->view('addUangMukaSpart', $this->data);
     }
 
 }

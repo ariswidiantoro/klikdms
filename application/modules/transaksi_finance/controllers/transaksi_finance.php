@@ -29,7 +29,6 @@ class Transaksi_Finance extends Application {
             'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => 1)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
-        $this->data['settingCoa'] = $this->model_trfinance->getSettingCoa(ses_cabang);
         $this->load->view('addTrans', $this->data);
     }
 
@@ -156,11 +155,11 @@ class Transaksi_Finance extends Application {
             'kst_noreff' => $this->input->post('trans_noreff', TRUE),
             'kst_tgl' => dateToIndo($this->input->post('trans_tgl', TRUE)),
             'kst_coa' => $this->input->post('trans_coa', TRUE),
-            'kst_desc' => $this->input->post('trans_desc', TRUE),
+            'kst_desc' => strtoupper($this->input->post('trans_desc', TRUE)),
             'kst_debit' => numeric($this->input->post('totalTrans', TRUE)),
             'kst_kredit' => numeric($this->input->post('totalTrans', TRUE)),
             'kst_createon' => date('Y-m-d H:i:s'),
-            'kst_is_uangmuka' => $this->input->post('trans_is_uangmuka', TRUE),
+            'kst_sub_trans' => $this->input->post('trans_sub_trans', TRUE),
             'kst_createby' => ses_krid,
             'kst_cbid' => ses_cabang,
         );
@@ -232,12 +231,11 @@ class Transaksi_Finance extends Application {
     }
 
     /* UANG MUKA */
-
     public function uangMuka() {
-        $this->hakAkses(1051);
+        $this->hakAkses(1101);
         $this->data['etc'] = array(
-            'judul' => 'Uang Muka Penjualan',
-            'targetSave' => 'transaksi_finance/saveUangMuka',
+            'judul' => 'Uangmuka Penjualan',
+            'targetSave' => 'transaksi_finance/saveTrans',
             'kstid' => '',
             'purpose' => 'ADD',
             'trans' => 'KAS',
@@ -246,6 +244,52 @@ class Transaksi_Finance extends Application {
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addUangMuka', $this->data);
+    }
+    
+    /* NOTA KREDIT */
+    public function notaKredit() {
+        $this->hakAkses(1088);
+        $this->data['etc'] = array(
+            'judul' => 'Nota Kredit',
+            'targetSave' => 'transaksi_finance/saveTrans',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'NOTAKREDIT',
+            'type' => 'I',
+        );
+        $this->load->view('addNotaKredit', $this->data);
+    }
+    
+    /* KWITANSI */
+    public function kwitansi() {
+        $this->hakAkses(1106);
+        $this->data['etc'] = array(
+            'judul' => 'Kwitansi',
+            'targetSave' => 'transaksi_finance/saveKwitansi',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'KWI',
+            'type' => 'I',
+            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => '-1')),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
+        );
+        $this->load->view('addKwitansi', $this->data);
+    }
+    
+    /* PENYESUAIAN */
+    public function penyesuaian() {
+        $this->hakAkses(1107);
+        $this->data['etc'] = array(
+            'judul' => 'Jurnal Penyesuaian',
+            'targetSave' => 'transaksi_finance/savePenyesuaian',
+            'kstid' => '',
+            'purpose' => 'ADD',
+            'trans' => 'ADJ',
+            'type' => 'I',
+            'mainCoa' => '',
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
+        );
+        $this->load->view('addPenyesuaian', $this->data);
     }
 
     public function getMainCoa() {
@@ -324,36 +368,6 @@ class Transaksi_Finance extends Application {
         }
 
         echo json_encode($result);
-    }
-    
-    public function kwitansi() {
-        $this->hakAkses(1051);
-        $this->data['etc'] = array(
-            'judul' => 'Kwitansi',
-            'targetSave' => 'transaksi_finance/saveKwitansi',
-            'kstid' => '',
-            'purpose' => 'ADD',
-            'trans' => 'KWI',
-            'type' => 'I',
-            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => '-1')),
-            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
-        );
-        $this->load->view('addKwitansi', $this->data);
-    }
-    
-    public function penyesuaian() {
-        $this->hakAkses(1051);
-        $this->data['etc'] = array(
-            'judul' => 'Jurnal Penyesuaian',
-            'targetSave' => 'transaksi_finance/savePenyesuaian',
-            'kstid' => '',
-            'purpose' => 'ADD',
-            'trans' => 'ADJ',
-            'type' => 'I',
-            'mainCoa' => '',
-            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
-        );
-        $this->load->view('addPenyesuaian', $this->data);
     }
     
     public function printTrans(){

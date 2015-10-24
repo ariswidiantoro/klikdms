@@ -1,4 +1,3 @@
-<link type="text/css" href="<?php echo path_css(); ?>report.css" rel="stylesheet" />
 <?php
 define('METHOD', $etc['output']);
 
@@ -19,6 +18,7 @@ $akre = 0;
 <?php 
 if ($etc['output'] != 'show') {
 ?>
+<link type="text/css" href="<?php echo path_css(); ?>report.css" rel="stylesheet" />
 <div>
     <table id="table-header-detail">
         <tr>
@@ -27,7 +27,7 @@ if ($etc['output'] != 'show') {
         <tr>
             <td width="150px">CABANG</td>
             <td width="1px">:</td>
-            <td><?php echo $cabang['cb_nama']?></td>
+            <td><?php echo $cabang['cb_nama'].' ('.$cabang['cbid'].')'?></td>
             <td width="15px">&nbsp;</td>
             <td width="150px">ACCOUNT</td>
             <td width="1px">:</td>
@@ -37,6 +37,7 @@ if ($etc['output'] != 'show') {
             <td>ALAMAT</td>
             <td>:</td>
             <td><?php echo $cabang['cb_alamat']?></td>
+            <td width="15px">&nbsp;</td>
             <td width="150px;">RANGE</td>
             <td width="1px;">:</td>
             <td><?php echo $etc['dateFrom'].' s/d '.$etc['dateTo']?></td>
@@ -45,6 +46,7 @@ if ($etc['output'] != 'show') {
             <td>TELP</td>
             <td>:</td>
             <td><?php echo $cabang['cb_telpon']?></td>
+            <td width="15px">&nbsp;</td>
         </tr>
     </table>
 </div>
@@ -55,17 +57,17 @@ if ($etc['output'] != 'show') {
         <thead>
             <tr>
                 <th width="2%">NO</th>
-                <th width="2%">TGL. TRANS</th>
+                <th width="2%">TANGGAL</th>
                 <th width="10%">NO. BUKTI</th>
                 <th width="10%">TRANS</th>
-                <th WIDTH="20%">DESKRIPSI</th>
-                <th WIDTH="10%">COSTCENTER</th>
-                <th WIDTH="20%">DEBIT</th>
-                <th WIDTH="20%">KREDIT</th>
-                <th WIDTH="20%">BALANCE</th>
-                <th width="15%">NO. FAKTUR</th>
-                <th width="15%">NO. CUSTOMER</th>
-                <th width="15%">NO. SUPLIER</th>
+                <th WIDTH="15%">DESKRIPSI</th>
+                <th WIDTH="5%">COSTCENTER</th>
+                <th WIDTH="15%">DEBIT</th>
+                <th WIDTH="15%">KREDIT</th>
+                <th WIDTH="15%">BALANCE</th>
+                <th width="8%">NO. FAKTUR</th>
+                <th width="8%">CUSTOMER</th>
+                <th width="8%">SUPLIER</th>
             </tr>
         </thead>
         <tbody>
@@ -84,7 +86,7 @@ if ($etc['output'] != 'show') {
                         <td ><?php echo $no ?></td>
                         <td align="center"><?php echo date('d-m-Y', strtotime($value['trl_date'])); ?></td>
                         <td><?php echo strtoupper($value['trl_nomer']); ?></td>
-                        <td><?php echo strtoupper($value['trl_name']); ?></td>
+                        <td><?php echo strtoupper($value['trl_name'].$value['trl_trans']); ?></td>
                         <td><?php echo strtoupper($value['trl_descrip']); ?></td>
                         <td><?php echo strtoupper($value['trl_ccid']); ?></td>
                         <td align="right"><?php echo format_number($value['trl_debit']); ?></td>
@@ -117,6 +119,22 @@ if ($etc['output'] != 'show') {
     </table>
 </div>
 <?php
+if($etc['output'] != 'show'){
+    ?>
+<table style='margin-top: 10px;' id='table-footer-detail'>
+                <tr><td colspan='5'><p align="left"><?php echo ses_kota . ", " . date('d-m-Y') . ", " . date('H:i:s'); ?> </p></td></tr>
+                <tr><td class="sign">Dibuat</td><td class='sign'>Diketahui</td><td class="sign">Diperiksa</td><td class="sign" style="width:3.1cm;">Disetujui</td><td class="sign">Diaudit</td></tr>
+                <tr><td colspan="5" height="80"></td></tr>
+                <tr>
+                    <td class="sign">........................<br/>Kasir</td>
+                    <td class="sign">........................<br />Ka.bag/ADH</td>
+                    <td class="sign">........................<br/>Accounting</td>
+                    <td class="sign">........................<br />Branch Manager</td>
+                    <td class="sign">........................<br/>Audit</td>
+                </tr>
+  </table>  
+<?php
+}
 if ($etc['output'] == 'excel') {
     ?>
     <script type="text/javascript">
@@ -135,6 +153,6 @@ if ($etc['output'] == 'excel') {
         window.print();
         history.back();
     </script>               
-    <?php
+<?php
 }
 ?>
