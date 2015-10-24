@@ -18,9 +18,66 @@ class Model_Trsales extends CI_Model {
     public function getTotalBpk($where) {
         $wh = "WHERE bpk_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
-            $wh = " AND " . $where;
+            $wh .= " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(bpkid) AS total FROM pen_bpk ");
         return $sql->row()->total;
+    }
+
+    /**
+     * 
+     * @param type $where
+     * @return type
+     */
+    public function getTotalSpk($where) {
+        $wh = "WHERE spk_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(spkid) AS total FROM pen_spk $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * 
+     * @param type $where
+     * @return type
+     */
+    public function getTotalCekDokumen($where) {
+        $wh = "WHERE spk_cbid = '" . ses_cabang . "' AND spk_ceklist_kategory != 0";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(spkid) AS total FROM pen_spk $wh");
+        log_message('error', 'FAFAFA' . $this->db->last_query());
+        return $sql->row()->total;
+    }
+
+    /**
+     * 
+     * @param type $where
+     * @return type
+     */
+    public function getTotalFpk($where) {
+        $wh = "WHERE fpk_cbid = '" . ses_cabang . "' AND fpk_status = 0";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(fpkid) AS total FROM pen_fpk LEFT JOIN"
+                . " pen_spk ON fpk_spkid = spkid LEFT JOIN ms_leasing ON leasid = fpk_leasid $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * 
+     * @param type $fpkid
+     * @return type
+     */
+    function getFpkById($fpkid) {
+        $sql = $this->db->query("SELECT * FROM pen_fpk LEFT JOIN"
+                . " pen_spk ON fpk_spkid = spkid LEFT JOIN ms_leasing ON leasid = fpk_leasid WHERE fpkid = '$fpkid'");
+        return $sql->row_array();
+    }
+
+    function getSpkById($fpkid) {
+        $sql = $this->db->query("SELECT * FROM pen_spk LEFT JOIN ms_ceklist_kategory ON ckid = spk_ceklist_kategory WHERE spkid = '$fpkid'");
+        return $sql->row_array();
     }
 
     /**
@@ -29,9 +86,13 @@ class Model_Trsales extends CI_Model {
      * @param type $cbid
      * @return null
      */
-    public function autoRangkaUnit($norangka, $cbid) {
+    public function autoRangkaUnit($norangka, $readyStock = null, $cbid) {
+        $wh = '';
+        if ($readyStock != null) {
+            $wh = " AND msc_ready_stock = 1";
+        }
         $sql = $this->db->query("SELECT msc_norangka FROM ms_car WHERE msc_cbid = '$cbid'"
-                . " AND msc_isstock = 1 AND msc_norangka LIKE '$norangka%' ORDER BY msc_norangka LIMIT 20");
+                . " AND msc_isstock = 1 $wh AND msc_norangka LIKE '$norangka%'  ORDER BY msc_norangka LIMIT 20");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -57,6 +118,19 @@ class Model_Trsales extends CI_Model {
         return null;
     }
 
+    public function autoSpk($noSpk, $approve = null, $cbid) {
+        $wh = '';
+        if ($approve != null) {
+            $wh = " AND spk_approve_status = $approve";
+        }
+        $sql = $this->db->query("SELECT spk_no AS value, spkid, spk_nokontrak FROM pen_spk WHERE spk_cbid = '$cbid' "
+                . " AND spk_no LIKE '$noSpk%' $wh ORDER BY spk_no LIMIT 20");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
     /**
      * 
      * @param type $norangka
@@ -64,8 +138,10 @@ class Model_Trsales extends CI_Model {
      * @return null
      */
     public function getDataStock($norangka, $cbid) {
-        $sql = $this->db->query("SELECT mscid,msc_nomesin,merk_deskripsi,cty_deskripsi,msc_kondisi,msc_vinlot,msc_bodyseri FROM ms_car LEFT JOIN ms_car_type ON ctyid = msc_ctyid"
-                . " LEFT JOIN ms_car_model ON modelid = cty_modelid LEFT JOIN ms_car_merk ON model_merkid = merkid"
+        $sql = $this->db->query("SELECT mscid,warna_deskripsi,msc_nomesin,merk_deskripsi,cty_deskripsi,msc_kondisi,msc_vinlot,msc_bodyseri FROM ms_car LEFT JOIN ms_car_type ON ctyid = msc_ctyid"
+                . " LEFT JOIN ms_car_model ON modelid = cty_modelid "
+                . " LEFT JOIN ms_car_merk ON model_merkid = merkid"
+                . " LEFT JOIN ms_warna ON warnaid = msc_warnaid"
                 . " WHERE msc_cbid = '$cbid' AND msc_norangka = '$norangka'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
@@ -82,6 +158,16 @@ class Model_Trsales extends CI_Model {
         return null;
     }
 
+    public function getDataSpk($spkid, $cbid) {
+        $sql = $this->db->query("SELECT * FROM pen_spk "
+                . " LEFT JOIN pen_fpt ON fptid = spk_fptid LEFT JOIN ms_pelanggan ON pelid = spk_pelid "
+                . " LEFT JOIN ms_karyawan ON spk_salesman = krid WHERE spkid = '$spkid' AND spk_cbid = '$cbid'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
     /**
      * 
      * @param type $start
@@ -91,7 +177,7 @@ class Model_Trsales extends CI_Model {
      * @param type $where
      * @return null
      */
-    public function getDataBpk($start, $limit, $sidx, $sord, $where) {
+    public function getAllBpk($start, $limit, $sidx, $sord, $where) {
         $this->db->select('bpkid,bpk_jenis,msc_norangka,bpk_nomer,msc_bodyseri,bpk_tgl,cty_deskripsi');
         $this->db->limit($limit);
         if ($where != NULL)
@@ -100,6 +186,62 @@ class Model_Trsales extends CI_Model {
         $this->db->join('ms_car', 'mscid = bpk_mscid', 'left');
         $this->db->join('ms_car_type', 'ctyid = msc_ctyid', 'left');
         $this->db->where('bpk_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function getAllSpk($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('spkid,spk_no, spk_tgl, spk_nokontrak, fpt_kode,pel_nama');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('pen_spk');
+        $this->db->join('pen_fpt', 'fptid = spk_fptid', 'left');
+        $this->db->join('ms_kontrak', 'spk_nokontrak = kon_nomer AND spk_cbid = kon_cbid', 'left');
+        $this->db->join('ms_pelanggan', 'spk_pelid = pelid', 'left');
+        $this->db->where('spk_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function getAllCekDokumen($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('spkid, spk_no, spk_approve_status, spk_nokontrak, spk_approve_tgl,spk_approve_by');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('pen_spk');
+        $this->db->where('spk_cbid', ses_cabang);
+        $this->db->where('spk_ceklist_kategory != 0');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        log_message('error', 'AAAAAa ' . $this->db->last_query());
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function getAllFpk($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('fpkid,fpk_no, fpk_tgl, spk_no, leas_nama, spk_nokontrak');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('pen_fpk');
+        $this->db->join('pen_spk', 'spkid = fpk_spkid', 'left');
+        $this->db->join('ms_leasing', 'leasid = fpk_leasid', 'left');
+        $this->db->where('fpk_cbid', ses_cabang);
+        $this->db->where('fpk_status', 0);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -121,7 +263,7 @@ class Model_Trsales extends CI_Model {
         $result = array();
         $data['bpkid'] = NUM_BPK . $tahun . sprintf("%08s", $this->getCounter(NUM_BPK . $tahun));
         $this->db->insert('pen_bpk', $data);
-        $this->db->query("UPDATE ms_car SET msc_ready_stock = 1 WHERE mscid = '"
+        $this->db->query("UPDATE ms_car SET msc_ready_stock = 1, msc_hpp = ".$data['bpk_hpp']." WHERE mscid = '"
                 . $data['bpk_mscid'] . "' AND msc_cbid = '" . $data['bpk_cbid'] . "'");
         if ($this->db->trans_status() == TRUE) {
             $this->db->trans_commit();
@@ -139,6 +281,112 @@ class Model_Trsales extends CI_Model {
 
     /**
      * 
+     * @param array $data
+     * @param type $fat
+     * @return type
+     */
+    public function saveSpk($data, $fat) {
+        $this->db->trans_begin();
+        $tahun = date('y');
+        $result = array();
+        $data['spkid'] = NUM_SPK . $tahun . sprintf("%08s", $this->getCounter(NUM_SPK . $tahun));
+        $this->db->insert('pen_spk', $data);
+        $acc = 0;
+        $this->db->query("DELETE FROM pen_fat WHERE fat_fptid = '" . $data['spk_fptid'] . "'");
+        if (count($fat) > 0) {
+            foreach ($fat as $value) {
+                $value['fat_fptid'] = $data['spk_fptid'];
+                $this->db->insert('pen_fat', $value);
+                $acc += $value['fat_harga'];
+            }
+        }
+        $this->db->query("UPDATE pen_fpt SET fpt_accesories = $acc WHERE fptid = '" . $data['spk_fptid'] . "'");
+        $this->db->query("UPDATE ms_kontrak SET kon_use = 1 WHERE kon_cbid = '" . ses_cabang . "' AND kon_nomer = '" . $data['spk_nokontrak'] . "'");
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['kode'] = $data['spkid'];
+            $result['msg'] = sukses("Berhasil menyimpan spk");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['kode'] = '';
+            $result['msg'] = error("Gagal menyimpan spk");
+        }
+        return $result;
+    }
+
+    /**
+     * 
+     * @param array $data
+     * @param type $fat
+     * @return type
+     */
+    public function saveCekDokumen($data, $ceklist) {
+        $this->db->trans_begin();
+        $this->db->where('spkid', $data['spkid']);
+        $this->db->update('pen_spk', $data);
+        $this->db->query("DELETE FROM pen_spk_ceklist WHERE list_spkid = '" . $data['spkid'] . "'");
+        if (count($ceklist) > 0) {
+            foreach ($ceklist as $value) {
+                $this->db->insert('pen_spk_ceklist', $value);
+            }
+        }
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['msg'] = sukses("Berhasil menyimpan spk");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['msg'] = error("Gagal menyimpan spk");
+        }
+        return $result;
+    }
+
+    public function updateCekDokumen($spkid, $ceklist) {
+        $this->db->trans_begin();
+        $this->db->query("DELETE FROM pen_spk_ceklist WHERE list_spkid = '$spkid'");
+        if (count($ceklist) > 0) {
+            foreach ($ceklist as $value) {
+                $this->db->insert('pen_spk_ceklist', $value);
+            }
+        }
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['msg'] = sukses("Berhasil menyimpan cek list");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['msg'] = error("Gagal menyimpan cek list");
+        }
+        return $result;
+    }
+
+    public function savePoLeasing($data) {
+        $this->db->trans_begin();
+        $tahun = date('y');
+        $result = array();
+        $data['fpkid'] = NUM_FPK_PK . $tahun . sprintf("%08s", $this->getCounter(NUM_FPK_PK . $tahun));
+        $data['fpk_no'] = NUM_FPK_NOMER . $tahun . sprintf("%06s", $this->getCounterCabang(NUM_FPK_NOMER . $tahun));
+        $this->db->insert('pen_fpk', $data);
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['kode'] = $data['fpkid'];
+            $result['msg'] = sukses("Berhasil menyimpan PO Leasing");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['kode'] = '';
+            $result['msg'] = error("Gagal menyimpan PO Leasing");
+        }
+        return $result;
+    }
+
+    /**
+     * 
      * @param type $data
      * @param type $where
      * @return type
@@ -150,6 +398,24 @@ class Model_Trsales extends CI_Model {
         } else {
             return array('status' => FALSE, 'msg' => 'TERIMA KENDARAAN GAGAL DIUPDATE');
         }
+    }
+
+    public function updatePoLeasing($data) {
+        $this->db->where('fpkid', $data['fpkid']);
+        $this->db->update('pen_fpk', $data);
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function saveApproveCekDokumen($data) {
+        $this->db->where('spkid', $data['spkid']);
+        $this->db->update('pen_spk', $data);
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -177,6 +443,44 @@ class Model_Trsales extends CI_Model {
      */
     public function deleteBpk($data) {
         if ($this->db->query("DELETE FROM ms_car WHERE bpkid = ' " . $data . "'")) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * 
+     * @return boolean
+     */
+    public function getCeklistKategory() {
+        $sql = $this->db->query("SELECT * FROM ms_ceklist_kategory ORDER BY ck_deskripsi");
+        return $sql->result_array();
+    }
+
+    public function getCekdokumenDetail($kategory, $spkid) {
+        if ($kategory == 0) {
+            $kategory = '0';
+        }
+        $sql = $this->db->query("SELECT * FROM ms_ceklist_detail LEFT JOIN ms_ceklist ON cekid = detail_cekid "
+                . " LEFT JOIN pen_spk_ceklist ON cekid = list_cekid AND list_spkid = '$spkid' WHERE detail_ckid = $kategory ORDER BY cek_deskripsi");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    public function getCekdokumenBySpkid($spkid) {
+        $sql = $this->db->query("SELECT * FROM pen_spk_ceklist LEFT JOIN ms_ceklist ON cekid = list_cekid "
+                . "WHERE list_spkid = '$spkid' ORDER BY cek_deskripsi");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    public function deleteFpk($data) {
+        if ($this->db->query("UPDATE pen_fpk SET fpk_status = 1 WHERE fpkid = '$data'")) {
             return TRUE;
         } else {
             return FALSE;

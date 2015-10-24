@@ -118,7 +118,7 @@ function formatDefault(num) {
     }
     return uang+koma;
 }
-function formatDefaultTanpaKoma(num) {
+function formatDefaultTanpaDecimal(num) {
     if (num == "") {
         num = "0";   
     }

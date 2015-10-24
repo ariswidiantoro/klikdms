@@ -152,8 +152,12 @@ class Master_Sales extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $hapus = '<a href="javascript:void(0);" onclick="hapusKontrak(\'' . $row->kon_nomer . '\')" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                $edit = '<a href="#master_sales/editKontrak?id=' . $row->kon_nomer . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $edit = "-";
+                $hapus = "-";
+                if ($row->kon_use == 0) {
+                    $edit = '<a href="#master_sales/editKontrak?id=' . $row->kon_nomer . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                    $hapus = '<a href="javascript:void(0);" onclick="hapusKontrak(\'' . $row->kon_nomer . '\')" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                }
                 $responce->rows[$i]['id'] = $row->kon_nomer;
                 $responce->rows[$i]['cell'] = array(
                     $row->kon_nomer,

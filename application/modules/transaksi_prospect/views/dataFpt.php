@@ -7,8 +7,8 @@ echo $this->session->flashdata('msg');
         <div class="col-xs-12">
             <div id="header" class="info">
                 <select class="form-control input-large" name="status" onchange='$("#grid-table").trigger("reloadGrid");' id="status" >
-                    <option value="0">--Pilih Status--</option>
-                    <option value="1">Menunggu Persetujuan</option>
+                    <option value="0">Semua</option>
+                    <option value="1" selected>Menunggu Persetujuan</option>
                     <option value="2">Disetujui</option>
                     <option value="4">Ditolak</option>
                     <option value="3">Spk</option>

@@ -11,6 +11,11 @@
     <div  class="form-group" style="margin-left: 0px;">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Cari Menu</label>
         <div class="col-sm-8">
+            <select name="centang" id="centang" class="form-control col-xs-10 col-sm-1" style="width: 20%">
+                <option value="">Semua</option>
+                <option value="1">Sudah Dipilih</option>
+                <option value="2">Belum Terpilih</option>
+            </select>
             <select name="sortby" id="sortby" class="form-control col-xs-10 col-sm-1" style="width: 20%">
                 <option value="menu_nama">Nama Menu</option>
                 <option value="menu_deskripsi">Deskripsi</option>
@@ -97,24 +102,35 @@
         //inline scripts related to this page
     });
     
-    function carimenu()
-    {
+    
+    function submited(actions) {
+        $('#roleDetail').html('');
         $.ajax({
             type: 'POST',
-            url: "<?php echo site_url('admin/getMenuDetail'); ?>",
-            dataType: "json",
-            async: false,
+            url: '' + actions + '',
             data: {
                 sortby : $("#sortby").val(),
                 cari_menu : $("#cari_menu").val(),
+                centang : $("#centang").val(),
                 roleid : $("#roleid").val()
             },
             success: function(data) {
-                $("#roleDetail").html("");
-                $("#roleDetail").html(data).show().fadeIn("slow");
+                $('#roleDetail').html(data);
+                //                $('#roleDetail').fadeIn('fast');
             }
         })
     }
+
+    function carimenu() {
+        submited('<?php echo site_url('admin/getMenuDetail'); ?>');
+        if ($('#tranid').val() == '') {
+            alert('KODE PERKIRAAN TDK BOLEH KOSONG');
+        } else {
+            $('#form').submit();
+        }
+        $('#form').unbind('submit');
+    }
+    
     $(function() {
         $('table th input:checkbox').on('click', function() {
             var that = this;

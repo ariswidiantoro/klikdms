@@ -148,7 +148,7 @@ class Admin extends Application {
     }
 
     function jsonKaryawan() {
-        $nama = $this->input->post('param');
+        $nama = strtoupper($this->input->post('param'));
         $cbid = $this->input->post('cbid');
         $data['response'] = 'false';
         $query = $this->model_admin->getKaryawan($nama, $cbid);
@@ -517,7 +517,7 @@ class Admin extends Application {
                 $tgl = defaultTgl();
             }
             $data = array(
-                'kr_nik' => $this->input->post('kr_nik'),
+                'kr_nik' => strtoupper($this->input->post('kr_nik')),
                 'kr_nama' => strtoupper($this->input->post('kr_nama')),
                 'kr_kotaid' => $this->input->post('kr_kotaid'),
                 'kr_alamat' => strtoupper($this->input->post('kr_alamat')),
@@ -529,7 +529,7 @@ class Admin extends Application {
                 'kr_password' => sha1('123456'),
                 'kr_hp' => $this->input->post('kr_hp'),
                 'kr_email' => $this->input->post('kr_email'),
-                'kr_tempat_lahir' => $this->input->post('kr_tempat_lahir'),
+                'kr_tempat_lahir' => strtoupper($this->input->post('kr_tempat_lahir')),
                 'kr_tgl_lahir' => dateToIndo($tgl),
             );
             $hasil = array();
@@ -570,7 +570,7 @@ class Admin extends Application {
                 'kr_password' => sha1('123456'),
                 'kr_hp' => $this->input->post('kr_hp'),
                 'kr_email' => $this->input->post('kr_email'),
-                'kr_tempat_lahir' => $this->input->post('kr_tempat_lahir'),
+                'kr_tempat_lahir' => strtoupper($this->input->post('kr_tempat_lahir')),
                 'kr_tgl_lahir' => dateToIndo($tgl),
             );
             $hasil = $this->model_admin->updateKaryawan($data);
@@ -897,12 +897,13 @@ class Admin extends Application {
      * Dgunakan untuk edit role detail
      */
     function getMenuDetail() {
-        $id = $this->input->post('roleid');
+        $roleid = $this->input->post('roleid');
         $cari = $this->input->post('cari_menu');
         $sortby = $this->input->post('sortby');
-        $this->data['roleid'] = $id;
-        $this->data['menu'] = $this->model_admin->getMenuSort($sortby, $cari);
-        $this->data['detail'] = $this->model_admin->getDetailRole($id);
+        $centang = $this->input->post('centang');
+        $this->data['roleid'] = $roleid;
+        $this->data['menu'] = $this->model_admin->getMenuRole($sortby, $cari, $centang,  $roleid);
+        $this->data['detail'] = $this->model_admin->getDetailRole($roleid);
         $this->load->view("getMenuDetail", $this->data);
     }
 

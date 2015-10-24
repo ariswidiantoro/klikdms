@@ -463,10 +463,11 @@ class Transaksi_Prospect extends Application {
             $data['fpt_accesories'] = $acc;
             $data['fpt_total'] += $acc;
             $save = $this->model_prospect->saveFPT($data, $fat);
-            if ($save['status'] == TRUE) {
-                $hasil = array('result' => TRUE, 'msg' => $this->sukses($save['msg']));
+            if ($save['status']) {
+                $hasil = array('result' => true, 'msg' => $this->sukses($save['msg']));
+                 $this->session->set_flashdata('msg', $this->sukses('Berhasil menambah FPT'));
             } else {
-                $hasil = array('result' => FALSE, 'msg' => $this->error($save['msg']));
+                $hasil = array('result' => false, 'msg' => $this->error($save['msg']));
             }
         }
         echo json_encode($hasil);
@@ -556,7 +557,7 @@ class Transaksi_Prospect extends Application {
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
         $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
         $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'prosid';
-        $status = isset($_POST['status']) ? $_POST['status'] : '';
+        $status = isset($_POST['status']) ? $_POST['status'] : '1';
         $sord = isset($_POST['sord']) ? $_POST['sord'] : 'DESC';
         $start = $limit * $page - $limit;
         $start = ($start < 0) ? 0 : $start;

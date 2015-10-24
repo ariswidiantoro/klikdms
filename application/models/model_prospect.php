@@ -247,8 +247,8 @@ class Model_Prospect extends CI_Model {
         $this->db->trans_begin();
         try {
             $tahun = date('y');
-            $data['fptid'] = NUM_FPT . $tahun . sprintf("%08s", $this->getCounter(NUM_FPT . $tahun));
-            $data['fpt_kode'] = NUM_FPT . $tahun . sprintf("%06s", $this->getCounterCabang(NUM_FPT . $tahun));
+            $data['fptid'] = NUM_FPT . $tahun . sprintf("%07s", $this->getCounter(NUM_FPT . $tahun));
+            $data['fpt_kode'] = NUM_FPT_NOMER . $tahun . sprintf("%06s", $this->getCounterCabang(NUM_FPT_NOMER . $tahun));
             $this->db->insert('pen_fpt', $data);
             if (count($fat) > 0) {
                 foreach ($fat as $value) {
@@ -362,7 +362,7 @@ class Model_Prospect extends CI_Model {
             merk_deskripsi,fpt_hargako,fpt_bbn,warna_deskripsi,fpt_accesories,fpt_kondisi,fpt_komisi,fpt_penerima_komisi,
             fpt_asuransi,fpt_administrasi,fpt_qty,fpt_total,leas_nama,fpt_leasid,fpt_note, warnaid, fpt_merkid, fpt_ctyid,
             fpt_cashback,fpt_uangmuka, fpt_kode, cty_deskripsi, fpt_tgl, fpt_modelid,
-            pros_hp,fpt_pay_method,fpt_jangka,fpt_karoseri, fpt_segid
+            pros_hp,fpt_pay_method,fpt_jangka,fpt_karoseri, fpt_segid,pros_salesman
             FROM pen_fpt 
             LEFT JOIN pros_data ON prosid = fpt_prosid 
             LEFT JOIN ms_karyawan ON krid = pros_salesman 
