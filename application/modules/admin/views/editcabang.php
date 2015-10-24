@@ -1,5 +1,5 @@
 <div id="result"></div>
-<form class="form-horizontal" id="formMenu" method="post" action="<?php echo site_url('admin/updateCabang'); ?>" name="formMenu">
+<form class="form-horizontal" id="formMenu" method="post" action="<?php echo site_url('admin/updateCabang'); ?>" name="formMenu" enctype="multipart/form-data">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Cabang</label>
         <div class="col-sm-8">
@@ -94,6 +94,12 @@
             <input type="email" name="cb_email" id="cb_email" value="<?php echo $cabang['cb_email'] ?>"  placeholder="email" class="col-xs-10 col-sm-5" />
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Icon</label>
+        <div class="col-sm-4">
+            <input type="file" name="cb_icon" id="cb_icon" class="file-input col-xs-10 col-sm-4" />
+        </div>
+    </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
             <button class="btn btn-info" type="submit">
@@ -110,6 +116,24 @@
     </div>
 </form>
 <script type="text/javascript">
+   
+    jQuery(function($) {
+        $('.file-input').ace_file_input({
+            no_file:'Upload Icon',
+            btn_choose:'Choose',
+            btn_change:'Change',
+            droppable:false,
+            onchange:null,
+            thumbnail:false //| true | large
+            //whitelist:'gif|png|jpg|jpeg'
+            //blacklist:'exe|php'
+            //onchange:''
+            //
+        });
+        //pre-show a file name, for example a previously selected file
+        //$('#id-input-file-1').ace_file_input('show_file_list', ['myfile.txt'])
+			
+    });
     function getKota()
     {
         $.ajax({
@@ -135,8 +159,9 @@
                 url: $(this).attr('action'),
                 dataType: "json",
                 async: false,
-                data: $(this)
-                .serialize(),
+                data: new FormData( this ),
+                processData: false,
+                contentType: false,
                 beforeSend: function() {
                     $("#imgAjaxLoader")
                     .show();

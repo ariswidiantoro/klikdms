@@ -45,7 +45,7 @@ class Model_Trservice extends CI_Model {
      * @return null
      */
     public function getWoBelumInvoiceAutoComplete($wo) {
-        $sql = $this->db->query("SELECT wo_nomer,msc_nopol,wo_type FROM svc_wo LEFT JOIN"
+        $sql = $this->db->query("SELECT wo_nomer AS value,msc_nopol AS desc,wo_type AS type FROM svc_wo LEFT JOIN"
                 . " ms_car ON mscid = wo_mscid WHERE wo_nomer LIKE '$wo%' AND wo_cbid = '"
                 . ses_cabang . "' AND wo_inv_status = 0 AND wo_status = 0 ORDER BY wo_nomer LIMIT 10");
         if ($sql->num_rows() > 0) {
@@ -244,11 +244,11 @@ class Model_Trservice extends CI_Model {
     public function getFakturService($invid) {
         $sql = $this->db->query("SELECT inv_numerator,inv_tgl,wo_numerator,wo_status,wo_booking,wo_inextern,wo_nomer,msc_nopol,"
                 . " msc_norangka,msc_nomesin,msc_tahun,wo_km,kr_nama,pel_nama,pel_alamat,model_deskripsi,"
-                . " pel_hp,wo_createon,wo_selesai,pel_telpon, wo_pembawa"
-                . " FROM svc_wo LEFT JOIN ms_car ON mscid = wo_mscid LEFT JOIN ms_car_type"
+                . " pel_hp,wo_createon,wo_selesai,pel_telpon, wo_pembawa, wo_km,wo_sa,inv_fchecker,inv_createon,wo_createon"
+                . " FROM svc_invoice LEFT JOIN svc_wo ON inv_woid = woid LEFT JOIN ms_car ON mscid = wo_mscid LEFT JOIN ms_car_type"
                 . " ON msc_ctyid = ctyid LEFT JOIN ms_car_model ON modelid = cty_modelid"
                 . " LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_karyawan ON krid = wo_sa"
-                . " WHERE woid = '$woid'");
+                . " WHERE invid = '$invid'");
         if ($sql->num_rows() > 0) {
             return $sql->row_array();
         }

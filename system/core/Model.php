@@ -55,6 +55,7 @@ class CI_Model {
     function getCounter($key) {
         $sql = "SELECT set_value FROM setting WHERE set_key = '" . $key . "' FOR UPDATE";
         $sql = $this->db->QUERY($sql);
+//        log_message('error', 'AAAAAAA ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             $row = $sql->row();
             $counter = intval($row->set_value) + 1;
@@ -68,9 +69,9 @@ class CI_Model {
         }
         return $counter;
     }
-    
+
     function getCounterCabang($key) {
-        $sql = "SELECT set_value FROM setting WHERE set_key = '" . $key . "' AND set_cbid = '".ses_cabang."' FOR UPDATE";
+        $sql = "SELECT set_value FROM setting WHERE set_key = '" . $key . "' AND set_cbid = '" . ses_cabang . "' FOR UPDATE";
         $sql = $this->db->QUERY($sql);
         if ($sql->num_rows() > 0) {
             $row = $sql->row();
@@ -85,25 +86,25 @@ class CI_Model {
         }
         return $counter;
     }
-    
+
     public function newCode($data) {
         $current_year = date("y");
         //$data['cbid'] = (empty($data['cbid']))?ses_cabang:$data['cbid'];
-        if(empty($data['cbid'])){
+        if (empty($data['cbid'])) {
             $filter = " ";
-        }else{
-            $filter = " AND nmr_cbid = '".$data['cbid']."' ";
+        } else {
+            $filter = " AND nmr_cbid = '" . $data['cbid'] . "' ";
         }
         if (!empty($data['type'])) {
-            $nomer = $data['type'].$current_year;
-        }else{
+            $nomer = $data['type'] . $current_year;
+        } else {
             $back['status'] = FALSE;
             $back['code'] = 0;
             return $back;
         }
-        
+
         $sql = "SELECT nmr_value FROM ms_numerator WHERE  nmr_key = '" . $nomer . "' 
-            ".$filter." FOR UPDATE ";
+            " . $filter . " FOR UPDATE ";
         $sql = $this->db->query($sql);
         if ($sql->num_rows() > 0) {
             $row = $sql->row();
@@ -113,14 +114,15 @@ class CI_Model {
                 'nmr_value' => $counter
             );
             $query = "UPDATE ms_numerator SET nmr_value = '" . $counter . "' 
-                WHERE nmr_key = '" . $nomer . "' ".$filter;
+                WHERE nmr_key = '" . $nomer . "' " . $filter;
             $cek = $this->db->query($query);
         } else {
             $dataInsert = array(
-                            'nmr_key' => $nomer, 
-                            'nmr_value' => '00000001'
-                            );
-            if(!empty($data['cbid'])) $dataInsert['nmr_cbid'] = $data['cbid'];
+                'nmr_key' => $nomer,
+                'nmr_value' => '00000001'
+            );
+            if (!empty($data['cbid']))
+                $dataInsert['nmr_cbid'] = $data['cbid'];
             $cek = $this->db->insert('ms_numerator', $dataInsert);
             $counter = '00000001';
         }

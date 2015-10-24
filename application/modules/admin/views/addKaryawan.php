@@ -3,31 +3,26 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Cabang</label>
         <div class="col-sm-8">
-            <span style="float: left;width: 30%;">
-                <select name="kr_cbid" id="kr_cbid" required="required" class="form-control col-xs-10 col-sm-10"  >
-                    <option value="">Pilih</option>
-                    <?php
-                    if (count($cabang) > 0) {
-                        foreach ($cabang as $value) {
-                            $select = (ses_cabang == $value['cbid']) ? 'selected' : '';
-                            ?>
-                            <option value="<?php echo $value['cbid']; ?>" <?php echo $select; ?>><?php echo $value['cb_nama']; ?></option> 
-                            <?php
-                        }
+
+            <select name="kr_cbid" id="kr_cbid" required="required" class="ace col-xs-10 col-sm-3"  >
+                <option value="">Pilih</option>
+                <?php
+                if (count($cabang) > 0) {
+                    foreach ($cabang as $value) {
+                        $select = (ses_cabang == $value['cbid']) ? 'selected' : '';
+                        ?>
+                        <option value="<?php echo $value['cbid']; ?>" <?php echo $select; ?>><?php echo $value['cb_nama']; ?></option> 
+                        <?php
                     }
-                    ?>
-                </select>
-            </span>
-            <span style="float: left;width: 60%;margin-left: 10px; ">
-                <input type="hidden" id="kr_atasanid" name="kr_atasanid">
-                <input type="text" name="kr_atasan" id="kr_atasan"  placeholder="Atasan" class="form-control col-xs-10" />
-            </span>
+                }
+                ?>
+            </select>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Departemen</label>
         <div class="col-sm-8">
-            <select name="jab_deptid" id="jab_deptid" onchange="getJabatan()" class="req form-control" style="width: 30%" >
+            <select name="jab_deptid" id="jab_deptid" onchange="getJabatan()" class="ace col-xs-10 col-sm-3">
                 <option value="">Pilih</option>
                 <?php
                 if (count($departemen) > 0) {
@@ -44,7 +39,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Jabatan</label>
         <div class="col-sm-8">
-            <select name="kr_jabid" id="kr_jabid" required="required" class="req form-control" style="width: 30%">
+            <select name="kr_jabid" id="kr_jabid" required="required" class="ace col-xs-10 col-sm-3 req">
             </select>
         </div>
     </div>
@@ -52,25 +47,31 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">NIK</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_nik" required="required"  class="req ace col-xs-10 col-sm-3" />
+            <input type="text" name="kr_nik" required="required"  class="req ace col-xs-10 col-sm-3 upper req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Karyawan</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_nama" required="required"  class="req upper ace col-xs-10 col-sm-5" />
+            <span style="float: left;width: 45%;">
+                <input type="text" name="kr_nama" required="required" style="width: 100%"  class="req upper ace col-xs-10 col-sm-10 upper req" />
+            </span>
+            <span style="float: left;width: 50%;margin-left: 10px; ">
+                <input type="hidden" id="kr_atasanid" name="kr_atasanid">
+                <input type="text" name="kr_atasan" id="kr_atasan"  placeholder="Atasan" class="form-control col-xs-10 upper" />
+            </span>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Username</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_username"  required="required"  class="req ace col-xs-10 col-sm-3" />
+            <input type="text" name="kr_username"  required="required"  class="req ace col-xs-10 col-sm-3 req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea class="req upper ace col-xs-10 col-sm-5" name="kr_alamat" rows="4"></textarea>
+            <textarea required class="req upper ace col-xs-10 col-sm-5" name="kr_alamat" rows="4"></textarea>
         </div>
     </div>
     <div class="form-group">
@@ -106,7 +107,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tempat Lahir</label>
         <div class="col-sm-8">
-            <input type="text" name="kr_tempat_lahir"  placeholder="Tempat Lahir" class="ace col-xs-10 col-sm-5" />
+            <input type="text" name="kr_tempat_lahir"  placeholder="Tempat Lahir" class="ace col-xs-10 col-sm-5 upper req" />
         </div>
     </div>
     <div class="form-group">

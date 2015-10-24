@@ -7,6 +7,14 @@ if (!defined('BASEPATH'))
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });
+    
+    function printData(bpkid)
+    {
+        var params  = 'width='+screen.width;
+        params += ', height='+screen.height;
+        params += ', fullscreen=yes,scrollbars=yes';
+        window.open("<?php echo site_url("transaksi_sales/printBpk"); ?>/"+bpkid,'_blank', params);
+    }
     function hapusData(id, kode) {
         bootbox.confirm("Yakin Hapus Data "+kode+" ?", function(result) {
             if(result) {
@@ -18,8 +26,8 @@ if (!defined('BASEPATH'))
                         id: id
                     },
                     success: function(data) {
-                       $("#result").html(data).show().fadeIn("slow");
-                       $("#grid-table").trigger("reloadGrid");
+                        $("#result").html(data).show().fadeIn("slow");
+                        $("#grid-table").trigger("reloadGrid");
                     }
                 });
             }

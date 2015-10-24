@@ -30,35 +30,35 @@
             applet.append("\x1B\x46"); // ESC F -> set Bold Off
             applet.append("\n               <?php
 $reprint = "";
-if ($datas->inv_print > 0) {
-    $reprint = " REPRINT KE " . $datas->inv_print;
-} echo sprintf("%' -40s", ses_dealer) . $data->wo_nomer . $reprint;
+if ($data['inv_print'] > 0) {
+    $reprint = " REPRINT KE " . $data['inv_print'];
+} echo sprintf("%' -40s", ses_dealer) . $data['wo_nomer'] . $reprint;
 ?>");
-            applet.append("\n               <?php echo sprintf("%' -40s", " ") . Date('d-M-Y H:i', strtotime($data->inv_tgl)) . sprintf("%' -3s", " ") . $datas->inv_numerator; ?>");
+            applet.append("\n               <?php echo sprintf("%' -40s", " ") . Date('d-M-Y H:i', strtotime($data['inv_tgl'])) . sprintf("%' -3s", " ") . $datas['inv_tgl']; ?>");
             applet.append("\n               <?php echo sprintf("%' -55s", str_replace($remove, " ", ses_alamat)); ?>");
             applet.append("\n               <?php echo sprintf("%' -55s", ses_phone); ?>");
             applet.append("\n               <?php echo sprintf("%' -55s", ses_npwp); ?>");
             applet.append("\n");
             applet.append("\n");
-            applet.append("\nWORK ORDER = <?php echo $data->wo_nomer; ?>");
-            applet.append("\nTANGGAL    = <?php echo $this->system->dateID($pelanggan->wo_tgl); ?>");
-            applet.append("\nWAKTU      = <?php echo Date('H:i', strtotime($pelanggan->wo_createon)); ?>");
+            applet.append("\nWORK ORDER = <?php echo $data['wo_nomer']; ?>");
+            applet.append("\nTANGGAL    = <?php echo dateToIndo($data['wo_tgl']); ?>");
+            applet.append("\nWAKTU      = <?php echo Date('H:i', strtotime($data['wo_createon'])); ?>");
             applet.append("\n                      [INVOICE]                         <?php
 echo Date('d-m-Y/H:i');
 ?> ");
             applet.append("\n<?php echo sprintf("%'--96s", "-"); ?>");
             applet.append("\nKWITANSI PEMBAYARAN (INVOICE)");
             applet.append("\n<?php echo sprintf("%'--96s", "-"); ?>");
-            applet.append("\nNAMA PEMILIK  : <?php echo sprintf("%' -50s", str_replace('"', " ", $pelanggan->pel_nama)) . "NO.POLISI  :" . $pelanggan->msc_nopol; ?>");
+            applet.append("\nNAMA PEMILIK  : <?php echo sprintf("%' -50s", str_replace('"', " ", $data['pel_nama'])) . "NO.POLISI  :" . $data['msc_nopol']; ?>");
             applet.append("\nALAMAT        : <?php
-$alamat = str_replace($remove, " ", str_replace("\\", "/", strtoupper($pelanggan->pel_alamat)));
-echo sprintf("%' -50s", substr($alamat, 0, 49)) . "NO.RANGKA  :" . $pelanggan->msc_norangka;
+$alamat = str_replace($remove, " ", str_replace("\\", "/", strtoupper($data['pel_alamat'])));
+echo sprintf("%' -50s", substr($alamat, 0, 49)) . "NO.RANGKA  :" . $data['msc_norangka'];
 ?>");
-            applet.append("\n              : <?php echo sprintf("%' -50s", substr($alamat, 49, 49)) . "NO.MESIN   :" . $pelanggan->msc_nomesin; ?>");
-            applet.append("\n              : <?php echo sprintf("%' -50s", substr($alamat, 98, 49)) . "KM.MASUK   :" . $pelanggan->wo_km; ?>");
-            applet.append("\nTELPON        : <?php echo sprintf("%' -50s", $pelanggan->pel_hp) . "MEKANIK    :" . $pelanggan->kr_fullname_mekanik; ?>");
-            applet.append("\nSVC.Ad/FR.MAN : <?php echo sprintf("%' -50s", $pelanggan->kr_fullname) . "TGL. MASUK :" . Date('d-m-Y/H:i', strtotime($pelanggan->wo_createon)); ?>");
-            applet.append("\nFINAL CHECKER : <?php echo sprintf("%' -50s", $datas->kr_fullname_checker) . "TGL.SELESAI:" . Date('d-m-Y/H:i', strtotime($datas->inv_createon)); ?>");
+            applet.append("\n              : <?php echo sprintf("%' -50s", substr($alamat, 49, 49)) . "NO.MESIN   :" . $data['msc_nomesin']; ?>");
+            applet.append("\n              : <?php echo sprintf("%' -50s", substr($alamat, 98, 49)) . "KM.MASUK   :" . $data['wo_km']; ?>");
+            applet.append("\nTELPON        : <?php echo sprintf("%' -50s", $data['pel_hp']) .      "MEKANIK    : -" ?>");
+            applet.append("\nSVC.Ad/FR.MAN : <?php echo sprintf("%' -50s", $sa['kr_nama']) . "TGL. MASUK :" . Date('d-m-Y/H:i', strtotime($data['wo_createon'])); ?>");
+            applet.append("\nFINAL CHECKER : <?php echo sprintf("%' -50s", $fc['kr_nama']) . "TGL.SELESAI:" . Date('d-m-Y/H:i', strtotime($data['inv_createon'])); ?>");
             applet.append("\n<?php echo sprintf("%'--96s", "-"); ?>");
             applet.append("\nRINCIAN TAGIHAN<?php echo sprintf("%' -67s", " ") ?>JUMLAH");
             applet.append("\n<?php echo sprintf("%'--96s", "-"); ?>");

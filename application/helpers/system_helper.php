@@ -811,6 +811,13 @@ if (!defined('ses_alamat')) {
     }
     define("ses_alamat", $alamat);
 }
+if (!defined('ses_icon')) {
+    $icon = $CI->session->userdata('icon');
+    if ($icon == "") {
+        $icon = data_cookie("icon");
+    }
+    define("ses_icon", $icon);
+}
 
 
 //cabang

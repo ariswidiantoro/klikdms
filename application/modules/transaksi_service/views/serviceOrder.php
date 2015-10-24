@@ -5,6 +5,19 @@
 
     }
 
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 20px;
+    }
+    * html .ui-autocomplete {
+        height: 200px;
+    }
+    input:focus {
+        background-color: yellow;
+    } 
+
 </style>
 <script type="text/javascript">
     function addRowJasa() {

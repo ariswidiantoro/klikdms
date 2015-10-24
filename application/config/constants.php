@@ -46,8 +46,10 @@ define('JAB_MKT_SPVSALES', 'JAB007');
 define('JAB_MKT_GMOSALES', 'JAB007');
 
 // NUMERATOR KODE
+define('NUM_CAR', 'IV');
 define('NUM_INVOICE', 'IV');
 define('NUM_TERIMA_BARANG', 'TB');
+define('NUM_KARYAWAN', 'KR');
 define('NUM_RETUR_JUAL_SPAREPART', 'RJ');
 define('NUM_RETUR_BELI_SPAREPART', 'RB');
 define('NUM_NOTA_SPAREPART', 'NS');
@@ -55,6 +57,8 @@ define('NUM_NUMERATOR_SPAREPART', 'NC');
 define('NUM_SUPPLY_PK', 'SS');
 define('NUM_SUPPLY_NOMER', 'SP');
 define('NUM_ADJUSTMENT_STOCK', 'AD');
+define('NUM_FPK_PK', 'PK');
+define('NUM_FPK_NOMER', 'FK');
 
 /* Rossi */
 define('NUM_TIPE_JURNAL', 'TJ');
@@ -63,7 +67,8 @@ define('NUM_PROSPECT', 'PC');
 define('NUM_STOCK_UNIT', 'ST');
 define('NUM_BPK', 'BP');
 define('NUM_SPK', 'SK');
-define('NUM_FPT', 'FP');
+define('NUM_FPT', 'FPT');
+define('NUM_FPT_NOMER', 'FP');
 define('NUM_TRANS', 'TR');
 define('NUM_JENIS_COA', 'JC');
 define('NUM_SPECIAL_COA', 'SC');

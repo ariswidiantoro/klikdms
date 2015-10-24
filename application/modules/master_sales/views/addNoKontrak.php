@@ -1,4 +1,7 @@
 <div id="result"></div>
+<?php
+echo $this->session->flashdata('msg');
+?>
 <form class="form-horizontal" id="form" method="post" action="<?php echo site_url('master_sales/saveNoKontrak'); ?>" name="form">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Kontrak</label>
@@ -9,13 +12,14 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama Prospek</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_nama" required="required" placeholder="Nama" class="req upper ace col-xs-10 col-sm-6" />
+            <input type="text" name="pel_nama" required="required" id="pel_nama" placeholder="Nama" class="req upper ace col-xs-10 col-sm-6" />
+            <input type="hidden" name="prosid" id="prosid">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea name="pel_alamat" class="req upper ace col-xs-10 col-sm-7" required="required" rows="4"></textarea>
+            <textarea name="pel_alamat" id="pel_alamat" class="req upper ace col-xs-10 col-sm-7" required="required" rows="4"></textarea>
         </div>
     </div>
     <div class="form-group">
@@ -51,19 +55,19 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor HP</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_hp" required="required"  placeholder="Nomor HP" class="req ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_hp" id="pel_hp" required="required"  placeholder="Nomor HP" class="req ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor KTP</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_nomor_id" required="required" placeholder="Nomor HP" class="req ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_nomor_id" id="pel_nomor_id" required="required" placeholder="Nomor HP" class="req ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Telpon</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_telpon" placeholder="Nomor Telpon" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_telpon" id="pel_telpon" placeholder="Nomor Telpon" class="ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
@@ -76,14 +80,14 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tempat Lahir</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_tempat_lahir"  placeholder="Tempat Lahir" class="ace col-xs-10 col-sm-5" />
+            <input type="text" name="pel_tempat_lahir" id="pel_tempat_lahir"  autocomplete="off" placeholder="Tempat Lahir" class="ace col-xs-10 col-sm-5 upper" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tgl Lahir</label>
         <div class="col-sm-8">
             <div class="input-group input-group-sm col-sm-2">
-                <input type="text" name="pel_tgl_lahir" id="datepicker" class="form-control" />
+                <input type="text" name="pel_tgl_lahir" id="pel_tgl_lahir" class="form-control datepicker" />
                 <span class="input-group-addon">
                     <i class="ace-icon fa fa-calendar"></i>
                 </span>
@@ -95,14 +99,14 @@
         <div class="col-sm-8">
             <div class="radio">
                 <label>
-                    <input name="pel_gender" type="radio" value="L" class="ace" />
+                    <input name="pel_gender" type="radio" value="L" id="L" class="ace" />
                     <span class="lbl">Laki-Laki</span>
                 </label>
             </div>
 
             <div class="radio">
                 <label>
-                    <input name="pel_gender" type="radio" value="P" class="ace" />
+                    <input name="pel_gender" type="radio" value="P" id="P" class="ace" />
                     <span class="lbl">Perempuan</span>
                 </label>
             </div>
@@ -120,31 +124,31 @@
         <div class="col-sm-8">
             <div class="radio">
                 <label>
-                    <input name="pel_agama" type="radio" value="islam" class="ace" />
+                    <input name="pel_agama" type="radio" value="islam" id="islam" class="ace" />
                     <span class="lbl">Islam</span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input name="pel_agama" type="radio" value="kristen" class="ace" />
+                    <input name="pel_agama" type="radio" value="kristen" id="kristen" class="ace" />
                     <span class="lbl">Kristen</span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input name="pel_agama" type="radio" value="budha" class="ace" />
+                    <input name="pel_agama" type="radio" value="budha" id="budha" class="ace" />
                     <span class="lbl">Budha</span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input name="pel_agama" type="radio" value="katolik" class="ace" />
+                    <input name="pel_agama" type="radio" value="katolik" id="katolik" class="ace" />
                     <span class="lbl">Katolik</span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input name="pel_agama" type="radio" value="hindu" class="ace" />
+                    <input name="pel_agama" type="radio" value="hindu" id="hindu" class="ace" />
                     <span class="lbl">Hindu</span>
                 </label>
             </div>
@@ -192,7 +196,7 @@
         })
     }
     
-    $( "#datepicker" ).datepicker({
+    $( ".datepicker" ).datepicker({
         showOtherMonths: true,
         selectOtherMonths: false,
         isRTL:true,
@@ -227,10 +231,7 @@
                 success: function(data) {
                     window.scrollTo(0, 0);
                     if (data.result) {
-                        if ($("#href").val() != '') {
-                            window.location = "#"+$("#href").val();
-                        }
-                        document.form.reset();
+                        $('.page-content-area').ace_ajax('loadUrl', "#master_sales/addNoKontrak", false);
                     }
                     $("#result").html(data.msg).show().fadeIn("slow");
                 }
@@ -238,6 +239,63 @@
             return false;
         });
 
+    });
+    
+    $(this).ready(function() {
+        
+        $("#pel_nama").autocomplete({
+            minLength: 1,
+            source: function(req, add) {
+                $.ajax({
+                    url: '<?php echo site_url('master_sales/jsonNamaProspek'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {param : $("#pel_nama").val()},
+                    success: function(data) {
+                        add(data.message);
+                    }
+                });
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                    .append('<a><strong>' + item.label + '</strong><br>' + item.desc + '</a>')
+                    .appendTo(ul);
+                };
+            },
+            select: function(event, ui) {
+                $("#prosid").val(ui.item.prosid);
+                $('.page-content-area').ace_ajax('startLoading');
+                $.ajax({
+                    url: '<?php echo site_url('master_sales/getDataProspek'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {param : ui.item.prosid},
+                    success: function(data) {
+                        var tgl = "";
+                        if (data['pros_tgl_lahir'] != "<?php echo dateToIndo(DEFAULT_TGL) ?>") {
+                            var date = data['pros_tgl_lahir'].split("-");
+                            tgl = date['2']+"-"+date['1']+"-"+date['0'];
+                        }
+                        $('#kr_kotaid').html('');
+                        $("#pel_alamat").html(data['pros_alamat']);
+                        $("#propinsi").val(data['kota_propid']);
+                        $("#pel_hp").val(data['pros_hp']);
+                        $("#pel_nomor_id").val(data['prop_nomor_id']);
+                        $("#pel_telpon").val(data['pros_telpon']);
+                        $("#pel_fax").val(data['pros_fax']);
+                        $("#pel_email").val(data['pros_email']);
+                        $("#"+data['pros_gender']).checked = true;
+                        $("#"+data['pros_agama']).checked = true;
+                        $("#pel_tempat_lahir").val(data['pros_tempat_lahir']);
+                        $("#pel_tgl_lahir").val(tgl);
+                        $('#kr_kotaid').append('<option value="' + data['kotaid'] + '">' + data['kota_deskripsi'] + '</option>');
+                        $('.page-content-area').ace_ajax('stopLoading', true);
+                    }
+                });
+            }
+        })
+        
     });
    
 </script>

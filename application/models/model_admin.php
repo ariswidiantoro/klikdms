@@ -32,6 +32,7 @@ class Model_Admin extends CI_Model {
         }
         return null;
     }
+
     public function getSupplierById($id) {
         $sql = $this->db->query("SELECT * FROM ms_supplier LEFT JOIN ms_kota ON kotaid = sup_kotaid WHERE supid = '$id'");
         if ($sql->num_rows() > 0) {
@@ -62,7 +63,7 @@ class Model_Admin extends CI_Model {
         $sql = $this->db->query("SELECT * FROM ms_user_role LEFT JOIN ms_role_detail "
                 . " ON rode_roleid = user_roleid LEFT JOIN ms_menu ON menuid = rode_menuid 
                     WHERE menu_isactive = 1 
-                        AND user_krid = '" . ses_krid . "' GROUP BY menuid ORDER BY menu_urut");
+                        AND user_krid = '" . ses_krid . "' GROUP BY menuid ORDER BY menu_urut, menuid");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -108,9 +109,39 @@ class Model_Admin extends CI_Model {
     public function getMenuSort($sortby, $cari = null) {
         $where = '';
         if (!empty($cari)) {
-            $where = "WHERE $sortby LIKE '%$cari%'";
+            $cari = trim(strtoupper($cari));
+            $where = "WHERE upper($sortby) LIKE '%$cari%'";
         }
         $sql = $this->db->query("SELECT * FROM ms_menu $where ORDER BY menu_deskripsi ASC");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    public function getMenuRole($sortby, $cari = null, $centang, $roleid) {
+        $where = '';
+        if (!empty($cari)) {
+            $cari = trim(strtoupper($cari));
+            $where = "WHERE upper($sortby) LIKE '%$cari%' ";
+        }
+        if (!empty($centang)) {
+            if ($centang == '1') {
+                if ($where == '') {
+                    $where = " WHERE menuid IN(SELECT roledet_menuid FROM ms_role_det WHERE roledet_roleid = '$roleid')";
+                } else {
+                    $where .= " AND menuid IN(SELECT roledet_menuid FROM ms_role_det WHERE roledet_roleid = '$roleid')";
+                }
+            } else {
+                if ($where == '') {
+                    $where .= " WHERE menuid NOT IN(SELECT roledet_menuid FROM ms_role_det WHERE roledet_roleid = '$roleid')";
+                } else {
+                    $where .= " AND menuid NOT IN(SELECT roledet_menuid FROM ms_role_det WHERE roledet_roleid = '$roleid')";
+                }
+            }
+        }
+        $sql = $this->db->query("SELECT * FROM ms_menu $where ORDER BY menu_deskripsi ASC");
+        log_message('error', 'AAAAAAA ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -194,7 +225,7 @@ class Model_Admin extends CI_Model {
 
         $sql = $this->db->query("SELECT menu_nama,menu_parent_id,menuid,menu_icon,menu_deskripsi,menu_url FROM ms_user_role LEFT JOIN ms_role_det ON"
                 . " userro_roleid = roledet_roleid LEFT JOIN ms_menu ON menuid = roledet_menuid"
-                . " WHERE menu_parent_id != -1 AND menu_module = ".$data." AND userro_krid = '" . ses_krid . "' ORDER BY menu_urut, menuid ASC");
+                . " WHERE menu_parent_id != -1 AND menu_module = " . $data . " AND userro_krid = '" . ses_krid . "' AND menu_status = 0 ORDER BY menu_urut, menuid ASC");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -248,7 +279,7 @@ class Model_Admin extends CI_Model {
      * @return int
      */
     public function getTotalKaryawan($where) {
-        $wh = " WHERE kr_cbid = '".ses_cabang."'";
+        $wh = " WHERE kr_cbid = '" . ses_cabang . "'";
         if ($where != NULL)
             $wh .= $where;
         $sql = $this->db->query("SELECT COUNT(krid) AS total FROM ms_karyawan LEFT JOIN ms_jabatan ON jabid = kr_jabid $wh");
@@ -265,13 +296,14 @@ class Model_Admin extends CI_Model {
                 . " = kotaid LEFT JOIN ms_jabatan ON jabid = kr_jabid WHERE krid = '$id'");
         return $sql->row_array();
     }
+
     /**
      * Function ini digunakan untuk mendapatkan data karyawab
      * @param type $where
      * @return int
      */
     public function getKaryawanByJabatan($id) {
-        $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_jabid = '$id' AND kr_cbid = '".ses_cabang."'");
+        $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_jabid = '$id' AND kr_cbid = '" . ses_cabang . "'");
         return $sql->result_array();
     }
 
@@ -359,7 +391,7 @@ class Model_Admin extends CI_Model {
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
-//        $this->db->where('kr_cbid', ses_cabang);
+        $this->db->where('kr_cbid', ses_cabang);
         $this->db->from('ms_karyawan');
         $this->db->join('ms_jabatan', 'kr_jabid = jabid', 'LEFT');
         $this->db->order_by($sidx, $sord);
@@ -395,9 +427,10 @@ class Model_Admin extends CI_Model {
 
     function saveKaryawan($data) {
         $this->db->trans_begin();
-        $tahun = substr(date('Y'), 2, 2);
-        $id = sprintf("%08s", $this->getCounter("KR" . $tahun));
-        $data['krid'] = "KR" . $tahun . $id;
+        $tahun = date('y');
+        $id = sprintf("%08s", $this->getCounter(NUM_KARYAWAN . $tahun));
+        log_message('error', 'AAAAAAA ' . $this->db->last_query());
+        $data['krid'] = NUM_KARYAWAN . $tahun . $id;
         $this->db->INSERT('ms_karyawan', $data);
         $group = array(
             'group_krid' => $data['krid'],
@@ -533,6 +566,7 @@ class Model_Admin extends CI_Model {
      */
     public function getKaryawan($nama, $cbid) {
         $sql = $this->db->query("SELECT * FROM ms_karyawan WHERE kr_nama LIKE '%$nama%' AND kr_cbid = '$cbid' ORDER BY kr_nama");
+//       log_message('error', 'AAAAA '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -948,7 +982,7 @@ class Model_Admin extends CI_Model {
             return true;
         }
     }
-    
+
 }
 
 ?>

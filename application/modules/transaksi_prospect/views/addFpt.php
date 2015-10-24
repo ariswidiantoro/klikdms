@@ -1,4 +1,6 @@
-
+<?php
+echo $this->session->flashdata('msg');
+?>
 <style type="text/css">
     .ui-autocomplete {
         max-height: 200px;
@@ -646,10 +648,10 @@
                             data: $(this).serialize(),
                             success: function(data) {
                                 window.scrollTo(0, 0);
-                                if (data.result) {
-                                    document.formAdd.reset();
-                                }
-                                $("#result").html(data.msg).show().fadeIn("slow");
+                                if(data.result)
+                                    $('.page-content-area').ace_ajax('loadUrl', "#transaksi_sales/addFpt", true);
+                                else
+                                    $("#result").html(data.msg).show().fadeIn("slow");
                             }
                         })
                         return false;

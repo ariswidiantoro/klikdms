@@ -25,6 +25,14 @@ class Model_Sales extends CI_Model {
         return $query->result_array();
     }
 
+    public function getProspekByNama($nama, $cbid) {
+        $sql = $this->db->query("SELECT pros_nama,pros_alamat,prosid FROM pros_data WHERE pros_cbid = '$cbid' AND pros_nama LIKE '%" . strtoupper($nama) . "%' ORDER BY pros_nama LIMIT 40");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
     public function cListModel($data) {
         $this->db->where('model_merkid', $data['merkid']);
         $query = $this->db->get('ms_car_model');
@@ -174,8 +182,8 @@ class Model_Sales extends CI_Model {
         return $sql->row()->total;
     }
 
-    public function getTotalKontrak() {
-        $wh = "WHERE kon_cbid = '" . ses_cabang . "'";
+    public function getTotalKontrak($where) {
+        $wh = "WHERE kon_cbid = '" . ses_cabang . "' AND kon_status = 0";
         if ($where != NULL)
             $wh = " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(kon_nomer) AS total FROM ms_kontrak $wh");
@@ -223,6 +231,14 @@ class Model_Sales extends CI_Model {
 
     public function deleteSegment($data) {
         if ($this->db->query("DELETE FROM ms_segment WHERE segid = '" . $data . "'")) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function deleteKontrak($data) {
+        if ($this->db->query("UPDATE ms_kontrak SET kon_status = 1 WHERE kon_nomer = '$data' AND kon_cbid = '" . ses_cabang . "'")) {
             return TRUE;
         } else {
             return FALSE;
@@ -662,6 +678,7 @@ class Model_Sales extends CI_Model {
         $this->db->from('ms_kontrak');
         $this->db->join('ms_pelanggan', 'kon_pelid = pelid', 'left');
         $this->db->where('kon_cbid', ses_cabang);
+        $this->db->where('kon_status', 0);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -775,7 +792,7 @@ class Model_Sales extends CI_Model {
      * 2015-09-18
      */
     public function getTotalStockUnit($where) {
-        $wh = "WHERE msc_cbid = '" . ses_cabang . "'";
+        $wh = "WHERE msc_cbid = '" . ses_cabang . "' AND msc_isstock = 1";
         if ($where != NULL)
             $wh = " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(*) AS total FROM ms_car ");
@@ -794,6 +811,7 @@ class Model_Sales extends CI_Model {
         $this->db->join('ms_car_merk', 'merkid = model_merkid', 'left');
         $this->db->join('ms_warna', 'warnaid = msc_warnaid', 'left');
         $this->db->where('msc_cbid', ses_cabang);
+        $this->db->where('msc_isstock', 1);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -807,7 +825,7 @@ class Model_Sales extends CI_Model {
         $this->db->trans_begin();
         try {
             $tahun = date('y');
-            $data['mscid'] = NUM_STOCK_UNIT . $tahun . sprintf("%08s", $this->getCounter(NUM_FPT . $tahun));
+            $data['mscid'] = NUM_CAR . $tahun . sprintf("%08s", $this->getCounter(NUM_FPT . $tahun));
 
             if ($this->db->insert('ms_car', $data) == FALSE) {
                 $warn = "FAILED INSERTING DATA : STOCK UNIT";
@@ -854,6 +872,35 @@ class Model_Sales extends CI_Model {
         } else {
             return FALSE;
         }
+    }
+
+    function saveNoKontrak($data, $kontrak) {
+        $this->db->trans_begin();
+        $sql = $this->db->query("SELECT * FROM ms_pelanggan WHERE pel_prosid = '" . $data['pel_prosid'] . "'");
+        $pelid = "";
+        if ($sql->num_rows() > 0) {
+            $pelid = $sql->row()->pelid;
+        } else {
+            $tahun = substr(date('Y'), 2, 2);
+            $id = sprintf("%08s", $this->getCounter("PE" . $tahun));
+            $data['pelid'] = "PE" . $tahun . $id;
+            $this->db->INSERT('ms_pelanggan', $data);
+            $pelid = "PE" . $tahun . $id;
+        }
+        $datakontrak = array(
+            'kon_pelid' => $pelid,
+            'kon_nomer' => $kontrak,
+            'kon_cbid' => ses_cabang
+        );
+        $this->db->INSERT('ms_kontrak', $datakontrak);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return true;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+        return false;
     }
 
 }
