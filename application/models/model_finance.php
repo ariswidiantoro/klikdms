@@ -32,6 +32,11 @@ class Model_Finance extends CI_Model {
         $sql = $this->db->get('ms_coa_jenis');
         return $sql->result_array();
     }
+    
+    public function cListDepartemen() {
+        $sql = $this->db->get('ms_departemen');
+        return $sql->result_array();
+    }
 
     /** Jenis Chart Of Account (COA) 
      * @author Rossi Erl
@@ -100,6 +105,78 @@ class Model_Finance extends CI_Model {
     public function getJenisCoa($data) {
         $query = $this->db->query("
             SELECT * FROM ms_coa_jenis WHERE jeniscoaid = '" . $data . "'  ");
+        return $query->row_array();
+    }
+    
+    /* MASTER DEPARTEMENT */
+    /** DEPARTEMENT (COA) 
+     * @author Rossi Erl
+     * 2015-09-04
+     */
+    public function getTotalDepartement($where) {
+        $wh = "WHERE  deptid != '' ";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+        
+        $sql = $this->db->query("SELECT deptid AS total FROM ms_departement $wh");
+        return $sql->row()->total;
+    }
+
+    public function getDataDepartement($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('*');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('ms_departement');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function deleteDepartement($data) {
+        if ($this->db->query("DELETE FROM ms_departement WHERE deptid = '" . $data . "'")) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function addDepartement($data = array()) {
+        $this->db->trans_begin();
+        $cek = $this->db->query("SELECT dept_deskripsi FROM ms_departement 
+            WHERE dept_deskripsi = '" . $data['dept_deskripsi'] . "'");
+        if ($cek->num_rows() > 0) {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Duplikasi Departement');
+        }
+        $data['specid'] = NUM_DEPT . sprintf("%02s", $this->getCounter(NUM_DEPT));
+        $this->db->insert('ms_departement', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $this->db->trans_commit();
+            return array('status' => TRUE, 'msg' => 'Data berhasil disimpan');
+        } else {
+            $this->db->trans_rollback();
+            return array('status' => FALSE, 'msg' => 'Data gagal disimpan');
+        }
+    }
+
+    public function updateDepartement($data, $where) {
+        $this->db->where('deptid', $where);
+        if ($this->db->update('ms_departement', $data)) {
+            return array('status' => TRUE, 'msg' => 'Data berhasil diupdate');
+        } else {
+            return array('status' => FALSE, 'msg' => 'Data gagal diupdate');
+        }
+    }
+
+    public function getDepartement($data) {
+        $query = $this->db->query("
+            SELECT * FROM ms_departement 
+            WHERE deptid = '" . $data . "'  ");
         return $query->row_array();
     }
 

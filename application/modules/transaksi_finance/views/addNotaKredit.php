@@ -21,7 +21,7 @@
             <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
             <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
             <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
-            <input type="hidden" id="trans_sub_trans" name="trans_sub_trans" value="<?php echo $etc['sub_trans']; ?>" />
+            <input type="hidden" id="trans_sub_trans" name="trans_sub_trans" value="<?php echo $etc['subTrans']; ?>" />
             <input type="hidden" id="trans_type" name="trans_type" value="<?php echo $etc['type']; ?>" />
         </div>
     </div>
@@ -63,25 +63,28 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Memo</label>
         <div class="col-sm-6">
-            <input type="text" id="trans_desc" name="dtrans_desc[]" required="required" maxlength="500" 
+            <input type="hidden" id="trans_coa" name="trans_coa" value="<?php echo PIUTANG_UNIT; ?>"/>
+            <input type="text" id="trans_desc" name="trans_desc" required="required" maxlength="500" 
                    placeholder="KETERANGAN" class="upper form-control input-xxlarge req" />
         </div>
     </div> 
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Sebesar ( Rp. )</label>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
              <input type="text" id="totalTrans" name="totalTrans" required="required" placeholder="0.00"
-                   onchange="$('#'+this.id).val(formatCurrency(this.value));" onblur="terbilang(this.value)" 
-                   onkeyup="countDisc(this.value);"
+                   onchange="$('#'+this.id).val(formatCurrency(this.value));" onblur="countDisc(this.value);" 
+                   onkeyup="terbilang(this.value);"
                    class="number form-control input-xlarge req align-right" />
             <input type="hidden" id="dtrans_coa1" name="dtrans_coa[]" value="<?php echo DISKON_UNIT_BARU; ?>"/>
             <input type="hidden" id="dtrans_coa2" name="dtrans_coa[]" value="<?php echo HUTANG_PPN; ?>"/>
+            <input type="hidden" id="dtrans_notaid1" name="dtrans_notaid[]" value = "0" />
+            <input type="hidden" id="dtrans_notaid1" name="dtrans_notaid[]" value = "0" />
+            <input type="hidden" id="dtrans_pelid1" name="dtrans_pelid[]" value = "0" />
+            <input type="hidden" id="dtrans_pelid1" name="dtrans_pelid[]" value = "0" />
             <input type="hidden" id="dtrans_desc1" name="dtrans_desc[]" value = "" />
-            <input type="hidden" id="dtrans_desc1" name="dtrans_desc[]" value = "" />
-            <input type="hidden" id="dtrans_ccid1" name="dtrans_ccid[]" value = "" />
-            <input type="hidden" id="dtrans_ccid2" name="dtrans_ccid[]" value = "" />
+            <input type="hidden" id="dtrans_desc2" name="dtrans_desc[]" value = "" />
             <input type="hidden" id="dtrans_nominal1" name="dtrans_nominal[]" value = "0" />
-            <input type="hidden" id="dtrans_nominal1" name="dtrans_nominal[]" value = "0" />
+            <input type="hidden" id="dtrans_nominal2" name="dtrans_nominal[]" value = "0" />
         </div>
     </div>
     <div class="form-group">
@@ -165,7 +168,15 @@
     }
     
     function countDisc(total){
+        var tot  = total.replace(/,/g, "");
+        var desc = $("#trans_desc").val();
+        var discount = tot/1.1;
+        var ppn = tot/11;
         
+        $("#dtrans_nominal1").val(discount);
+        $("#dtrans_nominal2").val(ppn);
+        $("#dtrans_desc1").val(desc);
+        $("#dtrans_desc2").val(desc);
     }
     
     function terbilang(total){

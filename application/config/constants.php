@@ -65,9 +65,10 @@ define('NUM_BPK', 'BP');
 define('NUM_SPK', 'SK');
 define('NUM_FPT', 'FP');
 define('NUM_TRANS', 'TR');
-
 define('NUM_JENIS_COA', 'JC');
 define('NUM_SPECIAL_COA', 'SC');
+define('NUM_DEPT', 'DP');
+
 
 define('DEPT_SALES', '1');
 define('DEPT_SERVICE', '2');
