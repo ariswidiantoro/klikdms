@@ -7,6 +7,15 @@ if (!defined('BASEPATH'))
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });
+    
+    
+    function print(spkid)
+    {
+        var params  = 'width=600';
+        params += ', height=50';
+        params += ', fullscreen=yes,scrollbars=yes';
+        window.open("<?php echo site_url("transaksi_sales/printSpk"); ?>/"+spkid,'_blank', params);
+    }
     function hapusData(id, kode) {
         bootbox.confirm("Yakin Hapus Data "+kode+" ?", function(result) {
             if(result) {
@@ -18,8 +27,8 @@ if (!defined('BASEPATH'))
                         id: id
                     },
                     success: function(data) {
-                       $("#result").html(data).show().fadeIn("slow");
-                       $("#grid-table").trigger("reloadGrid");
+                        $("#result").html(data).show().fadeIn("slow");
+                        $("#grid-table").trigger("reloadGrid");
                     }
                 });
             }
@@ -52,7 +61,7 @@ if (!defined('BASEPATH'))
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Pesanan Kendaraan"
+            caption:"Daftar Surat Pesanan Kendaraan (SPK)"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
@@ -75,7 +84,7 @@ if (!defined('BASEPATH'))
         <p>
             <a href="#transaksi_sales/addSpk" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
-                Tambah Pesanan Kendaraan</a>
+                Tambah SPK</a>
         </p>
         <table id="grid-table"></table>
         <div id="pager"></div>

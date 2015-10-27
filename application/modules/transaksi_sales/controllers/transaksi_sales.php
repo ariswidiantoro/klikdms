@@ -21,7 +21,7 @@ class Transaksi_Sales extends Application {
      * Bukti Penerimaan Kendaraan (BPK)
      * @author Rossi
      * * */
-    public function terimaKendaraan() {
+    public function masukKendaraan() {
         $this->hakAkses(1092);
         $this->load->view('dataBpk', $this->data);
     }
@@ -49,6 +49,17 @@ class Transaksi_Sales extends Application {
 
     public function jsonDataSpk() {
         echo json_encode($this->model_trsales->getDataSpk(strtoupper($this->input->post('param')), ses_cabang));
+    }
+
+    public function jsonDataBmk() {
+        echo json_encode($this->model_trsales->getBpk(strtoupper($this->input->post('param'))));
+    }
+    public function jsonDataFaktur() {
+        echo json_encode($this->model_trsales->getFakturPenjualanById(strtoupper($this->input->post('param'))));
+    }
+
+    public function jsonPoLeasing() {
+        echo json_encode($this->model_trsales->getPoLeasingBySpkid(strtoupper($this->input->post('param')), ses_cabang));
     }
 
     /**
@@ -159,6 +170,61 @@ class Transaksi_Sales extends Application {
         echo json_encode($hasil);
     }
 
+    /**
+     * 
+     */
+    public function saveFakturPenjualan() {
+        $this->load->library('form_validation');
+        log_message('error', 'MASUK SAVE FAKTUR ');
+        $this->form_validation->set_rules('fkp_nofaktur', '<b>Fx</b>', 'xss_clean');
+        $this->form_validation->set_rules('spk_no', '<b>Fx</b>', 'xss_clean');
+        $this->form_validation->set_rules('fkp_spkid', '<b>Fx</b>', 'xss_clean');
+        $this->form_validation->set_rules('fkp_norangka', '<b>Fx</b>', 'xss_clean');
+        $this->form_validation->set_rules('fkp_mscid', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'fkp_cbid' => ses_cabang,
+                'fkp_spkid' => $this->input->post("fkp_spkid"),
+                'fkp_nofaktur' => $this->input->post("fkp_nofaktur"),
+                'fkp_tgl' => date('Y-m-d'),
+                'fkp_namabpkb' => $this->input->post("fkp_namabpkb"),
+                'fkp_fpkid' => $this->input->post("fkp_fpkid"),
+                'fkp_alamat_bpkb' => trim($this->input->post("fkp_alamat_bpkb")),
+                'fkp_print' => 1,
+                'fkp_createby' => ses_username,
+                'fkp_mscid' => $this->input->post("fkp_mscid"),
+                'fkp_createon' => date('Y-m-d H:i:s'),
+            );
+
+            $payment = array(
+                'byr_um' => numeric($this->input->post("byr_um")),
+                'byr_diskon' => numeric($this->input->post("byr_diskon")),
+                'byr_cashback' => numeric($this->input->post("byr_cashback")),
+                'byr_asuransi' => numeric($this->input->post("byr_asuransi")),
+                'byr_aksesoris' => numeric($this->input->post("byr_aksesoris")),
+                'byr_admin' => numeric($this->input->post("byr_admin")),
+                'byr_lain' => numeric($this->input->post("byr_lain")),
+                'byr_hargako' => numeric($this->input->post("byr_hargako")),
+                'byr_karoseri' => numeric($this->input->post("byr_karoseri")),
+                'byr_bbn' => numeric($this->input->post("byr_bbn")),
+                'byr_tunai' => numeric($this->input->post("byr_tunai")),
+                'byr_total' => numeric($this->input->post("byr_total")),
+                'byr_sisa' => numeric($this->input->post("byr_sisa")),
+            );
+
+            $hasil = $this->model_trsales->saveFakturPenjualan($data, $payment);
+            if ($hasil['result']) {
+                $this->session->set_flashdata('msg', $this->sukses('Berhasil menambah faktur'));
+            } else {
+                $this->session->set_flashdata('msg', $this->error('Gagal menambah faktur'));
+            }
+        } else {
+            $hasil['result'] = false;
+            $hasil['msg'] = $this->error("Data Tidak Lengkap");
+        }
+        echo json_encode($hasil);
+    }
+
     public function savePoLeasing() {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('spk_no', '<b>Fx</b>', 'xss_clean');
@@ -188,6 +254,57 @@ class Transaksi_Sales extends Application {
                 $this->session->set_flashdata('msg', $this->sukses('Berhasil menambah po leasing'));
             } else {
                 $this->session->set_flashdata('msg', $this->error('Gagal menambah po leasing'));
+            }
+        } else {
+            $hasil['result'] = false;
+            $hasil['msg'] = $this->error("Data Tidak Lengkap");
+        }
+        echo json_encode($hasil);
+    }
+
+    public function saveReturBeli() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('rtb_bpkid', '<b>Fx</b>', 'xss_clean');
+        $this->form_validation->set_rules('rtb_nomer', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'rtb_cbid' => ses_cabang,
+                'rtb_createby' => ses_username,
+                'rtb_createon' => date('Y-m-d H:i:s'),
+                'rtb_tgl' => date('Y-m-d'),
+                'rtb_nomer' => trim(strtoupper($this->input->post("rtb_nomer"))),
+                'rtb_bpkid' => $this->input->post("rtb_bpkid"),
+                'rtb_mscid' => $this->input->post("rtb_mscid"),
+                'rtb_alasan_retur' => trim(strtoupper($this->input->post("rtb_alasan_retur"))),
+            );
+            $hasil = $this->model_trsales->saveReturBeli($data);
+            if ($hasil['result']) {
+                $this->session->set_flashdata('msg', $this->sukses('Berhasil retur beli'));
+            }
+        } else {
+            $hasil['result'] = false;
+            $hasil['msg'] = $this->error("Data Tidak Lengkap");
+        }
+        echo json_encode($hasil);
+    }
+    public function saveReturJual() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('no_faktur', '<b>Fx</b>', 'xss_clean');
+        $this->form_validation->set_rules('rtj_nomer', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'rtj_cbid' => ses_cabang,
+                'rtj_createby' => ses_username,
+                'rtj_createon' => date('Y-m-d H:i:s'),
+                'rtj_tgl' => date('Y-m-d'),
+                'rtj_nomer' => trim(strtoupper($this->input->post("rtj_nomer"))),
+                'rtj_fkpid' => $this->input->post("rtj_fkpid"),
+                'rtj_mscid' => $this->input->post("rtj_mscid"),
+                'rtj_alasan_retur' => trim(strtoupper($this->input->post("rtj_alasan_retur"))),
+            );
+            $hasil = $this->model_trsales->saveReturJual($data);
+            if ($hasil['result']) {
+                $this->session->set_flashdata('msg', $this->sukses('Berhasil retur jual'));
             }
         } else {
             $hasil['result'] = false;
@@ -376,10 +493,14 @@ class Transaksi_Sales extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
-                $del = "batalData('" . $row->spkid . "')";
-                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash bigger-120 red"></i>';
-                $print = '<a href="javascript:void(0);" onclick="printData(\'' . $row->spkid . '\')" title="Print"><i class="ace-icon fa fa-print bigger-120 green"></i>';
-                $view = '<a href="#transaksi_sales/viewBpk?id=' . $row->spkid . '" title="View"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                $hapus = '-';
+                if ($row->spk_faktur_status == 0) {
+                    $del = "batalData('" . $row->spkid . "')";
+                    $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash bigger-120 red"></i>';
+                }
+
+                $print = '<a href="javascript:void(0);" onclick="print(\'' . $row->spkid . '\')" title="Print"><i class="ace-icon fa fa-print bigger-120 green"></i>';
+                $view = '<a href="#transaksi_sales/viewSpk?id=' . $row->spkid . '" title="View"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->spkid;
                 $responce->rows[$i]['cell'] = array(
                     $row->spk_no,
@@ -390,6 +511,50 @@ class Transaksi_Sales extends Application {
                     $view,
                     $print,
                     $hapus
+                );
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    /**
+     * 
+     */
+    public function loadFaktur() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'fkpid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_trsales->getTotalFaktur($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_trsales->getAllFaktur($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $print = '<a href="javascript:void(0);" onclick="printData(\'' . $row->fkpid . '\')" title="Print"><i class="ace-icon fa fa-print bigger-120 green"></i>';
+//                $view = '<a href="#transaksi_sales/viewBpk?id=' . $row->fkpid . '" title="View"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->fkpid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->fkp_nofaktur,
+                    date('d-m-Y', strtotime($row->fkp_tgl)),
+                    $row->pel_nama,
+                    $row->cty_deskripsi,
+                    number_format($row->byr_total),
+                    $print
                 );
                 $i++;
             }
@@ -513,6 +678,12 @@ class Transaksi_Sales extends Application {
         $this->load->view('printBpk', $this->data);
     }
 
+    public function printSpk($spkid) {
+        $this->data['data'] = $this->model_trsales->getSpkById($spkid);
+        $this->data['dealer'] = $this->model_admin->getCabangById(ses_cabang);
+        $this->load->view('printSpk', $this->data);
+    }
+
     public function printFpk($fpkid) {
         $this->data['fpk'] = $this->model_trsales->getFpkById($fpkid);
         $this->load->view('printFpk', $this->data);
@@ -520,7 +691,7 @@ class Transaksi_Sales extends Application {
 
     function autoRangkaUnit() {
         $cbid = ses_cabang;
-        $query = $this->model_trsales->autoRangkaUnit(strtoupper($this->input->post('param')),$this->input->post('ready_stock'), $cbid);
+        $query = $this->model_trsales->autoRangkaUnit(strtoupper($this->input->post('param')), $this->input->post('ready_stock'), $cbid);
         if (!empty($query)) {
             $data['message'] = array();
             foreach ($query as $row) {
@@ -544,8 +715,7 @@ class Transaksi_Sales extends Application {
     }
 
     function autoSpk() {
-        $data = $this->model_trsales->autoSpk(strtoupper($this->input->post('param')),
-                $this->input->post('approve'), ses_cabang);
+        $data = $this->model_trsales->autoSpk(strtoupper($this->input->post('param')), ses_cabang, $this->input->post('approve'));
         if ($data == null) {
             $data[] = array(
                 'value' => 'Data Tidak Ditemukan',
@@ -553,6 +723,15 @@ class Transaksi_Sales extends Application {
             );
         }
         echo json_encode($data);
+    }
+
+    function autoBmk() {
+        $data = $this->model_trsales->autoBmk(strtoupper($this->input->post('param')), ses_cabang);
+        echo json_encode($data);
+    }
+
+    function autoFakturJual() {
+        echo json_encode($this->model_trsales->autoFakturJual(strtoupper($this->input->post('param')), ses_cabang));
     }
 
     function autoFpt() {
@@ -669,6 +848,7 @@ class Transaksi_Sales extends Application {
         }
         echo json_encode($retur);
     }
+
     public function saveBatalApproveCekDokumen() {
         $id = $this->input->post('id', TRUE);
         $data = array(
@@ -693,9 +873,33 @@ class Transaksi_Sales extends Application {
         $this->load->view('editHpp', $this->data);
     }
 
+    /**
+     * 
+     */
     public function spk() {
         $this->hakAkses(1096);
         $this->load->view('dataSpk', $this->data);
+    }
+
+    /**
+     * 
+     */
+    public function returBeli() {
+        $this->hakAkses(1099);
+        $this->load->view('returBeli', $this->data);
+    }
+
+    public function returJual() {
+        $this->hakAkses(1100);
+        $this->load->view('returJual', $this->data);
+    }
+
+    /**
+     * 
+     */
+    public function addReturBeli() {
+        $this->hakAkses(1099);
+        $this->load->view('addReturBeli', $this->data);
     }
 
     public function cekDokumen() {
@@ -732,6 +936,7 @@ class Transaksi_Sales extends Application {
         $this->hakAkses(1098);
         $this->load->view('fakturPenjualan', $this->data);
     }
+
     public function addFakturPenjualan() {
         $this->hakAkses(1098);
         $this->load->view('addFakturPenjualan', $this->data);

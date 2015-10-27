@@ -1,3 +1,4 @@
+
 <?php
 echo $this->session->flashdata('msg');
 ?> 
@@ -35,19 +36,17 @@ echo $this->session->flashdata('msg');
 
     $(document).ready(function (){
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('transaksi_sales/loadFpk') ?>',     
+            url:'<?php echo site_url('transaksi_sales/loadFaktur') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['No.','Tgl','No Spk','No Kontrak', 'Nama Leasing', 'Edit','Print', 'Hapus'],     
+            colNames:['No.','Tgl','Nama Pelanggan','Type Kendaraan', 'Total Harga','Print'],     
             colModel:[
-                {name:'fpk_no',index:'fpk_no', width:25, align:"left"},
-                {name:'fpk_tgl',index:'fpk_tgl', width:20, align:"center"},
-                {name:'spk_no',index:'spk_no', width:20, align:"left"},
-                {name:'spk_nokontrak',index:'spk_nokontrak', width:20, align:"left"},
-                {name:'leas_nama',index:'leas_nama', width:70, align:"left"},
-                {name:'view',index:'view', width:20, align:"center"},
-                {name:'print',index:'print', width:20, align:"center"},
-                {name:'hapus',index:'hapus', width:20, align:"center"},
+                {name:'fkp_nofaktur',index:'fkp_nofaktur', width:25, align:"left"},
+                {name:'fkp_tgl',index:'fkp_tgl', width:20, align:"center"},
+                {name:'pel_nama',index:'pel_nama', width:60, align:"left"},
+                {name:'cty_deskripsi',index:'cty_deskripsi', width:70, align:"left"},
+                {name:'byr_total',index:'byr_total', width:20, align:"right"},
+                {name:'print',index:'print', width:10, align:"center"},
                 
             ],
             rowNum:10,
@@ -55,11 +54,11 @@ echo $this->session->flashdata('msg');
             width: $(".page-content").width(),
             rowList:[10,20,30],
             pager: '#pager',
-            sortname: 'fpkid',
+            sortname: 'fkpid',
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"Daftar Po Leasing"
+            caption:"Daftar Faktur Penjualan"
         }).navGrid('#pager',{edit:false,add:false,del:false});
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );

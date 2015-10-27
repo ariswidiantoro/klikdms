@@ -540,8 +540,13 @@ echo $this->session->flashdata('msg');
                 data: $(this).serialize(),
                 success: function(data) {
                     window.scrollTo(0, 0);
-                    if(data.result)
+                    if(data.result){
+                        var params  = 'width=600';
+                        params += ', height=50';
+                        params += ', fullscreen=yes,scrollbars=yes';
+                        window.open("<?php echo site_url("transaksi_sales/printSpk"); ?>/"+data.kode,'_blank', params);
                         $('.page-content-area').ace_ajax('loadUrl', "#transaksi_sales/addSpk", true);
+                    }
                     else
                         $("#result").html(data.msg).show().fadeIn("slow");
                 }

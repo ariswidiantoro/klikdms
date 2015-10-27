@@ -94,7 +94,7 @@ echo $this->session->flashdata('msg');
     <div class="form-group">
         <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Harga OTR (Rp)</label>
         <div class="col-sm-7">
-            <input type="text" required="required" maxlength="30" onchange="$('#'+this.id).val(formatDefault(this.value));total()" value="<?php echo number_format($data['fpk_hargaotr']); ?>" name="fpk_hargaotr" id="fpk_hargaotr" class="col-xs-10 col-sm-5 number req right harga" />
+            <input type="text" required="required" readonly maxlength="30" onchange="$('#'+this.id).val(formatDefault(this.value));total()" value="<?php echo number_format($data['fpk_hargaotr']); ?>" name="fpk_hargaotr" id="fpk_hargaotr" class="col-xs-10 col-sm-5 number req right harga" />
         </div>
     </div>
     <div class="form-group">

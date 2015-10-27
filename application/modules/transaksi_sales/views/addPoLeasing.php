@@ -84,27 +84,27 @@ echo $this->session->flashdata('msg');
         </div>
     </div>
     <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Harga OTR (Rp)</label>
+        <div class="col-sm-7">
+            <input type="text" required="required" readonly maxlength="30" onchange="$('#'+this.id).val(formatDefault(this.value));total()" value="0" name="fpk_hargaotr" id="fpk_hargaotr" class="col-xs-10 col-sm-5 number req right harga" />
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Uang Muka PO.Leasing (Rp)</label>
         <div class="col-sm-7">
             <input type="text" required="required" maxlength="30" onchange="$('#'+this.id).val(formatDefault(this.value));total()" name="fpk_um"  value="0" id="fpk_um" class="ace col-xs-10 col-sm-5 number req right"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Harga OTR (Rp)</label>
-        <div class="col-sm-7">
-            <input type="text" required="required" maxlength="30" onchange="$('#'+this.id).val(formatDefault(this.value));total()" value="0" name="fpk_hargaotr" id="fpk_hargaotr" class="col-xs-10 col-sm-5 number req right harga" />
-        </div>
-    </div>
-    <div class="form-group">
         <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Asuransi (Rp)</label>
         <div class="col-sm-7">
-            <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));total()" value="0" maxlength="30" name="fpk_asuransi" id="fpk_asuransi" class="col-xs-10 col-sm-5 number right harga" />
+            <input type="text" onchange="$('#'+this.id).val(formatDefault(this.value));total()" value="0" maxlength="30" name="fpk_asuransi" id="fpk_asuransi" class="col-xs-10 col-sm-5 number right" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Administrasi (Rp)</label>
         <div class="col-sm-7">
-            <input type="text" value="0" maxlength="30" name="fpk_admin" onchange="$('#'+this.id).val(formatDefault(this.value));total()" id="fpk_admin" class="col-xs-10 col-sm-5 number right harga" />
+            <input type="text" value="0" maxlength="30" name="fpk_admin" onchange="$('#'+this.id).val(formatDefault(this.value));total()" id="fpk_admin" class="col-xs-10 col-sm-5 number right" />
         </div>
     </div>
     <div class="form-group">
@@ -243,9 +243,9 @@ echo $this->session->flashdata('msg');
                         $("#fpk_spkid").val(data['spkid']);
                         $("#fpk_jangka").val(data['fpt_jangka']);
                         $("#fpk_um").val(formatDefaultTanpaDecimal(data['spk_uangmuka']));
-                        $("#fpk_hargaotr").val(formatDefaultTanpaDecimal(Number(data['fpt_hargako'])+Number(data['fpt_bbn'])));
-                        $("#fpk_asuransi").val(formatDefaultTanpaDecimal(data['fpt_asuransi']));
-                        $("#fpk_admin").val(formatDefaultTanpaDecimal(data['fpt_administrasi']));
+                        $("#fpk_hargaotr").val(formatDefaultTanpaDecimal(Number(data['fpt_total'])));
+//                        $("#fpk_asuransi").val(formatDefaultTanpaDecimal(data['fpt_asuransi']));
+//                        $("#fpk_admin").val(formatDefaultTanpaDecimal(data['fpt_administrasi']));
                         $("#fpk_total").val(formatDefaultTanpaDecimal(Number(data['fpt_total'])-Number(data['spk_uangmuka'])));
                         $('.page-content-area').ace_ajax('stopLoading', true);
                     }
