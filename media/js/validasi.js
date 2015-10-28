@@ -229,12 +229,27 @@ function toWords(s) {
         for (var i = x + 1; i < y; i++) str += dg[n[i]] + ' ';
     }
     var words = str.replace(/\s+/g, ' ');
-	var words = words.replace(/satu ratus/g,"seratus");
-	var words = words.replace(/satu ribu/g,"seribu");
-	var words = words.replace(/puluh seribu/g,"puluh satu ribu");
-	var words = words.replace(/ratus seribu/g,"ratus satu ribu");
-	var words = words.replace(/koma nol nol/g," ");
+    var words = words.replace(/satu ratus/g,"seratus");
+    var words = words.replace(/satu ribu/g,"seribu");
+    var words = words.replace(/puluh seribu/g,"puluh satu ribu");
+    var words = words.replace(/ratus seribu/g,"ratus satu ribu");
+    var words = words.replace(/koma nol nol/g," ");
     return words;
+}
+
+function infoDialog(message)
+{
+    return  bootbox.dialog({
+        message: "<span class='bigger-110'>"+message+"</span>",
+        buttons: 			
+        {
+            "button" :
+            {
+                "label" : "Ok",
+                "className" : "btn-sm info"
+            }
+        }
+    });
 }
 
 

@@ -383,7 +383,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Cashback</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                            <input type="text" name="fpt_cashback" id="fpt_cashback" value="<?php echo number_format($data['fpt_cashback']) ?>" style="text-align: right;" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control number upper" />
+                            <input type="text" name="fpt_cashback" id="fpt_cashback" value="<?php echo number_format($data['fpt_cashback']) ?>" style="text-align: right;" onchange="$('#'+this.id).val(formatDefault(this.value));total()" class="form-control number upper potongan" />
                         </div>
                     </div>
                 </div>
@@ -391,7 +391,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Diskon</label>
                     <div class="col-sm-8">
                         <div class="input-group col-sm-6">
-                            <input type="text" name="fpt_diskon" id="fpt_diskon" style="text-align: right;" value="<?php echo number_format($data['fpt_diskon']) ?>" onchange="$('#'+this.id).val(formatDefault(this.value));" class="form-control number upper" />
+                            <input type="text" name="fpt_diskon" id="fpt_diskon" style="text-align: right;" value="<?php echo number_format($data['fpt_diskon']) ?>" onchange="$('#'+this.id).val(formatDefault(this.value));total()" class="form-control number upper potongan" />
                         </div>
                     </div>
                 </div>
@@ -582,6 +582,10 @@
         $(".harga").each(function() {
             price = $(this).val().replace(/,/g, "");
             total += Number(price);
+        });
+        $(".potongan").each(function() {
+            price = $(this).val().replace(/,/g, "");
+            total -= Number(price);
         });
         $("#fpt_total").val(formatDefault(total));
     }

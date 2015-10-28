@@ -894,13 +894,6 @@ class Transaksi_Sales extends Application {
         $this->load->view('returJual', $this->data);
     }
 
-    /**
-     * 
-     */
-    public function addReturBeli() {
-        $this->hakAkses(1099);
-        $this->load->view('addReturBeli', $this->data);
-    }
 
     public function cekDokumen() {
         $this->hakAkses(94);

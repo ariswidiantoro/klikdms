@@ -345,6 +345,25 @@ if (!function_exists("defaultTgl")) {
     }
 
 }
+if (!function_exists("getBulan")) {
+
+    function getBulan($bulan) {
+        $data['1'] = "JANUARI";
+        $data['2'] = "FEBRUARI";
+        $data['3'] = "MARET";
+        $data['4'] = "APRIL";
+        $data['5'] = "MEI";
+        $data['6'] = "JUNI";
+        $data['7'] = "JULI";
+        $data['8'] = "AGUSTUS";
+        $data['9'] = "SEPTEMBER";
+        $data['10'] = "OKTOBER";
+        $data['11'] = "NOPEMBER";
+        $data['12'] = "DESEMBER";
+        return $data[intval($bulan)];
+    }
+
+}
 /*
  * -----------------------------------------------------------------------------
  */

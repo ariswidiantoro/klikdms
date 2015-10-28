@@ -41,6 +41,25 @@ class Model_Trsales extends CI_Model {
      * @param type $where
      * @return type
      */
+    public function getTotalFaktur($where) {
+        $wh = " WHERE fkp_cbid = '" . ses_cabang . "'";
+        if ($where != NULL)
+            $wh .= " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(fkpid) AS total FROM pen_faktur"
+                . " LEFT JOIN pen_faktur_payment ON byr_fkpid = fkpid"
+                . " LEFT JOIN pen_spk ON spkid = fkp_spkid"
+                . " LEFT JOIN ms_pelanggan ON spk_pelid = pelid"
+                . " LEFT JOIN ms_car ON fkp_mscid = mscid"
+                . " LEFT JOIN ms_car_type ON msc_ctyid = ctyid"
+                . " $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * 
+     * @param type $where
+     * @return type
+     */
     public function getTotalCekDokumen($where) {
         $wh = "WHERE spk_cbid = '" . ses_cabang . "' AND spk_ceklist_kategory != 0";
         if ($where != NULL)
@@ -75,8 +94,33 @@ class Model_Trsales extends CI_Model {
         return $sql->row_array();
     }
 
-    function getSpkById($fpkid) {
-        $sql = $this->db->query("SELECT * FROM pen_spk LEFT JOIN ms_ceklist_kategory ON ckid = spk_ceklist_kategory WHERE spkid = '$fpkid'");
+    /**
+     * 
+     * @param type $fkpid
+     * @return type
+     */
+    function getFakturPenjualanById($fkpid) {
+        $sql = $this->db->query("SELECT fkpid,pel_nama,mscid,merk_deskripsi,model_deskripsi,
+            cty_deskripsi,msc_norangka,msc_nomesin FROM pen_faktur 
+            LEFT JOIN ms_car ON mscid = fkp_mscid
+            LEFT JOIN pen_spk ON fkp_spkid = spkid
+            LEFT JOIN ms_pelanggan ON pelid = spk_pelid
+            LEFT JOIN ms_car_type ON ctyid = msc_ctyid
+            LEFT JOIN ms_car_model ON modelid = cty_modelid
+            LEFT JOIN ms_car_merk ON merkid = model_merkid            
+            WHERE fkpid = '$fkpid'");
+        return $sql->row_array();
+    }
+
+    /**
+     * 
+     * @param type $spkid
+     * @return type
+     */
+    function getSpkById($spkid) {
+        $sql = $this->db->query("SELECT * FROM pen_spk LEFT JOIN ms_ceklist_kategory "
+                . " ON ckid = spk_ceklist_kategory LEFT JOIN pen_fpt ON fptid = spk_fptid "
+                . " LEFT JOIN ms_karyawan ON krid = spk_salesman WHERE spkid = '$spkid'");
         return $sql->row_array();
     }
 
@@ -118,15 +162,41 @@ class Model_Trsales extends CI_Model {
         return null;
     }
 
-    public function autoSpk($noSpk, $approve = null, $cbid) {
+    public function autoSpk($noSpk, $cbid, $approve = null) {
         $wh = '';
         if ($approve != null) {
             $wh = " AND spk_approve_status = $approve";
         }
         $sql = $this->db->query("SELECT spk_no AS value, spkid, spk_nokontrak FROM pen_spk WHERE spk_cbid = '$cbid' "
-                . " AND spk_no LIKE '$noSpk%' $wh ORDER BY spk_no LIMIT 20");
+                . " AND spk_faktur_status = 0 AND spk_no LIKE '$noSpk%' $wh ORDER BY spk_no LIMIT 20");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        }
+        return null;
+    }
+
+    public function autoBmk($noBmk, $cbid) {
+        $sql = $this->db->query("SELECT bpk_nomer AS value,bpkid FROM pen_bpk WHERE bpk_cbid = '$cbid' "
+                . " AND bpk_nomer LIKE '$noBmk%' ORDER BY bpk_nomer LIMIT 20");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan',
+            );
+        }
+        return null;
+    }
+
+    public function autoFakturJual($noFaktur, $cbid) {
+        $sql = $this->db->query("SELECT fkp_nofaktur AS value,fkpid FROM pen_faktur WHERE fkp_cbid = '$cbid' "
+                . " AND fkp_nofaktur LIKE '$noFaktur%' ORDER BY fkp_nofaktur LIMIT 20");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan',
+            );
         }
         return null;
     }
@@ -170,6 +240,20 @@ class Model_Trsales extends CI_Model {
 
     /**
      * 
+     * @param type $spkid
+     * @param type $cbid
+     * @return null
+     */
+    public function getPoLeasingBySpkid($spkid, $cbid) {
+        $sql = $this->db->query("SELECT * FROM pen_fpk WHERE fpk_spkid = '$spkid' AND fpk_cbid = '$cbid' AND fpk_status = 0");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
      * @param type $start
      * @param type $limit
      * @param type $sidx
@@ -196,7 +280,7 @@ class Model_Trsales extends CI_Model {
     }
 
     public function getAllSpk($start, $limit, $sidx, $sord, $where) {
-        $this->db->select('spkid,spk_no, spk_tgl, spk_nokontrak, fpt_kode,pel_nama');
+        $this->db->select('spkid,spk_no, spk_tgl, spk_nokontrak, fpt_kode,pel_nama,spk_faktur_status');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
@@ -204,6 +288,27 @@ class Model_Trsales extends CI_Model {
         $this->db->join('pen_fpt', 'fptid = spk_fptid', 'left');
         $this->db->join('ms_kontrak', 'spk_nokontrak = kon_nomer AND spk_cbid = kon_cbid', 'left');
         $this->db->join('ms_pelanggan', 'spk_pelid = pelid', 'left');
+        $this->db->where('spk_cbid', ses_cabang);
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    public function getAllFaktur($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('fkpid, fkp_nofaktur,fkp_tgl, pel_nama, byr_total, cty_deskripsi');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->from('pen_faktur');
+        $this->db->join('pen_faktur_payment', 'byr_fkpid = fkpid', 'left');
+        $this->db->join('pen_spk', 'spkid = fkp_spkid', 'left');
+        $this->db->join('ms_pelanggan', 'spk_pelid = pelid', 'left');
+        $this->db->join('ms_car', 'fkp_mscid = mscid', 'left');
+        $this->db->join('ms_car_type', 'msc_ctyid = ctyid', 'left');
         $this->db->where('spk_cbid', ses_cabang);
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
@@ -262,8 +367,18 @@ class Model_Trsales extends CI_Model {
         $tahun = date('y');
         $result = array();
         $data['bpkid'] = NUM_BPK . $tahun . sprintf("%08s", $this->getCounter(NUM_BPK . $tahun));
-        $this->db->insert('pen_bpk', $data);
-        $this->db->query("UPDATE ms_car SET msc_ready_stock = 1, msc_hpp = ".$data['bpk_hpp']." WHERE mscid = '"
+        $str = $this->db->insert('pen_bpk', $data);
+        if (!$str) {
+            $errMessage = $this->db->_error_message();
+            if (strpos($errMessage, "duplicate key value") == TRUE) {
+                $this->db->trans_rollback();
+                $result['result'] = false;
+                $result['kode'] = '';
+                $result['msg'] = error("Nomer '" . $data['bpk_nomer'] . "' Sudah Terdaftar");
+                return $result;
+            }
+        }
+        $this->db->query("UPDATE ms_car SET msc_ready_stock = 1, msc_hpp = " . $data['bpk_hpp'] . " WHERE mscid = '"
                 . $data['bpk_mscid'] . "' AND msc_cbid = '" . $data['bpk_cbid'] . "'");
         if ($this->db->trans_status() == TRUE) {
             $this->db->trans_commit();
@@ -290,7 +405,17 @@ class Model_Trsales extends CI_Model {
         $tahun = date('y');
         $result = array();
         $data['spkid'] = NUM_SPK . $tahun . sprintf("%08s", $this->getCounter(NUM_SPK . $tahun));
-        $this->db->insert('pen_spk', $data);
+        $str = $this->db->insert('pen_spk', $data);
+        if (!$str) {
+            $errMessage = $this->db->_error_message();
+            if (strpos($errMessage, "duplicate key value") == TRUE) {
+                $this->db->trans_rollback();
+                $result['result'] = false;
+                $result['kode'] = '';
+                $result['msg'] = error("Nomer Spk '" . $data['spk_no'] . "' Sudah Terdaftar");
+                return $result;
+            }
+        }
         $acc = 0;
         $this->db->query("DELETE FROM pen_fat WHERE fat_fptid = '" . $data['spk_fptid'] . "'");
         if (count($fat) > 0) {
@@ -312,6 +437,42 @@ class Model_Trsales extends CI_Model {
             $result['result'] = false;
             $result['kode'] = '';
             $result['msg'] = error("Gagal menyimpan spk");
+        }
+        return $result;
+    }
+
+    public function saveFakturPenjualan($data, $payment) {
+        $this->db->trans_begin();
+        $tahun = date('y');
+        $result = array();
+        $data['fkpid'] = NUM_FAKTUR_UNIT . $tahun . sprintf("%08s", $this->getCounter(NUM_FAKTUR_UNIT . $tahun));
+        $payment['byr_fkpid'] = $data['fkpid'];
+        $str = $this->db->insert('pen_faktur', $data);
+        if (!$str) {
+            $errMessage = $this->db->_error_message();
+            if (strpos($errMessage, "duplicate key value") == TRUE) {
+                $this->db->trans_rollback();
+                $result['result'] = false;
+                $result['kode'] = '';
+                $result['msg'] = error("Nomer Faktur '" . $data['fkp_nofaktur'] . "' Sudah Terdaftar");
+                return $result;
+            }
+        }
+        $this->db->insert('pen_faktur_payment', $payment);
+        // UPDATE SPK
+        $this->db->query("UPDATE pen_spk SET spk_faktur_status = 1 WHERE spkid = '" . $data['fkp_spkid'] . "'");
+        // UPDATE MS CAR SET STOCK READY TO FALSE
+        $this->db->query("UPDATE ms_car SET msc_ready_stock = 0 WHERE mscid = '" . $data['fkp_mscid'] . "'");
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['kode'] = $data['fkpid'];
+            $result['msg'] = sukses("Berhasil menyimpan faktur");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['kode'] = '';
+            $result['msg'] = error("Gagal menyimpan faktur");
         }
         return $result;
     }
@@ -381,6 +542,70 @@ class Model_Trsales extends CI_Model {
             $result['result'] = false;
             $result['kode'] = '';
             $result['msg'] = error("Gagal menyimpan PO Leasing");
+        }
+        return $result;
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return type
+     */
+    public function saveReturBeli($data) {
+        $this->db->trans_begin();
+        $tahun = date('y');
+        $result = array();
+        $str = $this->db->insert('pen_retbeli', $data);
+        $this->db->query("UPDATE ms_car SET msc_ready_stock = 0 WHERE mscid = '" . $data['rtb_mscid'] . "'");
+        if (!$str) {
+            $errMessage = $this->db->_error_message();
+            if (strpos($errMessage, "duplicate key value") == TRUE) {
+                $this->db->trans_rollback();
+                $result['result'] = false;
+                $result['kode'] = '';
+                $result['msg'] = error("Nomer Retur '" . $data['rtb_nomer'] . "' Sudah Terdaftar");
+                return $result;
+            }
+        }
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['kode'] = '';
+            $result['msg'] = sukses("Berhasil menyimpan Retur");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['kode'] = '';
+            $result['msg'] = error("Gagal menyimpan Retur");
+        }
+        return $result;
+    }
+    public function saveReturJual($data) {
+        $this->db->trans_begin();
+        $tahun = date('y');
+        $result = array();
+        $str = $this->db->insert('pen_retjual', $data);
+        $this->db->query("UPDATE ms_car SET msc_ready_stock = 1 WHERE mscid = '" . $data['rtj_mscid'] . "'");
+        if (!$str) {
+            $errMessage = $this->db->_error_message();
+            if (strpos($errMessage, "duplicate key value") == TRUE) {
+                $this->db->trans_rollback();
+                $result['result'] = false;
+                $result['kode'] = '';
+                $result['msg'] = error("Nomer Retur '" . $data['rtj_nomer'] . "' Sudah Terdaftar");
+                return $result;
+            }
+        }
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            $result['result'] = true;
+            $result['kode'] = '';
+            $result['msg'] = sukses("Berhasil menyimpan Retur");
+        } else {
+            $this->db->trans_rollback();
+            $result['result'] = false;
+            $result['kode'] = '';
+            $result['msg'] = error("Gagal menyimpan Retur");
         }
         return $result;
     }

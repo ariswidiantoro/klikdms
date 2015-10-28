@@ -71,7 +71,7 @@ class Model_Prospect extends CI_Model {
                 . " LEFT JOIN pros_agenda ON agen_prosid = prosid WHERE pros_cbid =  '" . ses_cabang
                 . "' $wh GROUP BY prosid, pros_kode, pros_cbid, pros_salesman, pros_nama,"
                 . " kr_nama ORDER BY $sidx $sord LIMIT $limit OFFSET $start");
-
+//        log_message('error', 'AAAAAAAAA '.$this->db->last_query());
         /* FILTER BY SUPERVISOR 
           if (ses_jabatan == 'supervisor') {
           $filter = $this->getSalesBySpv(array('krid' => ses_krid, 'cbid' => ses_cabang));

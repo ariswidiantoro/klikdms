@@ -182,6 +182,7 @@ class Transaksi_Prospect extends Application {
                 'pros_status' => 1,
                 'pros_status_hot' => 0,
                 'pros_createby' => ses_username,
+                'pros_tgl' => date('Y-m-d'),
                 'pros_createon' => date('Y-m-d H:i:s'),
             );
 

@@ -381,7 +381,7 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
-$config['config_coa'] = TRUE;
+$config['config_coa'] = FALSE;
 
 
 /* End of file config.php */
