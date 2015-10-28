@@ -1,3 +1,4 @@
+<link type="text/css" href="<?php echo path_css(); ?>report.css" rel="stylesheet" />
 <style>
     h3 {text-align: center;}
     table {text-align:  left; letter-spacing: 1px; border-collapse: collapse; font-size: 12px;width: 1500px;}

@@ -19,6 +19,9 @@ class Laporan_Prospect extends Application {
         echo "ARE YOU LOST ? ";
     }
 
+    /**
+     * 
+     */
     function rincianProspect() {
         $this->hakAkses(96);
         $this->data['link'] = 'showRincianProspect';
@@ -34,22 +37,49 @@ class Laporan_Prospect extends Application {
         $this->load->view('fptForm', $this->data);
     }
 
+    /**
+     * 
+     */
     function rekapHarian() {
         $this->hakAkses(97);
         $this->data['link'] = 'showRekapHarian';
         $this->load->view('prospectForm', $this->data);
     }
 
+    /**
+     * 
+     */
     function rekapBulanan() {
         $this->hakAkses(98);
         $this->data['link'] = 'showRekapBulanan';
         $this->load->view('prospectBulananForm', $this->data);
     }
 
+    /**
+     * 
+     */
     function rekapFptBulanan() {
         $this->hakAkses(100);
         $this->data['link'] = 'showRekapFptBulanan';
         $this->load->view('prospectBulananForm', $this->data);
+    }
+
+    /**
+     * 
+     */
+    function activitySalesman() {
+        $this->hakAkses(1066);
+        $this->data['link'] = 'showActivitySalesman';
+        $this->load->view('prospectForm', $this->data);
+    }
+
+    /**
+     * 
+     */
+    function followup() {
+        $this->hakAkses(1063);
+        $this->data['link'] = 'showFollowUp';
+        $this->load->view('prospectForm', $this->data);
     }
 
     /**
@@ -65,6 +95,37 @@ class Laporan_Prospect extends Application {
         $this->load->view('showRincianProspect', $this->data);
     }
 
+    public function showFollowUp($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_prospect->getRincianProspect($start, $end, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showRincianProspect', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showActivitySalesman($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_prospect->getTotalProspect($start, $end, $cabang);
+        $this->data['agenda'] = $this->model_lap_prospect->getTotalAgenda($start, $end, $cabang);
+        $this->data['follow'] = $this->model_lap_prospect->getTotalFollow($start, $end, $cabang);
+        $this->data['fpt'] = $this->model_lap_prospect->getTotalFpt($start, $end, $cabang);
+        $this->data['spk'] = $this->model_lap_prospect->getTotalSpk($start, $end, $cabang);
+        $this->data['faktur'] = $this->model_lap_prospect->getTotalFaktur($start, $end, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showActivitySalesman', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
     public function showRincianFpt($output) {
         $end = dateToIndo($this->input->post('end'));
         $start = dateToIndo($this->input->post('start'));
@@ -100,6 +161,10 @@ class Laporan_Prospect extends Application {
         $this->load->view('showRekapBulanan', $this->data);
     }
 
+    /**
+     * 
+     * @param type $output
+     */
     public function showRekapFptBulanan($output) {
         $tahun = dateToIndo($this->input->post('start'));
         $cabang = ses_cabang;

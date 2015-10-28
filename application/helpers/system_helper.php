@@ -22,7 +22,14 @@ if (!function_exists('name_system')) {
 
 }
 
+if (!function_exists('path_metro')) {
 
+    function path_metro($uri = '') {
+        $CI = & get_instance();
+        return $CI->config->item('path_metro');
+    }
+
+}
 /*
   |--------------------------------------------------------------------------
   | function of company

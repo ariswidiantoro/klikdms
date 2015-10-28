@@ -10,6 +10,7 @@
                      
                 var source = [];
                 var items = [];
+                if(data != null) {
                 for (var i = 0; i < data.length; i++) {
                     //                    var idx = $.inArray(dataid, selectArr);
                     //                    if (idx == -1) {
@@ -40,7 +41,7 @@
                             source[i] = items[id];
                         }
                     }
-                }
+                }}
                 return source;
             };
             var buildUL = function(parent, items) {

@@ -63,6 +63,14 @@ if (!function_exists('path_js')) {
     }
 
 }
+if (!function_exists('path_metro')) {
+
+    function path_metro($uri = '') {
+        $CI = & get_instance();
+        return $CI->config->item('path_metro');
+    }
+
+}
 
 if (!function_exists('path_docs')) {
 

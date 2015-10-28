@@ -63,6 +63,8 @@ class Welcome extends Application {
         $this->load->model('model_admin');
         $this->load->model('model_admin');
         $this->data['header'] = $this->model_admin->getMenuModule();
+        $this->data['content'] = 'attribut/home';
+        $this->data['menuid'] = '0';
         $this->load->view('template', $this->data);
     }
 
