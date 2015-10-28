@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The MODEL SETTING
  * @author Rossi Erl
@@ -10,7 +9,7 @@ class Model_Setting extends CI_Model {
     public function __construct() {
         parent::__construct();
         $pre = array();
-        $pre = array();
+        $ccid = array();
         $CI = &get_instance();
 
         if ($this->config->item("config_coa") && isLogin) {

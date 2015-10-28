@@ -59,9 +59,9 @@ if ($etc['output'] != 'show') {
                 <th width="2%">NO</th>
                 <th width="2%">COA</th>
                 <th width="10%">DESKRIPSI</th>
-                <th width="10%" align="right">SALDO AWAL</th>
+                <th width="15%" align="right">SALDO AWAL</th>
                 <th WIDTH="15%" align="right">DEBIT</th>
-                <th WIDTH="5%" align="right">KREDIT</th>
+                <th WIDTH="15%" align="right">KREDIT</th>
                 <th WIDTH="15%" align="right">SALDO AKHIR</th>
             </tr>
         </thead>

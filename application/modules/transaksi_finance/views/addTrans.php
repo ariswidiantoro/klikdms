@@ -18,11 +18,11 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">No. Transaksi</label>
         <div class="col-sm-3">
-                <input type="text" id="trans_docno" name="trans_docno" required="required" maxlength="20" class="upper form-control input-xlarge req" />
-                <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
-                <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
-                <input type="hidden" id="trans_type" name="trans_type" value="<?php echo $etc['type']; ?>" />
-                <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
+            <input type="text" id="trans_docno" name="trans_docno" required="required" maxlength="20" class="upper form-control input-xlarge req" />
+            <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
+            <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
+            <input type="hidden" id="trans_type" name="trans_type" value="<?php echo $etc['type']; ?>" />
+            <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
         </div>
     </div>
     <div class="form-group">
@@ -162,7 +162,7 @@
         </div>
     </div>
 
-<?php if ($etc['trans'] != 'KAS') { ?>
+    <?php if ($etc['trans'] != 'KAS') { ?>
         <div id="bank">
             <div class="table-header">
                 DETAIL BANK
@@ -240,7 +240,7 @@
                 </table>
             </div>
         </div>
-<?php } ?>
+    <?php } ?>
 
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
@@ -264,10 +264,7 @@
 
 <script type="text/javascript">
     function redirect(data){
-        bootbox.confirm("Anda yakin kembali ?", function(result) {
-            if(result) {
-                window.location.href = "#transaksi_finance/";
-            }});
+                window.location.href = "#transaksi_finance/<?php echo $etc['targetListdata']?>";
     }
     
     function saveData(){
@@ -324,7 +321,9 @@
                          <td>\n\
                             <select class="form-control input-small" style="width:100%;"  name="dtrans_ccid[]" id="dtrans_ccid'+inc+'">\n\
                                 <option value=""></option>\n\<?php foreach ($etc['costcenter'] as $ccid) {
-                                echo "<option value = \'" . $ccid['ccid'] . "\'>" . $ccid['cc_kode'] . " | " . $ccid['cc_name'] . "</option>";}?>\n\
+        echo "<option value = \'" . $ccid['ccid'] . "\'>" . $ccid['cc_kode'] . " | " . $ccid['cc_name'] . "</option>";
+    }
+    ?>\n\
                             </select>\n\
                          </td>\n\
                          <td>\n\
@@ -393,6 +392,7 @@
                </tr>');
                             $(".btnDelete").bind("click", Delete);
                             numberOnly();
+                            displayDate();
                         }
     
                         function acomplete(id, url, trglocal, trgid, trgname){
@@ -468,12 +468,20 @@
                             });
                             $("#totalTransBank").val(formatCurrency(total));
                         }
+                        
+                        function displayDate(){
+                            $( ".datepicker").datepicker({
+                                changeMonth: true,
+                                changeYear: true,        
+                                dateFormat:'dd-mm-yy'		
+                            });	
+                        }
     
                         $(this).ready(function() {
                             $( ".datepicker" ).datepicker({
                                 autoclose: true,
                                 todayHighlight: true,
-                                dateFormat:'dd-mm-yyyy'
+                                dateFormat:'dd-mm-yy'
                             })
                             .next().on(ace.click_event, function(){
                                 $(this).prev().focus();

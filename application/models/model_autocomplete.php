@@ -140,7 +140,7 @@ class Model_Autocomplete extends CI_Model {
             LEFT JOIN ms_kontrak ON kon_nomer = spk_nokontrak AND kon_cbid = fkp_cbid
             LEFT JOIN ms_pelanggan ON pelid = kon_pelid
             WHERE fkp_nofaktur LIKE '%".$data['param']."%'
-                AND pel_cbid = '".$data['cbid']."'
+                AND fkp_cbid = '".$data['cbid']."'
             ORDER BY pel_nama ASC LIMIT 20 OFFSET 0
         ");
         if ($sql->num_rows() > 0) {

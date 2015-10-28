@@ -185,6 +185,48 @@ class Laporan_Finance extends Application {
         }
         $this->load->view('rkPiutangShow', $this->data);
     }
+    
+    public function neraca() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Neraca',
+            'targetLoad' => 'neracaShow',
+            'groupCabang' => $this->model_lap_finance->getGroupCabang(array('krid' => ses_krid)),
+        );
+        $this->load->view('neracaForm', $this->data);
+    }
+
+    public function neracaShow($output) {
+        $end = dateToIndo($this->input->post('end', TRUE));
+        $start = dateToIndo($this->input->post('start', TRUE));
+        $cbid = $this->input->post('cbid', TRUE);
+        $coa = $this->input->post('coa', TRUE);
+        $month = date('m', strtotime($start));
+        $year = date('Y', strtotime($start));
+        $output = $this->uri->segment(3);
+        $this->data['etc'] = array(
+            'judul' => 'NERACA',
+            'targetLoad' => 'neracaShow',
+            'output' => $output,
+            'dateFrom' => dateToIndo($start),
+            'dateTo' => dateToIndo($end),
+            'coa' => $coa
+        );
+        $this->data['cabang'] = $this->model_lap_finance->getDetailCabang($cbid);
+        $this->data['listData'] = $this->model_lap_finance->logTrans(array(
+            'dateFrom' => $start,
+            'dateTo' => $end,
+            'cbid' => $cbid,
+            'coa' => $coa
+                ));
+        $this->data['saldoAwal'] = $this->model_lap_finance->getSaldo(array(
+            'month' => $month,
+            'year' => $year,
+            'type' => '1',
+            'cbid' => $cbid
+                ));
+        $this->load->view('ledgerShow', $this->data);
+    }
 
 }
 

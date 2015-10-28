@@ -61,7 +61,11 @@ class Model_Trfinance extends CI_Model {
 
     public function addDetail($data) {
         /* FILTER KELENGKAPAN TRANSAKSI BY JENIS ACCOUNT */
-
+        if ($this->isValidCoa(array(
+                        'coa' => $data['dkst_coa'],
+                        'cbid' => ses_cabang)) == FALSE)
+                return FALSE;
+        
         if ($this->db->insert("ksr_dtrans", $data) == FALSE) {
             return FALSE;
         } else {
@@ -89,8 +93,12 @@ class Model_Trfinance extends CI_Model {
                 $main['kstid'] = NUM_TRANS . $tahun . sprintf("%08s", $this->getCounter(NUM_TRANS . $tahun));
                 if ($main['kst_type'] == 'I') {
                     $main['kst_kredit'] = 0;
-                } else {
+                } else if ($main['kst_type'] == 'O') {
                     $main['kst_debit'] = 0;
+                }
+                if ($this->isDuplikat($main)) {
+                    $e = "NOMOR TRANSAKSI " . $main['kst_nomer'] . " TELAH DIGUNAKAN";
+                    throw new Exception($e);
                 }
                 $this->addMain($main);
             } else {
@@ -102,63 +110,44 @@ class Model_Trfinance extends CI_Model {
                 $e = "DETAIL TRANSAKSI KOSONG";
                 throw new Exception($e);
             } else {
-                if(!empty($detail['coa'][0]))
-                for ($i = 0; $i <= count($detail['coa']) - 1; $i++) {
-                    if ($main['kst_trans'] != 'ADJ') {
-                        if ($main['kst_type'] == 'I') {
-                            $kredit = numeric($detail['nominal'][$i]);
-                            $debit = 0;
+                if (!empty($detail['coa'][0]))
+                    for ($i = 0; $i <= count($detail['coa']) - 1; $i++) {
+                        if ($main['kst_trans'] != 'ADJ') {
+                            if ($main['kst_type'] == 'I') {
+                                $kredit = numeric($detail['nominal'][$i]);
+                                $debit = 0;
+                            } else {
+                                $kredit = 0;
+                                $debit = numeric($detail['nominal'][$i]);
+                            }
                         } else {
-                            $kredit = 0;
-                            $debit = numeric($detail['nominal'][$i]);
+                            $debit = numeric($detail['debit'][$i]);
+                            $kredit = numeric($detail['kredit'][$i]);
                         }
-                    } else {
-                        $debit = numeric($detail['debit'][$i]);
-                        $kredit = numeric($detail['kredit'][$i]);
-                    }
-                    if ($this->addDetail(array(
-                                'dkst_kstid' => $main['kstid'],
-                                'dkst_coa' => $detail['coa'][$i],
-                                'dkst_decrip' => strtoupper($detail['desc'][$i]),
-                                'dkst_nota' => strtoupper($detail['nota'][$i]),
-                                'dkst_pelid' => strtoupper($detail['pelid'][$i]),
-                                'dkst_supid' => strtoupper($detail['supid'][$i]),
-                                'dkst_ccid' => $detail['ccid'][$i],
-                                'dkst_debit' => $debit,
-                                'dkst_kredit' => $kredit,
-                                'dkst_flag' => '1',
-                                'dkst_lastupdate' => date('Y-m-d H:i:s')
-                            )) == FALSE) {
-                        throw new Exception('GAGAL TAMBAH DETAIL');
-                    }
+                        if ($this->addDetail(array(
+                                    'dkst_kstid' => $main['kstid'],
+                                    'dkst_coa' => $detail['coa'][$i],
+                                    'dkst_decrip' => strtoupper($detail['desc'][$i]),
+                                    'dkst_nota' => strtoupper($detail['nota'][$i]),
+                                    'dkst_pelid' => strtoupper($detail['pelid'][$i]),
+                                    'dkst_supid' => strtoupper($detail['supid'][$i]),
+                                    'dkst_ccid' => $detail['ccid'][$i],
+                                    'dkst_debit' => $debit,
+                                    'dkst_kredit' => $kredit,
+                                    'dkst_flag' => '1',
+                                    'dkst_lastupdate' => date('Y-m-d H:i:s')
+                                )) == FALSE) {
+                            throw new Exception('GAGAL TAMBAH DETAIL');
+                        }
 
-                    $arrLog[] = array(
-                        "trl_cbid" => ses_cabang,
-                        "trl_nomer" => $main['kst_nomer'],
-                        'trl_date' => $main['kst_tgl'],
-                        "trl_coa" => $detail['coa'][$i],
-                        "trl_descrip" => $detail['desc'][$i],
-                        "trl_debit" => $debit,
-                        "trl_kredit" => $kredit,
-                        "trl_croscoa" => $main['kst_coa'],
-                        "trl_nota" => $detail['nota'][$i],
-                        "trl_pelid" => $detail['pelid'][$i],
-                        "trl_ccid" => $detail['ccid'][$i],
-                        "trl_supid" => $detail['supid'][$i],
-                        "trl_headstatus" => '1',
-                        "trl_name" => $main['kst_trans'],
-                        "trl_trans" => $main['kst_type'],
-                        "trl_createon" => date('Y-m-d H:i:s')
-                    );
-                    if ($main['kst_trans'] != 'ADJ') {
                         $arrLog[] = array(
                             "trl_cbid" => ses_cabang,
                             "trl_nomer" => $main['kst_nomer'],
                             'trl_date' => $main['kst_tgl'],
-                            "trl_coa" => $main['kst_coa'],
+                            "trl_coa" => $detail['coa'][$i],
                             "trl_descrip" => $detail['desc'][$i],
-                            "trl_debit" => $kredit,
-                            "trl_kredit" => $debit,
+                            "trl_debit" => $debit,
+                            "trl_kredit" => $kredit,
                             "trl_croscoa" => $main['kst_coa'],
                             "trl_nota" => $detail['nota'][$i],
                             "trl_pelid" => $detail['pelid'][$i],
@@ -169,14 +158,33 @@ class Model_Trfinance extends CI_Model {
                             "trl_trans" => $main['kst_type'],
                             "trl_createon" => date('Y-m-d H:i:s')
                         );
+                        if ($main['kst_trans'] != 'ADJ') {
+                            $arrLog[] = array(
+                                "trl_cbid" => ses_cabang,
+                                "trl_nomer" => $main['kst_nomer'],
+                                'trl_date' => $main['kst_tgl'],
+                                "trl_coa" => $main['kst_coa'],
+                                "trl_descrip" => $detail['desc'][$i],
+                                "trl_debit" => $kredit,
+                                "trl_kredit" => $debit,
+                                "trl_croscoa" => $main['kst_coa'],
+                                "trl_nota" => $detail['nota'][$i],
+                                "trl_pelid" => $detail['pelid'][$i],
+                                "trl_ccid" => $detail['ccid'][$i],
+                                "trl_supid" => $detail['supid'][$i],
+                                "trl_headstatus" => '1',
+                                "trl_name" => $main['kst_trans'],
+                                "trl_trans" => $main['kst_type'],
+                                "trl_createon" => date('Y-m-d H:i:s')
+                            );
+                        }
                     }
-                }
             }
 
             if (count($bank['bank']) > 0) {
-                if(!empty($bank['bank'][0]))
-                for ($i = 0; $i <= count($bank['bank']) - 1; $i++) {
-                    if ($this->addBank(array(
+                if (!empty($bank['bank'][0]))
+                    for ($i = 0; $i <= count($bank['bank']) - 1; $i++) {
+                        if ($this->addBank(array(
                                 'dbnk_kstid' => $main['kstid'],
                                 'dbnk_bankid' => $bank['bank'][$i],
                                 'dbnk_norek' => $bank['norek'][$i],
@@ -187,14 +195,13 @@ class Model_Trfinance extends CI_Model {
                                 'dbnk_flag' => '1',
                                 'dbnk_lastupdate' => date('Y-m-d H:i:s')
                             )) == FALSE) {
-                        throw new Exception('GAGAL TAMBAH DETAIL BANK');
+                            throw new Exception('GAGAL TAMBAH DETAIL BANK');
+                        }
                     }
-                }
             }
 
             /* INSERTING TO LEDGER */
             $this->db->insert_batch('ksr_ledger', $arrLog);
-            
 
             if ($this->db->trans_status() == TRUE) {
                 $this->db->trans_commit();
@@ -277,61 +284,68 @@ class Model_Trfinance extends CI_Model {
     /* LOAD DATAGRID TRANSAKSI */
 
     public function loadtrans($data) {
-        if (!empty($data['where']['key'])) {
-            $where = " AND " . $data['option'] . " LIKE '%" . $data['key'] . "%'";
-        }
-
-        /* if(!empty($data['where']['category'])){
-          $where = " AND ".$data['category']." LIKE '%".$data['key']."%'";
-          } */
-
         $sql = $this->db->query("
-            SELECT * FROM ksr_trans WHERE 
-            kst_trans = '" . $data['trans'] . "' AND
-            kst_type = '" . $data['type'] . "' AND
-            kst_cbid = '" . $data['cbid'] . "' AND
-            kst_trans = '" . $data['trans'] . "' AND
-            kst_trans = '" . $data['trans'] . "' 
-            WHERE kstid != '' " . $where . "
-            ORDER BY " . $data['sort'] . " " . $data['order'] . "
-            LIMIT " . $data['limit'] . " OFFSET " . $data['offset'] . "
+            SELECT
+                kstid,kst_tgl,kst_nomer,kst_trans,kst_coa,
+                kst_desc,kst_debit,kst_kredit,kst_printed,
+                kst_cancel,pel_nama, 
+                CASE WHEN kst_printed = '1' THEN 'TERCETAK' 
+                ELSE 'BLM DICETAK' END AS kst_status
+            FROM
+                ksr_trans
+            LEFT JOIN ksr_dtrans ON dkst_kstid = kstid
+            LEFT JOIN ms_pelanggan ON pelid = dkst_pelid
+            WHERE
+                kst_trans LIKE '".$data['trans']."%'
+                AND kst_type = '".$data['type']."'
+            GROUP BY
+                kstid,kst_tgl,kst_nomer,kst_trans,kst_coa,
+                kst_desc,kst_debit,kst_kredit,kst_printed,
+                kst_cancel,pel_nama
+            ORDER BY ".$data['sidx']." ".$data['sord']." 
+            LIMIT ".$data['limit']." OFFSET ".$data['start']." 
+        ");
+               
+        $sqlCount = $this->db->query("SELECT
+                count (kstid) as total
+            FROM
+                ksr_trans
+            LEFT JOIN ksr_dtrans ON dkst_kstid = kstid
+            LEFT JOIN ms_pelanggan ON pelid = dkst_pelid
+            WHERE
+                kst_trans LIKE '".$data['trans']."%'
+                AND kst_type = '".$data['type']."'
+            GROUP BY
+                kstid,kst_tgl,kst_nomer,kst_trans,kst_coa,
+                kst_desc,kst_debit,kst_kredit,kst_printed,
+                kst_cancel,pel_nama
         ");
 
-        $sqlCount = $this->db->query("
-            SELECT count(kstid) as num FROM ksr_trans WHERE 
-            kst_trans = '" . $data['trans'] . "' AND
-            kst_type = '" . $data['type'] . "' AND
-            kst_cbid = '" . $data['cbid'] . "' AND
-            kst_trans = '" . $data['trans'] . "' AND
-            kst_trans = '" . $data['trans'] . "' 
-                WHERE kstid != '' " . $where . "
-        ");
-
-        return array('result' => $sql->result_array(), 'numrows' => $sqlCount->row()->num);
+        return array('result' => $sql->result(), 'numrows' => $sqlCount->row()->total);
     }
 
     public function getMainCoa($data = array()) {
-        $type = $data['type'] == '-1' ? 
-            " AND coa_is_kas_bank != '0' " :
-            " AND coa_is_kas_bank = '".$data['type']."'";
+        $type = $data['type'] == '-1' ?
+                " AND coa_is_kas_bank != '0' " :
+                " AND coa_is_kas_bank = '" . $data['type'] . "'";
         $sql = $this->db->query("
             SELECT * FROM ms_coa 
             WHERE coa_cbid = '" . $data['cbid'] . "' 
-                ".$type." AND coa_level != '1'
+                " . $type . " AND coa_level != '1'
         ");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
         return null;
     }
-    
-    public function getMainTrans($data = array()){
+
+    public function getMainTrans($data = array()) {
         $sql = $this->db->query("
-            SELECT * FROM ksr_trans WHERE kst_id = '".$data['kstid']."'
+            SELECT * FROM ksr_trans WHERE kst_id = '" . $data['kstid'] . "'
         ");
         return $sql->result_array();
     }
-    
+
     public function getSettingCoa($data) {
         $query = $this->db->query("SELECT setcoa_kode, setcoa_specid FROM ms_coa_setting 
             WHERE setcoa_cbid = '" . $data . "'");

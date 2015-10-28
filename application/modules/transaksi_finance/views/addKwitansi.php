@@ -248,10 +248,10 @@
 
 <script type="text/javascript">
     function redirect(data){
-        bootbox.confirm("Anda yakin kembali ?", function(result) {
-            if(result) {
-                window.location.href = "#transaksi_finance/";
-            }});
+        /*bootbox.confirm(" ?", function(result) {
+            if(result) { */
+                window.location.href = "#transaksi_finance/daftarKwitansi";
+            //}});
     }
     
     function saveData(){
@@ -479,12 +479,12 @@
         
         if($('#trans_jenis').val() == '1'){
             $('#bank').hide();
-            $('#trans_trans').val("KAS");
+            $('#trans_trans').val("KWIKAS");
         }else if($('#trans_jenis').val() == '2'){
-            $('#trans_trans').val("BNK");
+            $('#trans_trans').val("KWIBNK");
             $('#bank').show();
         }else{
-            $('#trans_trans').val("CEK");
+            $('#trans_trans').val("KWICEK");
             $('#bank').show();
         }
     }

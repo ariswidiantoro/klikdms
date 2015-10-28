@@ -149,6 +149,122 @@ class Master_Finance extends Application {
         echo json_encode($hasil);
     }
     
+    /* DEPARTEMENT */
+    
+    public function departement() {
+        $this->hakAkses(1120);
+        $this->load->view('dataDepartement', $this->data);
+    }
+
+    public function loadDepartement() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'merkid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $count = $this->model_finance->getTotalDepartement($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_finance->getDataDepartement($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusData('" . $row->deptid . "', '" . $row->dept_deskripsi . "')";
+                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_finance/editDepartement?id=' . $row->deptid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->deptid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->deptid,
+                    $row->dept_deskripsi,
+                    $edit, $hapus);
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    public function addDepartement() {
+        $this->hakAkses(1120);
+        $this->load->view('addDepartement', $this->data);
+    }
+
+    public function editDepartement() {
+        $this->hakAkses(1120);
+        $id = $this->input->get('id', TRUE);
+        $this->data['data'] = $this->model_finance->getDepartement($id);
+        $this->load->view('editDepartement', $this->data);
+    }
+
+    public function getDepartement() {
+        $data = $this->input->get('deptid', TRUE);
+        $result = $this->model_finance->getDepartement($data);
+        $responce = array();
+        if (count($result) > 0)
+            $responce = $result;
+        echo json_encode($responce);
+    }
+
+    public function saveDepartement() {
+        $desc = strtoupper($this->input->post('dept_deskripsi', TRUE));
+        if (empty($desc)) {
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
+        } else {
+            $save = $this->model_finance->addDepartement(
+                    array(
+                        'dept_deskripsi' => $desc
+                    ));
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function updateDepartement() {
+        $id = $this->input->post('deptid', TRUE);
+        $desc = strtoupper($this->input->post('dept_deskripsi', TRUE));
+        if (empty($desc)) {
+            $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
+        } else {
+            $save = $this->model_finance->updateDepartement(array(
+                'dept_deskripsi' => $desc,
+                ), $id);
+            if ($save['status'] == TRUE) {
+                $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+            } else {
+                $hasil = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    public function deleteDepartement() {
+        $deptid = $this->input->post('id', TRUE);
+        if (empty($deptid)) {
+            $hasil = $this->error('Hapus data gagal');
+        } else {
+            if ($this->model_finance->deleteDepartement($deptid)) {
+                $hasil = $this->sukses('Hapus data berhasil');
+            } else {
+                $hasil = $this->error('Hapus data gagal');
+            }
+        }
+        echo json_encode($hasil);
+    }
+    
     /* SPECIAL COA */
     
     public function specialCoa() {
@@ -446,6 +562,7 @@ class Master_Finance extends Application {
 
     public function addCostCenter() {
         $this->hakAkses(1052);
+        $this->data['departemen'] = $this->model_finance->cListDepartemen();
         $this->load->view('addCostCenter', $this->data);
     }
 
@@ -498,11 +615,16 @@ class Master_Finance extends Application {
     public function saveCostCenter() {
         $kode = $this->input->post('cc_kode', TRUE);
         $desc = $this->input->post('cc_name', TRUE);
-        if (empty($kode) || empty($desc)) {
+        $dept = $this->input->post('cc_dept', TRUE);
+        if (empty($kode) || empty($desc)|| empty($dept)) {
             $hasil = $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI');
         } else {
-            $save = $this->model_finance->addCostCenter(array('cc_kode' => strtoupper($kode),
-                'cc_name' => strtoupper($desc), 'cc_cbid' => ses_cabang, 'cc_flag' => '1'));
+            $save = $this->model_finance->addCostCenter(array(
+                'cc_kode' => strtoupper($kode),
+                'cc_name' => strtoupper($desc), 
+                'cc_cbid' => ses_cabang, 
+                'cc_dept' => strtoupper($dept),
+                'cc_flag' => '1'));
             if ($save['status'] == TRUE) {
                 $hasil = $this->sukses($save['msg']);
             } else {
