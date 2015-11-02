@@ -422,8 +422,8 @@ class Transaksi_Prospect extends Application {
                 'fpt_merkid' => $this->input->post('fpt_merkid', TRUE),
                 'fpt_modelid' => $this->input->post('fpt_modelid', TRUE),
                 'fpt_ctyid' => $this->input->post('fpt_ctyid', TRUE),
-                'fpt_leasid' => $this->input->post('fpt_leasid', TRUE),
-                'fpt_jangka' => $this->input->post('fpt_jangka', TRUE),
+                'fpt_leasid' => numeric($this->input->post('fpt_leasid', TRUE)),
+                'fpt_jangka' => numeric($this->input->post('fpt_jangka', TRUE)),
                 'fpt_warnaid' => $this->input->post('fpt_warnaid', TRUE),
                 'fpt_karoid' => $this->input->post('fpt_karoid', TRUE),
                 'fpt_segid' => $this->input->post('fpt_segid', TRUE),
@@ -438,6 +438,7 @@ class Transaksi_Prospect extends Application {
                 'fpt_bbn' => numeric($this->input->post('fpt_bbn', TRUE)),
                 'fpt_asuransi' => numeric($this->input->post('fpt_asuransi', TRUE)),
                 'fpt_karoseri' => numeric($this->input->post('fpt_karoseri', TRUE)),
+                'fpt_accesories' => numeric($this->input->post('fpt_accesories', TRUE)),
                 'fpt_administrasi' => numeric($this->input->post('fpt_administrasi', TRUE)),
                 'fpt_total' => numeric($this->input->post('fpt_total', TRUE)),
                 'fpt_status' => '0',
@@ -461,8 +462,7 @@ class Transaksi_Prospect extends Application {
                     $acc += numeric($harga[$i]);
                 }
             }
-            $data['fpt_accesories'] = $acc;
-            $data['fpt_total'] += $acc;
+            
             $save = $this->model_prospect->saveFPT($data, $fat);
             if ($save['status']) {
                 $hasil = array('result' => true, 'msg' => $this->sukses($save['msg']));
@@ -490,8 +490,8 @@ class Transaksi_Prospect extends Application {
                 'fpt_merkid' => $this->input->post('fpt_merkid', TRUE),
                 'fpt_modelid' => $this->input->post('fpt_modelid', TRUE),
                 'fpt_ctyid' => $this->input->post('fpt_ctyid', TRUE),
-                'fpt_leasid' => $this->input->post('fpt_leasid', TRUE),
-                'fpt_jangka' => $this->input->post('fpt_jangka', TRUE),
+                'fpt_leasid' => numeric($this->input->post('fpt_leasid', TRUE)),
+                'fpt_jangka' => numeric($this->input->post('fpt_jangka', TRUE)),
                 'fpt_warnaid' => $this->input->post('fpt_warnaid', TRUE),
                 'fpt_karoid' => $this->input->post('fpt_karoid', TRUE),
                 'fpt_segid' => $this->input->post('fpt_segid', TRUE),

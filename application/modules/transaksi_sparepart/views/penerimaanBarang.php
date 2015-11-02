@@ -56,12 +56,12 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Include Pajak</label>
         <div class="col-sm-8">
             <div class='input-group col-xs-10 col-sm-10'>
-            <select name="trbr_inc_pajak" required="required" class="ace col-xs-10 col-sm-4 req">
-                <option value="">Pilih</option>
-                <option value="1">Ya</option>
-                <option value="2">Tidak</option>
-            </select>
-        </div>
+                <select name="trbr_inc_pajak" required="required" class="ace col-xs-10 col-sm-4 req">
+                    <option value="">Pilih</option>
+                    <option value="1">Ya</option>
+                    <option value="2">Tidak</option>
+                </select>
+            </div>
         </div>
     </div>
     <div class="hr hr-16 hr-dotted"></div>
@@ -383,11 +383,7 @@
                     type: 'POST',
                     data: {param : $("#kodeBarang").val()},
                     success: function(data) {
-                        if (data.response == "true") {
-                            add(data.message);
-                        } else {
-                            add(data.value);
-                        }
+                        add(data);
                     }
                 });
             },

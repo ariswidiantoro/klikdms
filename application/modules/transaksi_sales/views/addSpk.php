@@ -157,7 +157,7 @@ echo $this->session->flashdata('msg');
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Uang Muka</label>
                     <div class="col-sm-7">
-                        <input type="text" name="spk_uangmuka"  value="0" id="spk_uangmuka" 
+                        <input type="text" name="spk_uangmuka" onchange="$('#'+this.id).val(formatDefault(this.value));"  value="0" id="spk_uangmuka" 
                                class="form-control input-xlarge number right" />
                     </div>
                 </div>  

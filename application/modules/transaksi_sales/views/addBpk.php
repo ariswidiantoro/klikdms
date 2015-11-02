@@ -23,7 +23,7 @@ echo $this->session->flashdata('msg');
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">No. Penerimaan</label>
         <div class="col-sm-3">
-            <input type="text" required="required" maxlength="50"
+            <input type="text" required="required" maxlength="30"
                    name="bpk_nomer" id="bpk_nomer"  class="form-control input-xlarge upper req" />
         </div>
     </div>

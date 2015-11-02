@@ -620,7 +620,7 @@
                         type : $("#wo_type").val()
                     },
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },

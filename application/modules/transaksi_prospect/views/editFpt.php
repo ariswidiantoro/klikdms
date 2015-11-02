@@ -285,7 +285,7 @@
                                                 <input type="hidden" value="<?php echo $value['aksid'] ?>" id="dtrans_aksid1"  name="dtrans_aksid[]" />
                                             </td>
                                             <td>
-                                                <input type="text" style="text-align: right;" id="dtrans_harga1" name="dtrans_harga[]" onchange="$('#'+this.id).val(formatDefault(this.value));"  value="<?php echo number_format($value['fat_harga'], 2) ?>"   placeholder="HARGA" class="form-control number upper" />
+                                                <input type="text" style="text-align: right;" id="dtrans_harga1" name="dtrans_harga[]" onchange="$('#'+this.id).val(formatDefault(this.value));totalAccesories();"  value="<?php echo number_format($value['fat_harga'], 2) ?>"   placeholder="HARGA" class="form-control number upper hargaaccs" />
                                             </td>
                                             <td class="center" style="vertical-align: middle;">
                                                 <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>
@@ -425,7 +425,7 @@
                                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Aksesories</label>
                                     <div class="col-sm-8">
                                         <div class="input-group col-sm-6">
-                                            <input type="text" name="fpt_aksesories" id="fpt_aksesories" style="text-align: right;" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()" class="form-control harga number upper" />
+                                            <input type="text" name="fpt_accesories" id="fpt_accesories" style="text-align: right;" onchange="$('#'+this.id).val(formatDefault(this.value));" onkeyup="total()" class="form-control harga number upper" />
                                         </div>
                                     </div>
                                 </div>-->
@@ -576,6 +576,17 @@
         })
     }
     
+    function totalAccesories(){    
+        var totalAccs = 0;
+        var price;
+        $(".hargaaccs").each(function() {
+            price = $(this).val().replace(/,/g, "");
+            totalAccs += Number(price);
+        });
+        $("#fpt_accesories").val(formatDefault(totalAccs));
+        total();
+    }
+    
     function total(){    
         var total = 0;
         var price;
@@ -616,6 +627,7 @@
                 var kode = ui.item.value;
                 $("#dtrans_harga"+inc).val(formatDefault(ui.item.trgtwo));
                 $("#dtrans_aksid"+inc).val(ui.item.trgone);
+                totalAccesories();
                 $("input[name^=dtrans_aksname]").each(function() {
                     var k = $(this).val().replace(/,/g, "");
                     if (k == kode) {
@@ -653,7 +665,7 @@
                 <input type="hidden"  id="dtrans_aksid'+inc+'"  name="dtrans_aksid[]" />\n\
             </td>\n\
             <td>\n\
-                    <input type="text" style="text-align: right;"  id="dtrans_harga'+(inc)+'" name="dtrans_harga[]" onchange="$(\'#\'+this.id).val(formatDefault(this.value));"  placeholder="HARGA" class="form-control number upper" />\n\
+                    <input type="text" style="text-align: right;"  id="dtrans_harga'+(inc)+'" name="dtrans_harga[]" onchange="$(\'#\'+this.id).val(formatDefault(this.value));totalAccesories();"  placeholder="HARGA" class="form-control number upper hargaaccs" />\n\
             </td>\n\
             <td class="center" style="vertical-align: middle;">\n\
                 <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>\n\

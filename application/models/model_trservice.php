@@ -95,13 +95,18 @@ class Model_Trservice extends CI_Model {
      * @return array of work order
      */
     public function getNopol($nopol) {
-        $sql = $this->db->query("SELECT msc_nopol, mscid,msc_norangka  "
-                . " FROM ms_car WHERE msc_nopol LIKE '$nopol%' AND msc_cbid = '"
+        $sql = $this->db->query("SELECT msc_nopol AS value, mscid,msc_norangka  "
+                . " FROM ms_car WHERE (msc_nopol LIKE '$nopol%' OR msc_norangka LIKE '$nopol%' ) AND msc_cbid = '"
                 . ses_cabang . "' ORDER BY msc_nopol LIMIT 20");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            $data = array(
+                'value' => 'Data Tidak Ditemukan',
+                'msc_norangka' => 'Data Tidak Ditemukan'
+            );
         }
-        return null;
+        return $data;
     }
 
     /**
@@ -110,16 +115,21 @@ class Model_Trservice extends CI_Model {
      * @return null
      */
     public function getFlateRateAuto($data, $type) {
+        $datas = array();
         if (!empty($data)) {
-            $sql = $this->db->query("SELECT flat_kode, flat_deskripsi,flatid  "
+            $sql = $this->db->query("SELECT flat_kode AS value, flat_deskripsi AS desc,flatid  "
                     . " FROM svc_frate WHERE (flat_kode LIKE '%$data%' OR flat_deskripsi LIKE '%$data%' ) AND flat_cbid = '"
                     . ses_cabang . "' AND flat_type = $type ORDER BY flat_kode LIMIT 20");
             if ($sql->num_rows() > 0) {
                 return $sql->result_array();
+            } else {
+                $datas = array(
+                    'value' => 'Data Tidak Ditemukan',
+                    'desc' => 'Data Tidak Ditemukan'
+                );
             }
         }
-
-        return null;
+        return $datas;
     }
 
     /**
@@ -271,10 +281,10 @@ class Model_Trservice extends CI_Model {
 
     /**
      * 
-     * @param type $start
-     * @param type $limit
-     * @param type $sidx
-     * @param type $sord
+     * @param Date  $start
+     * @param Integer $limit
+     * @param Integer $sidx
+     * @param String $sord
      * @param type $where
      * @return null
      */
@@ -304,10 +314,10 @@ class Model_Trservice extends CI_Model {
 
     /**
      *
-     * @param type $tgl
-     * @param type $timestart
-     * @param type $timeend
-     * @return type 
+     * @param Date $tgl
+     * @param Timestamp $timestart
+     * @param Timestamp $timeend
+     * @return Array 
      */
     public function getDataMekanik() {
         $query = $this->db->QUERY("SELECT DISTINCT krid, kr_nama FROM svc_absensi"

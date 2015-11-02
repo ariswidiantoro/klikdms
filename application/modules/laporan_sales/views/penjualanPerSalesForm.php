@@ -3,34 +3,25 @@
         <div class="row">
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <span>Mulai Tgl</span>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <span>Sampai Dengan</span>
+                    <span>Tahun</span>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <div class="input-group">
-                        <input type="text" name="start" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
-                        <span class="input-group-addon">
-                            <i class="ace-icon fa fa-calendar"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <div class="input-group" style="position: static">
-                        <input type="text" value="<?php echo date('d/m/Y') ?>" name="end" class="datepicker form-control" />
-                        <span class="input-group-addon">
-                            <i class="ace-icon fa fa-calendar"></i>
-                        </span>
-                    </div>
+                    <!--<div class="input-group">-->
+                        <select class="form-control" name="start" id="start" style="width: 100%">
+                            <?php
+                            $tahun = date('Y') - 10;
+                            for ($i = date('Y'); $i >= $tahun; $i--) {
+                                ?>
+                                <option value="<?php echo $i ?>"><?php echo $i ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    <!--</div>-->
                 </div>
             </div>
             <div id="default-buttons" class="col-xs-6 col-sm-6">

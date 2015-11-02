@@ -18,7 +18,17 @@ class Model_Trspart extends CI_Model {
         $tahun = substr(date('Y'), 2, 2);
         $id = sprintf("%08s", $this->getCounter(NUM_TERIMA_BARANG . $tahun));
         $data['trbrid'] = NUM_TERIMA_BARANG . $tahun . $id;
-        $this->db->INSERT('spa_trbr', $data);
+        $str = $this->db->INSERT('spa_trbr', $data);
+        if (!$str) {
+            $errMessage = $this->db->_error_message();
+            if (strpos($errMessage, "duplicate key value") == TRUE) {
+                $this->db->trans_rollback();
+                $result['result'] = false;
+                $result['kode'] = '';
+                $result['msg'] = error("Nomer '" . $data['trbr_faktur'] . "' Sudah Terdaftar");
+                return $result;
+            }
+        }
         foreach ($detail as $value) {
             $value['dtr_trbrid'] = "TB" . $tahun . $id;
             $this->db->INSERT('spa_trbr_det', $value);
@@ -205,7 +215,17 @@ class Model_Trspart extends CI_Model {
             $tahun = substr(date('Y'), 2, 2);
             $id = sprintf("%08s", $this->getCounter(NUM_ADJUSTMENT_STOCK . $tahun));
             $data['adjid'] = NUM_ADJUSTMENT_STOCK . $tahun . $id;
-            $this->db->INSERT('spa_adjustment', $data);
+            $str = $this->db->INSERT('spa_adjustment', $data);
+            if (!$str) {
+                $errMessage = $this->db->_error_message();
+                if (strpos($errMessage, "duplicate key value") == TRUE) {
+                    $this->db->trans_rollback();
+                    $result['result'] = false;
+                    $result['kode'] = '';
+                    $result['msg'] = error("Nomer '" . $data['adj_nomer'] . "' Sudah Terdaftar");
+                    return $result;
+                }
+            }
             foreach ($detail as $value) {
                 $value['dadj_adjid'] = NUM_ADJUSTMENT_STOCK . $tahun . $id;
                 $insert = $this->db->INSERT('spa_adjustment_det', $value);
@@ -341,6 +361,7 @@ class Model_Trspart extends CI_Model {
         }
         return null;
     }
+
     function getSupplySlipSo($sppid) {
         $sql = $this->db->query("SELECT * FROM spa_supply_so WHERE so_sppid = '$sppid'");
         if ($sql->num_rows() > 0) {
@@ -397,11 +418,12 @@ class Model_Trspart extends CI_Model {
         }
         return null;
     }
+
     function getSupplySlipSoByWo($woNomer) {
         $sql = $this->db->query("SELECT so_deskripsi,spp_jenis, so_harga FROM spa_supply_so  LEFT JOIN spa_supply"
                 . " ON sppid = so_sppid LEFT JOIN svc_wo ON woid = spp_woid "
                 . "WHERE wo_nomer = '$woNomer' AND wo_cbid = '" . ses_cabang . "' AND spp_status = 0 ORDER BY spp_jenis,so_deskripsi ");
-       log_message('error', 'AAAAAAA '.$this->db->last_query());
+        log_message('error', 'AAAAAAA ' . $this->db->last_query());
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }
@@ -454,11 +476,16 @@ class Model_Trspart extends CI_Model {
      * @return boolean
      */
     public function getFakturTerimaAutoComplete($kode) {
-        $sql = $this->db->query("SELECT trbrid, trbr_faktur, trbr_supid, sup_nama "
+        $sql = $this->db->query("SELECT trbrid AS id, trbr_faktur AS value, trbr_supid AS supid, sup_nama AS desc "
                 . "FROM spa_trbr LEFT JOIN ms_supplier ON supid = trbr_supid  "
                 . "WHERE trbr_cbid = '" . ses_cabang . "' AND trbr_faktur LIKE '%$kode%' ORDER BY trbr_faktur LIMIT 10");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan',
+                'desc' => ''
+            );
         }
         return null;
     }

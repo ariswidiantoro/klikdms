@@ -166,18 +166,7 @@ class Master_Service extends Application {
     function jsonPelanggan() {
         $nama = $this->input->post('param');
         $cbid = ses_cabang;
-        $data['response'] = 'false';
-        $query = $this->model_service->getPelangganByNama($nama, $cbid);
-        if (!empty($query)) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array('value' => $row['pel_nama'], 'pelid' => $row['pelid'], 'desc' => $row['pel_alamat']);
-            }
-        } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ditemukan", 'desc' => '');
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_service->getPelangganByNama($nama, $cbid));
     }
 
     /**

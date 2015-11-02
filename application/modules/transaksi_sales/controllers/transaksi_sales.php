@@ -209,6 +209,7 @@ class Transaksi_Sales extends Application {
                 'byr_bbn' => numeric($this->input->post("byr_bbn")),
                 'byr_tunai' => numeric($this->input->post("byr_tunai")),
                 'byr_total' => numeric($this->input->post("byr_total")),
+                'byr_hpp' => numeric($this->input->post("byr_hpp")),
                 'byr_sisa' => numeric($this->input->post("byr_sisa")),
             );
 
@@ -603,7 +604,10 @@ class Transaksi_Sales extends Application {
                     $status = "SUDAH DIUPPROVE";
                     $approve = '-';
                     $edit = '-';
-                    $batalApprove = '<a href="javascript:void(0);" onclick="batalApprove(\'' . $row->spkid . '\')" title="Batal Approve"><i class="ace-icon fa fa-times red2 bigger-120"></i>';
+                    $batalApprove = 'Sudah Faktur';
+                    if ($row->spk_faktur_status == 0) {
+                        $batalApprove = '<a href="javascript:void(0);" onclick="batalApprove(\'' . $row->spkid . '\')" title="Batal Approve"><i class="ace-icon fa fa-times red2 bigger-120"></i>';
+                    }
                 }
                 $responce->rows[$i]['cell'] = array(
                     $row->spk_no,

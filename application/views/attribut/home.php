@@ -1,17 +1,17 @@
-<link href="<?php echo path_metro() ?>css/metro-bootstrap.css" rel="stylesheet">
+<!--<link href="<?php echo path_metro() ?>css/metro-bootstrap.css" rel="stylesheet">
 <link href="<?php echo path_metro() ?>css/metro-bootstrap-responsive.css" rel="stylesheet">
 <link href="<?php echo path_metro() ?>css/iconFont.css" rel="stylesheet">
 <link href="<?php echo path_metro() ?>js/prettify/prettify.css" rel="stylesheet">
 
-<!-- Load JavaScript Libraries -->
+ Load JavaScript Libraries 
 <script src="<?php echo path_metro() ?>js/jquery/jquery.min.js"></script>
 <script src="<?php echo path_metro() ?>js/jquery/jquery.widget.min.js"></script>
 <script src="<?php echo path_metro() ?>js/jquery/jquery.mousewheel.js"></script>
 <script src="<?php echo path_metro() ?>js/prettify/prettify.js"></script>
 
 <script src="<?php echo path_metro() ?>js/metro.min.js"></script>
-<script src="<?php echo path_metro() ?>js/start-screen.js"></script>
-<body class="metro tile-area-bg">
+<script src="<?php echo path_metro() ?>js/start-screen.js"></script>-->
+<!--<body class="metro tile-area-bg">
 
     <div class="tile-area">
         <h1 class="tile-area-title fg-white"><?php echo "KlikDms"; ?></h1>
@@ -99,7 +99,7 @@
                 </div>
             </div>
         </div>
-</body>
+</body>-->
 <script type="text/javascript">
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {

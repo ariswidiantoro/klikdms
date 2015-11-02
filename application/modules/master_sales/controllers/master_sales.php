@@ -349,11 +349,11 @@ class Master_Sales extends Application {
             $retur = array();
             if ($hasil) {
                 $retur['result'] = true;
-                $this->session->set_flashdata('msg', $this->sukses('Berhasil menambah agenda'));
+                $this->session->set_flashdata('msg', $this->sukses('Berhasil menambah kontrak'));
                 $retur['msg'] = $this->sukses("Berhasil menyimpan kontrak");
             } else {
                 $retur['result'] = false;
-                $this->session->set_flashdata('msg', $this->error('Gagal menambah agenda'));
+                $this->session->set_flashdata('msg', $this->error('Gagal menambah kontrak'));
                 $retur['msg'] = $this->error("Gagal menyimpan kontrak");
             }
         }

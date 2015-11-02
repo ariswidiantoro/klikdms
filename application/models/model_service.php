@@ -368,7 +368,7 @@ class Model_Service extends CI_Model {
     function saveKendaraan($data) {
         $this->db->trans_begin();
         $tahun = date('y');
-        $id = sprintf("%08s", $this->getCounter(NUM_CAR. $tahun));
+        $id = sprintf("%08s", $this->getCounter(NUM_CAR . $tahun));
         $data['mscid'] = NUM_CAR . $tahun . $id;
         $this->db->INSERT('ms_car', $data);
         if ($this->db->trans_status() === TRUE) {
@@ -455,9 +455,13 @@ class Model_Service extends CI_Model {
      * @return boolean
      */
     public function getPelangganByNama($nama, $cbid) {
-        $sql = $this->db->query("SELECT * FROM ms_pelanggan WHERE pel_cbid = '$cbid' AND pel_nama LIKE '%" . strtoupper($nama) . "%' ORDER BY pel_nama LIMIT 40");
+        $sql = $this->db->query("SELECT pel_nama AS value,pelid,pel_alamat AS desc FROM ms_pelanggan WHERE pel_cbid = '$cbid' AND pel_nama LIKE '%" . strtoupper($nama) . "%' ORDER BY pel_nama LIMIT 40");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan'
+            );
         }
         return null;
     }
@@ -549,8 +553,8 @@ class Model_Service extends CI_Model {
      */
     function updatePrintFaktur($notid) {
         $this->db->trans_begin();
-        $sql = 
-        $this->db->where('notid', $notid);
+        $sql =
+                $this->db->where('notid', $notid);
         $this->db->update('spa_nota', array('not_'));
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();

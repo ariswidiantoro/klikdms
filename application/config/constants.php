@@ -60,6 +60,7 @@ define('NUM_ADJUSTMENT_STOCK', 'AD');
 define('NUM_FPK_PK', 'PK');
 define('NUM_FPK_NOMER', 'FK');
 define('NUM_FAKTUR_UNIT', 'FU');
+define('NUM_RETUR_BELI_UNIT', 'RT');
 
 /* Rossi */
 define('NUM_TIPE_JURNAL', 'TJ');

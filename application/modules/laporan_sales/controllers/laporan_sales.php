@@ -55,13 +55,14 @@ class Laporan_Sales extends Application {
     function penjualanPerSales() {
         $this->hakAkses(106);
         $this->data['link'] = 'showPenjualanPerSales';
-        $this->load->view('salesForm', $this->data);
+        $this->load->view('penjualanPerSalesForm', $this->data);
     }
 
     function produktifitasSales() {
         $this->hakAkses(107);
         $this->data['link'] = 'showProduktifitasSales';
-        $this->load->view('salesForm', $this->data);
+        $this->data['merk'] = $this->model_admin->getMerk();
+        $this->load->view('produktifitasSalesForm', $this->data);
     }
 
     function mutasiKendaraan() {
@@ -93,6 +94,86 @@ class Laporan_Sales extends Application {
         $this->data['data'] = $this->model_lap_sales->getMasukKendaran($start, $end, $cabang);
         $this->data['output'] = $output;
         $this->load->view('showMasukKendaraan', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showSpk($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sales->getSpk($start, $end, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showSpk', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showPenjualanPerSales($output) {
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sales->getPenjualanPerSales($start, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showPenjualanPerSales', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showProduktifitasSales($output) {
+        $this->load->model('model_service');
+        $tahun = $this->input->post('tahun');
+        $bulan = $this->input->post('bulan');
+        $merk = $this->input->post('merkid');
+        $cabang = ses_cabang;
+        $this->data['model'] = $this->model_service->getModelByMerk($merk);
+        $this->data['data'] = $this->model_lap_sales->getProduktifitasSales($tahun, $bulan, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showProduktifitasSales', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showReturJual($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sales->getReturJual($start, $end, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showReturJual', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showReturBeli($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sales->getReturBeli($start, $end, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showReturBeli', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showFakturPenjualan($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sales->getFakturPenjualan($start, $end, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showFakturPenjualan', $this->data);
     }
 
 }

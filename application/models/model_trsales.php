@@ -208,7 +208,7 @@ class Model_Trsales extends CI_Model {
      * @return null
      */
     public function getDataStock($norangka, $cbid) {
-        $sql = $this->db->query("SELECT mscid,warna_deskripsi,msc_nomesin,merk_deskripsi,cty_deskripsi,msc_kondisi,msc_vinlot,msc_bodyseri FROM ms_car LEFT JOIN ms_car_type ON ctyid = msc_ctyid"
+        $sql = $this->db->query("SELECT msc_hpp,mscid,warna_deskripsi,msc_nomesin,merk_deskripsi,cty_deskripsi,msc_kondisi,msc_vinlot,msc_bodyseri FROM ms_car LEFT JOIN ms_car_type ON ctyid = msc_ctyid"
                 . " LEFT JOIN ms_car_model ON modelid = cty_modelid "
                 . " LEFT JOIN ms_car_merk ON model_merkid = merkid"
                 . " LEFT JOIN ms_warna ON warnaid = msc_warnaid"
@@ -320,7 +320,7 @@ class Model_Trsales extends CI_Model {
     }
 
     public function getAllCekDokumen($start, $limit, $sidx, $sord, $where) {
-        $this->db->select('spkid, spk_no, spk_approve_status, spk_nokontrak, spk_approve_tgl,spk_approve_by');
+        $this->db->select('spkid, spk_no, spk_approve_status, spk_nokontrak, spk_approve_tgl,spk_approve_by,spk_faktur_status');
         $this->db->limit($limit);
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
@@ -378,6 +378,17 @@ class Model_Trsales extends CI_Model {
                 return $result;
             }
         }
+
+        $mutasi = array(
+            'mut_mscid' => $data['bpk_mscid'],
+            'mut_desc' => 'Penerimaan Kendaraan',
+            'mut_nomer' => $data['bpk_nomer'],
+            'mut_nomerid' => $data['bpkid'],
+            'mut_inout' => 'in',
+            'mut_tgl' => date('Y-m-d H:i:s')
+        );
+        $this->db->insert('pen_mutasi', $mutasi);
+
         $this->db->query("UPDATE ms_car SET msc_ready_stock = 1, msc_hpp = " . $data['bpk_hpp'] . " WHERE mscid = '"
                 . $data['bpk_mscid'] . "' AND msc_cbid = '" . $data['bpk_cbid'] . "'");
         if ($this->db->trans_status() == TRUE) {
@@ -458,6 +469,19 @@ class Model_Trsales extends CI_Model {
                 return $result;
             }
         }
+
+        // Save Mutasi
+        $mutasi = array(
+            'mut_mscid' => $data['fkp_mscid'],
+            'mut_desc' => 'Faktur Penjualan',
+            'mut_nomer' => $data['fkp_nofaktur'],
+            'mut_nomerid' => $data['fkpid'],
+            'mut_inout' => 'out',
+            'mut_tgl' => date('Y-m-d H:i:s')
+        );
+        $this->db->insert('pen_mutasi', $mutasi);
+
+        // Save faktur pembayaran
         $this->db->insert('pen_faktur_payment', $payment);
         // UPDATE SPK
         $this->db->query("UPDATE pen_spk SET spk_faktur_status = 1 WHERE spkid = '" . $data['fkp_spkid'] . "'");
@@ -555,6 +579,7 @@ class Model_Trsales extends CI_Model {
         $this->db->trans_begin();
         $tahun = date('y');
         $result = array();
+        $data['rtbid'] = NUM_RETUR_BELI_UNIT . $tahun . sprintf("%08s", $this->getCounter(NUM_RETUR_BELI_UNIT . $tahun));
         $str = $this->db->insert('pen_retbeli', $data);
         $this->db->query("UPDATE ms_car SET msc_ready_stock = 0 WHERE mscid = '" . $data['rtb_mscid'] . "'");
         if (!$str) {
@@ -567,6 +592,15 @@ class Model_Trsales extends CI_Model {
                 return $result;
             }
         }
+        $mutasi = array(
+            'mut_mscid' => $data['rtb_mscid'],
+            'mut_desc' => 'Retur Beli',
+            'mut_nomer' => $data['rtb_nomer'],
+            'mut_nomerid' => $data['rtbid'],
+            'mut_inout' => 'out',
+            'mut_tgl' => date('Y-m-d H:i:s')
+        );
+        $this->db->insert('pen_mutasi', $mutasi);
         if ($this->db->trans_status() == TRUE) {
             $this->db->trans_commit();
             $result['result'] = true;
@@ -580,10 +614,12 @@ class Model_Trsales extends CI_Model {
         }
         return $result;
     }
+
     public function saveReturJual($data) {
         $this->db->trans_begin();
         $tahun = date('y');
         $result = array();
+        $data['rtjid'] = NUM_RETUR_BELI_UNIT . $tahun . sprintf("%08s", $this->getCounter(NUM_RETUR_BELI_UNIT . $tahun));
         $str = $this->db->insert('pen_retjual', $data);
         $this->db->query("UPDATE ms_car SET msc_ready_stock = 1 WHERE mscid = '" . $data['rtj_mscid'] . "'");
         if (!$str) {
@@ -596,6 +632,15 @@ class Model_Trsales extends CI_Model {
                 return $result;
             }
         }
+        $mutasi = array(
+            'mut_mscid' => $data['rtj_mscid'],
+            'mut_desc' => 'Retur Jual',
+            'mut_nomer' => $data['rtj_nomer'],
+            'mut_nomerid' => $data['rtjid'],
+            'mut_inout' => 'in',
+            'mut_tgl' => date('Y-m-d H:i:s')
+        );
+        $this->db->insert('pen_mutasi', $mutasi);
         if ($this->db->trans_status() == TRUE) {
             $this->db->trans_commit();
             $result['result'] = true;

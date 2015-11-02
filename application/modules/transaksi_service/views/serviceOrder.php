@@ -746,7 +746,7 @@
                         type : $("#type").val()
                     },
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },
@@ -795,7 +795,7 @@
                     type: 'POST',
                     data: {param : $("#wod_kodesp" + inc).val()},
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },
@@ -847,8 +847,8 @@
                 if (data['response']) {
                     $("#woj_namajasa"+inc).val(data.data['flat_deskripsi']);
                     $("#woj_flatid"+inc).val(data.data['flatid']);
-                    $("#woj_rate"+inc).val(formatDefault(data.data['flat_lc']));
-                    $("#woj_subtotal"+inc).val(formatDefault(data.data['flat_total']));
+                    $("#woj_rate"+inc).val(formatDefaultTanpaDecimal(data.data['flat_lc']));
+                    $("#woj_subtotal"+inc).val(formatDefaultTanpaDecimal(data.data['flat_total']));
                     totalJasa();
                 }else{
                     $("#woj_namajasa"+inc).val('');
@@ -920,14 +920,14 @@
                     type: 'POST',
                     data: {param : $("#nopol").val()},
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },
             create: function () {
                 $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
                     return $('<li>')
-                    .append("<a><strong>" + item.value + "</strong><br>" + item.desc + "</a>")
+                    .append("<a><strong>" + item.value + "</strong><br>" + item.msc_norangka + "</a>")
                     .appendTo(ul);
                 };
             },select: function(event, ui) {

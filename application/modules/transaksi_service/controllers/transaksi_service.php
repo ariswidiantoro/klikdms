@@ -32,7 +32,7 @@ class Transaksi_Service extends Application {
     }
 
     function jsonWo() {
-        $woNomer = strtoupper($this->input->post('param'));
+        $woNomer = trim(strtoupper($this->input->post('param')));
         $data = $this->model_trservice->getWo($woNomer);
         if (count($data) > 0) {
             $data['response'] = true;
@@ -81,44 +81,12 @@ class Transaksi_Service extends Application {
     }
 
     function jsonNopol() {
-        $data['response'] = 'false';
-        $nopol = strtoupper(str_replace(" ", "", $this->input->post('param')));
-        $query = $this->model_trservice->getNopol($nopol);
-        if (count($query) > 0) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $nopol = $row['msc_nopol'];
-                $data['message'][] = array(
-                    'value' => $nopol,
-                    'mscid' => $row['mscid'],
-                    'desc' => $row['msc_norangka']
-                );
-            }
-        } else {
-            $data['message'][] = array('value' => 'Data Tidak Ditemukan', 'label' => "Data Tidak Ada", 'desc' => '');
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_trservice->getNopol(strtoupper(str_replace(" ", "", $this->input->post('param')))));
     }
 
     function getFlateRateAuto() {
-        $data['response'] = 'false';
         $param = strtoupper(str_replace(" ", "", $this->input->post('term')));
-        $query = $this->model_trservice->getFlateRateAuto($param, $this->input->post('type'));
-        if (count($query) > 0) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array(
-                    'value' => $row['flat_kode'],
-                    'flatid' => $row['flatid'],
-                    'desc' => $row['flat_deskripsi']
-                );
-            }
-        } else {
-            $data['message'][] = array('value' => 'Data Tidak Ditemukan', 'label' => "Data Tidak Ada", 'desc' => '');
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_trservice->getFlateRateAuto($param, $this->input->post('type')));
     }
 
     function saveWo() {
@@ -416,7 +384,7 @@ class Transaksi_Service extends Application {
         }
         echo json_encode($hasil);
     }
-    
+
     public function uangmukaService() {
         $this->hakAkses(1122);
         $this->data['etc'] = array(

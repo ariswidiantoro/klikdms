@@ -10,20 +10,20 @@
     <table id="table-detail">
         <tr>
             <th width="2%">No</th>
-            <th width="2%">No Bmk</th>
-            <th width="2%">Tgl Bmk</th>
-            <th width="2%">Nama Supplier</th>
-            <th width="2%">Alamat Supplier</th>
-            <th width="2%">Nomor Do</th>
-            <th width="2%">Tgl Do</th>
+            <th width="2%">No&nbsp;Retur</th>
+            <th width="2%">Tgl&nbsp;Retur</th>
+            <th width="2%">Alasan&nbsp;Retur</th>
+            <th width="2%">No&nbsp;Terima</th>
+            <th width="2%">Tgl&nbsp;Terima</th>
+            <th width="2%">Nama&nbsp;Supplier</th>
+            <th width="2%">Alamat&nbsp;Supplier</th>
             <th width="2%">Merk</th>
             <th width="2%">Model</th>
             <th width="2%">Type</th>
-            <th width="2%">No Rangka</th>
-            <th width="2%">No Mesin</th>
-            <th width="2%">No Seri</th>
+            <th width="2%">No&nbsp;Rangka</th>
+            <th width="2%">No&nbsp;Mesin</th>
+            <th width="2%">No&nbsp;Seri</th>
             <th width="2%">Warna</th>
-            <th width="2%">Kondisi</th>
         </tr>
         <?php
         if (count($data) > 0) {
@@ -32,12 +32,13 @@
             foreach ($data as $value) {
                 ?><tr>
                     <td><?php echo $no ?></td>
-                    <td><?php echo $value['bpk_nomer']; ?></td>
+                    <td><?php echo "'" . $value['rtb_nomer']; ?></td>
+                    <td><?php echo dateToIndo($value['rtb_tgl']); ?></td>
+                    <td><?php echo $value['rtb_alasan_retur']; ?></td>
+                    <td><?php echo "'" . $value['bpk_nomer']; ?></td>
                     <td><?php echo dateToIndo($value['bpk_tgl']); ?></td>
                     <td><?php echo $value['sup_nama']; ?></td>
                     <td><?php echo $value['sup_alamat']; ?></td>
-                    <td><?php echo $value['bpk_nodo']; ?></td>
-                    <td><?php echo (dateToIndo($value['bpk_tgldo']) != DEFAULT_TGL) ? dateToIndo($value['bpk_tgldo']) : ''; ?></td>
                     <td><?php echo $value['merk_deskripsi']; ?></td>
                     <td><?php echo $value['model_deskripsi']; ?></td>
                     <td><?php echo str_replace(' ', '&nbsp;', $value['cty_deskripsi']); ?></td>
@@ -45,7 +46,6 @@
                     <td><?php echo $value['msc_nomesin']; ?></td>
                     <td><?php echo $value['msc_bodyseri']; ?></td>
                     <td><?php echo str_replace(' ', '&nbsp;', $value['warna_deskripsi']); ?></td>
-                    <td><?php echo $value['msc_kondisi']; ?></td>
                 </tr>
                 <?php
                 $no++;
@@ -57,12 +57,12 @@
 <?php
 if ($output == 'excel') {
     ?>
-                    <!--    <script type="text/javascript">
-                            window.close();
-                        </script>  -->
+                                    <!--    <script type="text/javascript">
+                                            window.close();
+                                        </script>  -->
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=penerimaan_kendaraan.xls");
+    header("Content-Disposition: attachment; filename=retur_beli.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

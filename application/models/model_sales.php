@@ -889,7 +889,7 @@ class Model_Sales extends CI_Model {
         }
         $datakontrak = array(
             'kon_pelid' => $pelid,
-            'kon_nomer' => $kontrak,
+            'kon_nomer' => trim(strtoupper($kontrak)),
             'kon_cbid' => ses_cabang
         );
         $this->db->INSERT('ms_kontrak', $datakontrak);

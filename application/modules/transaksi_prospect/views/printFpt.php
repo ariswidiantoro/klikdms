@@ -84,7 +84,7 @@ if (!defined('BASEPATH'))
 ?>
 <form method="POST" action="<?php echo site_url(); ?>/transaksi_prospecting/cetak_fpt"> 
 
-    <?php if ($fpt['fpt_print'] != 1) { ?>
+<!--    <?php if ($fpt['fpt_print'] != 1) { ?>
         <div  style="align:left;">
             <button type="submit" style="border: 0; background: transparent;cursor: pointer;"  name="jenis" value="printer" id="print">
                 <img src="<?php echo path_img(); ?>/printer.png" alt="submit"/> CETAK FPT
@@ -93,7 +93,7 @@ if (!defined('BASEPATH'))
         </div>
         <div align="right">
 
-        </div><?php } ?>    
+        </div><?php } ?>    -->
 
 </form> 
 <?php //} ?>
@@ -104,7 +104,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
     <div style="width: 19cm; padding-right:100px  ; ">
         <table class="display1" style="margin-left:auto; margin-right: auto; font-family:monospace; font-size:12" border="0" width="100%">
             <tr valign="top" style="width: 20cm;">
-                <td rowspan="4"><img src="<?php echo path_img(); ?>icon.png" width="50" height="50"/></td>
+                <td rowspan="4"><img src="<?php echo path_img() . ses_icon; ?>" width="50" height="50"/></td>
 
             </tr>
             <tr  >
@@ -140,10 +140,9 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
     </div>
 <?php } ?>
 
-<?php dealer((!empty($dealer['cb_nama'])) ? $dealer['cb_nama'] : "", (!empty($dealer['cb_alamat']))
-        ? $dealer['cb_alamat'] : "", (!empty($dealer['kota_deskripsi'])) ? $dealer['kota_deskripsi'] : "",
-        (!empty($dealer['cb_telpon'])) ? $dealer['cb_telpon'] : "", (!empty($fpt['fpt_kode'])) ? $fpt['fpt_kode'] : "", 
-        date('d-m-Y', strtotime($fpt['fpt_tgl']))); ?>
+<?php
+dealer((!empty($dealer['cb_nama'])) ? $dealer['cb_nama'] : "", (!empty($dealer['cb_alamat'])) ? $dealer['cb_alamat'] : "", (!empty($dealer['kota_deskripsi'])) ? $dealer['kota_deskripsi'] : "", (!empty($dealer['cb_telpon'])) ? $dealer['cb_telpon'] : "", (!empty($fpt['fpt_kode'])) ? $fpt['fpt_kode'] : "", date('d-m-Y', strtotime($fpt['fpt_tgl'])));
+?>
 <hr style="width: 100%;  border-color: black;border: 0.8px solid " ></div>
 <!--- tengahhhhhhh ------------>
 <div style="margin-top: 7px; width: 100%;">
@@ -183,7 +182,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td width="366"><div style="text-align:right;"> 
                     <?php
                     if (!empty($fpt['fpt_diskon'])) {
-                        echo format_idr($fpt['fpt_diskon']);
+                        echo number_format($fpt['fpt_diskon']);
                     } else {
                         echo "&nbsp;";
                         ;
@@ -208,7 +207,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td valign="top"><div style="text-align:right;">
                     <?php
                     if ($fpt['fpt_hargako'] > 0) {
-                        echo format_idr($fpt['fpt_hargako']);
+                        echo number_format($fpt['fpt_hargako']);
                     }
                     ?>
                 </div><hr /></td>
@@ -223,7 +222,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td style="margin-top:100px"><div style="text-align:right;">
                     <?php
                     if ($fpt['fpt_bbn'] > 0) {
-                        echo format_idr($fpt['fpt_bbn']);
+                        echo number_format($fpt['fpt_bbn']);
                     } else {
                         echo "&nbsp;";
                     }
@@ -254,7 +253,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td valign="top"><div style="text-align:right;">
                     <?php
                     if ($fpt['fpt_komisi'] > 0) {
-                        echo format_idr($fpt['fpt_komisi']);
+                        echo number_format($fpt['fpt_komisi']);
                     } else {
                         echo "&nbsp;";
                         ;
@@ -283,18 +282,12 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td >&nbsp;</td>
             <td>Lain Lain</td>
             <td>:</td>
-            <td><div style="text-align:right;">
+            <td style="text-align:right;">
 
                     <?php
-                    if (!empty($fpt['fpt_asuransi']) or !empty($fpt['fpt_hargako']) or !empty($fpt['fpt_administrasi'])) {
-                        $lainlain = $fpt['fpt_asuransi'] + $fpt['fpt_hargako'] + $fpt['fpt_administrasi'];
-                        echo format_idr($lainlain);
-                    } else {
-                        echo "&nbsp;";
-                        $lainlain = 0;
-                    }
+                    $lainlain = $fpt['fpt_asuransi'] + $fpt['fpt_karoseri'] + $fpt['fpt_administrasi'];
+                    echo number_format($lainlain);
                     ?>
-                    &nbsp;</div>
                 <hr /></td>
         </tr>
         <!-- Transaksi Fleet ONLY -->
@@ -316,7 +309,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td>:</td>
             <td><div style="text-align:right;">
                     <?php
-                    echo number_format($fpt['fpt_total'] * $qty, 2);
+                    echo number_format(($fpt['fpt_hargako'] + $fpt['fpt_bbn']) * $qty);
                     ?>
                 </div><hr /></td>
             <td></td>
@@ -367,7 +360,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td><div style="text-align:right;">
                     <?php
                     if ($fpt['fpt_cashback'] > 0) {
-                        echo format_idr($fpt['fpt_cashback']);
+                        echo number_format($fpt['fpt_cashback']);
                     } else {
                         echo "&nbsp;";
                         ;
@@ -382,7 +375,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td><div style="text-align:right;">
                     <?php
                     if ($fpt['fpt_uangmuka'] > 0) {
-                        echo format_idr($fpt['fpt_uangmuka']);
+                        echo number_format($fpt['fpt_uangmuka']);
                     } else {
                         echo "&nbsp;";
                         ;
@@ -437,14 +430,14 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
                 } else {
                     $hargaasesoris = 0;
                 }
-                echo format_idr($harga = $hargaasesoris);
+                echo number_format($harga = $hargaasesoris);
                 $totalharga = $totalharga + $hargaasesoris;
                 ?></div><hr /></td>
                     <td>&nbsp;</td>
                     <td>(Paket/Biasa)</td>
                     <td><div style="text-align:right;"><?php
 //      if(!empty($asesoris[$i]->fat_hpp)){$hppasesoris=$asesoris[$i]->fat_hpp;}else{$hppasesoris=0;}
-//    echo format_idr($hpp= $hppasesoris);
+//    echo number_format($hpp= $hppasesoris);
 //    $totalcost=$totalcost+$asesoris[$i]->fat_hpp;
                     echo "&nbsp;";
                 ?></div>
@@ -453,7 +446,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
                     <td><div style="text-align:right;">
                             <?php
                             echo "&nbsp;";
-//    echo format_idr($hpp= $harga-$hpp);
+//    echo number_format($hpp= $harga-$hpp);
 // $totalmargin=$totalmargin+$hpp;
                             ?></div>
                         <hr /></td>
@@ -494,7 +487,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td>Rp </td>
             <td><div style="text-align:right;">
                     <?php
-                    $subtotalasesoris = format_idr($hargasubtotalasesoris = $totalharga);
+                    $subtotalasesoris = number_format($hargasubtotalasesoris = $totalharga);
                     if ($subtotalasesoris == 0) {
                         echo "&nbsp;";
                     } else {
@@ -504,10 +497,10 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
                 </div><hr /></td>
             <td></td>
             <td></td>
-            <td><div style="text-align:right;"><?php echo "&nbsp;"; // echo format_idr($totalcost);                           ?></div>
+            <td><div style="text-align:right;"><?php echo "&nbsp;"; // echo number_format($totalcost);                                ?></div>
                 <hr /></td>
             <td width="10">&nbsp;</td>
-            <td><div style="text-align:right;"><?php echo "&nbsp;"; //format_idr($totalmargin);                          ?></div>
+            <td><div style="text-align:right;"><?php echo "&nbsp;"; //number_format($totalmargin);                               ?></div>
                 <hr /></td>
         </tr>
         <tr>
@@ -518,10 +511,10 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
             <td>Rp </td>
             <td><div style="text-align:right;">
                     <?php
-                    if ($lainlain > 0 or $fpt['fpt_hargako'] or $hargasubtotalasesoris > 0) {
+//                    if ($lainlain > 0 or $fpt['fpt_hargako'] or $hargasubtotalasesoris > 0) {
 
-                        echo format_idr($fpt['fpt_hargako'] + $hargasubtotalasesoris + $lainlain);
-                    }
+                    echo number_format($fpt['fpt_total']);
+//                    }
                     ?> 
                 </div><hr /></td>
             <td></td>
@@ -533,7 +526,7 @@ function dealer($cabang, $alamat, $kota, $telp, $spk, $tglfpt) {
                     echo "&nbsp;";
 //       if(!empty($fpt->cty_hpp)){$hpptype=$fpt->cty_hpp;}else{$hpptype=0;}
 //      $total_kendaraanacc=$hargakosong-$hpptype+$totalmargin;
-//     echo format_idr($total_kendaraanacc)
+//     echo number_format($total_kendaraanacc)
                     ?>
                 </div>
                 <hr /></td>

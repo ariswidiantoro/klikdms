@@ -56,6 +56,7 @@ echo $this->session->flashdata('msg');
                                                                class="ace col-xs-10 col-sm-7 upper req"  />
                                                         <input type="hidden" name="fkp_spkid" id="fkp_spkid">
                                                         <input type="hidden" name="fkp_mscid" id="fkp_mscid">
+                                                        <input type="hidden" name="byr_hpp" id="byr_hpp">
                                                         <input type="hidden" name="fkp_fpkid" id="fkp_fpkid">
                                                     </div>
                                                 </div>  
@@ -647,6 +648,7 @@ echo $this->session->flashdata('msg');
                             }else{
                                 $("#fkp_mscid").val(data['mscid']);
                                 $("#nomesin").val(data['msc_nomesin']);
+                                $("#byr_hpp").val(data['msc_hpp']);
                                 $("#merk").val(data['merk_deskripsi']);
                                 $("#cty_deskripsi").val(data['cty_deskripsi']);
                                 $("#kondisi").val(data['msc_kondisi']);

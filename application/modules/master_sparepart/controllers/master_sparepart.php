@@ -395,38 +395,16 @@ class Master_Sparepart extends Application {
     }
 
     function jsonBarang() {
-        $nama = $this->input->post('param');
+        $nama = trim(strtoupper($this->input->post('param')));
         $jenis = isset($_POST['jenis']) ? $_POST['jenis'] : 'ps';
-        $data['response'] = 'false';
-        $query = $this->model_sparepart->getInventoryAutoComplete(strtoupper($nama), $jenis);
-        if (!empty($query)) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array('value' => $row['inve_kode'], 'desc' => $row['inve_nama']);
-            }
-        } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_sparepart->getInventoryAutoComplete(strtoupper($nama), $jenis));
     }
+
     function jsonBarangPenjualan() {
         $nama = $this->input->post('param');
         $sppid = $this->input->post('sppid');
-        $data['response'] = 'false';
-        $query = $this->model_sparepart->getBarangPenjualanAutoComplete(strtoupper($nama),$sppid);
-        if (!empty($query)) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array('value' => $row['inve_kode'], 'desc' => $row['inve_nama']);
-            }
-        } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_sparepart->getBarangPenjualanAutoComplete(strtoupper($nama), $sppid));
     }
-    
 
     /**
      * 
@@ -442,6 +420,7 @@ class Master_Sparepart extends Application {
         }
         echo json_encode($query);
     }
+
     /**
      * 
      */
@@ -469,6 +448,7 @@ class Master_Sparepart extends Application {
         }
         echo json_encode($query);
     }
+
     function jsonDataBarangPenjualan() {
         $kodebarang = $this->input->post('kodebarang');
         $sppid = $this->input->post('sppid');

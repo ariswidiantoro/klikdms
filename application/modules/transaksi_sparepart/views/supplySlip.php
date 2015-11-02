@@ -75,7 +75,7 @@
                </tr>');
                             $(".btnDeleteOrder").bind("click", DeleteOrder);
                             numberOnly();
-                        }
+                        };
 </script>
 <form class="form-horizontal" id="form" action="<?php echo site_url('transaksi_sparepart/saveSupplySlip'); ?>" method="post" name="form">
     <div class="form-group">
@@ -537,7 +537,7 @@
                     type: 'POST',
                     data: {param : $("#pel_nama").val()},
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },
@@ -680,7 +680,7 @@
                         jenis : $("#spp_jenis").val()
                     },
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },

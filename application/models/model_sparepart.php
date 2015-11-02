@@ -306,23 +306,33 @@ class Model_Sparepart extends CI_Model {
      */
     public function getInventoryAutoComplete($nama, $jenis) {
         $wh = "";
+        $datas = array();
         if ($jenis != 'ps') {
             $wh = "AND inve_jenis = '$jenis'";
         }
-        $sql = $this->db->query("SELECT inve_kode, inve_nama FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "' $wh AND (inve_kode LIKE '%" . strtoupper($nama) . "%' OR inve_nama LIKE '%" . strtoupper($nama) . "%') ORDER BY inve_kode LIMIT 30");
+        $sql = $this->db->query("SELECT inve_kode AS value, inve_nama AS desc FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "' $wh AND (inve_kode LIKE '%" . strtoupper($nama) . "%' OR inve_nama LIKE '%" . strtoupper($nama) . "%') ORDER BY inve_kode LIMIT 30");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            return $datas = array(
+                'value' => 'Data Tidak Ditemukan'
+//                'desc' => 'test'
+            );
         }
         return null;
     }
 
     public function getBarangPenjualanAutoComplete($nama, $sppid) {
-        $sql = $this->db->query("SELECT inve_kode, inve_nama FROM spa_supply_det LEFT JOIN"
+        $sql = $this->db->query("SELECT inve_kode AS value, inve_nama AS desc FROM spa_supply_det LEFT JOIN"
                 . "  spa_inventory ON inveid = dsupp_inveid WHERE dsupp_sppid = '$sppid'"
                 . " AND (inve_kode LIKE '%" . strtoupper($nama) . "%')"
                 . " ORDER BY inve_kode LIMIT 30");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan'
+            );
         }
         return null;
     }

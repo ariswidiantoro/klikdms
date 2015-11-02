@@ -46,23 +46,7 @@ class Transaksi_Sparepart extends Application {
 
     function jsonFakturTerima() {
         $faktur = strtoupper($this->input->post('param'));
-        $cbid = ses_cabang;
-        $data['response'] = 'false';
-        $query = $this->model_trspart->getFakturTerimaAutoComplete($faktur);
-        if (!empty($query)) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array(
-                    'value' => $row['trbr_faktur'],
-                    'supid' => $row['trbr_supid'],
-                    'desc' => $row['sup_nama'],
-                    'id' => $row['trbrid']);
-            }
-        } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_trspart->getFakturTerimaAutoComplete($faktur));
     }
 
     function cekFakturTrbr() {
@@ -138,7 +122,7 @@ class Transaksi_Sparepart extends Application {
                 'trbr_tgl' => date('Y-m-d'),
                 'trbr_createon' => date('Y-m-d H:i:s'),
                 'trbr_createby' => ses_username,
-                'trbr_faktur' => strtoupper($this->input->post('trbr_faktur')),
+                'trbr_faktur' => trim(strtoupper($this->input->post('trbr_faktur'))),
                 'trbr_supid' => $this->input->post('trbr_supid'),
                 'trbr_total' => numeric($this->input->post('trbr_total')),
                 'trbr_pay_method' => $this->input->post('trbr_pay_method'),
@@ -341,7 +325,7 @@ class Transaksi_Sparepart extends Application {
                 'adj_tgl' => date('Y-m-d'),
                 'adj_createon' => date('Y-m-d H:i:s'),
                 'adj_createby' => ses_username,
-                'adj_nomer' => strtoupper($this->input->post('adj_nomer')),
+                'adj_nomer' => trim(strtoupper($this->input->post('adj_nomer'))),
                 'adj_cbid' => ses_cabang,
             );
             $dadj_inveid = $this->input->post('dadj_inveid');
@@ -456,7 +440,7 @@ class Transaksi_Sparepart extends Application {
             $this->load->view('printSupplySlip', $this->data);
         }
     }
-    
+
     public function uangmukaSparepart() {
         $this->hakAkses(1123);
         $this->data['etc'] = array(

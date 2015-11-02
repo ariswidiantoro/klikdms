@@ -741,6 +741,15 @@ if (!defined('ses_nik')) {
     define("ses_nik", $nik);
 }
 
+//merk
+if (!defined('ses_brand')) {
+    $brand = $CI->session->userdata('brand');
+    if ($brand == "") {
+        $brand = data_cookie("brand");
+    }
+    define("ses_brand", $brand);
+}
+
 //username
 if (!defined('ses_username')) {
     $username = $CI->session->userdata('username');
