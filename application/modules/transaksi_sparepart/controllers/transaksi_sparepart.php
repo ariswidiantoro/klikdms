@@ -36,6 +36,7 @@ class Transaksi_Sparepart extends Application {
 
     public function fakturSparepart() {
         $this->hakAkses(60);
+        $this->data['salesman'] = $this->model_admin->getKaryawanByJabatan(JAB_SPAREPART_SALESMAN);
         $this->load->view('fakturSparepart', $this->data);
     }
 
@@ -56,46 +57,22 @@ class Transaksi_Sparepart extends Application {
 
     function jsonFakturJual() {
         $faktur = strtoupper($this->input->post('param'));
-        $data['response'] = 'false';
-        $query = $this->model_trspart->getFakturJualAutoComplete($faktur);
-        if (!empty($query)) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array(
-                    'value' => $row['not_nomer'],
-                    'pelid' => $row['pelid'],
-                    'desc' => $row['pel_nama'],
-                    'sppid' => $row['not_sppid'],
-                    'id' => $row['notid']);
-            }
-        } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ditemukan", 'desc' => '');
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_trspart->getFakturJualAutoComplete($faktur));
     }
 
+    /**
+     * 
+     */
     function jsonSupplyPartShop() {
-        $supply = strtoupper($this->input->post('param'));
-        $data['response'] = 'false';
-        $query = $this->model_trspart->getSupplyAutoComplete($supply);
-        if (!empty($query)) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array(
-                    'value' => $row['spp_noslip'],
-                    'label' => $row['pel_nama'],
-                );
-            }
-        } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada");
-        }
-        echo json_encode($data);
+        $supply = trim(strtoupper($this->input->post('param')));
+        echo json_encode($this->model_trspart->getSupplyAutoComplete($supply));
     }
 
+    /**
+     * 
+     */
     function getDataSupplyPartShop() {
-        $supply = strtoupper($this->input->post('param'));
+        $supply = trim(strtoupper($this->input->post('param')));
         $data = $this->model_trspart->getDataSupplyPartShop($supply);
         echo json_encode($data);
     }
@@ -298,6 +275,7 @@ class Transaksi_Sparepart extends Application {
             $det_subtotal = $this->input->post('dsupp_subtotal');
             // get array spare part from table 
             $detail = array();
+            $hpp = 0;
             for ($i = 0; $i < count($det_inveid); $i++) {
                 $detail[] = array(
                     'det_inveid' => $det_inveid[$i],
@@ -306,9 +284,11 @@ class Transaksi_Sparepart extends Application {
                     'det_diskon' => $det_diskon[$i],
                     'det_hpp' => $det_hpp[$i],
                     'det_subtotal' => numeric($det_subtotal[$i]),
-                    'det_subtotal_hpp' => numeric($det_hpp[$i] * $det_qty[$i]),
+                    'det_subtotal_hpp' => numeric(numeric($det_hpp[$i]) * $det_qty[$i]),
                 );
+                $hpp += (numeric($det_hpp[$i]) * $det_qty[$i]);
             }
+            $data['rj_total_hpp'] = $hpp;
             $return = $this->model_trspart->saveReturPenjualan($data, $detail, $this->input->post('sppid'));
         } else {
             $return['result'] = false;
@@ -336,12 +316,19 @@ class Transaksi_Sparepart extends Application {
             // get array spare part from table 
             $detail = array();
             for ($i = 0; $i < count($dadj_inveid); $i++) {
+                $min = empty($dadj_minus[$i]) ? 0 : $dadj_minus[$i];
+                $hpp = numeric($dadj_hpp[$i]);
+                $subTotal = numeric($dadj_subtotal_hpp[$i]);
+                if ($min > 0) {
+                    $hpp *= -1;
+                    $subTotal *= -1;
+                }
                 $detail[] = array(
                     'dadj_inveid' => $dadj_inveid[$i],
                     'dadj_plus' => empty($dadj_plus[$i]) ? 0 : $dadj_plus[$i],
-                    'dadj_minus' => empty($dadj_minus[$i]) ? 0 : $dadj_minus[$i],
-                    'dadj_hpp' => numeric($dadj_hpp[$i]),
-                    'dadj_subtotal_hpp' => numeric($dadj_subtotal_hpp[$i]),
+                    'dadj_minus' => $min,
+                    'dadj_hpp' => $hpp,
+                    'dadj_subtotal_hpp' => $subTotal,
                 );
             }
             $return = $this->model_trspart->saveAdjustmentStock($data, $detail);
@@ -364,6 +351,7 @@ class Transaksi_Sparepart extends Application {
                 'not_createby' => ses_username,
                 'not_cbid' => ses_cabang,
                 'not_numerator' => $this->input->post('not_numerator'),
+                'not_salesman' => $this->input->post('not_salesman'),
                 'not_sppid' => $this->input->post('not_sppid'),
                 'not_kredit_term' => numeric($this->input->post('not_kredit_term')),
                 'not_nokwitansi_um' => $this->input->post('not_nokwitansi_um'),

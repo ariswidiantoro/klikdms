@@ -39,11 +39,9 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('transaksi_sales/loadBpk') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:[ 'View','Print', 'Del', 'No. BPK', 'No. Rangka', 'No. Seri', 'Tgl. Bpk', 'Jns. Penerimaan', 'Tipe Kendaraan'],     
+            colNames:['Print', 'No. BPK', 'No. Rangka', 'No. Seri', 'Tgl. Bpk', 'Jns. Penerimaan', 'Tipe Kendaraan'],     
             colModel:[
-                {name:'view',index:'vew', width:14, align:"center"},
-                {name:'print',index:'print', width:14, align:"center"},
-                {name:'hapus',index:'hapus', width:14, align:"center"},
+                {name:'print',index:'print', width:23, align:"center"},
                 {name:'bpk_nomer',index:'bpk_nomer', width:80, align:"left"},
                 {name:'msc_norangka',index:'msc_norangka', width:80, align:"left"},
                 {name:'msc_bodyseri',index:'msc_bodyseri', width:60, align:"left"},

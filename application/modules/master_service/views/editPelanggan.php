@@ -3,7 +3,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Type Pelanggan</label>
         <div class="col-sm-8">
-            <select name="pel_type" required="required" class="ace col-xs-10 col-sm-3">
+            <select name="pel_type" required="required" class="ace col-xs-10 col-sm-3 req">
                 <option value="">Pilih</option>
                 <option value="retail" <?php if ($data['pel_type'] == 'retail') echo 'selected'; ?>>Retail</option>
                 <option value="broker" <?php if ($data['pel_type'] == 'broker') echo 'selected'; ?>>Broker</option>
@@ -16,19 +16,19 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
             <input type="hidden" value="<?php echo $data['pelid']; ?>" name="pelid">
-            <input type="text" name="pel_nama" value="<?php echo $data['pel_nama']; ?>" required="required" placeholder="Nama" class="upper ace col-xs-10 col-sm-10" />
+            <input type="text" name="pel_nama" value="<?php echo $data['pel_nama']; ?>" required="required" placeholder="Nama" class="upper ace col-xs-10 col-sm-10 req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Alamat</label>
         <div class="col-sm-8">
-            <textarea name="pel_alamat" class="upper ace col-xs-10 col-sm-7" required="required" rows="4"><?php echo $data['pel_alamat']; ?></textarea>
+            <textarea name="pel_alamat" class="upper ace col-xs-10 col-sm-7 req" required="required" rows="4"><?php echo $data['pel_alamat']; ?></textarea>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
         <div class="col-sm-8">
-            <select name="propinsi" id="propinsi" onchange="getKota()" class="ace col-xs-10 col-sm-3">
+            <select name="propinsi" id="propinsi" onchange="getKota()" class="ace col-xs-10 col-sm-3 req">
                 <option value="">Pilih</option>
                 <?php
                 if (count($propinsi) > 0) {
@@ -46,7 +46,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kab / Kota</label>
         <div class="col-sm-8">
-            <select name="pel_kotaid" id="kr_kotaid" class="ace col-xs-10 col-sm-3">
+            <select name="pel_kotaid" id="kr_kotaid" class="ace col-xs-10 col-sm-3 req">
                 <?php
                 if (count($kota) > 0) {
                     foreach ($kota as $value) {
@@ -75,7 +75,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor HP</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_hp" value="<?php echo $data['pel_hp']; ?>"  placeholder="Nomor HP" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_hp" value="<?php echo $data['pel_hp']; ?>"  placeholder="Nomor HP" class="ace col-xs-10 col-sm-3 req" />
         </div>
     </div>
 
@@ -83,6 +83,12 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Telpon</label>
         <div class="col-sm-8">
             <input type="text" name="pel_telpon" value="<?php echo $data['pel_telpon']; ?>" placeholder="Nomor Telpon" class="ace col-xs-10 col-sm-3" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Npwp</label>
+        <div class="col-sm-8">
+            <input type="text" name="pel_npwp" value="<?php echo $data['pel_npwp']; ?>" placeholder="Npwp" class="ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
@@ -102,7 +108,7 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Tgl Lahir</label>
         <div class="col-sm-8">
             <div class="input-group input-group-sm col-sm-2">
-                <input type="text" name="pel_tgl_lahir" value="<?php if($data['pel_tgl_lahir'] != '9999-01-01') echo dateToIndo($data['pel_tgl_lahir']); ?>" id="datepicker" class="form-control" />
+                <input type="text" name="pel_tgl_lahir" value="<?php if ($data['pel_tgl_lahir'] != '9999-01-01') echo dateToIndo($data['pel_tgl_lahir']); ?>" id="datepicker" class="form-control" />
                 <span class="input-group-addon">
                     <i class="ace-icon fa fa-calendar"></i>
                 </span>
@@ -114,14 +120,14 @@
         <div class="col-sm-8">
             <div class="radio">
                 <label>
-                    <input name="pel_gender"  type="radio" <?php if($data['pel_gender'] == 'L') echo 'checked' ; ?> value="L"  class="ace" />
+                    <input name="pel_gender"  type="radio" <?php if ($data['pel_gender'] == 'L') echo 'checked'; ?> value="L"  class="ace" />
                     <span class="lbl"   >Laki-Laki</span>
                 </label>
             </div>
 
             <div class="radio">
                 <label>
-                    <input name="pel_gender" <?php if($data['pel_gender'] == 'P') echo 'checked' ; ?> type="radio" value="P" class="ace" />
+                    <input name="pel_gender" <?php if ($data['pel_gender'] == 'P') echo 'checked'; ?> type="radio" value="P" class="ace" />
                     <span class="lbl">Perempuan</span>
                 </label>
             </div>
@@ -139,31 +145,31 @@
         <div class="col-sm-8">
             <div class="radio">
                 <label>
-                    <input name="pel_agama" <?php if($data['pel_agama'] == 'islam') echo 'checked' ; ?> type="radio" value="islam" class="ace" />
+                    <input name="pel_agama" <?php if ($data['pel_agama'] == 'islam') echo 'checked'; ?> type="radio" value="islam" class="ace" />
                     <span class="lbl">Islam</span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input name="pel_agama" <?php if($data['pel_agama'] == 'kristen') echo 'checked' ; ?> type="radio" value="kristen" class="ace" />
+                    <input name="pel_agama" <?php if ($data['pel_agama'] == 'kristen') echo 'checked'; ?> type="radio" value="kristen" class="ace" />
                     <span class="lbl">Kristen</span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input name="pel_agama" type="radio" <?php if($data['pel_agama'] == 'budha') echo 'checked' ; ?> value="budha" class="ace" />
+                    <input name="pel_agama" type="radio" <?php if ($data['pel_agama'] == 'budha') echo 'checked'; ?> value="budha" class="ace" />
                     <span class="lbl">Budha</span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input name="pel_agama" type="radio" <?php if($data['pel_agama'] == 'katolik') echo 'checked' ; ?> value="katolik" class="ace" />
+                    <input name="pel_agama" type="radio" <?php if ($data['pel_agama'] == 'katolik') echo 'checked'; ?> value="katolik" class="ace" />
                     <span class="lbl">Katolik</span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input name="pel_agama" type="radio" <?php if($data['pel_agama'] == 'hindu') echo 'checked' ; ?> value="hindu" class="ace" />
+                    <input name="pel_agama" type="radio" <?php if ($data['pel_agama'] == 'hindu') echo 'checked'; ?> value="hindu" class="ace" />
                     <span class="lbl">Hindu</span>
                 </label>
             </div>

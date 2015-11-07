@@ -1,17 +1,3 @@
-<style  type="text/css">
-    .ui-autocomplete {
-        max-height: 200px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding-right: 20px;
-    }
-    * html .ui-autocomplete {
-        height: 200px;
-    }
-    input:focus {
-        background-color: yellow;
-    } 
-</style>
 <form class="form-horizontal" id="form" method="post" action="" name="form">
     <div class="well well-sm">
         <div class="row">
@@ -23,11 +9,6 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <span>Sampai Dengan</span>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <span>Kode Barang</span>
                 </div>
             </div>
         </div>
@@ -52,13 +33,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <div class="input-group" style="position: static">
-                        <input type="text" name="kodeBarang" id="kodeBarang" class="form-control upper" />
-                    </div>
-                </div>
-            </div>
             <div id="default-buttons" class="col-xs-6 col-sm-6">
                 <button onclick="return lihat();" class="btn btn-white btn-info btn-bol" type="button"><i class="ace-icon fa fa-eye bigger-110 blue"></i>Lihat</button>
                 <button onclick="return excel();" class="btn btn-white btn-info btn-bol" type="button"><i class="ace-icon fa fa-file-excel-o  bigger-110 blue"/></i>Export</button>
@@ -68,10 +42,10 @@
     </div>
     <div id="result" style="overflow-x: auto;margin:-2px 0 0 0;" >
     </div>
+    <div id="loading" >
+        <div class="loading-img"><i class="ace-icon fa fa-spinner fa-spin orange bigger-200"></i></div> <div class="loading-text">Mengambil Data ...</div>
+    </div>
 </form>
-<div id="loading" >
-    <div class="loading-img"><i class="ace-icon fa fa-spinner fa-spin orange bigger-200"></i></div> <div class="loading-text">Mengambil Data ...</div>
-</div>
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
     $( ".datepicker" ).datepicker({
@@ -128,29 +102,6 @@
         }
     }
     
-    $(document).ready(function(){
-        $("#kodeBarang").autocomplete({
-            minLength: 1,
-            source: function(req, add) {
-                $.ajax({
-                    url: '<?php echo site_url('master_sparepart/jsonBarang'); ?>',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {param : $("#kodeBarang").val()},
-                    success: function(data) {
-                        add(data);
-                    }
-                });
-            },
-            create: function () {
-                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li>')
-                    .append("<a><strong>" + item.value + "</strong><br> Nama Barang : " + item.desc + "</a>")
-                    .appendTo(ul);
-                };
-            }
-        })
-    });
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page

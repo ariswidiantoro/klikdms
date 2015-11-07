@@ -132,7 +132,7 @@
                     type: 'POST',
                     data: {param : $("#pelNama").val()},
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },

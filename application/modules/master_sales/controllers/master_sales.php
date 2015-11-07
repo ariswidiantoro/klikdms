@@ -36,6 +36,19 @@ class Master_Sales extends Application {
         echo json_encode($this->model_sales->getWarnaByModel($modelid));
     }
 
+    public function addPelanggan() {
+        $this->hakAkses(113);
+        $this->data['href'] = $this->input->GET('href');
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->load->view('master_service/addPelanggan', $this->data);
+    }
+
+    public function pelanggan() {
+        $this->hakAkses(113);
+        $this->data['add'] = "master_sales/addPelanggan";
+        $this->load->view('master_service/pelanggan', $this->data);
+    }
+
     function jsonNamaProspek() {
         $nama = $this->input->post('param');
         $cbid = ses_cabang;
@@ -1312,8 +1325,15 @@ class Master_Sales extends Application {
         echo json_encode($hasil);
     }
 
+    public function addSupplier() {
+        $this->hakAkses(91);
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->load->view('master_service/addSupplier', $this->data);
+    }
+
     public function supplier() {
         $this->hakAkses(91);
+        $this->data['add'] = "master_sales/addSupplier";
         $this->load->view('master_service/supplier', $this->data);
     }
 

@@ -355,11 +355,7 @@
                     type: 'POST',
                     data: {param : $("#supplier").val()},
                     success: function(data) {
-                        if (data.response == "true") {
-                            add(data.message);
-                        } else {
-                            add(data.value);
-                        }
+                        add(data);
                     }
                 });
             },

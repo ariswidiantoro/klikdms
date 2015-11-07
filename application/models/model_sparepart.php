@@ -34,7 +34,7 @@ class Model_Sparepart extends CI_Model {
     }
 
     public function getTotalGradeToko($where) {
-        $wh = "WHERE grad_cbid = '" . ses_cabang . "'";
+        $wh = "WHERE grad_cbid = '" . ses_cabang . "' AND grad_status = 0 ";
         if ($where != NULL)
             $wh = " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(*) AS total FROM spa_grade "
@@ -112,7 +112,7 @@ class Model_Sparepart extends CI_Model {
      */
     public function getIdInventory() {
         $data = array();
-        $sql = $this->db->query("SELECT * FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "'");
+        $sql = $this->db->query("SELECT inve_kode,inveid FROM spa_inventory WHERE inve_cbid = '" . ses_cabang . "'");
         if ($sql->num_rows() > 0) {
             foreach ($sql->result_array() as $value) {
                 $data[$value['inve_kode']] = $value['inveid'];
@@ -152,6 +152,7 @@ class Model_Sparepart extends CI_Model {
         if ($where != NULL)
             $this->db->where($where, NULL, FALSE);
         $this->db->where('grad_cbid', ses_cabang);
+        $this->db->where('grad_status', 0);
         $this->db->from('spa_grade');
         $this->db->join('ms_pelanggan', 'pelid = grad_pelid', 'LEFT');
         $this->db->order_by($sidx, $sord);
@@ -251,17 +252,40 @@ class Model_Sparepart extends CI_Model {
      */
     function saveSpesialItem($data) {
         $this->db->trans_begin();
-        $this->db->query("DELETE FROM spa_spesial WHERE spe_cbid = '" . ses_cabang . "'");
-        foreach ($data as $value) {
-            $this->db->insert('spa_spesial', $value);
-        }
-        if ($this->db->trans_status() === TRUE) {
-            $this->db->trans_commit();
-            return true;
-        } else {
+        $inventory = $this->getIdInventory();
+        $spe = $this->getSpesialItem();
+        $baris = $data['numRows'];
+        try {
+            for ($i = 2; $i <= $baris; $i++) {
+                if (!empty($data['cells'][$i][1])) {
+                    $inveid = $inventory[str_replace(" ", "", $data['cells'][$i][1])];
+                    $harga = $data['cells'][$i][3];
+                    $spesial = array(
+                        'spe_inveid' => $inveid,
+                        'spe_cbid' => ses_cabang,
+                        'spe_harga' => $this->system->numeric($harga),
+                    );
+                    if (empty($spe[$inveid])) {
+                        $this->db->insert('spa_spesial', $spesial);
+                    } else {
+                        $this->db->where('spe_inveid', $spesial['spe_inveid']);
+                        $this->db->where('spe_cbid', ses_cabang);
+                        $this->db->update('spa_spesial', $spesial);
+                    }
+                }
+            }
+            if ($this->db->trans_status() === TRUE) {
+                $this->db->trans_commit();
+                return true;
+            } else {
+                $this->db->trans_rollback();
+                return false;
+            }
+        } catch (Exception $ex) {
             $this->db->trans_rollback();
             return false;
         }
+
         return false;
     }
 
@@ -272,9 +296,13 @@ class Model_Sparepart extends CI_Model {
      */
     function savePriceList($data) {
         $this->db->trans_begin();
-        $this->db->query("DELETE FROM spa_pricelist WHERE pl_cbid = '" . ses_cabang . "'");
-        foreach ($data as $value) {
-            $this->db->insert('spa_pricelist', $value);
+        $baris = $data['numRows'];
+        for ($i = 2; $i <= $baris; $i++) {
+            if (!empty($data['cells'][$i][1])) {
+                $kode = str_replace(" ", "", $data['cells'][$i][1]);
+                $harga = $data['cells'][$i][3];
+                $this->db->query("UPDATE spa_inventory SET inve_harga = " . numeric($harga) . " WHERE inve_cbid = '" . ses_cabang . "' AND inve_kode = '$kode'");
+            }
         }
         if ($this->db->trans_status() === TRUE) {
             $this->db->trans_commit();
@@ -292,9 +320,13 @@ class Model_Sparepart extends CI_Model {
      * @return boolean
      */
     public function getSupplierByNama($nama, $cbid) {
-        $sql = $this->db->query("SELECT * FROM ms_supplier WHERE sup_cbid = '$cbid' AND sup_nama LIKE '%" . strtoupper($nama) . "%' ORDER BY sup_nama LIMIT 40");
+        $sql = $this->db->query("SELECT sup_nama AS value,supid,sup_alamat AS desc FROM ms_supplier WHERE sup_cbid = '$cbid' AND sup_nama LIKE '%" . trim(strtoupper($nama)) . "%' ORDER BY sup_nama LIMIT 40");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan'
+            );
         }
         return null;
     }
@@ -615,6 +647,17 @@ class Model_Sparepart extends CI_Model {
             return $sql->row_array();
         }
         return null;
+    }
+
+    public function getSpesialItem() {
+        $return = array();
+        $sql = $this->db->query("SELECT spe_inveid FROM spa_spesial WHERE spe_cbid = '" . ses_cabang . "'");
+        if ($sql->num_rows() > 0) {
+            foreach ($sql->result_array() as $value) {
+                $return[$value['spe_inveid']] = 1;
+            }
+        }
+        return $return;
     }
 
     /**

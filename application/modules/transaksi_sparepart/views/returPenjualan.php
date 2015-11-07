@@ -337,7 +337,7 @@
                     type: 'POST',
                     data: {param : $("#not_nomer").val()},
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },

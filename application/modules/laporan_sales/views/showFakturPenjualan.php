@@ -38,6 +38,8 @@
             <th width="2%">Total&nbsp;Harga</th>
             <th width="2%">Uang&nbsp;Muka</th>
             <th width="2%">Sisa&nbsp;Tagihan</th>
+            <th width="2%">Hpp</th>
+            <th width="2%">Margin</th>
         </tr>
         <?php
         if (count($data) > 0) {
@@ -74,6 +76,8 @@
                     <td class="right"><?php echo number_format($value['byr_total']); ?></td>
                     <td class="right"><?php echo number_format($value['byr_um']); ?></td>
                     <td class="right"><?php echo number_format($value['byr_total'] - $value['byr_um']); ?></td>
+                    <td class="right"><?php echo number_format($value['byr_hpp']); ?></td>
+                    <td class="right"><?php echo number_format($value['byr_total']-$value['byr_hpp']); ?></td>
                 </tr>
                 <?php
                 $no++;

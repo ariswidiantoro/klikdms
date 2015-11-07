@@ -10,41 +10,39 @@
 <div  style="width: 100%;">
     <table id="table-detail">
         <tr>
-            <th width="2%">No</th>
-            <th width="20%">Kode&nbsp;Barang</th>
-            <th width="30%">Nama&nbsp;Barang</th>
-            <th width="10%">Jumlah</th>
+            <th width="5%">No</th>
+            <th width="10%">No&nbsp;Supply</th>
+            <th width="10%">Tgl&nbsp;Supply</th>
+            <th width="30%">Nama&nbsp;Pelanggan</th>
+            <th width="20%">Wo&nbsp;Nomer</th>
+            <th width="10%">Total</th>
             <th WIDTH="10%">Hpp</th>
-            <th WIDTH="10%">Harga Jual</th>
-            <th width="10%">Sub&nbsp;Total</th>
         </tr>
         <?php
         if (count($data) > 0) {
             $no = 1;
             $total = 0;
-            $saldo = 0;
+            $hpp = 0;
             foreach ($data as $value) {
                 ?><tr>
                     <td><?php echo $no ?></td>
-                    <td><?php echo $value['inve_kode']; ?></td>
-                    <td><?php echo $value['inve_nama']; ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_total'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_hpp'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['inve_harga'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_saldo'], 2); ?></td>
+                    <td><?php echo $value['spp_noslip']; ?></td>
+                    <td><?php echo date('d-m-Y', strtotime($value['spp_tgl'])); ?></td>
+                    <td><?php echo $value['pel_nama']; ?></td>
+                    <td><?php echo $value['wo_nomer']; ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['spp_total'], 2); ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['spp_total_hpp'], 2); ?></td>
                 </tr>
                 <?php
                 $no++;
-                $total += $value['ks_total'];
-                $saldo += $value['ks_saldo'];
+                $total += $value['spp_total'];
+                $hpp += $value['spp_total_hpp'];
             }
             ?>
             <tr style="font-weight: bold;">
-                <td colspan="3" style="text-align: right">TOTAL</td>
-                <td style="text-align: right;"><?php echo number_format($total,2); ?></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td style="text-align: right;"><?php echo number_format($saldo,2); ?></td>
+                <td colspan="5" style="text-align: right">TOTAL</td>
+                <td style="text-align: right;"><?php echo number_format($total, 2); ?></td>
+                <td style="text-align: right;"><?php echo number_format($hpp, 2); ?></td>
             </tr>
             <?php
         } else {
@@ -63,7 +61,7 @@ if ($output == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=posisi_stock.xls");
+    header("Content-Disposition: attachment; filename=supply_outstanding.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

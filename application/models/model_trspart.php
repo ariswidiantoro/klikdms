@@ -496,11 +496,15 @@ class Model_Trspart extends CI_Model {
      * @return null
      */
     public function getFakturJualAutoComplete($kode) {
-        $sql = $this->db->query("SELECT not_nomer,notid, not_sppid, pelid, pel_nama "
+        $sql = $this->db->query("SELECT not_nomer AS value,notid AS id, not_sppid AS sppid, pelid, pel_nama AS desc "
                 . "FROM spa_nota LEFT JOIN spa_supply ON not_sppid = sppid LEFT JOIN ms_pelanggan ON pelid = spp_pelid  "
                 . "WHERE not_cbid = '" . ses_cabang . "' AND not_nomer LIKE '%$kode%' ORDER BY not_nomer LIMIT 10");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan'
+            );
         }
         return null;
     }
@@ -511,12 +515,16 @@ class Model_Trspart extends CI_Model {
      * @return null
      */
     public function getSupplyAutoComplete($kode) {
-        $sql = $this->db->query("SELECT spp_noslip,pel_nama "
+        $sql = $this->db->query("SELECT spp_noslip AS value,pel_nama AS label "
                 . "FROM spa_supply  LEFT JOIN ms_pelanggan ON pelid = spp_pelid WHERE spp_cbid = '" . ses_cabang . "' AND spp_status = 0"
                 . " AND spp_faktur = 0 AND spp_noslip LIKE '$kode%' AND spp_jenis = 'ps' "
                 . "  ORDER BY spp_noslip LIMIT 20");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan'
+            );
         }
         return null;
     }

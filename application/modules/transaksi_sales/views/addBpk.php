@@ -382,7 +382,7 @@ echo $this->session->flashdata('msg');
                     type: 'POST',
                     data: {param : $("#bpk_supnama").val()},
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },
@@ -408,7 +408,7 @@ echo $this->session->flashdata('msg');
                     type: 'POST',
                     data: {param : $("#bpk_norangka").val()},
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },
@@ -444,7 +444,7 @@ echo $this->session->flashdata('msg');
                     }
                 });
             }
-        })
+        });
         
     });
     var scripts = [null, null]

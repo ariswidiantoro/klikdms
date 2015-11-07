@@ -135,10 +135,14 @@ class Model_Trsales extends CI_Model {
         if ($readyStock != null) {
             $wh = " AND msc_ready_stock = 1";
         }
-        $sql = $this->db->query("SELECT msc_norangka FROM ms_car WHERE msc_cbid = '$cbid'"
+        $sql = $this->db->query("SELECT msc_norangka AS value FROM ms_car WHERE msc_cbid = '$cbid'"
                 . " AND msc_isstock = 1 $wh AND msc_norangka LIKE '$norangka%'  ORDER BY msc_norangka LIMIT 20");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
+        } else {
+            return array(
+                'value' => 'Data Tidak Ditemukan',
+            );
         }
         return null;
     }
@@ -598,6 +602,7 @@ class Model_Trsales extends CI_Model {
             'mut_nomer' => $data['rtb_nomer'],
             'mut_nomerid' => $data['rtbid'],
             'mut_inout' => 'out',
+            'mut_cbid' => ses_cabang,
             'mut_tgl' => date('Y-m-d H:i:s')
         );
         $this->db->insert('pen_mutasi', $mutasi);
@@ -635,6 +640,7 @@ class Model_Trsales extends CI_Model {
         $mutasi = array(
             'mut_mscid' => $data['rtj_mscid'],
             'mut_desc' => 'Retur Jual',
+            'mut_cbid' => ses_cabang,
             'mut_nomer' => $data['rtj_nomer'],
             'mut_nomerid' => $data['rtjid'],
             'mut_inout' => 'in',

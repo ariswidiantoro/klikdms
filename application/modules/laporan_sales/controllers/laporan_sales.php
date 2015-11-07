@@ -10,7 +10,7 @@ class Laporan_Sales extends Application {
     public function __construct() {
         parent::__construct();
         $this->load->model(array(
-            'model_lap_sales'
+            'model_lap_sales', 'model_admin'
         ));
         $this->isLogin();
     }
@@ -68,13 +68,15 @@ class Laporan_Sales extends Application {
     function mutasiKendaraan() {
         $this->hakAkses(108);
         $this->data['link'] = 'showMutasiKendaraan';
-        $this->load->view('salesForm', $this->data);
+        $this->load->view('mutasiKendaraanForm', $this->data);
     }
 
     function stockReady() {
         $this->hakAkses(109);
+        $this->data['merk'] = $this->model_admin->getMerk();
+        $this->data['warna'] = $this->model_admin->getWarna();
         $this->data['link'] = 'showStockReady';
-        $this->load->view('salesForm', $this->data);
+        $this->load->view('stockReadyForm', $this->data);
     }
 
     function posisiStock() {
@@ -94,6 +96,18 @@ class Laporan_Sales extends Application {
         $this->data['data'] = $this->model_lap_sales->getMasukKendaran($start, $end, $cabang);
         $this->data['output'] = $output;
         $this->load->view('showMasukKendaraan', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showMutasiKendaraan($output) {
+        $rangka = trim(strtoupper($this->input->post('rangka')));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sales->getMutasiKendaran($rangka, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showMutasiKendaraan', $this->data);
     }
 
     /**
@@ -148,6 +162,20 @@ class Laporan_Sales extends Application {
         $this->data['data'] = $this->model_lap_sales->getReturJual($start, $end, $cabang);
         $this->data['output'] = $output;
         $this->load->view('showReturJual', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showStockReady($output) {
+        $merk = $this->input->post('merkid');
+        $model = $this->input->post('modelid');
+        $warna = $this->input->post('warnaid');
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sales->getStockReady($merk, $model, $warna, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showStockReady', $this->data);
     }
 
     /**

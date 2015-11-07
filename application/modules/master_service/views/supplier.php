@@ -8,7 +8,7 @@ echo $this->session->flashdata('msg');
 <div class="row">
     <div class="col-xs-12">
         <p>
-            <a href="#master_service/addSupplier" class="btn btn-sm btn-primary">
+            <a href="#<?php echo $add; ?>" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Supplier</a>
         </p>

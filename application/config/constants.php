@@ -44,9 +44,10 @@ define('JAB_SVC_KASIR_SERVICE', 'JAB005');
 define('JAB_MKT_SALES', 'JAB006');
 define('JAB_MKT_SPVSALES', 'JAB007');
 define('JAB_MKT_GMOSALES', 'JAB007');
+define('JAB_SPAREPART_SALESMAN', 'JAB006');
 
 // NUMERATOR KODE
-define('NUM_CAR', 'IV');
+define('NUM_CAR', 'CA');
 define('NUM_INVOICE', 'IV');
 define('NUM_TERIMA_BARANG', 'TB');
 define('NUM_KARYAWAN', 'KR');

@@ -825,7 +825,7 @@ class Model_Sales extends CI_Model {
         $this->db->trans_begin();
         try {
             $tahun = date('y');
-            $data['mscid'] = NUM_CAR . $tahun . sprintf("%08s", $this->getCounter(NUM_FPT . $tahun));
+            $data['mscid'] = NUM_CAR . $tahun . sprintf("%08s", $this->getCounter(NUM_CAR . $tahun));
 
             if ($this->db->insert('ms_car', $data) == FALSE) {
                 $warn = "FAILED INSERTING DATA : STOCK UNIT";

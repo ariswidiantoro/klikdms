@@ -11,40 +11,46 @@
     <table id="table-detail">
         <tr>
             <th width="2%">No</th>
+            <th width="20%">No&nbsp;Bukti</th>
+            <th width="20%">Tgl</th>
             <th width="20%">Kode&nbsp;Barang</th>
             <th width="30%">Nama&nbsp;Barang</th>
-            <th width="10%">Jumlah</th>
+            <th width="10%">Adj&nbsp;Plus</th>
+            <th width="10%">Adj&nbsp;Minus</th>
             <th WIDTH="10%">Hpp</th>
-            <th WIDTH="10%">Harga Jual</th>
-            <th width="10%">Sub&nbsp;Total</th>
+            <th width="10%">Sub&nbsp;Total&nbsp;Hpp</th>
         </tr>
         <?php
         if (count($data) > 0) {
             $no = 1;
             $total = 0;
-            $saldo = 0;
+            $plus = 0;
+            $minus = 0;
             foreach ($data as $value) {
                 ?><tr>
                     <td><?php echo $no ?></td>
+                    <td><?php echo $value['adj_nomer']; ?></td>
+                    <td><?php echo date('d-m-Y', strtotime($value['adj_tgl'])); ?></td>
                     <td><?php echo $value['inve_kode']; ?></td>
                     <td><?php echo $value['inve_nama']; ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_total'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_hpp'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['inve_harga'], 2); ?></td>
-                    <td style="text-align: right;"><?php echo number_format($value['ks_saldo'], 2); ?></td>
+                    <td style="text-align: right;"><?php echo $value['dadj_plus']; ?></td>
+                    <td style="text-align: right;"><?php echo $value['dadj_minus']; ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['dadj_hpp'], 2); ?></td>
+                    <td style="text-align: right;"><?php echo number_format($value['dadj_subtotal_hpp'], 2); ?></td>
                 </tr>
                 <?php
                 $no++;
-                $total += $value['ks_total'];
-                $saldo += $value['ks_saldo'];
+                $total += $value['dadj_subtotal_hpp'];
+                $plus += $value['dadj_plus'];
+                $minus += $value['dadj_minus'];
             }
             ?>
             <tr style="font-weight: bold;">
-                <td colspan="3" style="text-align: right">TOTAL</td>
+                <td colspan="5" style="text-align: right">TOTAL</td>
+                <td style="text-align: right;"><?php echo $plus; ?></td>
+                <td style="text-align: right;"><?php echo $minus; ?></td>
+                <td>&nbsp;</td>
                 <td style="text-align: right;"><?php echo number_format($total,2); ?></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td style="text-align: right;"><?php echo number_format($saldo,2); ?></td>
             </tr>
             <?php
         } else {
@@ -63,7 +69,7 @@ if ($output == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=posisi_stock.xls");
+    header("Content-Disposition: attachment; filename=adjustment_stock.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

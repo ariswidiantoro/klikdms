@@ -23,13 +23,28 @@ class Master_Sparepart extends Application {
         $this->load->view('template', $this->data);
     }
 
+    public function addPelanggan() {
+        $this->hakAkses(49);
+        $this->data['href'] = $this->input->GET('href');
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->load->view('master_service/addPelanggan', $this->data);
+    }
+
     public function pelanggan() {
         $this->hakAkses(49);
+        $this->data['add'] = "master_sparepart/addPelanggan";
         $this->load->view('master_service/pelanggan', $this->data);
+    }
+
+    public function addSupplier() {
+        $this->hakAkses(51);
+        $this->data['propinsi'] = $this->model_admin->getPropinsi();
+        $this->load->view('master_service/addSupplier', $this->data);
     }
 
     public function supplier() {
         $this->hakAkses(51);
+        $this->data['add'] = "master_sparepart/addSupplier";
         $this->load->view('master_service/supplier', $this->data);
     }
 
@@ -378,20 +393,8 @@ class Master_Sparepart extends Application {
     }
 
     function jsonSupplier() {
-        $nama = $this->input->post('param');
         $cbid = ses_cabang;
-        $data['response'] = 'false';
-        $query = $this->model_sparepart->getSupplierByNama($nama, $cbid);
-        if (!empty($query)) {
-            $data['response'] = 'true';
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array('value' => $row['sup_nama'], 'supid' => $row['supid'], 'desc' => $row['sup_alamat']);
-            }
-        } else {
-            $data['message'][] = array('value' => '', 'label' => "Data Tidak Ada", 'desc' => '');
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_sparepart->getSupplierByNama($this->input->post('param'), $cbid));
     }
 
     function jsonBarang() {
@@ -729,22 +732,9 @@ class Master_Sparepart extends Application {
             chmod($_FILES['spesial']['tmp_name'], 0755);
             $data->read($_FILES['spesial']['tmp_name']);
             $data->setOutputEncoding('CP1251');
-            $baris = $data->sheets[0]['numRows'];
-            $inventory = $this->model_sparepart->getIdInventory();
-            $spesial = array();
-            for ($i = 2; $i <= $baris; $i++) {
-                if (!empty($data->sheets[0]['cells'][$i][1])) {
-                    $inveid = $inventory[str_replace(" ", "", $data->sheets[0]['cells'][$i][1])];
-                    $harga = $data->sheets[0]['cells'][$i][3];
-                    $spesial[] = array(
-                        'spe_inveid' => $inveid,
-                        'spe_cbid' => ses_cabang,
-                        'spe_harga' => $this->system->numeric($harga),
-                    );
-                }
-            }
-            if ($this->model_sparepart->saveSpesialItem($spesial)) {
+            if ($this->model_sparepart->saveSpesialItem($data->sheets[0])) {
                 $hasil['result'] = true;
+                $this->session->set_flashdata('msg', $this->sukses('Berhasil mengupload spesial item'));
                 $hasil['msg'] = $this->sukses("Berhasil menyimpan spesial item");
             } else {
                 $hasil['result'] = false;
@@ -760,28 +750,15 @@ class Master_Sparepart extends Application {
             $this->load->library("Spreadsheet_Excel_Reader");
             $data = new Spreadsheet_Excel_Reader();
             chmod($_FILES['price']['tmp_name'], 0755);
-            $data->read($_FILES['spesial']['tmp_name']);
+            $data->read($_FILES['price']['tmp_name']);
             $data->setOutputEncoding('CP1251');
-            $baris = $data->sheets[0]['numRows'];
-            $inventory = $this->model_sparepart->getIdInventory();
-            $spesial = array();
-            for ($i = 2; $i <= $baris; $i++) {
-                if (!empty($data->sheets[0]['cells'][$i][1])) {
-                    $inveid = $inventory[str_replace(" ", "", $data->sheets[0]['cells'][$i][1])];
-                    $harga = $data->sheets[0]['cells'][$i][3];
-                    $spesial[] = array(
-                        'pl_inveid' => $inveid,
-                        'pl_cbid' => ses_cabang,
-                        'pl_harga' => $this->system->numeric($harga),
-                    );
-                }
-            }
-            if ($this->model_sparepart->savePriceList($spesial)) {
+            if ($this->model_sparepart->savePriceList($data->sheets[0])) {
                 $hasil['result'] = true;
-                $hasil['msg'] = $this->sukses("Berhasil menyimpan spesial item");
+                $this->session->set_flashdata('msg', $this->sukses('Berhasil mengupload pricelist'));
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan price list");
             } else {
                 $hasil['result'] = false;
-                $hasil['msg'] = $this->error("Gagal menyimpan spesial item");
+                $hasil['msg'] = $this->error("Gagal menyimpan price list");
             }
         }
         echo json_encode($hasil);

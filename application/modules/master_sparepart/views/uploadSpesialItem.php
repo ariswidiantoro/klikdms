@@ -6,7 +6,7 @@
         <div class="col-sm-8">
             <span>Silahkan download format dibawah ini <br></span><br>
             <strong>UNTUK MENYIMPAN EXCEL PASTIKAN SAVE AS->Excel 97-2003</strong><br>
-            <a class="link" href="#" onclick="get_format()">Download format excel disini.</a>
+            <a class="link" href="javascript:;" onclick="get_format()">Download format excel disini.</a>
         </div>
     </div>
     <div class="form-group">
@@ -55,12 +55,10 @@
                 success: function(data) {
                     window.scrollTo(0, 0);
                     if (data.result) {
-                        alert("sukses");
-                        var $el = $('#spesial');
-                        $el.wrap('<form>').closest('form').get(0).reset();
-                        $el.unwrap();
+                        $('.page-content-area').ace_ajax('loadUrl', "#master_sparepart/uploadSpesialItem", true);
+                    }else{
+                        $("#result").html(data.msg).show().fadeIn("slow");
                     }
-                    $("#result").html(data.msg).show().fadeIn("slow");
                 }
             })
             return false;

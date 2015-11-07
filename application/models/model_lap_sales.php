@@ -95,7 +95,8 @@ class Model_Lap_Sales extends CI_Model {
      * @return null
      */
     function getFakturPenjualan($start, $end, $cabang) {
-        $sql = $this->db->query("SELECT fkp_keterangan,leas_nama,warna_deskripsi,fkp_nofaktur,fkp_tgl,pen_faktur_payment.*, spk_no,spk_nokontrak,spk_tgl,kr_nama,pel_nama,"
+        $sql = $this->db->query("SELECT fkp_keterangan,leas_nama,warna_deskripsi,fkp_nofaktur,"
+                . " fkp_tgl,pen_faktur_payment.*, spk_no,spk_nokontrak,spk_tgl,kr_nama,pel_nama,"
                 . " pel_alamat,kota_deskripsi,pel_telpon,pel_hp,merk_deskripsi,model_deskripsi,"
                 . " cty_deskripsi, msc_tahun"
                 . " FROM pen_faktur "
@@ -164,7 +165,6 @@ class Model_Lap_Sales extends CI_Model {
                 . " WHERE fkp_cbid = '$cabang' AND date_part('year', fkp_tgl) = '$tahun' "
                 . " AND date_part('month', fkp_tgl) = '$bulan' GROUP BY spk_salesman,"
                 . " supervisor,modelid,kr_nama ORDER BY supervisor,kr_nama,modelid");
-        log_message('error', 'FFFFFF '.$this->db->last_query());
         if ($sql->num_rows() > 0) {
             foreach ($sql->result_array() as $value) {
                 if (array_key_exists($value['spk_salesman'], $data)) {
@@ -204,6 +204,47 @@ class Model_Lap_Sales extends CI_Model {
                 . " LEFT JOIN ms_kota ON pel_kotaid = kotaid"
                 . " LEFT JOIN ms_warna ON warnaid = msc_warnaid"
                 . " WHERE rtj_cbid = '$cabang' AND rtj_tgl BETWEEN '$start' AND '$end' ORDER BY rtjid");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    function getMutasiKendaran($rangka, $cbid) {
+        $sql = $this->db->query("SELECT mut_desc,mut_inout, msc_norangka,mut_nomer, mut_tgl "
+                . "FROM pen_mutasi LEFT JOIN ms_car ON mscid = mut_mscid WHERE "
+                . "msc_norangka = '$rangka' AND mut_cbid = '$cbid' ORDER BY mutid");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param Integer $merk
+     * @param Integer $model
+     * @param Integer $warna
+     * @param String $cabang
+     */
+    function getStockReady($merk, $model, $warna, $cabang) {
+
+        $wh = "";
+        if ($merk != '01') {
+            $wh .= " AND merkid = $merk ";
+        }
+        if ($model != '01') {
+            $wh .= " AND modelid = $model ";
+        }
+        if ($warna != '01') {
+            $wh .= " AND warnaid = $warna ";
+        }
+        $sql = $this->db->query("SELECT * "
+                . " FROM ms_car LEFT JOIN ms_car_type ON msc_ctyid = ctyid "
+                . " LEFT JOIN ms_car_model ON modelid = cty_modelid "
+                . " LEFT JOIN ms_car_merk ON merkid = model_merkid "
+                . " LEFT JOIN ms_warna ON warnaid = msc_warnaid "
+                . " WHERE msc_cbid = '$cabang' $wh AND msc_ready_stock = 1 ORDER BY msc_norangka");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();
         }

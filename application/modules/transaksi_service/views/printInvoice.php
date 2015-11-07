@@ -56,7 +56,7 @@ echo sprintf("%' -50s", substr($alamat, 0, 49)) . "NO.RANGKA  :" . $data['msc_no
 ?>");
             applet.append("\n              : <?php echo sprintf("%' -50s", substr($alamat, 49, 49)) . "NO.MESIN   :" . $data['msc_nomesin']; ?>");
             applet.append("\n              : <?php echo sprintf("%' -50s", substr($alamat, 98, 49)) . "KM.MASUK   :" . $data['wo_km']; ?>");
-            applet.append("\nTELPON        : <?php echo sprintf("%' -50s", $data['pel_hp']) .      "MEKANIK    : -" ?>");
+            applet.append("\nTELPON        : <?php echo sprintf("%' -50s", $data['pel_hp']) . "MEKANIK    : -" ?>");
             applet.append("\nSVC.Ad/FR.MAN : <?php echo sprintf("%' -50s", $sa['kr_nama']) . "TGL. MASUK :" . Date('d-m-Y/H:i', strtotime($data['wo_createon'])); ?>");
             applet.append("\nFINAL CHECKER : <?php echo sprintf("%' -50s", $fc['kr_nama']) . "TGL.SELESAI:" . Date('d-m-Y/H:i', strtotime($data['inv_createon'])); ?>");
             applet.append("\n<?php echo sprintf("%'--96s", "-"); ?>");
@@ -100,21 +100,17 @@ $parts = intval($datas->dinv_sm) + intval($datas->dinv_oli) +
         intval($datas->dinv_so) +
         intval($datas->dinv_parts);
 
-if ((substr($pelanggan->wo_nomer, 0, 2) == 'PR') && ($pelanggan->msc_internextern == 'CA')) {
-    $ppn = $datas->dinv_ppn;
+if ($datas->inv_incpajak == 'Y') {
+    $lc = $lc / 1.1;
+    $parts = $parts / 1.1;
+}
+if (ses_brand == '1') {
+    $ppn = (intval($datas->dinv_total) - intval($datas->dinv_adm)) / 1.1 * 0.1;
 } else {
     if ($datas->inv_incpajak == 'Y') {
-        $lc = $lc / 1.1;
-        $parts = $parts / 1.1;
-    }
-    if (ses_brand == '1') {
         $ppn = (intval($datas->dinv_total) - intval($datas->dinv_adm)) / 1.1 * 0.1;
     } else {
-        if ($datas->inv_incpajak == 'Y') {
-            $ppn = (intval($datas->dinv_total) - intval($datas->dinv_adm)) / 1.1 * 0.1;
-        } else {
-            $ppn = 0;
-        }
+        $ppn = 0;
     }
 }
 

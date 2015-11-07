@@ -130,7 +130,7 @@
                     type: 'POST',
                     data: {param : $("#kodeBarang").val()},
                     success: function(data) {
-                        add(data.message);
+                        add(data);
                     }
                 });
             },

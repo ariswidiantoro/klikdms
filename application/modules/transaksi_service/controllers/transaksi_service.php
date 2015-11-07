@@ -172,11 +172,12 @@ class Transaksi_Service extends Application {
         $return = false;
         $this->form_validation->set_rules('msc_nopol', '<b>Fx</b>', 'required|callback_validtelp|xss_clean');
         if ($this->form_validation->run() == TRUE) {
+            $woid = $this->input->post('inv_woid');
             $data = array(
                 'inv_tgl' => date('Y-m-d'),
                 'inv_createon' => date('Y-m-d H:i:s'),
                 'inv_createby' => ses_username,
-                'inv_woid' => $this->input->post('inv_woid'),
+                'inv_woid' => $woid,
                 'inv_catatan' => $this->input->post('inv_catatan'),
                 'inv_fchecker' => $this->input->post('inv_fchecker'),
                 'inv_kasir' => $this->input->post('inv_kasir'),

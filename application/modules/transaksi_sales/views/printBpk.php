@@ -162,7 +162,7 @@ dealer((!empty($dealer['cb_nama'])) ? $dealer['cb_nama'] : "", (!empty($dealer['
         </tr>
         <tr>
             <td colspan="2"  class="conten">Merk</td>
-            <td >&nbsp;</td>
+            <td >:</td>
             <td style="width:300px;" ><?php echo $bpk['merk_deskripsi']; ?></td>
             <td class="conten">No Stock</td>
             <td >:</td>
@@ -171,7 +171,8 @@ dealer((!empty($dealer['cb_nama'])) ? $dealer['cb_nama'] : "", (!empty($dealer['
         <tr>
             <td colspan="2"  class="conten">Norangka</td>
             <td >
-                :          </td>
+                :          
+            </td>
             <td style="width:300px;" ><?php echo $bpk['msc_norangka']; ?></td>
             <td class="conten">
                 Type</td>
@@ -211,12 +212,6 @@ dealer((!empty($dealer['cb_nama'])) ? $dealer['cb_nama'] : "", (!empty($dealer['
             <td >
                 :          </td>
             <td><?php echo $bpk['msc_bodyseri']; ?></td>
-        </tr>
-        <tr>
-            <td colspan="2" class="conten">&nbsp;</td>
-            <td>
-                :          </td>
-            <td>&nbsp;</td>
         </tr>
     </table>
 

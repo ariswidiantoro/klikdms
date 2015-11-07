@@ -454,7 +454,7 @@ class Transaksi_Sales extends Application {
                 $view = '<a href="#transaksi_sales/viewBpk?id=' . $row->bpkid . '" title="View"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
                 $responce->rows[$i]['id'] = $row->bpkid;
                 $responce->rows[$i]['cell'] = array(
-                    $view, $print, $hapus,
+                    $print,
                     $row->bpk_nomer,
                     $row->msc_norangka,
                     $row->msc_bodyseri,
@@ -695,16 +695,7 @@ class Transaksi_Sales extends Application {
 
     function autoRangkaUnit() {
         $cbid = ses_cabang;
-        $query = $this->model_trsales->autoRangkaUnit(strtoupper($this->input->post('param')), $this->input->post('ready_stock'), $cbid);
-        if (!empty($query)) {
-            $data['message'] = array();
-            foreach ($query as $row) {
-                $data['message'][] = array('value' => $row['msc_norangka']);
-            }
-        } else {
-            $data['message'][] = array('value' => 'Data Tidak Ditemukan');
-        }
-        echo json_encode($data);
+        echo json_encode($this->model_trsales->autoRangkaUnit(strtoupper($this->input->post('param')), $this->input->post('ready_stock'), $cbid));
     }
 
     function autoNoKontrak() {

@@ -33,28 +33,57 @@ class Laporan_Sparepart extends Application {
         $this->load->view('penerimaanBarang', $this->data);
     }
 
+    /**
+     * 
+     */
     public function returPembelian() {
         $this->hakAkses(67);
         $this->data['link'] = 'showReturPembelian';
         $this->load->view('returPembelian', $this->data);
     }
 
+    /**
+     * 
+     */
     public function kartuStock() {
         $this->hakAkses(68);
         $this->data['link'] = 'showKartuStock';
         $this->load->view('kartuStock', $this->data);
     }
+    public function supplyOutstanding() {
+        $this->hakAkses(112);
+        $this->data['link'] = 'showSupplyOutstanding';
+        $this->load->view('supplyOutstanding', $this->data);
+    }
 
+    /**
+     * 
+     */
     public function posisiStock() {
         $this->hakAkses(69);
         $this->data['link'] = 'showPosisiStock';
         $this->load->view('posisiStock', $this->data);
     }
 
+    /**
+     * 
+     */
+    public function adjustmentStock() {
+        $this->hakAkses(111);
+        $this->data['link'] = 'showAdjustmentStock';
+        $this->load->view('adjustmentStock', $this->data);
+    }
+
     public function supplySlip() {
         $this->hakAkses(72);
         $this->data['link'] = 'showSupplySlip';
         $this->load->view('supplySlip', $this->data);
+    }
+
+    public function agingStockSparepart() {
+        $this->hakAkses(78);
+        $this->data['link'] = 'showAgingStockSparepart';
+        $this->load->view('agingStockSparepart', $this->data);
     }
 
     public function fakturSparepart() {
@@ -68,16 +97,27 @@ class Laporan_Sparepart extends Application {
         $this->data['link'] = 'showFakturByPelanggan';
         $this->load->view('fakturByPelanggan', $this->data);
     }
+
     public function fakturBySparepart() {
         $this->hakAkses(76);
         $this->data['link'] = 'showFakturBySparepart';
         $this->load->view('fakturBySparepart', $this->data);
     }
-    
+
     public function pembelianByPart() {
         $this->hakAkses(77);
         $this->data['link'] = 'showPembelianByPart';
         $this->load->view('pembelianByPart', $this->data);
+    }
+
+    public function detailKomposisiStock($start, $end, $cbid, $type, $status) {
+        $this->data['start'] = $start;
+        $this->data['end'] = $end;
+        $this->data['cbid'] = $cbid;
+        $this->data['type'] = $type;
+        $this->data['output'] = $status;
+        $this->data['data'] = $this->model_lap_sparepart->getDetailKomposisiStock($start, $end, $cbid, $type);
+        $this->load->view('detailKomposisiStock', $this->data);
     }
 
     /**
@@ -100,6 +140,19 @@ class Laporan_Sparepart extends Application {
         $this->data['data'] = $this->model_lap_sparepart->getPenerimaanBarang($start, $end, $cabang);
         $this->data['output'] = $output;
         $this->load->view('showPenerimaanBarang', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showAdjustmentStock($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sparepart->getAdjustmentStock($start, $end, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showAdjustmentStock', $this->data);
     }
 
     /**
@@ -148,6 +201,7 @@ class Laporan_Sparepart extends Application {
             $this->load->view('showFakturByPelangganTotal', $this->data);
         }
     }
+
     public function showFakturBySparepart($output) {
         $end = dateToIndo($this->input->post('end'));
         $start = dateToIndo($this->input->post('start'));
@@ -163,7 +217,7 @@ class Laporan_Sparepart extends Application {
             $this->load->view('showFakturBySparepartTotal', $this->data);
         }
     }
-    
+
     /**
      * 
      * @param type $output
@@ -243,6 +297,42 @@ class Laporan_Sparepart extends Application {
         $this->data['data'] = $this->model_lap_sparepart->getPosisiStock($start, $cabang, $kodeBarang, $type);
         $this->data['output'] = $output;
         $this->load->view('showPosisiStock', $this->data);
+    }
+    
+    /**
+     * 
+     * @param type $output
+     */
+    public function showSupplyOutstanding($output) {
+        $start = dateToIndo($this->input->post('start'));
+        $type = $this->input->post('type');
+        $cabang = ses_cabang;
+        $this->data['data'] = $this->model_lap_sparepart->getSupplyOutstanding($start, $cabang, $type);
+        $this->data['output'] = $output;
+        $this->load->view('showSupplyOutstanding', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $output
+     */
+    public function showAgingStockSparepart($output) {
+        $end = dateToIndo($this->input->post('end'));
+        $start = dateToIndo($this->input->post('start'));
+        $cabang = ses_cabang;
+        $this->data['start'] = $start;
+        $this->data['end'] = $end;
+        $this->data['cabang'] = $cabang;
+        $datesa = date("Y-m-d", mktime(0, 0, 0, date("m", strtotime($start)), date("d", strtotime($start)) - 1, date("Y", strtotime($start))));
+        $this->data['sa'] = $this->model_lap_sparepart->getRekapPosisiStock($datesa, $cabang, '', '');
+        $this->data['beli'] = $this->model_lap_sparepart->getTotalPembelian($start, $end, $cabang);
+        $this->data['jual'] = $this->model_lap_sparepart->getTotalPenjualanSupply($start, $end, $cabang);
+        $this->data['adj'] = $this->model_lap_sparepart->getTotalAdjustmentStock($start, $end, $cabang);
+        $this->data['returJual'] = $this->model_lap_sparepart->getTotalReturPenjualan($start, $end, $cabang);
+        $this->data['returBeli'] = $this->model_lap_sparepart->getTotalReturPembelian($start, $end, $cabang);
+        $this->data['moving'] = $this->model_lap_sparepart->getMovingPart2($start, $end, $cabang);
+        $this->data['output'] = $output;
+        $this->load->view('showAgingStockSparepart', $this->data);
     }
 
 }

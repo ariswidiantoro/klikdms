@@ -17,45 +17,15 @@
         <div class="row">
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <span>Mulai Tgl</span>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <span>Sampai Dengan</span>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <span>Kode Barang</span>
+                    <span>Nomer Rangka</span>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <div class="input-group">
-                        <input type="text" name="start" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
-                        <span class="input-group-addon">
-                            <i class="ace-icon fa fa-calendar"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
                     <div class="input-group" style="position: static">
-                        <input type="text" value="<?php echo date('d/m/Y') ?>" name="end" class="datepicker form-control" />
-                        <span class="input-group-addon">
-                            <i class="ace-icon fa fa-calendar"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <div class="input-group" style="position: static">
-                        <input type="text" name="kodeBarang" id="kodeBarang" class="form-control upper" />
+                        <input type="text" name="rangka" id="rangka" class="form-control upper" />
                     </div>
                 </div>
             </div>
@@ -97,7 +67,7 @@
     }
 
     function lihat() {
-        submited('<?php echo site_url('laporan_sparepart/' . $link . '/lihat'); ?>');
+        submited('<?php echo site_url('laporan_sales/' . $link . '/lihat'); ?>');
         if ($('#tranid').val() == '') {
             alert('KODE PERKIRAAN TDK BOLEH KOSONG');
         } else {
@@ -108,7 +78,7 @@
 
     function excel() {
         $('#form').removeAttr('action');
-        $('#form').attr('action', "<?php echo site_url('laporan_sparepart/' . $link . '/excel'); ?>");
+        $('#form').attr('action', "<?php echo site_url('laporan_sales/' . $link . '/excel'); ?>");
         if ($('#tranid').val() == '') {
             alert('KODE PERKIRAAN TDK BOLEH KOSONG');
         } else {
@@ -118,7 +88,7 @@
 
     function print() {
         $('#form').removeAttr('action');
-        $('#form').attr('action', "<?php echo site_url('laporan_sparepart/' . $link . '/print'); ?>");
+        $('#form').attr('action', "<?php echo site_url('laporan_sales/' . $link . '/print'); ?>");
         $('#form').attr('target', "_new");
 
         if ($('#tranid').val() == '') {
@@ -129,27 +99,20 @@
     }
     
     $(document).ready(function(){
-        $("#kodeBarang").autocomplete({
+        $("#rangka").autocomplete({
             minLength: 1,
             source: function(req, add) {
                 $.ajax({
-                    url: '<?php echo site_url('master_sparepart/jsonBarang'); ?>',
+                    url: '<?php echo site_url('transaksi_sales/autoRangkaUnit'); ?>',
                     dataType: 'json',
                     type: 'POST',
-                    data: {param : $("#kodeBarang").val()},
+                    data: {param : $("#rangka").val()},
                     success: function(data) {
                         add(data);
                     }
                 });
-            },
-            create: function () {
-                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li>')
-                    .append("<a><strong>" + item.value + "</strong><br> Nama Barang : " + item.desc + "</a>")
-                    .appendTo(ul);
-                };
             }
-        })
+        });
     });
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {

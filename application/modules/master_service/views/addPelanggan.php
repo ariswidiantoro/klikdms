@@ -4,7 +4,7 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Type Pelanggan</label>
         <div class="col-sm-8">
             <input type="hidden" id="href" name="href" value="<?php echo $href; ?>">
-            <select name="pel_type" required="required" class="req ace col-xs-10 col-sm-3">
+            <select name="pel_type" required="required" class="req ace col-xs-10 col-sm-4">
                 <option value="">Pilih</option>
                 <option value="retail">Retail</option>
                 <option value="broker">Broker</option>
@@ -28,7 +28,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Propinsi</label>
         <div class="col-sm-8">
-            <select name="propinsi" id="propinsi" required="required" onchange="getKota()" class="req ace col-xs-10 col-sm-3">
+            <select name="propinsi" id="propinsi" required="required" onchange="getKota()" class="req ace col-xs-10 col-sm-4">
                 <option value="">Pilih</option>
                 <?php
                 if (count($propinsi) > 0) {
@@ -45,7 +45,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kab / Kota</label>
         <div class="col-sm-8">
-            <select name="pel_kotaid" required="required" id="kr_kotaid" class="req ace col-xs-10 col-sm-3">
+            <select name="pel_kotaid" required="required" id="kr_kotaid" class="req ace col-xs-10 col-sm-4">
             </select>
         </div>
     </div>
@@ -58,25 +58,31 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor HP</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_hp" required="required"  placeholder="Nomor HP" class="req ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_hp" required="required"  placeholder="Nomor HP" class="req ace col-xs-10 col-sm-4" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor KTP</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_nomor_id" required="required" placeholder="Nomor HP" class="req ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_nomor_id" required="required" placeholder="Nomor HP" class="req ace col-xs-10 col-sm-4" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomor Telpon</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_telpon" placeholder="Nomor Telpon" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_telpon" placeholder="Nomor Telpon" class="ace col-xs-10 col-sm-4" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Npwp</label>
+        <div class="col-sm-8">
+            <input type="text" name="pel_npwp" placeholder="Npwp" class="ace col-xs-10 col-sm-4" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Fax</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_fax"  placeholder="Nomor Fax" class="ace col-xs-10 col-sm-3" />
+            <input type="text" name="pel_fax"  placeholder="Nomor Fax" class="ace col-xs-10 col-sm-4" />
         </div>
     </div>
 

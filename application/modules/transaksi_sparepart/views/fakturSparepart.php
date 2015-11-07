@@ -11,9 +11,28 @@
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nomer Supply</label>
         <div class="col-sm-8">
             <div class='input-group col-xs-10 col-sm-10'>
-                <input type="text" required="required" autocomplete="off" name="supply" maxlength="30" id="supply" class="req upper ace col-xs-10 col-sm-3" />
+                <input type="text" required="required" autocomplete="off" name="supply" maxlength="30" id="supply" class="req upper ace col-xs-10 col-sm-6" />
                 <input type="hidden" name="not_sppid" id="not_sppid"/>
                 <input type="hidden" name="total" id="total"/>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Salesman</label>
+        <div class="col-sm-8">
+            <div class='input-group col-xs-10 col-sm-10'>
+                <select name="not_salesman" required class="ace col-xs-10 col-sm-5 upper req">
+                    <option value="">Pilih</option>
+                    <?php
+                    if (count($salesman) > 0) {
+                        foreach ($salesman as $value) {
+                            ?>
+                            <option value="<?php echo $value['krid']; ?>"><?php echo $value['kr_nama'] ?></option> 
+                            <?php
+                        }
+                    }
+                    ?>
+                </select>
             </div>
         </div>
     </div>
@@ -22,7 +41,7 @@
         <div class="col-sm-8">
             <div class='input-group col-xs-10 col-sm-10'>
                 <input type="text" required="required" readonly="readonly" name="pel_nama" 
-                       id="pel_nama" class="number col-xs-10 col-sm-5" />
+                       id="pel_nama" class="upper col-xs-10 col-sm-5" />
             </div>
         </div>
     </div>
@@ -224,6 +243,32 @@
                     dataType: 'json',
                     type: 'POST',
                     data: {param : $("#supply").val()},
+                    success: function(data) {
+                        add(data);
+                    }
+                });
+            },create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                    .append("<a><strong>" + item.value + "</strong><br> Pelanggan : " + item.label + "</a>")
+                    .appendTo(ul);
+                };
+            },
+            select: function(event, ui) {
+                $('.page-content-area').ace_ajax('startLoading');
+                getDataSupply(ui.item.value);
+            }
+        })
+        
+        
+        $("#salesman").autocomplete({
+            minLength: 1,
+            source: function(req, add) {
+                $.ajax({
+                    url: '<?php echo site_url('transaksi_sparepart/autoSalesmanSparepart'); ?>',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {param : $("#salesman").val()},
                     success: function(data) {
                         add(data.message);
                     }

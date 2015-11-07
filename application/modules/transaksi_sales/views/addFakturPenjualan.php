@@ -622,7 +622,7 @@ echo $this->session->flashdata('msg');
                             ready_stock : 1
                         },
                         success: function(data) {
-                            add(data.message);
+                            add(data);
                         }
                     });
                 },

@@ -17,17 +17,12 @@
         <div class="row">
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <span>Mulai Tgl</span>
+                    <span>Tgl Cut Off</span>
                 </div>
             </div>
             <div class="col-xs-6 col-sm-2">
                 <div>
-                    <span>Sampai Dengan</span>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <span>Kode Barang</span>
+                    <span>Type</span>
                 </div>
             </div>
         </div>
@@ -35,7 +30,7 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group">
-                        <input type="text" name="start" value="<?php echo date('01/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
+                        <input type="text" name="start" value="<?php echo date('d/m/Y') ?>" class="datepicker form-control" style="position: static;"/>
                         <span class="input-group-addon">
                             <i class="ace-icon fa fa-calendar"></i>
                         </span>
@@ -45,17 +40,14 @@
             <div class="col-xs-6 col-sm-2">
                 <div>
                     <div class="input-group" style="position: static">
-                        <input type="text" value="<?php echo date('d/m/Y') ?>" name="end" class="datepicker form-control" />
-                        <span class="input-group-addon">
-                            <i class="ace-icon fa fa-calendar"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <div class="input-group" style="position: static">
-                        <input type="text" name="kodeBarang" id="kodeBarang" class="form-control upper" />
+                        <select name="type" id="type" class="form-control upper">
+                            <option value="">Semua</option>
+                            <option value="ps">PartShop</option>
+                            <option value="sp">Sparepart</option>
+                            <option value="sm">Sub Material</option>
+                            <option value="ol">Oli</option>
+                            <option value="so">Sub Order</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -128,29 +120,6 @@
         }
     }
     
-    $(document).ready(function(){
-        $("#kodeBarang").autocomplete({
-            minLength: 1,
-            source: function(req, add) {
-                $.ajax({
-                    url: '<?php echo site_url('master_sparepart/jsonBarang'); ?>',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {param : $("#kodeBarang").val()},
-                    success: function(data) {
-                        add(data);
-                    }
-                });
-            },
-            create: function () {
-                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li>')
-                    .append("<a><strong>" + item.value + "</strong><br> Nama Barang : " + item.desc + "</a>")
-                    .appendTo(ul);
-                };
-            }
-        })
-    });
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page

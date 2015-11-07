@@ -41,6 +41,7 @@ class Master_Service extends Application {
      */
     public function pelanggan() {
         $this->hakAkses(28);
+        $this->data['add'] = "master_service/addPelanggan";
         $this->load->view('pelanggan', $this->data);
     }
 
@@ -51,6 +52,7 @@ class Master_Service extends Application {
      */
     public function supplier() {
         $this->hakAkses(29);
+        $this->data['add'] = "master_service/addSupplier";
         $this->load->view('supplier', $this->data);
     }
 
@@ -178,7 +180,7 @@ class Master_Service extends Application {
 //        $this->hakAkses(28);
         $this->data['href'] = $this->input->GET('href');
         $this->data['propinsi'] = $this->model_admin->getPropinsi();
-        $this->load->view('addPelanggan', $this->data);
+        $this->load->view('master_service/addPelanggan', $this->data);
     }
 
     /**
@@ -545,17 +547,18 @@ class Master_Service extends Application {
         if ($this->form_validation->run() == TRUE) {
             $tgl = $this->input->post('pel_tgl_lahir');
             if (empty($tgl)) {
-                $tgl = defaultTgl();
+                $tgl = DEFAULT_TGL;
             }
             $data = array(
                 'pel_cbid' => ses_cabang,
-                'pel_nama' => strtoupper($this->input->post('pel_nama')),
-                'pel_alamat' => strtoupper($this->input->post('pel_alamat')),
+                'pel_nama' => trim(strtoupper($this->input->post('pel_nama'))),
+                'pel_alamat' => trim(strtoupper($this->input->post('pel_alamat'))),
                 'pel_gender' => $this->input->post('pel_gender'),
                 'pel_kotaid' => $this->input->post('pel_kotaid'),
                 'pel_type' => $this->input->post('pel_type'),
-                'pel_alamat_surat' => $this->input->post('pel_alamat_surat'),
+                'pel_alamat_surat' => trim($this->input->post('pel_alamat_surat')),
                 'pel_hp' => $this->input->post('pel_hp'),
+                'pel_npwp' => $this->input->post('pel_npwp'),
                 'pel_nomor_id' => $this->input->post('pel_nomor_id'),
                 'pel_telpon' => $this->input->post('pel_telpon'),
                 'pel_fax' => $this->input->post('pel_fax'),
@@ -660,6 +663,7 @@ class Master_Service extends Application {
                 'pel_alamat' => strtoupper($this->input->post('pel_alamat')),
                 'pel_gender' => $this->input->post('pel_gender'),
                 'pel_kotaid' => $this->input->post('pel_kotaid'),
+                'pel_npwp' => $this->input->post('pel_npwp'),
                 'pel_type' => $this->input->post('pel_type'),
                 'pel_alamat_surat' => $this->input->post('pel_alamat_surat'),
                 'pel_hp' => $this->input->post('pel_hp'),
