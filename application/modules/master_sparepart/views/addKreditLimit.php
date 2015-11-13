@@ -11,18 +11,18 @@
         height: 200px;
     }
 </style>
-<form class="form-horizontal" id="form" method="post" action="<?php echo site_url('master_sparepart/saveGradeToko'); ?>" name="form">
+<form class="form-horizontal" id="form" method="post" action="<?php echo site_url('master_sparepart/saveKreditLimit'); ?>" name="form">
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Nama</label>
         <div class="col-sm-8">
-            <input type="text" name="pel_nama" id="pel_nama" autocomplete="off" spellcheck="false" required="required" placeholder="Nama" class="upper ace col-xs-10 col-sm-5" />
+            <input type="text" name="pel_nama" id="pel_nama" autocomplete="off" spellcheck="false" required="required" placeholder="Nama" class="upper ace col-xs-10 col-sm-5 req" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kode Pelanggan</label>
         <div class="col-sm-8">
 
-            <input type="text" name="pelid" required="required" id="pelid" placeholder="Kode Pelanggan" class="upper ace col-xs-10 col-sm-5" />
+            <input type="text" name="pelid" required="required" id="pelid" placeholder="Kode Pelanggan" class="upper ace col-xs-10 col-sm-5 req" />
         </div>
     </div>
     <div class="form-group">
@@ -32,21 +32,21 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Plus 1</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Batas Kredit Hari (TOP)</label>
         <div class="col-sm-8">
-            <input type="text" name="grad_1" id="grad_1" autocomplete="off" spellcheck="false" required="required" value="0" class="number ace col-xs-10 col-sm-1" />%
+            <input type="text" name="limit_top" maxlength="3" id="limit_top" autocomplete="off" spellcheck="false" required="required" value="0" class="number ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Plus 2</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Kredit Limit (Rp)</label>
         <div class="col-sm-8">
-            <input type="text" name="grad_2" id="grad_2" autocomplete="off" spellcheck="false" required="required" value="0" class="number ace col-xs-10 col-sm-1" />%
+            <input type="text" name="limit_total" onchange="$('#'+this.id).val(formatDefault(this.value))" id="limit_total" autocomplete="off" required="required" value="0" class="number ace col-xs-10 col-sm-3" />
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Plus 3</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">Batas Diskon (%)</label>
         <div class="col-sm-8">
-            <input type="text" name="grad_3" id="grad_3" autocomplete="off" spellcheck="false" required="required" value="0" class="number ace col-xs-10 col-sm-1" />%
+            <input type="text" name="limit_diskon" maxlength="5" id="limit_diskon" autocomplete="off" spellcheck="false" required="required" value="0" class="number ace col-xs-10 col-sm-3" />
         </div>
     </div>
 
@@ -67,10 +67,10 @@
         </div>
     </div>
 </form>
-<script src="http://cdn.jsdelivr.net/typeahead.js/0.9.3/typeahead.min.js"></script>
+<!--<script src="http://cdn.jsdelivr.net/typeahead.js/0.9.3/typeahead.min.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>-->
 <script type="text/javascript">
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
@@ -96,7 +96,7 @@
                     type: 'POST',
                     data: {param : $("#pel_nama").val()},
                     success: function(data) {
-                        add(data);
+                       add(data);
                     }
                 });
             },

@@ -187,6 +187,15 @@ class Model_Trservice extends CI_Model {
         return null;
     }
 
+    public function getTrJasa($invid) {
+        $sql = $this->db->query("SELECT * FROM svc_invoice_det LEFT JOIN svc_frate ON flatid = dinv_flatid"
+                . " WHERE dinv_invid = '$invid'");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+
     /**
      * 
      * @param String $woNomer
@@ -252,10 +261,7 @@ class Model_Trservice extends CI_Model {
      * @return null
      */
     public function getFakturService($invid) {
-        $sql = $this->db->query("SELECT inv_numerator,inv_tgl,wo_numerator,wo_status,wo_booking,wo_inextern,wo_nomer,msc_nopol,"
-                . " msc_norangka,msc_nomesin,msc_tahun,wo_km,kr_nama,pel_nama,pel_alamat,model_deskripsi,"
-                . " pel_hp,wo_createon,wo_selesai,pel_telpon, wo_pembawa, wo_km,wo_sa,inv_fchecker,inv_createon,wo_createon"
-                . " FROM svc_invoice LEFT JOIN svc_wo ON inv_woid = woid LEFT JOIN ms_car ON mscid = wo_mscid LEFT JOIN ms_car_type"
+        $sql = $this->db->query("SELECT * FROM svc_invoice LEFT JOIN svc_wo ON inv_woid = woid LEFT JOIN ms_car ON mscid = wo_mscid LEFT JOIN ms_car_type"
                 . " ON msc_ctyid = ctyid LEFT JOIN ms_car_model ON modelid = cty_modelid"
                 . " LEFT JOIN ms_pelanggan ON pelid = wo_pelid LEFT JOIN ms_karyawan ON krid = wo_sa"
                 . " WHERE invid = '$invid'");

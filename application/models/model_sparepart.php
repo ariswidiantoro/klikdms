@@ -33,7 +33,26 @@ class Model_Sparepart extends CI_Model {
         return $sql->row()->total;
     }
 
+    /**
+     * 
+     * @param type $where
+     * @return type
+     */
     public function getTotalGradeToko($where) {
+        $wh = "WHERE limit_cbid = '" . ses_cabang . "' AND limit_status = 0 ";
+        if ($where != NULL)
+            $wh = " AND " . $where;
+        $sql = $this->db->query("SELECT COUNT(*) AS total FROM spa_kredit_limit "
+                . " LEFT JOIN ms_pelanggan ON pelid = limit_pelid $wh");
+        return $sql->row()->total;
+    }
+
+    /**
+     * 
+     * @param type $where
+     * @return type
+     */
+    public function getTotalKreditLimit($where) {
         $wh = "WHERE grad_cbid = '" . ses_cabang . "' AND grad_status = 0 ";
         if ($where != NULL)
             $wh = " AND " . $where;
@@ -96,6 +115,19 @@ class Model_Sparepart extends CI_Model {
      * @param type $id
      * @return null
      */
+    public function getKreditLimitById($id) {
+        $sql = $this->db->query("SELECT * FROM spa_kredit_limit LEFT JOIN ms_pelanggan ON pelid = limit_pelid WHERE limitid = '$id'");
+        if ($sql->num_rows() > 0) {
+            return $sql->row_array();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @return null
+     */
     public function getGradeById($id) {
         $sql = $this->db->query("SELECT * FROM spa_grade LEFT JOIN ms_pelanggan ON"
                 . " pelid = grad_pelid  WHERE gradid = '$id'");
@@ -121,6 +153,10 @@ class Model_Sparepart extends CI_Model {
         return $data;
     }
 
+    /**
+     * 
+     * @return null
+     */
     public function getGudang() {
         $sql = $this->db->query("SELECT * FROM spa_gudang WHERE gdg_cbid = '" . ses_cabang . "' ORDER BY gdg_deskripsi");
         if ($sql->num_rows() > 0) {
@@ -129,6 +165,15 @@ class Model_Sparepart extends CI_Model {
         return null;
     }
 
+    /**
+     * 
+     * @param type $start
+     * @param type $limit
+     * @param type $sidx
+     * @param type $sord
+     * @param type $where
+     * @return null
+     */
     function getAllRak($start, $limit, $sidx, $sord, $where) {
         $this->db->select('*');
         $this->db->limit($limit);
@@ -146,6 +191,15 @@ class Model_Sparepart extends CI_Model {
         return null;
     }
 
+    /**
+     * 
+     * @param type $start
+     * @param type $limit
+     * @param type $sidx
+     * @param type $sord
+     * @param type $where
+     * @return null
+     */
     function getAllGradeToko($start, $limit, $sidx, $sord, $where) {
         $this->db->select('pel_nama,gradid,grad_1,grad_2,pel_alamat,grad_3, grad_status');
         $this->db->limit($limit);
@@ -155,6 +209,24 @@ class Model_Sparepart extends CI_Model {
         $this->db->where('grad_status', 0);
         $this->db->from('spa_grade');
         $this->db->join('ms_pelanggan', 'pelid = grad_pelid', 'LEFT');
+        $this->db->order_by($sidx, $sord);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return null;
+    }
+
+    function getAllKreditLimit($start, $limit, $sidx, $sord, $where) {
+        $this->db->select('pel_nama,pel_alamat,limit_top,limit_total,limit_diskon,limitid');
+        $this->db->limit($limit);
+        if ($where != NULL)
+            $this->db->where($where, NULL, FALSE);
+        $this->db->where('limit_cbid', ses_cabang);
+        $this->db->where('limit_status', 0);
+        $this->db->from('spa_kredit_limit');
+        $this->db->join('ms_pelanggan', 'pelid = limit_pelid', 'LEFT');
         $this->db->order_by($sidx, $sord);
         $this->db->limit($limit, $start);
         $query = $this->db->get();
@@ -180,6 +252,15 @@ class Model_Sparepart extends CI_Model {
         return null;
     }
 
+    /**
+     * 
+     * @param type $start
+     * @param type $limit
+     * @param type $sidx
+     * @param type $sord
+     * @param type $where
+     * @return null
+     */
     function getAllSpesialItem($start, $limit, $sidx, $sord, $where) {
         $this->db->select('*');
         $this->db->limit($limit);
@@ -354,6 +435,12 @@ class Model_Sparepart extends CI_Model {
         return null;
     }
 
+    /**
+     * 
+     * @param type $nama
+     * @param type $sppid
+     * @return null
+     */
     public function getBarangPenjualanAutoComplete($nama, $sppid) {
         $sql = $this->db->query("SELECT inve_kode AS value, inve_nama AS desc FROM spa_supply_det LEFT JOIN"
                 . "  spa_inventory ON inveid = dsupp_inveid WHERE dsupp_sppid = '$sppid'"
@@ -431,6 +518,26 @@ class Model_Sparepart extends CI_Model {
 
     /**
      * 
+     * @param Array $data
+     * @return boolean
+     */
+    function saveKreditLimit($data) {
+        $str = $this->db->INSERT('spa_kredit_limit', $data);
+        if (!$str) {
+            $errMessage = $this->db->_error_message();
+            if (strpos($errMessage, "duplicate key value") == TRUE) {
+                $this->db->where('limit_pelid', $data['limit_pelid']);
+                $this->db->update('spa_kredit_limit', $data);
+            }
+        }
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 
      * @param type $data
      * @return boolean
      */
@@ -456,6 +563,24 @@ class Model_Sparepart extends CI_Model {
         $this->db->trans_begin();
         $this->db->where('gradid', $data['gradid']);
         $this->db->update('spa_grade', $data);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @return boolean
+     */
+    function updateKreditLimit($data) {
+        $this->db->trans_begin();
+        $this->db->where('limitid', $data['limitid']);
+        $this->db->update('spa_kredit_limit', $data);
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             return false;

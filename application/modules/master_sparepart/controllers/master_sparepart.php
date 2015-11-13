@@ -48,6 +48,11 @@ class Master_Sparepart extends Application {
         $this->load->view('master_service/supplier', $this->data);
     }
 
+    public function kreditLimit() {
+        $this->hakAkses(114);
+        $this->load->view('kreditLimit', $this->data);
+    }
+
     public function addInventory() {
         $this->hakAkses(52);
         $this->data['gudang'] = $this->model_sparepart->getGudang();
@@ -116,6 +121,13 @@ class Master_Sparepart extends Application {
         $this->data['data'] = $this->model_sparepart->getGradeById($id);
         $this->load->view('editGradeToko', $this->data);
     }
+    
+    public function editKreditLimit() {
+        $this->hakAkses(114);
+        $id = $this->input->GET('id');
+        $this->data['data'] = $this->model_sparepart->getKreditLimitById($id);
+        $this->load->view('editKreditLimit', $this->data);
+    }
 
     /**
      * 
@@ -123,6 +135,14 @@ class Master_Sparepart extends Application {
     public function addGradeToko() {
         $this->hakAkses(50);
         $this->load->view('addGradeToko', $this->data);
+    }
+
+    /**
+     * 
+     */
+    public function addKreditLimit() {
+        $this->hakAkses(114);
+        $this->load->view('addKreditLimit', $this->data);
     }
 
     /**
@@ -209,6 +229,54 @@ class Master_Sparepart extends Application {
                     $row->grad_1,
                     $row->grad_2,
                     $row->grad_3,
+                    $edit,
+                    $hapus
+                );
+                $i++;
+            }
+        echo json_encode($responce);
+    }
+
+    /**
+     * 
+     */
+    function loadKreditLimit() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'pel_nama';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : '';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $where = whereLoad();
+        $this->load->model('model_sparepart');
+        $count = $this->model_sparepart->getTotalKreditLimit($where);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $query = $this->model_sparepart->getAllKreditLimit($start, $limit, $sidx, $sord, $where);
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query) > 0)
+            foreach ($query as $row) {
+                $del = "hapusKreditLimit('" . $row->limitid . "')";
+                $hapus = '<a href="javascript:;" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $edit = '<a href="#master_sparepart/editKreditLimit?id=' . $row->limitid . '" title="edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+
+                $responce->rows[$i]['id'] = $row->limitid;
+                $responce->rows[$i]['cell'] = array(
+                    $row->pel_nama,
+                    $row->pel_alamat,
+                    $row->limit_top,
+                    number_format($row->limit_total, 2),
+                    $row->limit_diskon,
                     $edit,
                     $hapus
                 );
@@ -558,6 +626,57 @@ class Master_Sparepart extends Application {
             } else {
                 $hasil['result'] = false;
                 $hasil['msg'] = $this->error("Gagal menyimpan Grade Toko");
+            }
+        }
+        echo json_encode($hasil);
+    }
+
+    /**
+     * 
+     */
+    public function saveKreditLimit() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('pelid', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'limit_cbid' => ses_cabang,
+                'limit_pelid' => $this->input->post('pelid'),
+                'limit_top' => numeric($this->input->post('limit_top')),
+                'limit_total' => numeric($this->input->post('limit_total')),
+                'limit_diskon' => numeric($this->input->post('limit_diskon')),
+                'limit_createon' => date('Y-m-d H:i:s'),
+                'limit_createby' => ses_cabang
+            );
+            if ($this->model_sparepart->saveKreditLimit($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Kredit Limit");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Kredit Limit");
+            }
+        }
+        echo json_encode($hasil);
+    }
+    public function updateKreditLimit() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('pelid', '<b>Fx</b>', 'xss_clean');
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'limit_cbid' => ses_cabang,
+                'limit_pelid' => $this->input->post('pelid'),
+                'limitid' => $this->input->post('limitid'),
+                'limit_top' => numeric($this->input->post('limit_top')),
+                'limit_total' => numeric($this->input->post('limit_total')),
+                'limit_diskon' => numeric($this->input->post('limit_diskon')),
+                'limit_createon' => date('Y-m-d H:i:s'),
+                'limit_createby' => ses_cabang
+            );
+            if ($this->model_sparepart->updateKreditLimit($data)) {
+                $hasil['result'] = true;
+                $hasil['msg'] = $this->sukses("Berhasil menyimpan Kredit Limit");
+            } else {
+                $hasil['result'] = false;
+                $hasil['msg'] = $this->error("Gagal menyimpan Kredit Limit");
             }
         }
         echo json_encode($hasil);

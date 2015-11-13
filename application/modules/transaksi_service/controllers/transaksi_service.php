@@ -12,7 +12,7 @@ class Transaksi_Service extends Application {
      */
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('model_trservice', 'model_trfinance', 'model_finance'));
+        $this->load->model(array('model_trservice', 'model_trfinance', 'model_finance', 'model_admin'));
     }
 
     public function index() {
@@ -278,9 +278,7 @@ class Transaksi_Service extends Application {
     function printInvoice($invid) {
         $data = $this->model_trservice->getFakturService($invid);
         $this->data['data'] = $data;
-        $this->data['jasa'] = $this->model_trservice->getJasaWorkOrder($kode);
-        $this->data['sp'] = $this->model_trservice->getSparepartWorkOrder($kode);
-        $this->data['so'] = $this->model_trservice->getSoWorkOrder($kode);
+        $this->data['flat'] = $this->model_trservice->getTrJasa($invid);
         $this->data['sa'] = $this->model_admin->getKaryawanById($data['wo_sa']);
         $this->data['fc'] = $this->model_admin->getKaryawanById($data['inv_fchecker']);
         $this->load->view('printInvoice', $this->data);

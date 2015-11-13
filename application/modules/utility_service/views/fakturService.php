@@ -66,9 +66,7 @@ echo $this->session->flashdata('msg');
         var params  = 'width=1000';
         params += ', height='+screen.height;
         params += ', fullscreen=yes,scrollbars=yes';
-        document.form.reset();
-        clearForm();
-        window.open("<?php echo site_url("transaksi_service/printWo"); ?>/"+invid,'_blank', params);
+        window.open("<?php echo site_url("transaksi_service/printInvoice"); ?>/"+invid,'_blank', params);
     }
 
     $(document).ready(function (){

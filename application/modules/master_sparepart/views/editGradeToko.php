@@ -97,11 +97,7 @@
                     type: 'POST',
                     data: {param : $("#pel_nama").val()},
                     success: function(data) {
-                        if (data.response == "true") {
-                            add(data.message);
-                        } else {
-                            add(data.value);
-                        }
+                        add(data);
                     }
                 });
             },
@@ -135,7 +131,7 @@
                     window.scrollTo(0, 0);
                     if (data.result) {
                         document.form.reset();
-//                        $("#pel_alamat").html("");
+                        //                        $("#pel_alamat").html("");
                     }
                     $("#result").html(data.msg).show().fadeIn("slow");
                 }
