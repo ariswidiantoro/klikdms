@@ -105,19 +105,22 @@ class Model_Autocomplete extends CI_Model {
                 FROM svc_wo 
                 LEFT JOIN ms_pelanggan ON pelid = wo_pelid 
                 LEFT JOIN ms_car ON mscid = wo_mscid
-                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'";
+                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'
+                    ORDER BY woid ASC LIMIT 20 OFFSET 0";
         }else if ($data['coa'] == PIUTANG_SPART){
-            $query = "SELECT not_kode as faktur, msc_nopol as kontrak, pel_nama as nama
+            $query = "SELECT notid as faktur, msc_nopol as kontrak, pel_nama as nama
                 FROM svc_wo 
                 LEFT JOIN ms_pelanggan ON pelid = wo_pelid 
                 LEFT JOIN ms_car ON mscid = wo_mscid
-                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'";
+                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'
+                    ORDER BY notid ASC LIMIT 20 OFFSET 0";
         }else if($data['coa'] == PIUTANG_UNIT){
             $query = "SELECT spkid as faktur, msc_nopol as kontrak, pel_nama as nama
                 FROM svc_wo 
                 LEFT JOIN ms_pelanggan ON pelid = wo_pelid 
                 LEFT JOIN ms_car ON mscid = wo_mscid
-                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'";
+                WHERE wo_nomer LIKE '%".$data['param']."%' AND wo_cbid = '".ses_cabang."'
+                    ORDER BY spkid ASC LIMIT 20 OFFSET 0";
         }
         $sql = $this->db->query("
             select supid, sup_nama, sup_alamat 
@@ -142,6 +145,65 @@ class Model_Autocomplete extends CI_Model {
             WHERE fkp_nofaktur LIKE '%".$data['param']."%'
                 AND fkp_cbid = '".$data['cbid']."'
             ORDER BY pel_nama ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
+    /* AUTO COMPLETE */
+    public function autoFakturSvc($data) {
+        $sql = $this->db->query("SELECT woid as trglocal, wo_nomer as value, 
+                concat(msc_nopol, ' - ', pel_nama) as desc, msc_nopol as trgid, 
+                pel_nama as trgname
+                FROM svc_wo 
+                LEFT JOIN ms_pelanggan ON pelid = wo_pelid 
+                LEFT JOIN ms_car ON mscid = wo_mscid
+                WHERE wo_nomer LIKE '%".$data['param']."%' 
+                     AND wo_cbid = '".ses_cabang."'
+                     AND pelid = '".$data['pelid']."'
+                     ORDER BY wo_nomer ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        }
+        return null;
+    }
+    
+    /* AUTO COMPLETE */
+    public function autoFakturTagSvc($data) {
+        $sql = $this->db->query("SELECT woid as notaid, wo_nomer as value, 
+                concat(msc_nopol, ' - ', pel_nama) as desc, msc_nopol as nopol, 
+                pel_nama as trgname, inv_total, (SELECT SUM(trl_kredit - trl_debit) as totUm FROM
+                ksr_ledger WHERE trl_coa = '".UANGMUKA_SERVICE."' AND trl_nota = woid 
+                    AND trl_cbid = wo_cbid ) as uangmuka
+                FROM svc_wo 
+                LEFT JOIN ms_pelanggan ON pelid = wo_pelid 
+                LEFT JOIN ms_car ON mscid = wo_mscid
+                LEFT JOIN svc_invoice on inv_woid = woid
+                WHERE wo_nomer LIKE '%".$data['param']."%' 
+                     AND wo_cbid = '".ses_cabang."'
+                     AND inv_tagihan = 0
+                     ORDER BY wo_nomer ASC LIMIT 20 OFFSET 0
+        ");
+        if ($sql->num_rows() > 0) {
+            $ret = $sql->result_array();
+        }else {
+            $ret[] = array('value' => '', 'desc' => "DATA TIDAK ADA");
+        }
+        
+        return $ret;
+    }
+    
+    /* AUTO COMPLETE */
+    public function getDetailTagSvc($data) {
+        $sql = $this->db->query("SELECT woid, wo_nomer, invid, inv_total
+                FROM svc_wo 
+                JOIN ms_pelanggan ON pelid = wo_pelid 
+                WHERE wo_nomer LIKE '%".$data['param']."%' 
+                     AND wo_cbid = '".ses_cabang."'
+                     ORDER BY wo_nomer ASC LIMIT 20 OFFSET 0
         ");
         if ($sql->num_rows() > 0) {
             return $sql->result_array();

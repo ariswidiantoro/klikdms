@@ -20,8 +20,8 @@
             <input type="text" id="trans_docno" name="trans_docno" required="required" maxlength="20" class="upper form-control input-xlarge req" />
             <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
             <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
-            <input type="hidden" id="trans_trans" name="trans_trans" value="" />
-            <input type="hidden" id="trans_type" name="trans_type" value="I" />
+            <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
+            <input type="hidden" id="trans_type" name="trans_type" value="<?php echo $etc['type']; ?>" />
         </div>
     </div>
     <div class="form-group">
@@ -253,31 +253,17 @@
                 window.location.href = "#transaksi_finance/daftarKwitansi";
             //}});
     }
-            
+    
     function saveData(){
         var result = false;
         if(!$('#formAdd').valid()){
-            //e.preventDefault();
+            e.preventDefault();
         }else{
-            if($("#trans_trans").val() != 'KWIKAS'){
-                var totalTrans = $("#totalTrans").val().replace(/,/g, "");
-                var totalBank = $("#totalTransBank").val().replace(/,/g, "");
-                if( totalTrans != totalBank){
-                    alertDialog("Total transaksi dengan Total detail Bank harus sama");
-                }else{
-                    bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
-                        if(result) {
-                            $("#formAdd").submit();
-                        }
-                    });
+            bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                if(result) {
+                    $("#formAdd").submit();
                 }
-            }else{
-                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
-                        if(result) {
-                            $("#formAdd").submit();
-                        }
-                });
-            }
+            });
         }
         return false;
     }
@@ -434,6 +420,87 @@
                      row.find("input[name^=dtrans_pelid]").val(ui.item.trglocal);
                 }
 
+
+
+            }
+        });
+    }
+    
+    function getDetailTrans(kstid) {
+        var inc = 0;
+        kstid = kstid.toUpperCase();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo site_url('transaksi_finance/getDetailTrans'); ?>",
+            data: {kstid : kstid},
+            dataType: 'json',
+            success: function(data) {
+                if (data.main.kstid != '') {
+                    var tgl = data.main.kst_tgl.split("-");
+                    $('.item-row').children().remove();
+                    $("#trans_docno").val(data.main.kst_nomer);
+                    $("#trans_kstid").val(data.main.kstid);
+                    $("#trans_pelname").val(data.main.pel_nama);
+                    $("#trans_pelid").val(data.main.kst_pelid);
+                    $("#trans_desc").val(data.main.kst_desc);
+                    $("#trans_noreff").val(data.main.kst_noreff);
+                    $("#trans_tgl").val(tgl[2] + '-' + tgl[1] + '-' + tgl[0]);
+                    $("#trans_trans").val(data.main.kst_trans);
+                    $("#trans_type").val(data.main.kst_type);
+                    if( $('#trans_trans').val() == 'KWIKAS'){
+                        $('#trans_jenis').val('1');
+                    }else if( $('#trans_trans').val() == 'KWIBNK'){
+                        $('#trans_jenis').val('2');
+                    }else{
+                        $('#trans_jenis').val('3');
+                    }
+                    changeType();
+                     $("#trans_coa").val(data.main.kst_coa);
+
+                    for (var i = 0; i < data.detail.length; i++) {
+                        addRow();
+                        inc = i+1;
+                        $("#dtrans_coa" + inc).val(data.detail[i].dkst_coa);
+                        if ((data.detail[i].dkst_coa == "<?php echo PIUTANG_UNIT; ?>")) {
+                            $("#dtrans_nota" + inc ).css('background-color', '#FFCCCC');
+                        }
+                        $("#dtrans_desc" + inc).val(data.detail[i].dkst_descrip);
+                        //$("#dtrans_pelnama" + inc).val(data.detail[i].dkst_ccid);
+                        $("#dtrans_pelid" + inc).val(data.detail[i].dkst_pelid);
+                        $("#dtrans_ccid" + inc).val(data.detail[i].dkst_ccid);
+                        //$("#dtrans_supnama" + inc).val(data.detail[i].dkst_supnama);
+                        $("#dtrans_supid" + inc).val(data.detail[i].dkst_supid);
+                        if(data.main.kst_type == 'I'){
+                            $("#dtrans_nominal" + inc).val(formatCurrency(data.detail[i].dkst_kredit));
+                        }else{
+                            $("#dtrans_nominal" + inc).val(formatCurrency(data.detail[i].dkst_debit));
+                        }
+                    }
+                    countTotal();
+
+                <?php
+                if ($etc['trans'] != 'KWIKAS') {
+                    ?>
+                        $('.item-row-bank').children().remove();
+                        inc = 0;
+                        for (var i = 0; i < data.bank.length; i++) {
+                            addRowBank();
+                            inc = i+1;
+                            $("#dbnk_bank" + inc ).val(data.bank[i].dbnk_banknama);
+                            $("#dbnk_bankid" + inc ).val(data.bank[i].dbnk_bankid);
+                            $("#dbnk_norek" + inc ).val(data.bank[i].dbnk_norek);
+                            $("#dbnk_nocek" + inc ).val(data.bank[i].dbnk_nocek);
+                            $("#dbnk_kota" + inc ).val(data.bank[i].dbnk_kotanama);
+                            $("#dbnk_kotaid" + inc ).val(data.bank[i].dbnk_kotaid);
+                            var tgl = data.bank[i].dbnk_jtempo.split("-");
+                            $("#dbnk_jtempo" + inc).val(tgl[2] + '-' + tgl[1] + '-' + tgl[0]);
+                            $("#dbnk_nominal" + inc).val(formatCurrency(data.bank[i].dbnk_nominal));
+                        }
+                        countTotalBank();
+                <?php
+                }
+                ?>
+                }
             }
         });
     }
@@ -510,20 +577,25 @@
         .next().on(ace.click_event, function(){
             $(this).prev().focus();
         });
+        
+        getDetailTrans('<?php echo $etc['kstid'];?>');
 
         $('#formAdd').submit(function() {
             if($("#totalTrans").val())
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url($etc['targetSave']) ?>",
+                url: "<?php echo site_url($etc['targetSave']); ?>",
                 dataType: "json",
                 async: false,
                 data: $(this).serialize(),
                 success: function(data) {
                     window.scrollTo(0, 0);
-                    if(data.status == true)
+                    if(data.status == true){
                         document.formAdd.reset();
+                        redirect('data');
+                    }
                     $("#result").html(data.msg).show().fadeIn("slow");
+                    
                 }
             })
             return false;

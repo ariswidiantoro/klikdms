@@ -21,8 +21,9 @@
             <input type="text" id="trans_docno" name="trans_docno" required="required" maxlength="20" class="upper form-control input-xlarge req" />
             <input type="hidden" id="trans_trans" name="trans_trans" value="<?php echo $etc['trans']; ?>" />
             <input type="hidden" id="trans_type" name="trans_type" value="<?php echo $etc['type']; ?>" />
+            <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
             <input type="hidden" id="trans_coa" name="trans_coa" value="0" />
-            <input type="hidden" id="trans_subtrans" name="trans_subtrans" value="<?php echo $etc['subtrans']; ?>" />
+            <input type="hidden" id="trans_subtrans" name="trans_subtrans" value="0" />
             <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
         </div>
     </div>
@@ -180,20 +181,6 @@
                 window.location.href = "#transaksi_finance/<?php echo $etc['targetListdata']?>";
     }
     
-    function alertDialog(msg){
-        bootbox.dialog({
-            message: "<span class='bigger-110'>"+msg+"</span>",
-            buttons: 			
-            {
-                "danger" :
-                {
-                    "label" : "OK",
-                    "className" : "btn-sm btn-danger"
-                }
-            }
-        });
-    }
-    
     function saveData(){
         var result = false;
         var totalDebit = $("#totalTransDebit").val().replace(/,/g, "");
@@ -323,6 +310,52 @@
             });
         }
         
+        function getDetailTrans(kstid) {
+            var inc = 0;
+            kstid = kstid.toUpperCase();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo site_url('transaksi_finance/getDetailTrans'); ?>",
+                data: {kstid : kstid},
+                dataType: 'json',
+                success: function(data) {
+                    if (data.main.kstid != '') {
+                        var tgl = data.main.kst_tgl.split("-");
+                        $('.item-row').children().remove();
+                        $("#trans_docno").val(data.main.kst_nomer);
+                        $("#trans_kstid").val(data.main.kstid);
+                        $("#trans_desc").val(data.main.kst_desc);
+                        $("#trans_noreff").val(data.main.kst_noreff);
+                        $("#trans_tgl").val(tgl[2] + '-' + tgl[1] + '-' + tgl[0]);
+                        $("#trans_trans").val(data.main.kst_trans);
+                        $("#trans_type").val(data.main.kst_type);
+                        $("#trans_coa").val(data.main.kst_coa);
+
+                        for (var i = 0; i < data.detail.length; i++) {
+                            addRow();
+                            inc = i+1;
+                            $("#dtrans_coa" + inc).val(data.detail[i].dkst_coa);
+                            if ((data.detail[i].dkst_coa == "<?php echo PIUTANG_UNIT; ?>")) {
+                                $("#dtrans_nota" + inc ).css('background-color', '#FFCCCC');
+                            }
+                            $("#dtrans_nota" + inc).val(data.detail[i].dkst_nota);
+                            $("#dtrans_notaid" + inc).val(data.detail[i].dkst_nota);
+                            $("#dtrans_desc" + inc).val(data.detail[i].dkst_descrip);
+                            $("#dtrans_pelnama" + inc).val(data.detail[i].dkst_pelnama);
+                            $("#dtrans_pelid" + inc).val(data.detail[i].dkst_pelid);
+                            $("#dtrans_ccid" + inc).val(data.detail[i].dkst_ccid);
+                            $("#dtrans_supnama" + inc).val(data.detail[i].dkst_supnama);
+                            $("#dtrans_supid" + inc).val(data.detail[i].dkst_supid);
+                            $("#dtrans_kredit" + inc).val(formatCurrency(data.detail[i].dkst_kredit));
+                            $("#dtrans_debit" + inc).val(formatCurrency(data.detail[i].dkst_debit));
+                        }
+                        countDebit();
+                        countKredit();
+                    }
+                }
+            });
+        }
+        
         function countDebit(){
             var total = 0;
             var price;
@@ -353,7 +386,8 @@
             .next().on(ace.click_event, function(){
                 $(this).prev().focus();
             });
-
+            
+            getDetailTrans('<?php echo $etc['kstid'];?>');
 
             $('#formAdd').submit(function() {
                 $.ajax({
@@ -397,7 +431,7 @@
                     }
                     else error.insertAfter(element.parent());
                 },
-                submitHandler: function (form) { 
+                submitHandler: function (form) {
                 },
                 invalidHandler: function (form) {
                 }

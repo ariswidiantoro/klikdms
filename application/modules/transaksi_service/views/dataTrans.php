@@ -70,63 +70,18 @@
         </div>
     </div>
 </form>
-
-<div id="modal-form" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" onclick="javascript:$('#modal-form').hide();">&times;</button>
-                <h4 class="blue bigger" id="header-modal"></h4>
-            </div>
-
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-7">
-                        <div class="form-group">
-                            <label for="form-field-select-3">Location</label>
-                            <div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="form-field-username">Username</label>
-
-                            <div>
-                                <input type="text" id="form-field-username" placeholder="Username" value="alexdoe" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="form-field-first">Name</label>
-                            <div>
-                                <input type="text" id="form-field-first" placeholder="First Name" value="Alex" />
-                                <input type="text" id="form-field-last" placeholder="Last Name" value="Doe" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-sm" onclick="javascript:$('#modal-form').hide();">
-                    <i class="ace-icon fa fa-check"></i>
-                    TUTUP
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript">
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page
     });  
-
+    
     function batalData(id, kode) {
         bootbox.confirm("Yakin batalkan transaksi "+kode+" ?", function(result) {
             if(result) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url("transaksi_finance/" . $etc['targetCancel'] . ""); ?>',
+                    url: '<?php echo site_url($etc['targetCancel']); ?>',
                     dataType: "json",
                     data: {
                         id: id
@@ -139,62 +94,24 @@
             }
         });
     }
-
+    
     function loadData(){
         $("#grid-table").trigger("reloadGrid");
     }
-
+    
     function addData(){
-        window.location.href = "#transaksi_finance/<?php echo $etc['newTrans']; ?>";
-    }
-
-    function cetakData(id, nomer){
-        bootbox.confirm("Yakin Cetak Transaksi "+nomer+" ?", function(result) {
-            if(result) {
-                $.ajax({
-                    type: 'POST',
-                    url: '<?php echo site_url("transaksi_finance/updatePrint"); ?>',
-                    dataType: "json",
-                    data: {
-                        id: id
-                    },
-                    success: function(data) {
-                        if(data.status == '1'){
-                            var params  = 'width='+screen.width;
-                            params += ', height='+screen.height;
-                            params += ', fullscreen=yes,scrollbars=yes';
-                            window.open("<?php echo site_url("transaksi_finance/" . $etc['targetPrint'] . ""); ?>/"+id,'_blank', params);
-                            $("#grid-table").trigger("reloadGrid");
-                        }else{
-                            alertDialog('Data gagal dicetak');
-                        }
-                    }
-                });
-            } 
-        });        
+          window.location.href = "#<?php echo $etc['targetNewTrans']; ?>";
     }
     
-    function detailTrans(kstid){
-              /* kstid = kstid.toUpperCase();
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo site_url('transaksi_finance/viewDetailTrans'); ?>",
-                    data: {kstid : kstid},
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.status == 'TRUE') {
-                            $('#modal-content').html(data.content);
-                        }else{
-                            alertDialog('TRANSAKSI TIDAK DITEMUKAN');
-                        }
-                    }
-                });*/
-            $('#header-modal').html('DETAIL TRANSAKSI : '+kstid);
-            $('#modal-form').show();
-        }
-
+    function cetakData(id){
+        var params  = 'width='+screen.width;
+        params += ', height='+screen.height;
+        params += ', fullscreen=yes,scrollbars=yes';
+        window.open("<?php echo site_url($etc['targetPrint']); ?>/"+id,'_blank', params);
+    }
+    
     $(document).ready(function (){
-        $(function() {
+         $(function() {
             var dates = $( "#from, #to" ).datepicker({	
                 changeMonth: true,
                 showAnim: '',
@@ -212,9 +129,9 @@
                 }
             });
         });
-
+        
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url("transaksi_finance/" . $etc['targetLoad']) ?>',     
+            url:'<?php echo site_url($etc['targetLoad']) ?>',     
             mtype : "post",             
             datatype: "json",
             postData: {
@@ -238,13 +155,13 @@
             viewrecords: true,
             rownumbers: true,
             gridview: true,
-            caption:"<?php echo $etc['judul']; ?>"
+            caption:"<?php echo $etc['judul'];?>"
         }).navGrid('#pager',{edit:false,add:false,del:false,search:false, refresh:false});
         $("#pager").append("<input type='button' value='Click Me' style='height:20px;font-size:-3'/>");
         $(window).on('resize.jqGrid', function () {
             $("#grid-table").jqGrid( 'setGridWidth', $(".page-content").width() );
         })
-
+        
         var parent_column = $("#grid-table").closest('[class*="col-"]');
         $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
             if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {

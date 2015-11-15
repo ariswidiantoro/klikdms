@@ -31,11 +31,12 @@ if (!defined('BASEPATH'))
             url:'<?php echo site_url('master_finance/loadSpecialCoa') ?>',     
             mtype : "post",            
             datatype: "json",            
-            colNames:['Kode','Deskripsi', 'Account', 'Edit', 'Setting','Del'],     
+            colNames:['Kode','Deskripsi', 'Account', 'Breakdown Saldo', 'Edit', 'Setting','Del'],     
             colModel:[
                 {name:'specid',index:'specid', width:30, align:"left"},
                 {name:'spec_deskripsi',index:'spec_deskripsi', width:100, align:"left"},
                 {name:'setcoa_kode',index:'setcoa_kode', width:50, align:"left"},
+                {name:'setcoa_is_breakdown',index:'setcoa_is_breakdown', width:50, align:"left"},
                 {name:'edit',index:'edit', width:12, align:"center"},
                 {name:'setting',index:'setting', width:12, align:"center"},
                 {name:'hapus',index:'hapus', width:12, align:"center"},

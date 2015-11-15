@@ -15,8 +15,10 @@ $adeb = 0;
 $akre = 0;
 $asldakhir = 0;
 
-$departemen['1'] = 'UNIT';
-$departemen['2'] = 'SPAREPART';
+$departemen[UANGMUKA_UNIT] = 'UNIT';
+$departemen[UANGMUKA_SERVICE] = 'SERVICE';
+$departemen[UANGMUKA_SPART] = 'SPAREPART';
+$departemen[UANGMUKA_BREPAIR] = 'BODYREPAIR';
 ?>
 <?php 
 if ($etc['output'] != 'show') {
@@ -51,7 +53,7 @@ if ($etc['output'] != 'show') {
             <td width="15px">&nbsp;</td>
             <td width="150px;">JENIS PIUTANG</td>
             <td width="1px;">:</td>
-            <td><?php echo $departemen[$etc['dept']];?></td>
+            <td><?php echo $departemen[$etc['coa']];?></td>
         </tr>
     </table>
 </div>
@@ -62,10 +64,10 @@ if ($etc['output'] != 'show') {
         <thead>
             <tr>
                 <th width="2%">NO</th>
-                <th width="10%">NO. FAKTUR</th>
-                <th width="10%">TGL. FAKTUR</th>
-                <th width="10%">NO. SUPLIER</th>
-                <th WIDTH="15%">NAMA</th>
+                <th width="10%">NO. BUKTI</th>
+                <th width="10%">TGL</th>
+                <th width="10%">NO. CUSTOMER</th>
+                <th WIDTH="15%">NAMA CUSTOMER</th>
                 <th WIDTH="15%" align="right">SALDO AWAL</th>
                 <th WIDTH="15%" align="right">DEBIT</th>
                 <th WIDTH="15%" align="right">KREDIT</th>
@@ -121,7 +123,7 @@ if ($etc['output'] == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=RK_PIUTANG.xls");
+    header("Content-Disposition: attachment; filename=RK_UANGMUKA.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

@@ -50,16 +50,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-6 col-sm-2">
-                <div>
-                    <select name="jenis" class="input-sm input-medium" id="jenis" >
-                        <option value="ALL">SEMUA KWITANSI</option>
-                        <option value="KWIKAS">KWITANSI KAS</option>
-                        <option value="KWIBANK">KWITANSI BANK</option>
-                        <option value="KWICEK">KWITANSI CEK</option>
-                    </select>
-                </div>
-            </div>
             <div class="col-xs-6 col-sm-4">
                 <div>
                     <button onclick="return lihat();" class="btn btn-xs btn-info btn-bol" type="button"><i class="ace-icon fa fa-search"></i>LIHAT</button>

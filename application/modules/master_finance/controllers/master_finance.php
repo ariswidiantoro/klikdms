@@ -297,6 +297,7 @@ class Master_Finance extends Application {
         $i = 0;
         if (count($query) > 0)
             foreach ($query as $row) {
+                $breakdown = ($row->setcoa_is_breakdown == '1')?'BREAKDOWN':'-';
                 $del = "hapusData('" . $row->specid . "', '" . $row->spec_deskripsi . "')";
                 $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
                 $edit = '<a href="#master_finance/editSpecialCoa?id=' . $row->specid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
@@ -306,6 +307,7 @@ class Master_Finance extends Application {
                     $row->specid,
                     $row->spec_deskripsi,
                     $row->setcoa_kode,
+                    $breakdown,
                     $edit, $setCoa, $hapus);
                 $i++;
             }
@@ -379,6 +381,7 @@ class Master_Finance extends Application {
     public function saveSetSpecialCoa() {
         $specid = strtoupper($this->input->post('specid', TRUE));
         $coa = strtoupper($this->input->post('coa', TRUE));
+        $breakdown = strtoupper($this->input->post('breakdown', TRUE));
         $cbid = ses_cabang;
         if (empty($specid)||empty($coa)||empty($cbid)) {
             $hasil = array('status' => FALSE, 'msg' => $this->error('INPUT TIDAK LENGKAP, SILAHKAN CEK KEMBALI'));
@@ -387,7 +390,8 @@ class Master_Finance extends Application {
                     array(
                         'setcoa_specid' => $specid,
                         'setcoa_kode' => $coa,
-                        'setcoa_cbid' => $cbid
+                        'setcoa_cbid' => $cbid,
+                        'setcoa_is_breakdown' => $breakdown,
                     ));
             if ($save['status'] == TRUE) {
                 $hasil = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));

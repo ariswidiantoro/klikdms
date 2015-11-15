@@ -101,6 +101,27 @@ class Model_Lap_Finance extends CI_Model {
         return $sql->result_array();
     }
     
+    public function agendaKwitansi($data){
+        $filter = ($data['type'] == 'ALL')?" kst_trans LIKE 'KWI%'": " kst_trans = '".$data['type']."'";
+        $query = "SELECT 
+            kstid,kst_cbid,kst_type,kst_nomer,kst_coa,kst_debit,kst_kredit,kst_trans,
+            CASE WHEN kst_cancel = 1 THEN 'BATAL' ELSE 'AKTIF' END AS status, pel_nama,
+            kst_desc,kst_tgl
+            FROM ksr_trans 
+            LEFT JOIN ksr_dtrans ON dkst_kstid = kstid
+            LEFT JOIN ms_pelanggan ON pelid = dkst_pelid
+            WHERE 
+            kst_cbid = '".$data['cbid']."' AND kst_type = 'I'
+            AND kst_tgl BETWEEN '".$data['dateFrom']."' AND '".$data['dateTo']."'
+            AND ".$filter." 
+            GROUP BY kstid,kst_cbid,kst_type,kst_nomer,kst_coa,kst_debit,kst_kredit,kst_trans,
+            kst_cancel,kst_desc,kst_tgl, pel_nama
+            ";
+        $sql = $this->db->query($query);
+        //log_message('error', 'CEK : '.$this->db->last_query());
+        return $sql->result_array();
+    }
+    
     public function rekapHutang($data){
         $data['month'] = date('m', strtotime($data['dateFrom']));
         $data['year'] = date('Y', strtotime($data['dateFrom']));
@@ -408,7 +429,7 @@ class Model_Lap_Finance extends CI_Model {
 
     }
     
-    public function rekapPiutangServicet($data){
+    public function rekapPiutangService($data){
         $data['month'] = date('m', strtotime($data['dateFrom']));
         $data['year'] = date('Y', strtotime($data['dateFrom']));
         $data['dateFirst'] = date('Y-m-d', strtotime($data['year'] . '-' . $data['month'] . '-01'));
@@ -448,7 +469,6 @@ class Model_Lap_Finance extends CI_Model {
             GROUP BY faktur, tgl_faktur, kon_nomer, pel_nama, pel_alamat ";
         
         $sql = $this->db->query($query);
-        //log_message('error', 'CEK : '.$this->db->last_query());
         
         if (date('d', strtotime($data['dateFrom'])) != '01') {
             $yearfrom = date('Y', strtotime($data['dateFrom']));
@@ -494,15 +514,180 @@ class Model_Lap_Finance extends CI_Model {
 
     }
     
-    public function umrPiutangUnit(){
-        
+    public function loadNeraca($data){
+        $kategori = (!empty($data['kategori']))?" AND jeniscoa_kategori = ".$data['kategori'] : " ";
+        if(!empty($data['kategori'])){
+            if($data['kategori'] == '1'){
+               $kategori =  " AND (jeniscoa_kategori = 1 or jeniscoa_kategori = 2 ) " ;
+            }
+        }
+        $query = "SELECT jeniscoaid, jeniscoa_deskripsi, 
+            sum(trl_debit - trl_kredit) as saldo 
+            from ksr_ledger 
+            LEFT JOIN ms_coa on coa_kode = trl_coa and coa_cbid = trl_cbid
+            LEFT JOIN ms_coa_jenis on coa_jenis = jeniscoaid
+            where trl_cbid = '".$data['cbid']."' and trl_date BETWEEN '2015-10-01' and '2015-10-26'
+                ".$kategori."
+            GROUP BY jeniscoaid, jeniscoa_deskripsi
+            ORDER BY jeniscoaid asc";
+        $sql = $this->db->query($query);
+        return $sql->result_array();
     }
     
-    public function umrPiutangService(){
-        
+    public function lapPenyesuaian($data){
+        $filter = ($data['type'] == 'ALL')?" kst_trans LIKE 'KWI%'": " kst_trans = '".$data['type']."'";
+        $query = "SELECT 
+            kstid,kst_cbid,kst_type,kst_nomer,kst_coa,kst_debit,kst_kredit,kst_trans,
+            CASE WHEN kst_cancel = 1 THEN 'BATAL' ELSE 'AKTIF' END AS status, pel_nama,
+            kst_desc,kst_tgl
+            FROM ksr_trans 
+            LEFT JOIN ksr_dtrans ON dkst_kstid = kstid
+            LEFT JOIN ms_pelanggan ON pelid = dkst_pelid
+            WHERE 
+            kst_cbid = '".$data['cbid']."' AND kst_type = 'I'
+            AND kst_tgl BETWEEN '".$data['dateFrom']."' AND '".$data['dateTo']."'
+            AND ".$filter." 
+            GROUP BY kstid,kst_cbid,kst_type,kst_nomer,kst_coa,kst_debit,kst_kredit,kst_trans,
+            kst_cancel,kst_desc,kst_tgl, pel_nama
+            ";
+        $sql = $this->db->query($query);
+        //log_message('error', 'CEK : '.$this->db->last_query());
+        return $sql->result_array();
     }
     
+    /* @param array('dateFrom','dateTo','type')
+     */
+    public function rekapUangmuka($data){
+        $data['month'] = date('m', strtotime($data['dateFrom']));
+        $data['year'] = date('Y', strtotime($data['dateFrom']));
+        $data['dateFirst'] = date('Y-m-d', strtotime($data['year'] . '-' . $data['month'] . '-01'));
+        if($data['coa'] == UANGMUKA_UNIT){
+            $data['type'] = DEPT_SALES;
+            $select = "spkid as id, spk_no as faktur, date(spk_createon) as tgl_faktur, kon_nomer as kontrak, 
+            pel_nama as nama, pel_alamat as alamat,";
+            $detail = "
+                LEFT JOIN pen_spk on spkid = kode
+                LEFT JOIN ms_kontrak ON kon_nomer = spk_nokontrak and kon_cbid = cbid
+                LEFT JOIN ms_pelanggan ON pelid = kon_pelid
+                GROUP BY spkid, date(spk_createon), kon_nomer, pel_nama, pel_alamat";
+        }else if($data['coa'] == UANGMUKA_SERVICE){
+            $data['type'] = DEPT_SERVICE;
+            $select = "invid as id, wo_nomer as faktur, inv_tgl as tgl_faktur, msc_nopol as kontrak, 
+            pel_nama as nama, pel_alamat as alamat,";
+            $detail = "
+                LEFT JOIN svc_invoice on invid = kode
+                LEFT JOIN svc_wo on woid = inv_woid
+                LEFT JOIN ms_car ON mscid = wo_mscid
+                LEFT JOIN ms_pelanggan ON pelid = wo_pelid
+                GROUP BY invid, wo_nomer, inv_tgl, msc_nopol, pel_nama, pel_alamat";
+        }else if($data['coa'] == UANGMUKA_SPART){
+            $data['type'] = DEPT_SPART;
+            $select = "notid as id, not_numerator as faktur, not_tgl as tgl_faktur, spp_pelid as kontrak, 
+            pel_nama as nama, pel_alamat as alamat,";
+            $detail = "
+                LEFT JOIN spa_nota on notid = kode
+                LEFT JOIN spa_supply on sppid = not_sppid
+                LEFT JOIN ms_pelanggan ON pelid = spp_pelid
+                GROUP BY notid, not_numerator, not_tgl, spp_pelid, pel_nama, pel_alamat";
+        }else if($data['coa'] == UANGMUKA_BREPAIR){
+            $data['type'] = DEPT_BREPAIR;
+            $select = "invid as id, wo_nomer as faktur, inv_tgl as tgl_faktur, msc_nopol as kontrak, 
+            pel_nama as nama, pel_alamat as alamat,";
+            $detail = "
+                LEFT JOIN svc_wo on woid = kode
+                LEFT JOIN svc_invoice on woid = inv_woid
+                LEFT JOIN ms_car ON mscid = wo_mscid
+                LEFT JOIN ms_pelanggan ON pelid = wo_pelid
+                GROUP BY invid, wo_nomer, inv_tgl, msc_nopol, pel_nama, pel_alamat";
+        }
+        
+        $firsttrans = array();
+        $dataout = array();
+        
+        $query = "SELECT ".$select."
+            coalesce(sum(sld_saldo),0) as sld_awal,
+            coalesce(sum(trl_debit),0) as debit, 
+            coalesce(sum(trl_kredit),0) as kredit
+            FROM (
+                (SELECT sld_kode as kode, sld_cbid as cbid FROM ksr_saldo 
+                WHERE 
+                    sld_cbid = '".$data['cbid']."' AND sld_type = '".$data['type']."'
+                    AND sld_tahun = ".$data['year']." AND sld_bulan = ".$data['month']."
+                UNION 
+                SELECT trl_nota as kode, trl_cbid as cbid FROM ksr_ledger WHERE trl_coa = '".$data['coa']."'
+                    AND trl_date BETWEEN '".$data['dateFirst']."' AND '".$data['dateTo']."'
+                    GROUP BY trl_nota, trl_cbid
+                ) ORDER BY kode ASC 
+            ) SUBQ
+            LEFT JOIN ksr_saldo ON sld_kode = kode AND sld_type = '".$data['type']."' 
+                AND sld_tahun = ".$data['year']." AND sld_bulan = ".$data['month']."
+                AND sld_cbid = cbid
+            LEFT JOIN ksr_ledger ON trl_supid = kode AND trl_coa = '".$data['coa']."' 
+                AND trl_date BETWEEN '".$data['dateFrom']."' AND '".$data['dateTo']."'
+                AND trl_cbid = cbid
+            ".$detail." ";
+        
+        $sql = $this->db->query($query);
+        
+        if (date('d', strtotime($data['dateFrom'])) != '01') {
+            $yearfrom = date('Y', strtotime($data['dateFrom']));
+            $monthfrom = date('m', strtotime($data['dateFrom']));
+            $datefrom = date('d', strtotime($data['dateFrom']));
+            $datefirst = date('Y-m-d', mktime(0, 0, 0, $monthfrom, 1, $yearfrom));
+            $datesecond = date('Y-m-d', mktime(0, 0, 0, $monthfrom, $datefrom - 1, $yearfrom));
+            $qq = $this->db->query("SELECT trl_nota, SUM(trl_debit-trl_kredit) AS balance
+               FROM trledger WHERE trl_kodeid = '".$data['coa']."' AND" .
+                    " trl_date BETWEEN '" . $datefirst . "' AND '" . $datesecond . "' AND trl_cbid = " . $data['cbid'] . " 
+				GROUP BY trl_nota, trl_kodeid ");
+            if ($qq->num_rows() > 0) {
+                foreach ($qq->result() as $val) {
+                    $firsttrans[$val->trl_nota] = $val->balance;
+                }
+            }
+        }
+        
+        if(($sql->num_rows()) > 0){
+            foreach($sql->result_array() as $rows){
+                $awal = $rows['sld_awal'];
+                $first = 0;
+
+                if ((date('d', strtotime($data['dateFrom'])) != '01') && (array_key_exists($rows['faktur'], $firsttrans))) {
+                    $first = $firsttrans[$rows['faktur']];
+                    $awal += $first;
+                }
+                $dataout[] = array(
+                    'faktur' => strtoupper($rows['faktur']),
+                    'tgl_faktur' => datetoindo($rows['tgl_faktur']),
+                    'kontrak' => strtoupper($rows['kontrak']),
+                    'nama' => strtoupper($rows['nama']),
+                    'alamat' => strtoupper($rows['alamat']),
+                    'sld_awal' => $awal,
+                    'debit' => $rows['debit'],
+                    'kredit' => $rows['kredit'],
+                    'sld_akhir' => $awal+ $rows['debit'] - $rows['kredit'],
+                );
+            }
+        }
+        
+        return $dataout;
+    }
     
+    public function loadRugiLaba($data){
+        $kategori = (!empty($data['jenis']))?" AND jeniscoaid = '".$data['jenis']."'" : " ";
+        
+        $query = "SELECT jeniscoaid, jeniscoa_deskripsi, coa_kode, coa_desc, 
+            sum(trl_debit - trl_kredit) as saldo 
+            from ksr_ledger 
+            LEFT JOIN ms_coa on coa_kode = trl_coa and coa_cbid = trl_cbid
+            LEFT JOIN ms_coa_jenis on coa_jenis = jeniscoaid
+            where trl_cbid = '".$data['cbid']."' and trl_date BETWEEN '2015-10-01' and '2015-10-26'
+                ".$kategori."
+            GROUP BY jeniscoaid, jeniscoa_deskripsi, coa_kode, coa_desc
+            ORDER BY coa_kode asc";
+        $sql = $this->db->query($query);
+        return $sql->result_array();
+    }
+      
 
 }
 

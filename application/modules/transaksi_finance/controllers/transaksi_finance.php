@@ -116,7 +116,7 @@ class Transaksi_Finance extends Application {
         $this->data['etc'] = array(
             'judul' => 'Penerimaan Bank',
             'targetSave' => 'transaksi_finance/saveTrans',
-            'targetListdata' => 'daftarBankin',
+            'targetListdata' => 'daftarBnkin',
             'kstid' => '',
             'purpose' => 'ADD',
             'trans' => 'BNK',
@@ -128,7 +128,7 @@ class Transaksi_Finance extends Application {
         $this->load->view('addTrans', $this->data);
     }
     
-    public function daftarBankin() {
+    public function daftarBnkin() {
         $this->hakAkses(1071);
         $this->data['etc'] = array(
             'judul' => 'DAFTAR TRANSAKSI PENERIMAAN BANK',
@@ -163,7 +163,7 @@ class Transaksi_Finance extends Application {
         $this->data['etc'] = array(
             'judul' => 'Pengeluaran Bank',
             'targetSave' => 'transaksi_finance/saveTrans',
-            'targetListdata' => 'daftarBankout',
+            'targetListdata' => 'daftarBnkout',
             'kstid' => '',
             'purpose' => 'ADD',
             'trans' => 'BNK',
@@ -174,7 +174,7 @@ class Transaksi_Finance extends Application {
         $this->load->view('addTrans', $this->data);
     }
     
-    public function daftarBankout() {
+    public function daftarBnkout() {
         $this->hakAkses(1072);
         $this->data['etc'] = array(
             'judul' => 'DAFTAR TRANSAKSI PENGELUARAN BANK',
@@ -224,11 +224,11 @@ class Transaksi_Finance extends Application {
     public function daftarCekin() {
         $this->hakAkses(1086);
         $this->data['etc'] = array(
-            'judul' => 'DAFTAR TRANSAKSI PENERIMAAN BANK',
-            'trans' => 'BNK',
+            'judul' => 'DAFTAR TRANSAKSI PENERIMAAN CEK',
+            'trans' => 'CEK',
             'type' => 'I',
             'subtrans' => '0',
-            'newTrans' => 'bankin',
+            'newTrans' => 'cekin',
             'targetLoad' => 'loadTrans',
             'targetPrint' => 'printTrans',
             'targetCancel' => 'cancelTrans',
@@ -383,6 +383,81 @@ class Transaksi_Finance extends Application {
         );
         $this->load->view('dataTrans', $this->data);
     }
+    
+    public function editKwitansi() {
+        $this->hakAkses(1106);
+        $id = strtoupper($this->input->get('id', TRUE));
+        $dataMain = $this->model_trfinance->getMainTrans(array('kstid' => $id));
+        if($dataMain['kst_type'] == 'I'){
+            $daftar = "daftar".$dataMain['kst_trans']."in";
+        }else{
+            $daftar = "daftar".$dataMain['kst_trans']."out";
+        }
+        $this->data['etc'] = array(
+            'judul' => 'Edit Kwitansi : '.$dataMain['kst_nomer'],
+            'targetSave' => 'transaksi_finance/saveKwitansi',
+            'targetListdata' => $daftar,
+            'kstid' => $dataMain['kstid'],
+            'purpose' => 'EDIT',
+            'trans' => $dataMain['kst_trans'],
+            'type' => $dataMain['kst_type'],
+            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => -1)),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
+        );
+        $this->load->view('editKwitansi', $this->data);
+    }
+    
+    public function saveKwitansi() {
+        $main = array(
+            'kst_trans' => $this->input->post('trans_trans', TRUE),
+            'kst_type' => $this->input->post('trans_type', TRUE),
+            'kst_pelid' => strtoupper($this->input->post('trans_pelid', TRUE)),
+            'kst_nomer' => strtoupper($this->input->post('trans_docno', TRUE)),
+            'kst_noreff' => $this->input->post('trans_noreff', TRUE),
+            'kst_tgl' => dateToIndo($this->input->post('trans_tgl', TRUE)),
+            'kst_coa' => $this->input->post('trans_coa', TRUE),
+            'kst_desc' => strtoupper($this->input->post('trans_desc', TRUE)),
+            'kst_debit' => numeric($this->input->post('totalTrans', TRUE)),
+            'kst_kredit' => numeric(0),
+            'kst_createon' => date('Y-m-d H:i:s'),
+            'kst_sub_trans' => $this->input->post('trans_sub_trans', TRUE),
+            'kst_createby' => ses_krid,
+            'kst_cbid' => ses_cabang,
+        );
+
+        $detail = array(
+            'coa' => $this->input->post('dtrans_coa', TRUE),
+            'desc' => $this->input->post('dtrans_desc', TRUE),
+            'nota' => $this->input->post('dtrans_notaid', TRUE),
+            'ccid' => $this->input->post('dtrans_ccid', TRUE),
+            'nominal' => $this->input->post('dtrans_nominal', TRUE)
+        );
+
+        $bank = array(
+            'bank' => $this->input->post('dbnk_bankid', TRUE),
+            'norek' => $this->input->post('dbnk_norek', TRUE),
+            'nocek' => $this->input->post('dbnk_nocek', TRUE),
+            'jtempo' => $this->input->post('dbnk_jtempo', TRUE),
+            'kota' => $this->input->post('dbnk_kotaid', TRUE),
+            'nominal' => $this->input->post('dbnk_nominal', TRUE)
+        );
+
+        $etc = array(
+            'purpose' => $this->input->post('trans_purpose', TRUE),
+            'kstid' => $this->input->post('trans_kstid', TRUE)
+        );
+
+        $save = $this->model_trfinance->addKwitansi($etc, $main, $detail, $bank);
+
+        if ($save['status'] == TRUE) {
+            $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+        } else {
+            $result = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+        }
+
+        echo json_encode($result);
+    }
+    
     /* PENYESUAIAN */
 
     public function penyesuaian() {
@@ -390,16 +465,65 @@ class Transaksi_Finance extends Application {
         $this->data['etc'] = array(
             'judul' => 'Jurnal Penyesuaian',
             'targetSave' => 'transaksi_finance/savePenyesuaian',
+            'targetListdata' => 'daftarPenyesuaian',
             'kstid' => '',
+            'subtrans' => '0',
             'purpose' => 'ADD',
-            'trans' => 'ADJ',
+            'trans' => 'ADJUSTMENT',
             'type' => 'I',
             'mainCoa' => '',
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
         $this->load->view('addPenyesuaian', $this->data);
     }
-
+    
+    public function daftarPenyesuaian() {
+        $this->hakAkses(1107);
+        $this->data['etc'] = array(
+            'judul' => 'DAFTAR TRANSAKSI PENYESUAIAN',
+            'trans' => 'ADJUSTMENT',
+            'type' => 'I',
+            'subtrans' => '0',
+            'newTrans' => 'penyesuaian',
+            'targetLoad' => 'loadTrans',
+            'targetPrint' => 'printPenyesuaian',
+            'targetCancel' => 'cancelTrans',
+            'colNames' => "'TGL','NO.TRANS','DEBIT','KREDIT','STATUS','EDIT','DETAIL','PRINT','BATAL'",
+            'colModel' => "{name:'kst_tgl',index:'kst_tgl', width:30, align:'left'},
+                {name:'kst_nomer',index:'kst_nomer', width:40, align:'left'},
+                {name:'kst_debit',index:'kst_debit', width:50, align:'right'},
+                {name:'kst_kredit',index:'kst_kredit', width:50, align:'right'},
+                {name:'kst_status',index:'kst_status', width:30, align:'left'},
+                {name:'edit',index:'edit', width:14, align:'center'},
+                {name:'print',index:'print', width:14, align:'center'},
+                {name:'detail',index:'detail', width:14, align:'center'},
+                {name:'batal',index:'batal', width:14, align:'center'}",
+            'kategori' => " <option value='ADJUSTMENT'>PILIH</option>
+                            <option value='TERCETAK'>TERCETAK</option>
+                            <option value='BLM DICETAK'>BLM DICETAK</option>
+                            <option value='BATAL'>BATAL</option>"
+        );
+        $this->load->view('dataTrans', $this->data);
+    }
+    
+    public function editPenyesuaian() {
+        $this->hakAkses(1107);
+        $id = strtoupper($this->input->get('id', TRUE));
+        $dataMain = $this->model_trfinance->getMainTrans(array('kstid' => $id));
+        $this->data['etc'] = array(
+            'judul' => 'Edit Penyesuaian : '.$dataMain['kst_nomer'],
+            'targetSave' => 'transaksi_finance/savePenyesuaian',
+            'targetListdata' => 'daftarPenyesuaian',
+            'kstid' => $dataMain['kstid'],
+            'purpose' => 'EDIT',
+            'trans' => $dataMain['kst_trans'],
+            'type' => $dataMain['kst_type'],
+            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => -1)),
+            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
+        );
+        $this->load->view('editPenyesuaian', $this->data);
+    }
+    
     /* DAFTAR KAS */
 
     public function loadTrans() {
@@ -440,12 +564,13 @@ class Transaksi_Finance extends Application {
         if (count($query['result']) > 0) {
             if ($param['trans'] == 'KWI') {
                 foreach ($query['result'] as $row) {
-                    $del = "hapusData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
+                    $del = "batalData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
                     $pr = "cetakData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
-                    $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $print = '<a href="javascript:void(0);" onclick="' . $pr . '" title="Cetak"><i class="ace-icon fa fa-print bigger-120 blue"></i>';
-                    $detail = '<a href="#transaksi_finance/detailTransaksi?id=' . $row->kstid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
-                    $edit = '<a href="#transaksi_finance/editTransaksi?id=' . $row->kstid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                    $hapus = ($row->kst_cancel == 1) ?'-':'<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                    $print = ($row->kst_cancel == 1) ?'-':'<a href="javascript:void(0);" onclick="' . $pr . '" title="Cetak"><i class="ace-icon fa fa-print bigger-120 blue"></i>';
+                    $detail = '<a href="#transaksi_finance/detailTrans?id=' . $row->kstid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                    $detail2 = '<a href="javascript:void(0);" onClick="detailTrans(\''.$row->kstid.'\')" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                    $edit = ($row->kst_cancel == 1 or $row->kst_printed == 1) ?'-':'<a href="#transaksi_finance/editKwitansi?id=' . $row->kstid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                     $responce->rows[$i]['id'] = $row->kstid;
                     $responce->rows[$i]['cell'] = array(
                         dateToIndo($row->kst_tgl),
@@ -455,18 +580,19 @@ class Transaksi_Finance extends Application {
                         $row->pel_nama,
                         number_format($row->kst_debit, 2),
                         $row->kst_status,
-                        $edit, $detail, $print, $hapus);
+                        $edit, $detail2, $print, $hapus);
                     $i++;
                 }
             } else if ($param['trans'] == 'KAS' || $param['trans'] == 'BNK' || $param['trans'] == 'CEK') {
                 foreach ($query['result'] as $row) {
                     $nominal = ($param['type'] == 'I')?$row->kst_debit:$row->kst_kredit;
-                    $del = "hapusData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
+                    $del = "batalData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
                     $pr = "cetakData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
-                    $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
-                    $print = '<a href="javascript:void(0);" onclick="' . $pr . '" title="Cetak"><i class="ace-icon fa fa-print bigger-120 blue"></i>';
-                    $detail = '<a href="#transaksi_finance/detailTransaksi?id=' . $row->kstid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
-                    $edit = '<a href="#transaksi_finance/editTransaksi?id=' . $row->kstid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                    $hapus = ($row->kst_cancel == 1) ?'-':'<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                    $print = ($row->kst_cancel == 1) ?'-':'<a href="javascript:void(0);" onclick="' . $pr . '" title="Cetak"><i class="ace-icon fa fa-print bigger-120 blue"></i>';
+                    $detail = '<a href="#transaksi_finance/detailTrans?id=' . $row->kstid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                     $detail2 = '<a href="javascript:void(0);" onClick="detailTrans(\''.$row->kstid.'\')" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                    $edit = ($row->kst_cancel == 1 or $row->kst_printed == 1) ?'-':'<a href="#transaksi_finance/editTrans?id=' . $row->kstid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
                     $responce->rows[$i]['id'] = $row->kstid;
                     $responce->rows[$i]['cell'] = array(
                         dateToIndo($row->kst_tgl),
@@ -474,6 +600,24 @@ class Transaksi_Finance extends Application {
                         $row->kst_coa,
                         $row->kst_desc,
                         number_format($nominal, 2),
+                        $row->kst_status,
+                        $edit, $detail2, $print, $hapus);
+                    $i++;
+                }
+            } else if ($param['trans'] == 'ADJUSTMENT') {
+                foreach ($query['result'] as $row) {
+                    $del = "batalData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
+                    $pr = "cetakData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
+                    $hapus = ($row->kst_cancel == 1) ?'-':'<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                    $print = ($row->kst_cancel == 1) ?'-':'<a href="javascript:void(0);" onclick="' . $pr . '" title="Cetak"><i class="ace-icon fa fa-print bigger-120 blue"></i>';
+                    $detail = '<a href="#transaksi_finance/detailTrans?id=' . $row->kstid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                    $edit = ($row->kst_cancel == 1 or $row->kst_printed == 1) ?'-':'<a href="#transaksi_finance/editPenyesuaian?id=' . $row->kstid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                    $responce->rows[$i]['id'] = $row->kstid;
+                    $responce->rows[$i]['cell'] = array(
+                        dateToIndo($row->kst_tgl),
+                        strtoupper($row->kst_nomer),
+                        number_format($row->kst_debit, 2),
+                        number_format($row->kst_kredit, 2),
                         $row->kst_status,
                         $edit, $detail, $print, $hapus);
                     $i++;
@@ -521,10 +665,108 @@ class Transaksi_Finance extends Application {
 
         $etc = array(
             'purpose' => $this->input->post('trans_purpose', TRUE),
-            'kstid' => $this->input->post('trans_id', TRUE)
+            'kstid' => $this->input->post('trans_kstid', TRUE)
         );
 
         $save = $this->model_trfinance->addTrans($etc, $main, $detail, $bank);
+
+        if ($save['status'] == TRUE) {
+            $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+        } else {
+            $result = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+        }
+
+        echo json_encode($result);
+    }
+    
+    public function savePenyesuaian() {
+        $main = array(
+            'kst_trans' => $this->input->post('trans_trans', TRUE),
+            'kst_type' => $this->input->post('trans_type', TRUE),
+            'kst_coa' => '',
+            'kst_nomer' => strtoupper($this->input->post('trans_docno', TRUE)),
+            'kst_noreff' => $this->input->post('trans_noreff', TRUE),
+            'kst_tgl' => dateToIndo($this->input->post('trans_tgl', TRUE)),
+            'kst_desc' => strtoupper($this->input->post('trans_desc', TRUE)),
+            'kst_debit' => numeric($this->input->post('totalDebit', TRUE)),
+            'kst_kredit' => numeric($this->input->post('totalKredit', TRUE)),
+            'kst_createon' => date('Y-m-d H:i:s'),
+            'kst_sub_trans' => $this->input->post('trans_sub_trans', TRUE),
+            'kst_createby' => ses_krid,
+            'kst_cbid' => ses_cabang,
+        );
+
+        $detail = array(
+            'coa' => $this->input->post('dtrans_coa', TRUE),
+            'desc' => $this->input->post('dtrans_desc', TRUE),
+            'nota' => $this->input->post('dtrans_notaid', TRUE),
+            'pelid' => $this->input->post('dtrans_pelid', TRUE),
+            'supid' => $this->input->post('dtrans_supid', TRUE),
+            'ccid' => $this->input->post('dtrans_ccid', TRUE),
+            'debit' => $this->input->post('dtrans_debit', TRUE),
+            'kredit' => $this->input->post('dtrans_kredit', TRUE)
+        );
+
+        $bank = array();
+
+        $etc = array(
+            'purpose' => $this->input->post('trans_purpose', TRUE),
+            'kstid' => $this->input->post('trans_kstid', TRUE)
+        );
+
+        $save = $this->model_trfinance->addTrans($etc, $main, $detail, $bank);
+
+        if ($save['status'] == TRUE) {
+            $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+        } else {
+            $result = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+        }
+
+        echo json_encode($result);
+    }
+    
+    public function saveSubTrans() {
+        $main = array(
+            'kst_trans' => $this->input->post('trans_trans', TRUE),
+            'kst_type' => $this->input->post('trans_type', TRUE),
+            'kst_nomer' => strtoupper($this->input->post('trans_docno', TRUE)),
+            'kst_noreff' => $this->input->post('trans_noreff', TRUE),
+            'kst_tgl' => dateToIndo($this->input->post('trans_tgl', TRUE)),
+            'kst_coa' => $this->input->post('trans_coa', TRUE),
+            'kst_desc' => strtoupper($this->input->post('trans_desc', TRUE)),
+            'kst_debit' => numeric($this->input->post('totalTrans', TRUE)),
+            'kst_kredit' => numeric($this->input->post('totalTrans', TRUE)),
+            'kst_createon' => date('Y-m-d H:i:s'),
+            'kst_sub_trans' => $this->input->post('trans_subtrans', TRUE),
+            'kst_createby' => ses_krid,
+            'kst_cbid' => ses_cabang,
+        );
+
+        $detail = array(
+            'coa' => $this->input->post('dtrans_coa', TRUE),
+            'desc' => $this->input->post('trans_desc', TRUE),
+            'nota' => $this->input->post('dtrans_nota', TRUE),
+            'pelid' => $this->input->post('dtrans_pelid', TRUE),
+            'supid' => $this->input->post('dtrans_supid', TRUE),
+            'ccid' => $this->input->post('dtrans_ccid', TRUE),
+            'nominal' => $this->input->post('dtrans_nominal', TRUE)
+        );
+
+        $bank = array(
+            'bank' => $this->input->post('dbnk_bankid', TRUE),
+            'norek' => $this->input->post('dbnk_norek', TRUE),
+            'nocek' => $this->input->post('dbnk_nocek', TRUE),
+            'jtempo' => $this->input->post('dbnk_jtempo', TRUE),
+            'kota' => $this->input->post('dbnk_kotaid', TRUE),
+            'nominal' => $this->input->post('dbnk_nominal', TRUE)
+        );
+
+        $etc = array(
+            'purpose' => $this->input->post('trans_purpose', TRUE),
+            'kstid' => $this->input->post('trans_kstid', TRUE)
+        );
+
+        $save = $this->model_trfinance->addSubTrans($etc, $main, $detail, $bank);
 
         if ($save['status'] == TRUE) {
             $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
@@ -540,10 +782,10 @@ class Transaksi_Finance extends Application {
         if (empty($id)) {
             $hasil = array('status' => true, 'msg' => $this->error('Hapus data gagal'));
         } else {
-            if ($this->model_trfinance->cancelTrans($id)) {
+            if ($this->model_trfinance->cancelTrans(array('kstid' => $id))) {
                 $hasil = array('status' => true, 'msg' => $this->sukses('PEMBATALAN TRANSAKSI BERHASIL'));
             } else {
-                $hasil = array('status' => true, 'msg' => $this->error('PEMBATALAN TRANSAKSI GAGAL'));
+                $hasil = array('status' => false, 'msg' => $this->error('PEMBATALAN TRANSAKSI GAGAL'));
             }
         }
         echo json_encode($hasil);
@@ -553,17 +795,33 @@ class Transaksi_Finance extends Application {
         $this->hakAkses(1051);
         $id = strtoupper($this->input->get('id', TRUE));
         $dataMain = $this->model_trfinance->getMainTrans(array('kstid' => $id));
+        if($dataMain['kst_type'] == 'I'){
+            $daftar = "daftar".ucwords(strtolower($dataMain['kst_trans']))."in";
+        }else{
+            $daftar = "daftar".ucwords(strtolower($dataMain['kst_trans']))."out";
+        }
         $this->data['etc'] = array(
-            'judul' => 'Edit Transaksi',
+            'judul' => 'Edit Transaksi '.$dataMain['kst_nomer'],
             'targetSave' => 'transaksi_finance/saveTrans',
-            'kstid' => $id,
+            'targetListdata' => $daftar,
+            'kstid' => $dataMain['kstid'],
             'purpose' => 'EDIT',
             'trans' => $dataMain['kst_trans'],
             'type' => $dataMain['kst_type'],
-            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => 1)),
+            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => -1)),
             'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
         );
-        $this->load->view('addTrans', $this->data);
+        $this->load->view('editTrans', $this->data);
+    }
+    
+    public function getDetailTrans(){
+        $kstid = $this->input->post('kstid', TRUE);
+        $data['main'] = $this->model_trfinance->getMainTrans(array('kstid' => $kstid)); 
+        $data['detail'] = $this->model_trfinance->getDetailTrans(array('kstid' => $kstid)); 
+        $data['bank'] = $this->model_trfinance->getDetailBank(array('kstid' => $kstid)); 
+        
+        header("content-type: Application/json");
+        echo json_encode($data);
     }
 
     public function getMainCoa() {
@@ -643,21 +901,49 @@ class Transaksi_Finance extends Application {
 
         echo json_encode($result);
     }
-
-    public function printTrans() {
-        $this->hakAkses(1051);
-        $this->data['etc'] = array(
-            'judul' => 'Cetak Transaksi',
-            'kstid' => '',
-            'purpose' => 'ADD',
-            'trans' => 'ADJ',
-            'type' => 'I',
-            'mainCoa' => '',
-            'costcenter' => $this->model_finance->cListCostCenter(array('cbid' => ses_cabang)),
-        );
-        $this->load->view('addPenyesuaian', $this->data);
+    
+    public function updatePrint(){
+        $id = $this->input->post('id', TRUE);
+        $data = $this->model_trfinance->updatePrintStat($id);
+        echo json_encode($data);
     }
 
+    public function printTrans($id) {
+        $this->data['main'] = $this->model_trfinance->getMainTrans(array('kstid' => $id));
+        $judul = "BUKTI ";
+        if($this->data['main']['kst_type'] == 'I'){
+            $judul .= "PENERIMAAN ".$this->data['main']['kst_trans'];
+        }else{
+            $judul .= "PENGELUARAN ".$this->data['main']['kst_trans'];
+        }
+        $this->data['judul'] = $judul;
+        $this->data['detail'] = $this->model_trfinance->getDetailTrans(array('kstid' => $id));
+        $this->data['bank'] = $this->model_trfinance->getDetailBank(array('kstid' => $id));
+        $this->load->view('printTrans', $this->data);
+    }
+    
+    public function printKwitansi($id){
+        $this->data['main'] = $this->model_trfinance->getMainTrans($id);
+        $this->data['detail'] = $this->model_trfinance->getDataTrans($id);
+        $this->data['bank'] = $this->model_trfinance->getDetailBank($id);
+        $this->load->view('printKwitansi', $this->data);
+    }
+    
+    public function printPenyesuaian($id){
+        $this->data['main'] = $this->model_trfinance->getMainTrans($id);
+        $this->data['detail'] = $this->model_trfinance->getDataTrans($id);
+        $this->data['bank'] = $this->model_trfinance->getDetailBank($id);
+        $this->load->view('printPenyesuaian', $this->data);
+    }
+    
+    public function viewDetailTrans(){
+        $kstid = $this->input->post('kstid', TRUE);
+        $data['main'] = $this->model_trfinance->getMainTrans(array('kstid' => $kstid)); 
+        $data['detail'] = $this->model_trfinance->getDetailTrans(array('kstid' => $kstid)); 
+        $data['bank'] = $this->model_trfinance->getDetailBank(array('kstid' => $kstid)); 
+        
+        $this->load->view('viewDetailTrans');
+    }
 }
 
 ?>

@@ -197,36 +197,194 @@ class Laporan_Finance extends Application {
     }
 
     public function neracaShow($output) {
-        $end = dateToIndo($this->input->post('end', TRUE));
-        $start = dateToIndo($this->input->post('start', TRUE));
+        $bulan = dateToIndo($this->input->post('bulan', TRUE));
         $cbid = $this->input->post('cbid', TRUE);
-        $coa = $this->input->post('coa', TRUE);
-        $month = date('m', strtotime($start));
-        $year = date('Y', strtotime($start));
+        $tgl = explode('-', $bulan);
+        $month = $tgl['0'];
+        $year = $tgl['1'];
         $output = $this->uri->segment(3);
         $this->data['etc'] = array(
             'judul' => 'NERACA',
             'targetLoad' => 'neracaShow',
             'output' => $output,
-            'dateFrom' => dateToIndo($start),
-            'dateTo' => dateToIndo($end),
-            'coa' => $coa
+            'periode' => $bulan
         );
         $this->data['cabang'] = $this->model_lap_finance->getDetailCabang($cbid);
-        $this->data['listData'] = $this->model_lap_finance->logTrans(array(
+        $this->data['aktiva'] = $this->model_lap_finance->loadNeraca(array(
+            'month' => $month,
+            'year' => $year,
+            'cbid' => $cbid,
+            'kategori' => 1
+                ));
+        $this->data['pasiva'] = $this->model_lap_finance->loadNeraca(array(
+            'month' => $month,
+            'year' => $year,
+            'cbid' => $cbid,
+            'kategori' => 3
+                ));
+        $this->data['modal'] = $this->model_lap_finance->loadNeraca(array(
+            'month' => $month,
+            'year' => $year,
+            'cbid' => $cbid,
+            'kategori' => 4
+                ));
+        $this->load->view('neracaShow', $this->data);
+    }
+    
+    public function lapKwitansi() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Laporan Agenda Kwitansi',
+            'targetLoad' => 'kwitansiShow',
+            'groupCabang' => $this->model_lap_finance->getGroupCabang(array('krid' => ses_krid)),
+        );
+        $this->load->view('kwitansiForm', $this->data);
+    }
+
+    public function kwitansiShow($output) {
+        $end = dateToIndo($this->input->post('end', TRUE));
+        $start = dateToIndo($this->input->post('start', TRUE));
+        $cbid = $this->input->post('cbid', TRUE);
+        $type = $this->input->post('jenis', TRUE);
+        $month = date('m', strtotime($start));
+        $year = date('Y', strtotime($start));
+        $output = $this->uri->segment(3);
+        $this->data['etc'] = array(
+            'judul' => 'AGENDA KWITANSI',
+            'targetLoad' => 'kwitansiShow',
+            'output' => $output,
+            'dateFrom' => dateToIndo($start),
+            'dateTo' => dateToIndo($end),
+            'type' => $type
+        );
+        $this->data['cabang'] = $this->model_lap_finance->getDetailCabang($cbid);
+        $this->data['listData'] = $this->model_lap_finance->agendaKwitansi(array(
             'dateFrom' => $start,
             'dateTo' => $end,
             'cbid' => $cbid,
-            'coa' => $coa
+            'type' => $type
                 ));
-        $this->data['saldoAwal'] = $this->model_lap_finance->getSaldo(array(
+        $this->load->view('kwitansiShow', $this->data);
+    }
+    
+    public function lapPenyesuaian() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Laporan Jurnal Penyesuaian',
+            'targetLoad' => 'penyesuaianShow',
+            'groupCabang' => $this->model_lap_finance->getGroupCabang(array('krid' => ses_krid)),
+        );
+        $this->load->view('penyesuaianForm', $this->data);
+    }
+
+    public function penyesuaianShow($output) {
+        $end = dateToIndo($this->input->post('end', TRUE));
+        $start = dateToIndo($this->input->post('start', TRUE));
+        $cbid = $this->input->post('cbid', TRUE);
+        $type = $this->input->post('jenis', TRUE);
+        $month = date('m', strtotime($start));
+        $year = date('Y', strtotime($start));
+        $output = $this->uri->segment(3);
+        $this->data['etc'] = array(
+            'judul' => 'LAPORAN JURNAL PENYESUAIAN',
+            'targetLoad' => 'penyesuaianShow',
+            'output' => $output,
+            'dateFrom' => dateToIndo($start),
+            'dateTo' => dateToIndo($end),
+            'type' => $type
+        );
+        $this->data['cabang'] = $this->model_lap_finance->getDetailCabang($cbid);
+        $this->data['listData'] = $this->model_lap_finance->lapPenyesuaian(array(
+            'dateFrom' => $start,
+            'dateTo' => $end,
+            'cbid' => $cbid,
+            'type' => $type
+                ));
+        $this->load->view('penyesuaianShow', $this->data);
+    }
+    
+    public function rkUangmuka() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Rekap Uangmuka',
+            'targetLoad' => 'rkUangmukaShow',
+            'groupCabang' => $this->model_lap_finance->getGroupCabang(array('krid' => ses_krid)),
+        );
+        $this->load->view('rkUangmukaForm', $this->data);
+    }
+
+    public function rkUangmukaShow($output) {
+        $start = dateToIndo($this->input->post('start', TRUE));
+        $end = dateToIndo($this->input->post('end', TRUE));
+        $cbid = $this->input->post('cbid', TRUE);
+        $coa = $this->input->post('coa', TRUE);
+        $this->data['etc'] = array(
+            'judul' => 'Rekap Uangmuka',
+            'targetLoad' => 'rkUangmukaShow',
+            'output' => $output,
+            'dateFrom' => dateToIndo($start),
+            'dateTo' => dateToIndo($end),
+            'coa' => $coa );
+        $this->data['cabang'] = $this->model_lap_finance->getDetailCabang($cbid);
+        $param = array(
+            'dateFrom' => $start,
+            'dateTo' => $end,
+            'cbid' => $cbid,
+            'coa' => $coa);
+        $this->data['listData'] = $this->model_lap_finance->rekapUangmuka($param);
+        $this->load->view('rkUangmukaShow', $this->data);
+    }
+    
+    public function rugiLaba() {
+        $this->hakAkses(1051);
+        $this->data['etc'] = array(
+            'judul' => 'Rugi Laba',
+            'targetLoad' => 'rugilabaShow',
+            'groupCabang' => $this->model_lap_finance->getGroupCabang(array('krid' => ses_krid)),
+        );
+        $this->load->view('rugilabaForm', $this->data);
+    }
+
+    public function rugilabaShow($output) {
+        $bulan = dateToIndo($this->input->post('bulan', TRUE));
+        $cbid = $this->input->post('cbid', TRUE);
+        $tgl = explode('-', $bulan);
+        $month = $tgl['0'];
+        $year = $tgl['1'];
+        $output = $this->uri->segment(3);
+        $this->data['cabang'] = $this->model_lap_finance->getDetailCabang($cbid);
+        log_message('error', 'CEK : '.$this->db->last_query());
+        $this->data['etc'] = array(
+            'judul' => 'RUGI LABA',
+            'targetLoad' => 'rugilabaShow',
+            'output' => $output,
+            'periode' => $bulan
+        );
+        $datasubject = array(
             'month' => $month,
             'year' => $year,
-            'type' => '1',
-            'cbid' => $cbid
-                ));
-        $this->load->view('ledgerShow', $this->data);
+            'cbid' => $cbid);
+        $datasubject['jenis'] = 'JC15';
+        $this->data['penjualan'] = $this->model_lap_finance->loadRugiLaba($datasubject);
+        $datasubject['jenis'] = 'JC17';
+        $this->data['pendapatan'] = $this->model_lap_finance->loadRugiLaba($datasubject);
+        $datasubject['jenis'] = 'JC19';
+        $this->data['biayaProduksi'] = $this->model_lap_finance->loadRugiLaba($datasubject);
+        $datasubject['jenis'] = 'JC16';
+        $this->data['hpp'] = $this->model_lap_finance->loadRugiLaba($datasubject);
+        $datasubject['jenis'] = 'JC20';
+        $this->data['biayaUsaha'] = $this->model_lap_finance->loadRugiLaba($datasubject);
+        $datasubject['jenis'] = 'JC21';
+        $this->data['biayaOperasional'] = $this->model_lap_finance->loadRugiLaba($datasubject);
+        $datasubject['jenis'] = 'JC22';
+        $this->data['biayaNonOperasional'] = $this->model_lap_finance->loadRugiLaba($datasubject);
+        $datasubject['jenis'] = 'JC23';
+        $this->data['pendapatanLuarUsaha'] = $this->model_lap_finance->loadRugiLaba($datasubject);
+        
+        
+        $this->load->view('rugilabaShow', $this->data);
     }
+    
 
 }
 

@@ -61,7 +61,7 @@ define('NUM_ADJUSTMENT_STOCK', 'AD');
 define('NUM_FPK_PK', 'PK');
 define('NUM_FPK_NOMER', 'FK');
 define('NUM_FAKTUR_UNIT', 'FU');
-define('NUM_RETUR_BELI_UNIT', 'RT');
+define('NUM_WO', 'WO');
 
 /* Rossi */
 define('NUM_TIPE_JURNAL', 'TJ');
@@ -83,6 +83,7 @@ define('DEPT_SERVICE', '2');
 define('DEPT_SPART', '3');
 define('DEPT_BREPAIR', '4');
 
+
 define('TR_UM_UNIT', '1');
 define('TR_UM_SERVICE', '2');
 define('TR_UM_SPART', '3');
@@ -94,6 +95,17 @@ define('TR_BYR_PIU_BREPAIR', '8');
 define('TR_BYR_HUT_UNIT', '9');
 define('TR_BYR_HUT_SPART', '10');
 define('TR_NOTA_KREDIT', '11');
+
+define('JURNAL_SELUNIT', 'TJ001'); /* PENJUALAN UNIT */
+define('JURNAL_SELSERV', 'TJ002'); /* PENJUALAN SESRVICE */
+define('JURNAL_SELSPAR', 'TJ003'); /* PENJUALAN SPAREPART */
+define('JURNAL_BUYUNIT', 'TJ004'); /* PENERIMAAN UNIT */
+define('JURNAL_BUYSPAR', 'TJ005'); /* PENERIMAAN BARANG */
+define('JURNAL_PENSO', 'TJ006'); /* PENERIMAAN SUBORDER */
+define('JURNAL_RBUYUNIT', 'TJ007'); /* RETUR BELI UNIT */
+define('JURNAL_RSELUNIT', 'TJ008'); /* RETUR JUAL UNIT */
+define('JURNAL_RBUYSPAR', 'TJ009'); /* RETUR BELI SPAREPART */
+define('JURNAL_RSELSPAR', 'TJ010'); /* RETUR JUAL SPAREPART */
 
 
 

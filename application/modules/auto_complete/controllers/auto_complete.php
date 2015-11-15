@@ -203,6 +203,78 @@ class Auto_Complete extends Application {
         }
         echo json_encode($data);
     }
+    
+    public function auto_nota_hutang() {
+        $param = $this->input->post('param');
+        $cbid = $this->input->post('cbid');
+        $query = $this->model_autocomplete->autoSupid(array('param' => strtoupper($param), 'cbid' => $cbid));
+        if (!empty($query)) {
+            $data['message'] = array();
+            foreach ($query as $row) {
+                $data['message'][] = array(
+                    'value' => $row['sup_nama'],
+                    'desc' => substr($row['sup_alamat'], 0, 20),
+                    'trglocal' => $row['supid'],
+                    'trgid' => $row['supid'],
+                    'trgname' => $row['supid'],
+                );
+            }
+        } else {
+            $data['message'][] = array('value' => '', 'desc' => "DATA TIDAK ADA");
+        }
+        echo json_encode($data);
+    }
+    
+    public function auto_invoice() {
+        $param = $this->input->post('param', TRUE);
+        $pelid = $this->input->post('pelid', TRUE);
+        $cbid = ses_cabang;
+        $query = $this->model_autocomplete->autoFakturSvc(array(
+            'param' => strtoupper($param),
+            'pelid' => strtoupper($pelid),
+            'cbid' => $cbid));
+        if (!empty($query)) {
+            $data['message'] = $query;
+        } else {
+            $data['message'][] = array('value' => '', 'desc' => "DATA TIDAK ADA");
+        }
+        echo json_encode($data);
+    }
+    
+    public function auto_faktur_svc() {
+        $param = $this->input->post('param', TRUE);
+        $pelid = $this->input->post('pelid', TRUE);
+        $cbid = ses_cabang;
+        $query = $this->model_autocomplete->autoFakturSvc(array(
+            'param' => strtoupper($param),
+            'pelid' => strtoupper($pelid),
+            'cbid' => $cbid));
+        if (!empty($query)) {
+            $data['message'] = $query;
+        } else {
+            $data['message'][] = array('value' => '', 'desc' => "DATA TIDAK ADA");
+        }
+        echo json_encode($data);
+    }
+    
+    public function auto_fakturTagSvc() {
+        $param = $this->input->post('param', TRUE);
+        $cbid = ses_cabang;
+        $query = $this->model_autocomplete->autoFakturTagSvc(array(
+            'param' => strtoupper($param),
+            'cbid' => $cbid));
+            $data['message'] = $query;
+        echo json_encode($data);
+    }
+    
+    public function getDetailTagSvc($data){
+        $param = $this->input->post('woid', TRUE);
+        $cbid = ses_cabang;
+        $query = $this->model_autocomplete->getDetailTagSvc(array(
+            'woid' => strtoupper($param),
+            'cbid' => $cbid));
+        echo json_encode($query);
+    }
 
 }
 

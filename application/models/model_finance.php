@@ -238,12 +238,12 @@ class Model_Finance extends CI_Model {
 
     public function setSpecialCoa($data = array()) {
         $this->db->trans_begin();
-        $cek = $this->db->query("SELECT setcoa_kode FROM ms_coa_setting 
+        /*$cek = $this->db->query("SELECT setcoa_kode FROM ms_coa_setting 
             WHERE setcoa_kode = '" . $data['setcoa_kode'] . "' AND setcoa_cbid = '" . $data['setcoa_cbid'] . "'");
         if ($cek->num_rows() > 0) {
             $this->db->trans_rollback();
             return array('status' => FALSE, 'msg' => 'Duplikasi Special COA');
-        }
+        } */
         $cek = $this->db->query("DELETE FROM ms_coa_setting 
             WHERE setcoa_specid = '" . $data['setcoa_specid'] . "' AND setcoa_cbid = '" . $data['setcoa_cbid'] . "'");
         $this->db->insert('ms_coa_setting', $data);

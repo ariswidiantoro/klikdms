@@ -9,16 +9,9 @@ function format_number($number) {
     }
 }
 
-$no_aktiva = 1;
-$no_pasiva = 1;
-$no_modal = 1;
+$bal = 0;
+$no = 1;
 
-$all_aktiva = 0;
-$all_pasiva = 0;
-$all_modal = 0;
-?>
-
-<?php 
 if ($etc['output'] != 'show') {
 ?>
 <link type="text/css" href="<?php echo path_css(); ?>report.css" rel="stylesheet" />
@@ -32,18 +25,18 @@ if ($etc['output'] != 'show') {
             <td width="1px">:</td>
             <td><?php echo $cabang['cb_nama'].' ('.$cabang['cbid'].')'?></td>
             <td width="15px">&nbsp;</td>
-            <td width="150px">&nbsp;</td>
+            <td width="150px">JENIS</td>
             <td width="1px">:</td>
-            <td><?php echo '';?></td>
+            <td><?php echo $etc['type']?></td>
         </tr>
         <tr>
             <td>ALAMAT</td>
             <td>:</td>
             <td><?php echo $cabang['cb_alamat']?></td>
             <td width="15px">&nbsp;</td>
-            <td width="150px;">PERIODE</td>
+            <td width="150px;">RANGE</td>
             <td width="1px;">:</td>
-            <td><?php echo $etc['bulan']?></td>
+            <td><?php echo $etc['dateFrom'].' s/d '.$etc['dateTo']?></td>
         </tr>
         <tr>
             <td>TELP</td>
@@ -57,75 +50,51 @@ if ($etc['output'] != 'show') {
 <?php } ?>
 <div  style="width: 100%;">
     <table id="table-detail">
-       <tbody>
+        <thead>
             <tr>
-                <th colspan="3">AKTIVA</th>
+                <th width="2%">NO</th>
+                <th width="2%">TANGGAL</th>
+                <th width="10%">NO. BUKTI</th>
+                <th width="10%">TRANS</th>
+                <th width="10%">COA</th>
+                <th WIDTH="15%">DESKRIPSI</th>
+                <th WIDTH="15%">PELANGGAN</th>
+                <th WIDTH="15%">BALANCE</th>
+                <th width="8%">STATUS</th>
             </tr>
+        </thead>
+        <tbody>
             <?php
-                foreach ($aktiva as $row_a) {
-                    $all_aktiva += $row_a['saldo'];
+            if (count($listData) > 0) {
+                foreach ($listData as $value) {
+                    $bal += $value['kst_debit'];
                     ?><tr>
-                        <td ><?php echo $no_aktiva ?></td>
-                        <td ><?php echo strtoupper($row_a['jeniscoa_deskripsi']); ?></td>
-                        <td align="right"><?php echo format_number($row_a['saldo']); ?></td>
+                        <td ><?php echo $no ?></td>
+                        <td align="center"><?php echo date('d-m-Y', strtotime($value['kst_tgl'])); ?></td>
+                        <td><?php echo strtoupper($value['kst_nomer']); ?></td>
+                        <td><?php echo strtoupper($value['kst_trans']); ?></td>
+                        <td><?php echo strtoupper($value['kst_coa']); ?></td>
+                        <td><?php echo strtoupper($value['kst_desc']); ?></td>
+                        <td><?php echo strtoupper($value['pel_nama']); ?></td>
+                        <td align="right"><?php echo format_number($bal, 2); ?></td>
+                        <td><?php echo strtoupper($value['status']); ?></td>
                     </tr>
                     <?php
-                    $no_aktiva++;
+                    $no++;
                 }
-            ?>
-            <tr>
-                <th colspan="2">TOTAL AKTIVA</th>
-                <th align="right" style="text-align: right;"><?php echo format_number($all_aktiva)?></th>
-            </tr>
-            <tr>
-                <td colspan="3"></td>
-            </tr>
-            <tr>
-                <th colspan="3">PASIVA</th>
-            </tr>
-            <?php
-                foreach ($pasiva as $row_p) {
-                    $all_pasiva += $row_p['saldo'];
-                    ?><tr>
-                        <td ><?php echo $no_pasiva ?></td>
-                        <td ><?php echo strtoupper($row_p['jeniscoa_deskripsi']); ?></td>
-                        <td align="right"><?php echo format_number($row_p['saldo']); ?></td>
-                    </tr>
-                    <?php
-                    $no_pasiva++;
-                }
-            ?>
-            <tr>
-                <th colspan="2">TOTAL PASIVA</th>
-                <th align="right" style="text-align: right;"><?php echo format_number($all_pasiva)?></th>
-            </tr>
-            <tr>
-                <td colspan="3"></td>
-            </tr>
-            <tr>
-                <th colspan="3">MODAL</th>
-            </tr>
-            <?php
-                foreach ($modal as $row_m) {
-                    $all_modal += $row_m['saldo'];
-                    ?><tr>
-                        <td ><?php echo $no_modal ?></td>
-                        <td ><?php echo strtoupper($row_m['jeniscoa_deskripsi']); ?></td>
-                        <td align="right"><?php echo format_number($row_m['saldo']); ?></td>
-                    </tr>
-                    <?php
-                    $no_modal++;
-                }
-            ?>
-            <tr>
-                <th colspan="2">TOTAL MODAL</th>
-                <th align="right" style="text-align: right;"><?php echo format_number($all_modal)?></th>
-            </tr>
+           } else {
+                ?>
+                <tr>
+                    <td ><?php echo $no ?></td>
+                    <td align="center" colspan ="8">TIDAK ADA TRANSAKSI PADA RENTANG TGL TERSEBUT</td>
+                </tr>
+    <?php } ?>
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="2">TOTAL PASIVA + MODAL</th>
-                <th align="right" style="text-align: right;"><?php echo format_number($all_pasiva+$all_modal)?></th>
+                <td colspan ="7">TOTAL</th>
+                <td align="right"><?php echo format_number($bal); ?></td>
+                <td >&nbsp;</td>
             </tr>
         </tfoot>
     </table>
@@ -154,7 +123,7 @@ if ($etc['output'] == 'excel') {
     </script>  
     <?php
     header("Content-type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=NERACA.xls");
+    header("Content-Disposition: attachment; filename=ADJUSTMENT.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
     $break = "";

@@ -21,6 +21,7 @@
             <input type="hidden" id="trans_kstid" name="trans_kstid" value="<?php echo $etc['kstid']; ?>" />
             <input type="hidden" id="trans_purpose" name="trans_purpose" value="<?php echo $etc['purpose']; ?>" />
             <input type="hidden" id="trans_trans" name="trans_trans" value="" />
+            <input type="hidden" id="trans_sub_trans" name="trans_sub_trans" value="<?php echo DEPT_SALES; ?>" />
             <input type="hidden" id="trans_type" name="trans_type" value="I" />
         </div>
     </div>
@@ -56,96 +57,38 @@
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Pelanggan</label>
         <div class="col-sm-6">
-            <input type="text" id="trans_pelname" name="trans_pelname" required="required" maxlength="50" 
-                   onkeyup="acomplete('trans_pelname', 'auto_pelid', 'trans_pelid', '','')"class="req upper ace col-xs-10 col-sm-4" />
-            <a href="#master_service/addPelanggan?href=transaksi_finance/kwitansi" class="btn btn-sm btn-primary">
+            <input type="text" id="dtrans_pelname" name="dtrans_pelname[]" required="required" maxlength="50" 
+                   onkeyup="acomplete('dtrans_pelname', 'auto_pelid', 'dtrans_pelid', '','')"class="req upper ace col-xs-10 col-sm-4" />
+            <a href="#master_service/addPelanggan?href=transaksi_finance/uangMuka" class="btn btn-sm btn-primary">
                 <i class="ace-icon fa fa-plus"></i>
                 Tambah Pelanggan</a>
-            <input type="hidden" id="trans_pelid" name="trans_pelid" />
+            <input type="hidden" id="dtrans_pelid" name="dtrans_pelid[]"/>
         </div>
     </div>
-    <div id="detailtrans">
-        <div class="table-header">
-            DETAIL TRANSAKSI
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Memo</label>
+        <div class="col-sm-6">
+            <input type="text" id="dtrans_desc" name="dtrans_desc[]" required="required" maxlength="500" 
+                   placeholder="KETERANGAN" class="upper form-control input-xxlarge req" />
         </div>
-        <div>
-            <table id="simple-table-jasa" class="table table-striped table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 2%">NO</th>
-                        <th style="width: 10%">COA</th>
-                        <th style="width: 25%">DESKRIPSI</th>
-                        <th style="width: 10%">NO. NOTA</th>
-                        <th style="width: 10%">COST CENTER</th>
-                        <th style="width: 20%">NOMINAL</th>
-                        <th style="width: 5%">ADD</th>
-                        <th style="width: 5%">HAPUS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr  class="item-row">
-                        <td class="dtrans" style="text-align: center; vertical-align: middle;">
-                            1
-                        </td>
-                        <td>
-                            <input type="text"  autocomplete="off" 
-                                   onkeyup="acomplete('dtrans_coa1', 'auto_coa', 'dtrans_coa1', 'dtrans_desc1', '')"  placeholder="COA"
-                                   class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dtrans_coa1"  name="dtrans_coa[]" />
-                        </td>
-                        <td>
-                            <input type="text" class="upper ace col-xs-10 col-sm-10" placeholder="DESKRIPSI"
-                                   style="width:100%;"  name="dtrans_desc[]" id="dtrans_desc1" />
-                        </td>
-                        <td>
-                            <input type="text" autocomplete ="off" placeholder="NO. NOTA"
-                                   onkeyup="acomplete('dtrans_nota1', 'auto_faktur', 'dtrans_notaid1', '', '')" 
-                                   class="ace col-xs-10 col-sm-10" style="width:100%;"  name="dtrans_nota[]" id="dtrans_nota1" />
-                            <input type="hidden" id="dtrans_notaid1"  name="dtrans_notaid[]" />
-                        </td>
-                        <td>
-                            <select class="form-control input-small" style="width:100%;"  name="dtrans_ccid[]" id="dtrans_ccid">
-                                <option value ="0"></option>
-                                <?php
-                                foreach ($etc['costcenter'] as $ccid) {
-                                    echo "<option value = '" . $ccid['ccid'] . "'>" . $ccid['cc_kode'] . " | " . $ccid['cc_name'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text"  automplete="off"  class="number ace col-xs-10 col-sm-10" value="0" 
-                                 onchange="$('#'+this.id).val(formatCurrency(this.value));" onkeyup="countTotal()"  
-                                 style="width:100%;text-align: right"  name="dtrans_nominal[]" id="dtrans_nominal1" />
-                        </td>
-                        <td class="center" style="vertical-align: middle;">
-                            <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>
-                        </td>
-                        <td  class="center" style="vertical-align: middle;">
-                            <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="5" style="text-align: right">
-                            TOTAL
-                        </th>
-                        <th>
-                            <input type="text" readonly="readonly" style="width: 100%;text-align: right;" 
-                                   value="0" name="totalTrans" id="totalTrans" class="col-xs-10 col-sm-10" />  
-                        </th>
-                        <th class="center">
-                            &nbsp;
-                        </th>
-                        <th  class="center">
-                            &nbsp;
-                        </th>
-                    </tr>
-                </tfoot>
-            </table>
+    </div> 
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Sebesar ( Rp. )</label>
+        <div class="col-sm-6">
+            <input type="hidden" id="dtrans_coa" name="dtrans_coa[]" value="<?php echo UANGMUKA_UNIT; ?>"/>
+            <input type="text" id="totalTrans" name="totalTrans" required="required" placeholder="0.00"
+                   onchange="$('#'+this.id).val(formatCurrency(this.value));" onblur="terbilang(this.value)" 
+                   onkeyup="$('#dtrans_nominal').val(formatCurrency(this.value));"
+                   class="number form-control input-xlarge req align-right" />
+            <input type="hidden" id="dtrans_nominal" name="dtrans_nominal[]" value = "0" />
         </div>
     </div>
-    
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-left" for="form-field-1">Terbilang</label>
+        <div class="col-sm-8" style="padding-top:8px;">
+            <i><span id="terbilang"style="font-weight:bold;"></span></i>
+        </div>
+    </div>
     <div id="bank" style="display:none;">
         <div class="table-header">
             DETAIL BANK
@@ -176,10 +119,10 @@
                             <input type="hidden" id="dbnk_bankid1"  name="dbnk_bankid[]" />
                         </td>
                         <td>
-                            <input type="text" class="upper ace col-xs-10 col-sm-10" style="width:100%;" placeholder="NO. REK" name="dbnk_norek[]" id="dbnk_norek1" />
+                            <input type="text" class="ace col-xs-10 col-sm-10" style="width:100%;" placeholder="NO. REK" name="dbnk_norek[]" id="dbnk_norek1" />
                         </td>
                         <td>
-                            <input type="text" class="upper ace col-xs-10 col-sm-10" style="width:100%;" placeholder="NO. CEK" name="dbnk_nocek[]" id="dbnk_nocek1" />
+                            <input type="text" class="ace col-xs-10 col-sm-10" style="width:100%;" placeholder="NO. CEK" name="dbnk_nocek[]" id="dbnk_nocek1" />
                         </td>
                         <td>
                             <input type="text" class="ace col-xs-10 col-sm-10 datepicker" style="width:100%;"
@@ -222,10 +165,6 @@
             </table>
         </div>
     </div>
-    <div style="padding-top:8px;">
-        <div>TERBILANG : </div>
-            <i><span id="terbilang"style="font-weight:bold;"></span></i>
-    </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
             <button class="btn btn-success" type="button" onclick="javascript:saveData()">
@@ -248,36 +187,22 @@
 
 <script type="text/javascript">
     function redirect(data){
-        /*bootbox.confirm(" ?", function(result) {
-            if(result) { */
-                window.location.href = "#transaksi_finance/daftarKwitansi";
-            //}});
+        bootbox.confirm("Anda yakin kembali ?", function(result) {
+            if(result) {
+                window.location.href = "#transaksi_finance/";
+            }});
     }
-            
+    
     function saveData(){
         var result = false;
         if(!$('#formAdd').valid()){
-            //e.preventDefault();
+            e.preventDefault();
         }else{
-            if($("#trans_trans").val() != 'KWIKAS'){
-                var totalTrans = $("#totalTrans").val().replace(/,/g, "");
-                var totalBank = $("#totalTransBank").val().replace(/,/g, "");
-                if( totalTrans != totalBank){
-                    alertDialog("Total transaksi dengan Total detail Bank harus sama");
-                }else{
-                    bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
-                        if(result) {
-                            $("#formAdd").submit();
-                        }
-                    });
+            bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                if(result) {
+                    $("#formAdd").submit();
                 }
-            }else{
-                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
-                        if(result) {
-                            $("#formAdd").submit();
-                        }
-                });
-            }
+            });
         }
         return false;
     }
@@ -288,61 +213,6 @@
         countTotal();
         countTotalBank()
     }
-    
-    function Delete() {
-        var par = $(this).parent().parent(); //tr
-        par.remove();
-        countTotal();
-        countTotalBank()
-    }
-    
-    function addRow() {
-        var inc = $('.dtrans').length+1;
-        $(".item-row:last").after(
-        '<tr class="item-row">\n\
-                    <td class="dtrans center" style="vertical-align:middle;">' + inc + '</td>\n\
-                         <td>\n\
-                             <input type="text"  autocomplete="off" \n\
-                                placeholder = "COA"\n\
-                                onkeyup = "acomplete(\'dtrans_coa'+inc+'\', \'auto_coa\', \'dtrans_coa'+inc+'\', \'dtrans_desc'+inc+'\', \'\')"\n\
-                                class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dtrans_coa'+ inc +'"  name="dtrans_coa[]" />\n\
-                         </td>\n\
-                         <td>\n\
-                            <input type="text" autocomplete="off" class="upper ace col-xs-10 col-sm-10" style="width:100%;"\n\
-                                placeholder = "DESKRIPSI"\n\
-                                name="dtrans_desc[]" id="dtrans_desc'+ inc +'" />\n\
-                        </td>\n\
-                        <td>\n\
-                            <input type="text" autocomplete="off" class="upper ace col-xs-10 col-sm-10" style="width:100%;"  \n\
-                                onkeyup = "acomplete(\'dtrans_nota'+inc+'\', \'auto_faktur\', \'dtrans_notaid'+inc+'\', \'dtrans_pelid'+inc+'\', \'dtrans_pelname'+inc+'\')"\n\
-                                placeholder = "NO. NOTA"\n\
-                                name="dtrans_nota[]" id="dtrans_nota'+ inc +'" />\n\
-                            <input type="hidden" name="dtrans_notaid[]" id="dtrans_notaid'+inc+'"/>\n\
-                            <input type="hidden" name="dtrans_pelid[]" id="dtrans_pelid'+inc+'"/>\n\
-                         </td>\n\
-                         <td>\n\
-                            <select class="form-control input-small" style="width:100%;"  name="dtrans_ccid[]" id="dtrans_ccid'+inc+'">\n\
-                                <option value="0"></option>\n\<?php foreach ($etc['costcenter'] as $ccid){    
-                                    echo "<option value = \'" . $ccid['ccid'] . "\'>" . $ccid['cc_kode'] . " | " . $ccid['cc_name'] . "</option>";}?>\n\
-                            </select>\n\
-                             <input type="hidden" name="dtrans_supid[]" id="dtrans_supid'+inc+'/>"\n\
-                         </td>\n\
-                         <td>\n\
-                             <input type="text"  autocomplete="off" value= "0" onchange="$(\'#\'+this.id+\'\').val(formatCurrency(this.value));" onkeyup="countTotal()" \n\
-                                class="upper ace col-xs-10 col-sm-10" style="width:100%;text-align: right"  \n\
-                                name="dtrans_nominal[]" id="dtrans_nominal'+ inc +'" />\n\
-                         </td>\n\
-                         <td  class="center" style="vertical-align: middle;">\n\
-                             <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>\n\
-                         </td>\n\
-                         <td class="center" style="vertical-align: middle;">\n\
-                             <a class="red btnDelete" href="javascript:;"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\n\
-                         </td>\n\
-                       </tr>\n\
-                    </tr>');
-            $(".btnDelete").bind("click", Delete);
-            numberOnly();
-        }
         
     function addRowBank() {
         var inc = $('.detailbank').length+1;
@@ -350,8 +220,8 @@
                <td class="detailbank center" style="vertical-align:middle;">' + inc + '<input type="hidden" name="no[]" id="no'+ inc +'"  /></td>\n\
                     <td>\n\
                         <input type="text"  autocomplete="off" placeholder="BANK"\n\
-                            onkeyup="acomplete(dbnk_bankname'+inc+', auto_bank, dbnk_bankid'+inc+',\'\', \'\')"\n\ \n\
-                            class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dbnk_bank'+ inc +'"  name="dbnk_bank[]" />\n\
+                            onkeyup="acomplete(\'dbnk_bankname'+inc+'\', \'auto_bank\', \'dbnk_bankid'+inc+'\',\'\', \'\')"\n\ \n\
+                            class="upper ace col-xs-10 col-sm-10" style="width:100%;" id="dbnk_bankname'+ inc +'"  name="dbnk_bankname[]" />\n\
                        <input type="hidden" id="dbnk_bankid'+ inc +'" name="dbnk_bankid[]" />\n\
                     </td>\n\
                     <td>\n\
@@ -429,10 +299,8 @@
                         row.find("input[name^=dtrans_nota]").attr('required','required');
                     }
                 }
-                
-                if(url='auto_pelid'){
-                     row.find("input[name^=dtrans_pelid]").val(ui.item.trglocal);
-                }
+
+
 
             }
         });
@@ -458,7 +326,6 @@
             total += Number(price);
         });
         $("#totalTrans").val(formatCurrency(total));
-        terbilang(total);
     }
 
     function countTotalBank(){
@@ -491,12 +358,12 @@
         
         if($('#trans_jenis').val() == '1'){
             $('#bank').hide();
-            $('#trans_trans').val("KWIKAS");
+            $('#trans_trans').val("KAS");
         }else if($('#trans_jenis').val() == '2'){
-            $('#trans_trans').val("KWIBNK");
+            $('#trans_trans').val("BNK");
             $('#bank').show();
         }else{
-            $('#trans_trans').val("KWICEK");
+            $('#trans_trans').val("CEK");
             $('#bank').show();
         }
     }
@@ -515,7 +382,7 @@
             if($("#totalTrans").val())
             $.ajax({
                 type: 'POST',
-                url: "<?php echo site_url($etc['targetSave']) ?>",
+                url: "<?php echo site_url('transaksi_finance/saveTrans') ?>",
                 dataType: "json",
                 async: false,
                 data: $(this).serialize(),

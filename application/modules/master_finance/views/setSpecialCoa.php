@@ -30,6 +30,15 @@
                    name="coa" id="coa"  class="ace col-xs-10 col-sm-5 upper" autocomplete="off" />
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">&nbsp;</label>
+        <div class="col-sm-8">
+            <label>
+                <input class="ace" id="breakdown" value="1" type="checkbox" <?php if($data['setcoa_is_breakdown'] == '1') echo 'checked';?> name="breakdown">
+                <span class="lbl"> Breakdown Saldo</span>
+            </label>
+        </div>
+    </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
             <button class="btn btn-info" type="button" onclick="javascript:saveData()">
@@ -134,8 +143,8 @@
                 else error.insertAfter(element.parent());
             }
         });
-
     });
+    
     var scripts = [null, null]
     $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
         //inline scripts related to this page

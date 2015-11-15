@@ -195,6 +195,7 @@ class Transaksi_Service extends Application {
                 'inv_hpp_so' => numeric($this->input->post('total_so_hpp')),
                 'inv_cbid' => ses_cabang,
                 'inv_print' => 1,
+                'inv_status' => 1
             );
 
             $wo = array(
@@ -396,6 +397,238 @@ class Transaksi_Service extends Application {
             'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => '-1')),
         );
         $this->load->view('addUangMukaService', $this->data);
+    }
+
+    public function pembayaranPiutang() {
+        $this->hakAkses(1127);
+        $this->data['etc'] = array(
+            'judul' => 'Pembayaran Piutang Service',
+            'targetSave' => 'transaksi_finance/saveSubTrans',
+            'targetListData' => 'transaksi_service/daftarByrPiutang',
+            'kstid' => '',
+            'subtrans' => '6',
+            'crossCoa' => PIUTANG_SERVICE,
+            'purpose' => 'ADD',
+            'trans' => 'KAS',
+            'type' => 'I',
+        );
+        $this->load->view('addByrPiutangService', $this->data);
+    }
+
+    public function pembayaranHutang() {
+        $this->hakAkses(1125);
+        $this->data['etc'] = array(
+            'judul' => 'Pembayaran Hutang Service',
+            'targetSave' => 'transaksi_finance/saveSubTrans',
+            'targetListData' => 'transaksi_service/daftarByrHutang',
+            'kstid' => '',
+            'subtrans' => '11',
+            'crossCoa' => HUTANG_SPART,
+            'purpose' => 'ADD',
+            'type' => 'O',
+            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => '-1')),
+        );
+        $this->load->view('addByrHutangService', $this->data);
+    }
+
+    public function tagihanService() {
+        $this->hakAkses(1133);
+        $this->data['etc'] = array(
+            'judul' => 'Tagihan Service',
+            'targetSave' => 'transaksi_service/saveTagService',
+            'targetListData' => 'transaksi_service/daftarTagService',
+            'subtrans' => '12',
+            'purpose' => 'ADD',
+            'type' => 'I',
+            'mainCoa' => $this->model_trfinance->getMainCoa(array('cbid' => ses_cabang, 'type' => '-1')),
+        );
+        $this->load->view('addTagService', $this->data);
+    }
+
+    public function daftarByrPiutang() {
+        $this->hakAkses(1127);
+        $this->data['etc'] = array(
+            'judul' => 'DAFTAR TRANSAKSI PEMBAYARAN PIUTANG SERVICE',
+            'trans' => 'BYRPIUTANG',
+            'type' => 'I',
+            'subtrans' => '6',
+            'targetNewTrans' => 'transaksi_service/pembayaranPiutang',
+            'targetLoad' => 'transaksi_service/loadTrans',
+            'targetPrint' => 'transaksi_service/printBayarPiutang',
+            'targetCancel' => 'transaksi_service/cancelTrans',
+            'colNames' => "'TGL','NO.TRANS ','COA', 'DESC','NOMINAL', 'STAT', 'EDIT','DETAIL','PRINT','BATAL'",
+            'colModel' => "{name:'kst_tgl',index:'kst_tgl', width:30, align:'left'},
+                {name:'kst_nomer',index:'kst_nomer', width:40, align:'left'},
+                {name:'kst_coa',index:'kst_coa', width:20, align:'left'},
+                {name:'kst_desc',index:'kst_desc', width:70, align:'left'},
+                {name:'kst_debit',index:'kst_debit', width:50, align:'right'},
+                {name:'kst_status',index:'kst_status', width:30, align:'left'},
+                {name:'edit',index:'validasi', width:14, align:'center'},
+                {name:'print',index:'edit', width:14, align:'center'},
+                {name:'detail',index:'print', width:14, align:'center'},
+                {name:'batal',index:'detail', width:14, align:'center'}",
+            'kategori' => " <option value=''>PILIH</option>
+                            <option value='TERCETAK'>TERCETAK</option>
+                            <option value='BLM_DICETAK'>BLM DICETAK</option>
+                            <option value='BATAL'>BATAL</option>"
+        );
+        $this->load->view('dataTrans', $this->data);
+    }
+
+    public function daftarByrHutang() {
+        $this->hakAkses(1127);
+        $this->data['etc'] = array(
+            'judul' => 'DAFTAR TRANSAKSI PEMBAYARAN HUTANG SERVICE',
+            'trans' => 'BYRHUTANG',
+            'type' => 'O',
+            'subtrans' => '11',
+            'targetNewTrans' => 'transaksi_service/pembayaranHutang',
+            'targetLoad' => 'transaksi_service/loadTrans',
+            'targetPrint' => 'transaksi_service/printBayarHutang',
+            'targetCancel' => 'transaksi_service/cancelTrans',
+            'colNames' => "'TGL','NO.TRANS ','COA', 'DESC','NOMINAL', 'STAT', 'EDIT','DETAIL','PRINT','BATAL'",
+            'colModel' => "{name:'kst_tgl',index:'kst_tgl', width:30, align:'left'},
+                {name:'kst_nomer',index:'kst_nomer', width:40, align:'left'},
+                {name:'kst_coa',index:'kst_coa', width:20, align:'left'},
+                {name:'kst_desc',index:'kst_desc', width:70, align:'left'},
+                {name:'kst_debit',index:'kst_debit', width:50, align:'right'},
+                {name:'kst_status',index:'kst_status', width:30, align:'left'},
+                {name:'edit',index:'validasi', width:14, align:'center'},
+                {name:'print',index:'edit', width:14, align:'center'},
+                {name:'detail',index:'print', width:14, align:'center'},
+                {name:'batal',index:'detail', width:14, align:'center'}",
+            'kategori' => " <option value=''>PILIH</option>
+                            <option value='TERCETAK'>TERCETAK</option>
+                            <option value='BLM_DICETAK'>BLM DICETAK</option>
+                            <option value='BATAL'>BATAL</option>"
+        );
+        $this->load->view('dataTrans', $this->data);
+    }
+
+    public function saveTagService() {
+        $coa = $this->input->post('dtrans_coa', TRUE);
+        $desc = $this->input->post('dtrans_desc', TRUE);
+        $nominal = $this->input->post('dtrans_nominal', TRUE);
+        $trans = $this->input->post('dtrans_trans', TRUE);
+        
+        $etc = array(
+                'numerator' => $this->input->post('trans_numerator', TRUE),
+                'purpose' => 'ADD',
+                'woid' => $this->input->post('trans_notaid', TRUE)
+            );
+        
+        $transToSave = array();
+        
+        if (count($nominal) > 0) {
+            for ($i = 0; $i <= count($nominal) - 1; $i++) {
+                if (count($nominal) > 1) {
+                    $docno = strtoupper($this->input->post('trans_nota', TRUE)) . '-' . ($i + 1);
+                } else {
+                    $docno = strtoupper($this->input->post('trans_nota', TRUE));
+                }
+                
+                $main = array(
+                    'kst_trans' => $trans[$i],
+                    'kst_type' => $this->input->post('trans_type', TRUE),
+                    'kst_nomer' => $docno,
+                    'kst_noreff' => '',
+                    'kst_tgl' => dateToIndo($this->input->post('trans_tgl', TRUE)),
+                    'kst_coa' => $coa[$i],
+                    'kst_desc' => strtoupper($desc[$i]),
+                    'kst_debit' => numeric($nominal[$i]),
+                    'kst_kredit' => numeric($nominal[$i]),
+                    'kst_createon' => date('Y-m-d H:i:s'),
+                    'kst_sub_trans' => $this->input->post('trans_sub_trans', TRUE),
+                    'kst_createby' => ses_krid,
+                    'kst_cbid' => ses_cabang,
+                );
+                
+                $detail = array(
+                    'coa'   => array(0 => PIUTANG_SERVICE ),
+                    'desc'  => array(0 => $desc[$i]),
+                    'nota'  => array(0 => $this->input->post('trans_notaid', TRUE)),
+                    'pelid' => array(0 => $this->input->post('trans_pelid', TRUE)),
+                    'supid' => array(0 => '0'),
+                    'ccid'  => array(0 => '0'),
+                    'nominal' => array(0 => $nominal[$i])
+                );
+                
+                $bank = array();
+                
+                if($nominal[$i] != 0 ){
+                    $transToSave[] = array('etc' => $etc, 'main' => $main, 'detail' => $detail, 'bank' => $bank);
+                }
+            }
+        }
+        
+        $save = $this->model_trfinance->saveTagihanService($etc, $transToSave);
+        
+        if ($save['status'] == TRUE) {
+            $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
+        } else {
+            $result = array('status' => FALSE, 'msg' => $this->error($save['msg']));
+        }
+
+        echo json_encode($result);
+    }
+
+    public function loadTrans() {
+        $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        $limit = isset($_POST['rows']) ? $_POST['rows'] : 10;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : 'kstid';
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : 'DESC';
+        $start = $limit * $page - $limit;
+        $start = ($start < 0) ? 0 : $start;
+        $param = array(
+            'start' => $start,
+            'limit' => $limit,
+            'sidx' => $sidx,
+            'sord' => $sord,
+            'kategori' => isset($_POST['kategori']) ? $_POST['kategori'] : '',
+            'dateFrom' => isset($_POST['dateFrom']) ? dateToIndo($_POST['dateFrom']) : date('Y-01-01'),
+            'dateTo' => isset($_POST['dateTo']) ? dateToIndo($_POST['dateTo']) : date('Y-m-d'),
+            'trans' => isset($_POST['trans']) ? $_POST['trans'] : '',
+            'type' => isset($_POST['type']) ? $_POST['type'] : '',
+            'subtrans' => isset($_POST['subtrans']) ? $_POST['subtrans'] : '0',
+            'key' => isset($_POST['key']) ? $_POST['key'] : '',
+        );
+        $query = $this->model_trfinance->loadSubTrans($param);
+        $count = $query['numrows'];
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $responce = new stdClass;
+        $responce->page = $page;
+        $responce->total = $total_pages;
+        $responce->records = $count;
+        $i = 0;
+        if (count($query['result']) > 0) {
+            foreach ($query['result'] as $row) {
+                $nominal = ($param['type'] == 'I') ? $row->kst_debit : $row->kst_kredit;
+                $del = "hapusData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
+                $pr = "cetakData('" . $row->kstid . "', '" . $row->kst_nomer . "')";
+                $hapus = '<a href="javascript:void(0);" onclick="' . $del . '" title="Hapus"><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>';
+                $print = '<a href="javascript:void(0);" onclick="' . $pr . '" title="Cetak"><i class="ace-icon fa fa-print bigger-120 blue"></i>';
+                $detail = '<a href="#transaksi_finance/detailTrans?id=' . $row->kstid . '" title="Detail"><i class="ace-icon glyphicon glyphicon-list bigger-100"></i>';
+                $edit = '<a href="#transaksi_finance/editTrans?id=' . $row->kstid . '" title="Edit"><i class="ace-icon glyphicon glyphicon-pencil bigger-100"></i>';
+                $responce->rows[$i]['id'] = $row->kstid;
+                $responce->rows[$i]['cell'] = array(
+                    dateToIndo($row->kst_tgl),
+                    strtoupper($row->kst_nomer),
+                    $row->kst_coa,
+                    $row->kst_desc,
+                    number_format($nominal, 2),
+                    $row->kst_status,
+                    $edit, $detail, $print, $hapus);
+                $i++;
+            }
+        }
+        echo json_encode($responce);
     }
 
 }
