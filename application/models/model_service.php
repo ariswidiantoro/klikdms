@@ -32,7 +32,7 @@ class Model_Service extends CI_Model {
      * @return int
      */
     public function getTotalPelanggan($where, $table) {
-        $wh = "WHERE pel_cbid = '" . ses_cabang . "'";
+        $wh = "WHERE pel_cbid = '" . ses_cabang . "' AND pel_status = 0";
         if ($where != NULL)
             $wh = " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(*) AS total FROM $table $wh");

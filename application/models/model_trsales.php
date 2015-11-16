@@ -65,7 +65,6 @@ class Model_Trsales extends CI_Model {
         if ($where != NULL)
             $wh .= " AND " . $where;
         $sql = $this->db->query("SELECT COUNT(spkid) AS total FROM pen_spk $wh");
-        log_message('error', 'FAFAFA' . $this->db->last_query());
         return $sql->row()->total;
     }
 

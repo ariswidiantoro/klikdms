@@ -22,7 +22,7 @@ class Transaksi_Sales extends Application {
      * @author Rossi
      * * */
     public function masukKendaraan() {
-        $this->hakAkses(1092);
+        $this->hakAkses(121);
         $this->load->view('dataBpk', $this->data);
     }
 
@@ -670,7 +670,7 @@ class Transaksi_Sales extends Application {
     }
 
     public function addBpk() {
-        $this->hakAkses(1092);
+        $this->hakAkses(121);
         $this->data['merk'] = $this->model_sales->cListMerk();
         $this->data['segment'] = $this->model_sales->cListSegment();
         $this->load->view('addBpk', $this->data);
@@ -746,7 +746,7 @@ class Transaksi_Sales extends Application {
     }
 
     public function editBpk() {
-        $this->hakAkses(1092);
+        $this->hakAkses(121);
         $this->data['merk'] = $this->model_sales->cListMerk();
         $this->data['segment'] = $this->model_sales->cListSegment();
         $id = $this->input->get('id', TRUE);
@@ -936,13 +936,13 @@ class Transaksi_Sales extends Application {
     }
 
     public function addPoLeasing() {
-        $this->hakAkses(1096);
+        $this->hakAkses(1097);
         $this->data['leasing'] = $this->model_sales->cListLeasing();
         $this->load->view('addPoLeasing', $this->data);
     }
 
     public function editPoLeasing() {
-        $this->hakAkses(1096);
+        $this->hakAkses(1097);
         $id = $this->input->get('id', TRUE);
         $this->data['data'] = $this->model_trsales->getFpkById($id);
         $this->data['leasing'] = $this->model_sales->cListLeasing();

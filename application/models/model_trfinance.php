@@ -441,13 +441,12 @@ class Model_Trfinance extends CI_Model {
                         );
                     }
                 }
-                
+
                 /* INSERTING TO LEDGER */
                 if ($this->db->insert_batch('ksr_ledger', $arrLog) == FALSE) {
                     throw new Exception('GAGAL TAMBAH DATA KE LEDGER');
                 }
             }
-
         } catch (Exception $e) {
             throw new Exception('GAGAL TAMBAH DATA KE LEDGER');
         }
@@ -849,18 +848,30 @@ class Model_Trfinance extends CI_Model {
     public function saveTagihanService($etc = array(), $data = array()) {
         $this->db->trans_begin();
         try {
+            $invoice = array(
+                'inv_woid' => $etc['woid'],
+                'inv_tagihan' => 1,
+                'inv_tgl_tagihan' => date('Y-m-d')
+            );
+
+
+
             $this->load->model(array('model_auto_jurnal'));
-            $dataToJurnal = $this->model_auto_jurnal->getInvoiceForJurnal($etc);
-            $this->model_auto_jurnal->autoJurnalService($dataToJurnal);
+            $this->model_auto_jurnal->autoJurnalSelserv($etc['woid']);
+            
+            // UPDATE INVOICE STATUS
+            $this->db->where('inv_woid', $etc['woid']);
+            $this->db->where('inv_status', 0);
+            $this->db->update('svc_invoice', $invoice);
             if (count($data) > 0) {
                 for ($i = 0; $i <= count($data) - 1; $i++) {
                     $this->addTransSeparated($data[$i]['etc'], $data[$i]['main'], $data[$i]['detail'], $data[$i]['bank']);
                 }
             }
-            if($this->db->trans_status() == TRUE){
+            if ($this->db->trans_status() == TRUE) {
                 $this->db->trans_commit();
                 return array('status' => TRUE, 'msg' => 'Tagihan service berhasil disimpan');
-            }else{
+            } else {
                 throw new Exception('FAILS AT ALL');
             }
         } catch (Exception $e) {

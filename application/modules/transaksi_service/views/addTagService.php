@@ -8,6 +8,9 @@
     }      
 </style>
 <div id="result"></div>
+<?php
+echo $this->session->flashdata('msg');
+?>
 <div class="page-header">
     <h1>
         <?php echo $etc['judul']; ?>
@@ -78,7 +81,7 @@
                         </td>
                         <td>
                             <input type="text"  automplete="off"  class="number ace col-xs-10 col-sm-10" value="0" readonly 
-                                 style="width:100%;text-align: right"  name="total_tagihan" id="total_tagihan" />
+                                   style="width:100%;text-align: right"  name="total_tagihan" id="total_tagihan" />
                         </td>
                         <td class="center" style="vertical-align: middle;" colspan="2">&nbsp;</td>
                     </tr>
@@ -88,7 +91,7 @@
                         </td>
                         <td>
                             <input type="text"  automplete="off"  class="number ace col-xs-10 col-sm-10" value="0" readonly 
-                                 style="width:100%;text-align: right"  name="total_uangmuka" id="total_uangmuka" />
+                                   style="width:100%;text-align: right"  name="total_uangmuka" id="total_uangmuka" />
                         </td>
                         <td class="center" style="vertical-align: middle;" colspan="2">&nbsp;</td>
                     </tr>
@@ -115,8 +118,8 @@
                         </td>
                         <td>
                             <input type="text"  automplete="off"  class="number ace col-xs-10 col-sm-10" value="0" 
-                                 onchange="$('#'+this.id).val(formatCurrency(this.value));" onkeyup="countTotal()"  
-                                 style="width:100%;text-align: right"  name="dtrans_nominal[]" id="dtrans_nominal1" />
+                                   onchange="$('#'+this.id).val(formatCurrency(this.value));" onkeyup="countTotal()"  
+                                   style="width:100%;text-align: right"  name="dtrans_nominal[]" id="dtrans_nominal1" />
                         </td>
                         <td class="center" style="vertical-align: middle;">
                             <a class="green btnAdd"  onclick="addRow()" href="javascript:;"><i class="ace-icon fa fa-plus bigger-130"></i></a>
@@ -148,7 +151,7 @@
     </div>
     <div style="padding-top:8px;">
         <div><strong>TERBILANG : </strong></div>
-            <i><span id="terbilang"style="font-weight:bold;"></span></i>
+        <i><span id="terbilang"style="font-weight:bold;"></span></i>
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-1 col-md-5">
@@ -167,15 +170,15 @@
 
 <script type="text/javascript">
     function redirect(data){
-                window.location.href = "#<?php echo $etc['targetListData']; ?>";
+        window.location.href = "#<?php echo $etc['targetListData']; ?>";
     }
     function alertDialog(msg){
         bootbox.dialog({
             message: "<span class='bigger-110'>"+msg+"</span>",
             buttons: 			
-            {
-                "danger" :
                 {
+                "danger" :
+                    {
                     "label" : "OK",
                     "className" : "btn-sm btn-danger"
                 }
@@ -186,13 +189,13 @@
     function saveData(){
         var result = false;
         if(!$('#formAdd').valid()){
-           // e.preventDefault();
+            // e.preventDefault();
         }else{
-                bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
-                    if(result) {
-                        $("#formAdd").submit();
-                    }
-                });
+            bootbox.confirm("Anda yakin data sudah benar ?", function(result) {
+                if(result) {
+                    $("#formAdd").submit();
+                }
+            });
         }
         return false;
     }
@@ -237,194 +240,195 @@
                          </td>\n\
                        </tr>\n\
                     </tr>');
-            $(".btnDelete").bind("click", Delete);
-            numberOnly();
-    }
+                                 $(".btnDelete").bind("click", Delete);
+                                 numberOnly();
+                             }
 
-    function acomplete(id, url, trglocal, trgid, trgname){
-        var row = $("#"+id).parents('.item-row');
-        var pelid = $("#pelid").val();
-        $("#" + id).autocomplete({
-            minLength: 1,
-            source: function(req, add) {
-                $.ajax({
-                    url: "<?php echo site_url('auto_complete'); ?>/"+url,
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {
-                        param : $("#" + id).val(),
-                        cbid : '<?php echo ses_cabang; ?>',
-                        pelid : pelid
-                    },
-                    success: function(data) {
-                        add(data.message);
-                    }
-                });
-            },
-            create: function () {
-                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li></li>')
-                    .append("<strong>" + item.value + "</strong><br>" + item.desc + "")
-                    .appendTo(ul);
-                };
-            },select: function(event, ui) {
-                if(ui.item.status != ''){
-                    $('#trans_notaid').val(ui.item.notaid);
-                    $('#trans_pelid').val(ui.item.pelid);
-                    $('#trans_invid').val(ui.item.invid);
-                    $('#trans_nopol').val(ui.item.nopol);
-                    $('#total_tagihan').val(formatCurrency(ui.item.inv_total));
-                    $('#total_uangmuka').val(formatCurrency(ui.item.uangmuka));
-                    $('#dtrans_nominal1').val(formatCurrency(ui.item.inv_total - ui.item.uangmuka));
-                    countTotal();
-                }else{
-                    alertDialog('No Work Order tidak valid');
-                }
-            }
-        });
-    }
+                             function acomplete(id, url, trglocal, trgid, trgname){
+                                 var row = $("#"+id).parents('.item-row');
+                                 var pelid = $("#pelid").val();
+                                 $("#" + id).autocomplete({
+                                     minLength: 1,
+                                     source: function(req, add) {
+                                         $.ajax({
+                                             url: "<?php echo site_url('auto_complete'); ?>/"+url,
+                                             dataType: 'json',
+                                             type: 'POST',
+                                             data: {
+                                                 param : $("#" + id).val(),
+                                                 cbid : '<?php echo ses_cabang; ?>',
+                                                 pelid : pelid
+                                             },
+                                             success: function(data) {
+                                                 add(data.message);
+                                             }
+                                         });
+                                     },
+                                     create: function () {
+                                         $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                                             return $('<li></li>')
+                                             .append("<strong>" + item.value + "</strong><br>" + item.desc + "")
+                                             .appendTo(ul);
+                                         };
+                                     },select: function(event, ui) {
+                                         if(ui.item.status != ''){
+                                             $('#trans_notaid').val(ui.item.notaid);
+                                             $('#trans_pelid').val(ui.item.pelid);
+                                             $('#trans_invid').val(ui.item.invid);
+                                             $('#trans_nopol').val(ui.item.nopol);
+                                             $('#total_tagihan').val(formatCurrency(ui.item.inv_total));
+                                             $('#total_uangmuka').val(formatCurrency(ui.item.uangmuka));
+                                             $('#dtrans_nominal1').val(formatCurrency(ui.item.inv_total - ui.item.uangmuka));
+                                             countTotal();
+                                         }else{
+                                             alertDialog('No Work Order tidak valid');
+                                         }
+                                     }
+                                 });
+                             }
     
-    function terbilang(total){
-        $('#terbilang').html((toWords(total)+" rupiah").toUpperCase());
-    }
+                             function terbilang(total){
+                                 $('#terbilang').html((toWords(total)+" rupiah").toUpperCase());
+                             }
     
-    function displayDate(){
-        $( ".datepicker").datepicker({
-            changeMonth: true,
-            changeYear: true,        
-            dateFormat:'dd-mm-yy'		
-        });	
-    }
+                             function displayDate(){
+                                 $( ".datepicker").datepicker({
+                                     changeMonth: true,
+                                     changeYear: true,        
+                                     dateFormat:'dd-mm-yy'		
+                                 });	
+                             }
 
-    function countTotal(){
-        var totalTag = 0;
-        var totalUm = 0;
-        var total = 0;
-        var price;
-        $("input[name^=dtrans_nominal]").each(function() {
-            price = $(this).val().replace(/,/g, "");
-            total += Number(price);
-        });
+                             function countTotal(){
+                                 var totalTag = 0;
+                                 var totalUm = 0;
+                                 var total = 0;
+                                 var price;
+                                 $("input[name^=dtrans_nominal]").each(function() {
+                                     price = $(this).val().replace(/,/g, "");
+                                     total += Number(price);
+                                 });
         
-        totalTag = Number($("#total_tagihan").val().replace(/,/g, ""));
-        totalUm = Number($("#total_uangmuka").val().replace(/,/g, ""));
+                                 totalTag = Number($("#total_tagihan").val().replace(/,/g, ""));
+                                 totalUm = Number($("#total_uangmuka").val().replace(/,/g, ""));
         
-        $("#totalTrans").val(formatCurrency(totalTag - (totalUm + total)));
-        terbilang(totalTag - (totalUm + total));
-    }
+                                 $("#totalTrans").val(formatCurrency(totalTag - (totalUm + total)));
+                                 terbilang(totalTag - (totalUm + total));
+                             }
     
-     function checkDuplication(param){
-          var matches = 0;
-          var nilai;
-          $("input[name^=dtrans_jenis]").each(function() {
-              nilai=$(this).val();
-            if ($(this).val() == param) {
-              matches++;
-            }
-          });
-          if(matches > 1){
-              return true;
-          }else{
-              return false;
-          } 
-    }
+                             function checkDuplication(param){
+                                 var matches = 0;
+                                 var nilai;
+                                 $("input[name^=dtrans_jenis]").each(function() {
+                                     nilai=$(this).val();
+                                     if ($(this).val() == param) {
+                                         matches++;
+                                     }
+                                 });
+                                 if(matches > 1){
+                                     return true;
+                                 }else{
+                                     return false;
+                                 } 
+                             }
     
-    function changeType(target){
-        if(checkDuplication($('#dtrans_jenis'+target).val()) == true ){
-            $('#dtrans_jenis'+target).val('');
-            alertDialog("Jenis transaksi tersebut sudah dipilih");
-        }else{
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo site_url('transaksi_finance/jsonMainCoa') ?>',
-                dataType: "json",
-                async: false,
-                data: {
-                    type : $('#dtrans_jenis'+target).val()
-                },
-                success: function(data) {
-                    $('#dtrans_coa'+target).html('');
-                    $('#dtrans_coa'+target).append('<option value="">PILIH</option>');
-                    $.each(data, function(messageIndex, message) {
-                        $('#dtrans_coa'+target).append('<option value="' + message['coa_kode'] + '">' + message['coa_desc'] + '</option>');
-                    });
-                }
-            })
+                             function changeType(target){
+                                 if(checkDuplication($('#dtrans_jenis'+target).val()) == true ){
+                                     $('#dtrans_jenis'+target).val('');
+                                     alertDialog("Jenis transaksi tersebut sudah dipilih");
+                                 }else{
+                                     $.ajax({
+                                         type: 'POST',
+                                         url: '<?php echo site_url('transaksi_finance/jsonMainCoa') ?>',
+                                         dataType: "json",
+                                         async: false,
+                                         data: {
+                                             type : $('#dtrans_jenis'+target).val()
+                                         },
+                                         success: function(data) {
+                                             $('#dtrans_coa'+target).html('');
+                                             $('#dtrans_coa'+target).append('<option value="">PILIH</option>');
+                                             $.each(data, function(messageIndex, message) {
+                                                 $('#dtrans_coa'+target).append('<option value="' + message['coa_kode'] + '">' + message['coa_desc'] + '</option>');
+                                             });
+                                         }
+                                     })
         
-            if($('#dtrans_jenis'+target).val() == '1'){
-                $('#dtrans_trans'+target).val("KAS");
-            }else if($('#dtrans_jenis'+target).val() == '2'){
-                $('#dtrans_trans'+target).val("BNK");
-            }else{
-                $('#dtrans_trans'+target).val("CEK");
-            }
-        }
-    }
+                                     if($('#dtrans_jenis'+target).val() == '1'){
+                                         $('#dtrans_trans'+target).val("KAS");
+                                     }else if($('#dtrans_jenis'+target).val() == '2'){
+                                         $('#dtrans_trans'+target).val("BNK");
+                                     }else{
+                                         $('#dtrans_trans'+target).val("CEK");
+                                     }
+                                 }
+                             }
 
-    $(this).ready(function(){
-        numberOnly();
+                             $(this).ready(function(){
+                                 numberOnly();
         
-        $( ".datepicker" ).datepicker({
-            autoclose: true,
-            todayHighlight: true,
-            dateFormat:'dd-mm-yy'	
-        })
-        .next().on(ace.click_event, function(){
-            $(this).prev().focus();
-        });
+                                 $( ".datepicker" ).datepicker({
+                                     autoclose: true,
+                                     todayHighlight: true,
+                                     dateFormat:'dd-mm-yy'	
+                                 })
+                                 .next().on(ace.click_event, function(){
+                                     $(this).prev().focus();
+                                 });
         
-        $('#formAdd').submit(function() {
-            if($("#totalTrans").val())
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo site_url($etc['targetSave']) ?>",
-                dataType: "json",
-                async: false,
-                data: $(this).serialize(),
-                success: function(data) {
-                    window.scrollTo(0, 0);
-                    if(data.status == true)
-                        document.formAdd.reset();
-                    $("#result").html(data.msg).show().fadeIn("slow");
-                }
-            })
-            return false;
-        });
+                                 $('#formAdd').submit(function() {
+                                     if($("#totalTrans").val())
+                                         $.ajax({
+                                             type: 'POST',
+                                             url: "<?php echo site_url($etc['targetSave']) ?>",
+                                             dataType: "json",
+                                             async: false,
+                                             data: $(this).serialize(),
+                                             success: function(data) {
+                                                 window.scrollTo(0, 0);
+                                                 if(data.status == true)
+                                                     $('.page-content-area').ace_ajax('loadUrl', "#transaksi_service/tagihanService", true);
+                                                 else
+                                                     $("#result").html(data.msg).show().fadeIn("slow");
+                                             }
+                                     })
+                                     return false;
+                                 });
 
-        $('#formAdd').validate({
-            errorElement: 'div',
-            errorClass: 'help-block',
-            focusInvalid: false,
-            ignore: "",
-            rules: {},
-            messages: {},
-            highlight: function (e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-            },
-            success: function (e) {
-                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-                $(e).remove();
-            },
-            errorPlacement: function (error, element) {
-                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
-                    var controls = element.closest('div[class*="col-"]');
-                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
-                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
-                }
-                else if(element.is('.chosen-select')) {
-                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
-                }
-                else error.insertAfter(element.parent());
-            },
-            submitHandler: function (form) {
-            },
-            invalidHandler: function (form) {
-            }
-        });
-    });
+                                 $('#formAdd').validate({
+                                     errorElement: 'div',
+                                     errorClass: 'help-block',
+                                     focusInvalid: false,
+                                     ignore: "",
+                                     rules: {},
+                                     messages: {},
+                                     highlight: function (e) {
+                                         $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                                     },
+                                     success: function (e) {
+                                         $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                                         $(e).remove();
+                                     },
+                                     errorPlacement: function (error, element) {
+                                         if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                                             var controls = element.closest('div[class*="col-"]');
+                                             if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                                             else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                                         }
+                                         else if(element.is('.chosen-select')) {
+                                             error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                                         }
+                                         else error.insertAfter(element.parent());
+                                     },
+                                     submitHandler: function (form) {
+                                     },
+                                     invalidHandler: function (form) {
+                                     }
+                                 });
+                             });
 
-    var scripts = [null, null]
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-        //inline scripts related to this page
-    });
+                             var scripts = [null, null]
+                             $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+                                 //inline scripts related to this page
+                             });
 </script> 

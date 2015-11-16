@@ -564,6 +564,7 @@ class Transaksi_Service extends Application {
         $save = $this->model_trfinance->saveTagihanService($etc, $transToSave);
         
         if ($save['status'] == TRUE) {
+             $this->session->set_flashdata('msg', $this->sukses('Berhasil menambah tagihan'));
             $result = array('status' => TRUE, 'msg' => $this->sukses($save['msg']));
         } else {
             $result = array('status' => FALSE, 'msg' => $this->error($save['msg']));

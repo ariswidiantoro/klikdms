@@ -24,16 +24,15 @@ class Model_Auto_jurnal extends CI_Model {
             dtipe_cbid = '" . $data['cbid'] . "' 
                 AND dtipe_tipeid = '" . $data['type'] . "'
         ");
-        
         $constant = array();
-        
-        if($sql->num_rows()>0){
+
+        if ($sql->num_rows() > 0) {
             $retData['status'] = TRUE;
-            foreach($sql->result_array() as $rows){
+            foreach ($sql->result_array() as $rows) {
                 $constant[$rows['dtipe_constant']] = $rows['dtipe_coa'];
             }
-                        
-            if($data['type'] == JURNAL_SELUNIT){
+
+            if ($data['type'] == JURNAL_SELUNIT) {
                 $retData['piutang'] = $constant['A'];
                 $retData['penjualan'] = $constant['B'];
                 $retData['ppn'] = $constant['C'];
@@ -41,7 +40,7 @@ class Model_Auto_jurnal extends CI_Model {
                 $retData['aksesoris'] = $constant['E'];
                 $retData['hpp'] = $constant['F'];
                 $retData['persediaan'] = $constant['G'];
-            } else if($data['type'] == JURNAL_SELSERV){
+            } else if ($data['type'] == JURNAL_SELSERV) {
                 $retData['piutang'] = $constant['A'];
                 $retData['penj_lc'] = $constant['B'];
                 $retData['penj_oli'] = $constant['C'];
@@ -56,58 +55,51 @@ class Model_Auto_jurnal extends CI_Model {
                 $retData['hpp_so'] = $constant['L'];
                 $retData['persediaan_oli'] = $constant['M'];
                 $retData['pen_so'] = $constant['N'];
-            } else if($data['type'] == JURNAL_SELSPAR){
+            } else if ($data['type'] == JURNAL_SELSPAR) {
                 $retData['piutang'] = $constant['A'];
                 $retData['penjualan'] = $constant['B'];
                 $retData['ppn'] = $constant['C'];
                 $retData['hpp'] = $constant['D'];
                 $retData['persediaan'] = $constant['E'];
-            } else if($data['type'] == JURNAL_BUYUNIT){
+            } else if ($data['type'] == JURNAL_BUYUNIT) {
                 $retData['piutang'] = $constant['A'];
                 $retData['penjualan'] = $constant['B'];
                 $retData['ppn'] = $constant['C'];
                 $retData['hpp'] = $constant['D'];
                 $retData['persediaan'] = $constant['E'];
-            } else if($data['type'] == JURNAL_BUYSPAR){
+            } else if ($data['type'] == JURNAL_BUYSPAR) {
                 $retData['hutang'] = $constant['A'];
                 $retData[''] = $constant['B'];
                 $retData['ppn'] = $constant['C'];
                 $retData['hpp'] = $constant['D'];
                 $retData['persediaan'] = $constant['E'];
-            } 
-            
+            }
+
             return $retData;
-        }else{
+        } else {
             return array('status' => FALSE);
         }
     }
 
-    public function getInvoiceForJurnal($data) {
-        $query = "SELECT 
-            invid,inv_woid,inv_cbid,inv_tgl,inv_inextern,
-            inv_spart,inv_oli,inv_sm,inv_so,inv_lc,
-            inv_hpp_spart,inv_hpp_oli,inv_hpp_sm,inv_hpp_so,
-            inv_ppn,inv_total, pel_nama, msc_nopol, wo_nomer, wo_pelid FROM svc_invoice 
-            LEFT JOIN svc_wo ON woid = inv_woid
-            LEFT JOIN ms_car ON mscid = wo_mscid
-            LEFT JOIN ms_pelanggan ON pelid = wo_pelid
-            WHERE inv_woid = '" . $data['woid'] . "' AND inv_status = 0";
-        $query = $this->db->query($query);
-        log_message('error', 'CEK ERROR: '.$this->db->last_query());
-        return $query->row_array();
-    }
+//    public function getInvoiceForJurnal($data) {
+//        $query = ;
+//       
+//        log_message('error', 'CEK ERROR: '.$this->db->last_query());
+//        return $query->row_array();
+//    }
 
     /* AUTO JURNAL PENJUALAN SERVICE */
 
-    public function autoJurnalSelserv($data = array()) {
-        $total = $data['inv_lc'] + $data['inv_oli'] + $data['inv_sm'] + $data['inv_so'] + $data['inv_spart'];
-        $ppn = $total * (1 / 10);
-        $totalpiutang = $total + $ppn;
+    public function autoJurnalSelserv($woid) {
+        $sql = $this->db->query("SELECT * FROM svc_invoice LEFT JOIN svc_wo ON woid = inv_woid"
+                . " LEFT JOIN ms_car ON mscid = wo_mscid LEFT JOIN ms_pelanggan ON pelid = wo_pelid"
+                . " WHERE inv_woid = '$woid' AND inv_tagihan = 0");
+        $data = $sql->row_array();
+        $ppn = $data['inv_lc'] * 0.1;
         $jurnalCode = $this->getJurnalCode(array('type' => JURNAL_SELSERV, 'cbid' => ses_cabang));
 
         if ($jurnalCode['status'] == FALSE)
             return FALSE;
-
         $basicArray = array(
             'trl_nomer' => $data['inv_woid'],
             'trl_name' => 'SELSERV',
@@ -125,36 +117,35 @@ class Model_Auto_jurnal extends CI_Model {
         );
 
         $orderedArray = array();
-
         /* PIUTANG SERVICE - DEBIT */
         array_push($orderedArray, $basicArray);
         $orderedArray[0]['trl_coa'] = $jurnalCode['piutang'];
-        $orderedArray[0]['trl_debit'] = $totalpiutang;
+        $orderedArray[0]['trl_debit'] = $data['inv_total'];
 
         /* PENJUALAN LC - KREDIT */
         array_push($orderedArray, $basicArray);
         $orderedArray[1]['trl_coa'] = $jurnalCode['penj_lc'];
-        $orderedArray[1]['trl_kredit'] = $data['inv_lc'];
+        $orderedArray[1]['trl_kredit'] = $data['inv_lc'] / 1.1;
 
         /* PENJUALAN OLI - KREDIT */
         array_push($orderedArray, $basicArray);
         $orderedArray[2]['trl_coa'] = $jurnalCode['penj_oli'];
-        $orderedArray[2]['trl_kredit'] = $data['inv_oli'];
+        $orderedArray[2]['trl_kredit'] = $data['inv_oli'] / 1.1;
 
         /* PENJUALAN SPARTS - KREDIT */
         array_push($orderedArray, $basicArray);
         $orderedArray[3]['trl_coa'] = $jurnalCode['penj_spart'];
-        $orderedArray[3]['trl_kredit'] = $data['inv_spart'];
+        $orderedArray[3]['trl_kredit'] = $data['inv_spart'] / 1.1;
 
         /* PENJUALAN SUB ORDER - KREDIT */
         array_push($orderedArray, $basicArray);
         $orderedArray[4]['trl_coa'] = $jurnalCode['penj_so'];
-        $orderedArray[4]['trl_kredit'] = $data['inv_so'];
+        $orderedArray[4]['trl_kredit'] = $data['inv_so'] / 1.1;
 
         /* PIUTANG PENJUALAN SUB MATERIAL - KREDIT */
         array_push($orderedArray, $basicArray);
         $orderedArray[5]['trl_coa'] = $jurnalCode['penj_sm'];
-        $orderedArray[5]['trl_kredit'] = $data['inv_sm'];
+        $orderedArray[5]['trl_kredit'] = $data['inv_sm'] / 1.1;
 
         /* HUTANG PAJAK PPN - KREDIT */
         array_push($orderedArray, $basicArray);
@@ -190,12 +181,9 @@ class Model_Auto_jurnal extends CI_Model {
         array_push($orderedArray, $basicArray);
         $orderedArray[12]['trl_coa'] = $jurnalCode['pen_so'];
         $orderedArray[12]['trl_kredit'] = $data['inv_hpp_so'];
-
-        if ($this->db->insert_batch('ksr_ledger', $orderedArray) == FALSE) {
-            throw new Exception('AUTO JURNAL PENJUALAN SERVICE GAGAL');
-        }
+        $this->db->insert_batch('ksr_ledger', $orderedArray);
     }
-    
+
     /* AUTO JURNAL PENJUALAN SERVICE */
 
     public function autoJurnalSelspar($data = array()) {
@@ -730,7 +718,7 @@ class Model_Auto_jurnal extends CI_Model {
             return $back;
         }
     }
-    
+
     /* AUTO JURNAL PENJUALAN SERVICE */
 
     public function autoJurnalTerimaBarang($data = array()) {

@@ -50,8 +50,8 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'postgres';
-$db['default']['password'] = '';
-$db['default']['database'] = 'klikdms';
+$db['default']['password'] = 'root';
+$db['default']['database'] = 'klikdms_rosi';
 $db['default']['dbdriver'] = 'postgre';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = FALSE;
@@ -63,7 +63,7 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
-$db['default']['port']     = 5433;
+$db['default']['port']     = 5432;
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */
